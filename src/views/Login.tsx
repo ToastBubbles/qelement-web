@@ -34,50 +34,47 @@ export default function Login() {
   };
   return (
     <>
-      <div className="maincontainer">
-        <div className="logincontainer">
-          <h1>login</h1>
-          <div className="loginRegForm">
-            <input
-              placeholder="Username"
-              // type="email"
-              onChange={(e) =>
-                setLoginDTO((loginDTO) => ({
-                  ...loginDTO,
-                  ...{ username: e.target.value },
-                }))
-              }
-            />
-            <input
-              placeholder="Password"
-              type="password"
-              onChange={(e) =>
-                setLoginDTO((loginDTO) => ({
-                  ...loginDTO,
-                  ...{ password: e.target.value },
-                }))
-              }
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  attemptLogin(loginDTO);
-                }
-              }}
-            />
-
-            <button
-              onClick={() => {
+      <div className="logincontainer">
+        <h1>login</h1>
+        <div className="loginRegForm">
+          <input
+            placeholder="Username"
+            // type="email"
+            onChange={(e) =>
+              setLoginDTO((loginDTO) => ({
+                ...loginDTO,
+                ...{ username: e.target.value },
+              }))
+            }
+          />
+          <input
+            placeholder="Password"
+            type="password"
+            onChange={(e) =>
+              setLoginDTO((loginDTO) => ({
+                ...loginDTO,
+                ...{ password: e.target.value },
+              }))
+            }
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
                 attemptLogin(loginDTO);
-              }}
-            >
-              Login
-            </button>
-            {loginError && <div>incorrect login</div>}
-            <a href="#">forgot password?</a>
-            <Link to="/register">Register for an account</Link>
-          </div>
+              }
+            }}
+          />
+
+          <button
+            onClick={() => {
+              attemptLogin(loginDTO);
+            }}
+          >
+            Login
+          </button>
+          {loginError && <div>incorrect login</div>}
+          <a href="#">forgot password?</a>
+          <Link to="/register">Register for an account</Link>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

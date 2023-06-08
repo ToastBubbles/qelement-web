@@ -91,8 +91,6 @@ export default function ColorEditView() {
 
   return (
     <>
-      {}
-
       <div className="colorTop">
         <div className="colorName">
           {!colIsLoading && colData ? (

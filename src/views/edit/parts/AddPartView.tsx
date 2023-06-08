@@ -7,7 +7,9 @@ export default function AddPartView() {
   const [newPart, setNewPart] = useState<iPartDTO>({
     name: "",
     number: "",
+    secondaryNumber: "",
     CatId: -1,
+    note: "",
   });
   const [newCategory, setNewCategory] = useState<string>();
 
@@ -16,16 +18,14 @@ export default function AddPartView() {
     isLoading,
     error,
     isFetched,
+    refetch,
   } = useQuery("todos", () =>
     axios.get<category[]>("http://localhost:3000/categories")
   );
+
   const partMutation = useMutation({
-    mutationFn: ({ name, number, CatId }: iPartDTO) =>
-      axios.post<part>(`http://localhost:3000/parts`, {
-        name,
-        number,
-        CatId,
-      }),
+    mutationFn: (part: iPartDTO) =>
+      axios.post<part>(`http://localhost:3000/parts`, part),
     onSuccess: () => {},
   });
   const catMutation = useMutation({
@@ -34,98 +34,146 @@ export default function AddPartView() {
         .post<string>(`http://localhost:3000/categories`, { name })
         .then((res) => console.log(res.data))
         .catch((err) => console.log(err)),
-    onSuccess: () => {},
+    onSuccess: () => {
+      refetch();
+    },
   });
   if (isFetched && catData) {
     return (
       <>
-        <div>
-          <h3>Add new part</h3>
-          <div>
-            <div>
+        <div className="logincontainer">
+          <h1>add new part</h1>
+          <div className="loginRegForm">
+            <div className="w-100 d-flex jc-space-b">
+              <label htmlFor="partname">Part Name</label>
               <input
-                placeholder="Add New Category..."
-                onChange={(e) => setNewCategory(e.target.value)}
-              />
-              <button
-                onClick={() => {
-                  if (newCategory) {
-                    console.log("adding...");
-                    catMutation.mutate(newCategory);
-                  }
-                }}
-              >
-                Add Category
-              </button>
-            </div>
-            <br></br>
-            <div>
-              <input
-                placeholder="Part Name"
+                id="partname"
+                className="formInput fg-1"
+                placeholder="Required"
                 onChange={(e) =>
                   setNewPart((newPart) => ({
                     ...newPart,
                     ...{ name: e.target.value },
                   }))
                 }
+                value={newPart.name}
               />
             </div>
-            <input
-              placeholder="Part Number"
-              onChange={(e) =>
-                setNewPart((newPart) => ({
-                  ...newPart,
-                  ...{ number: e.target.value },
-                }))
-              }
-            />
+            <div className="w-100 d-flex jc-space-b">
+              <label htmlFor="primary">Part Number</label>
+              <input
+                id="primary"
+                className="formInput w-50"
+                placeholder="Required"
+                onChange={(e) =>
+                  setNewPart((newPart) => ({
+                    ...newPart,
+                    ...{ number: e.target.value },
+                  }))
+                }
+                value={newPart.number}
+              />
+            </div>
+            <div className="w-100 d-flex jc-space-b">
+              <label htmlFor="secondary">Secondary Part Number</label>
+              <input
+                className="formInput w-50"
+                placeholder="Optional"
+                id="secondary"
+                onChange={(e) =>
+                  setNewPart((newPart) => ({
+                    ...newPart,
+                    ...{ secondaryNumber: e.target.value },
+                  }))
+                }
+                value={newPart.secondaryNumber}
+              />
+            </div>
+            <div className="w-100 d-flex jc-space-b">
+              <label htmlFor="cat">Category</label>
+              <select
+                name="cat"
+                id="cat"
+                className="w-50 formInput"
+                onChange={(e) =>
+                  setNewPart((newPart) => ({
+                    ...newPart,
+                    ...{ CatId: Number(e.target.value) },
+                  }))
+                }
+                value={newPart.CatId}
+              >
+                <option value="-1">--</option>
+                {catData.data.map((cat) => (
+                  <option value={`${cat.id}`}>{cat.name}</option>
+                ))}
+              </select>
+            </div>
+            <label htmlFor="partnote" style={{ marginRight: "auto" }}>
+              Note
+            </label>
+            <div className="w-100 d-flex">
+              <textarea
+                id="partnote"
+                className="fg-1 formInput"
+                rows={5}
+                placeholder="Optional"
+                onChange={(e) =>
+                  setNewPart((newPart) => ({
+                    ...newPart,
+                    ...{ note: e.target.value },
+                  }))
+                }
+                value={newPart.note}
+              />
+            </div>
+            <div>
+              <button
+                className="formInputNM"
+                onClick={() => {
+                  if (newPart.CatId != -1) {
+                    console.log("adding...");
+                    partMutation.mutate(newPart);
+                    setNewPart({
+                      name: "",
+                      number: "",
+                      secondaryNumber: "",
+                      CatId: -1,
+                      note: "",
+                    });
+                  }
+                }}
+              >
+                Add Part
+              </button>
+            </div>
+            <div className="w-100 d-flex flex-col flex-center">
+              <div className="fake-hr-form"></div>
+              <div style={{ marginBottom: "1em" }}>
+                can't find the category? add a new one:
+              </div>
+              <div>
+                <input
+                  className="formInput"
+                  placeholder="Category Name"
+                  onChange={(e) => setNewCategory(e.target.value)}
+                  value={newCategory}
+                />
+                <button
+                  className="formInputNM"
+                  onClick={() => {
+                    if (newCategory) {
+                      console.log("adding...");
+                      catMutation.mutate(newCategory);
+                      setNewCategory("");
+                    }
+                  }}
+                >
+                  Add Category
+                </button>
+              </div>
+            </div>
           </div>
-
-          <select
-            name="cat"
-            id="cat"
-            onChange={(e) =>
-              setNewPart((newPart) => ({
-                ...newPart,
-                ...{ CatId: Number(e.target.value) },
-              }))
-            }
-          >
-            <option value="-1">--</option>
-            {catData.data.map((cat) => (
-              <option value={`${cat.id}`}>{cat.name}</option>
-            ))}
-            {/* <option value="solid">solid</option>
-          <option value="transparent">transparent</option>
-          <option value="chrome">chrome</option>
-          <option value="pearl">pearl</option>
-          <option value="satin">satin</option>
-          <option value="metallic">metallic</option>
-          <option value="milky">milky</option>
-          <option value="glitter">glitter</option>
-          <option value="speckle">speckle</option>
-          <option value="modulex">modulex</option>
-          <option value="modulexFoil">modulex foil</option>
-          <option value="functional">functional</option>
-          <option value="unreleased">unreleased</option> */}
-          </select>
-
-          <button
-            onClick={() => {
-              // if (newColor.hex.length == 0) newColor.hex = "UNKNWN";
-              // if (newColor.hex.length == 6) {
-              if (newPart.CatId != -1) {
-                console.log("adding...");
-                partMutation.mutate({
-                  name: newPart.name,
-                  number: newPart.number,
-                  CatId: newPart.CatId,
-                });
-              }
-            }}
-          >
-            Add Part
-          </button>
         </div>
       </>
     );

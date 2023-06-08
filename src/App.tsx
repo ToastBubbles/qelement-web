@@ -1,10 +1,8 @@
-import { useState } from "react";
 import { Routes, Route } from "react-router";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import {
   AddPartView,
-  AllColorsEditView,
   AllColorsView,
   AllMessagesView,
   AllPartsView,
@@ -19,6 +17,9 @@ import {
 } from "./views";
 import { AppProvider } from "./context/context";
 import { QueryClient, QueryClientProvider } from "react-query";
+import Home from "./views/Home";
+import AddQPartView from "./views/edit/parts/AddQPartView";
+import AddColorView from "./views/edit/colors/AddColorView";
 
 const queryClient = new QueryClient();
 
@@ -27,26 +28,28 @@ function App() {
     <AppProvider>
       <QueryClientProvider client={queryClient}>
         <Navbar />
-        <Routes>
-          {/* <Route path="/" element={{<h2>Hello<h2/>} /> */}
-          <Route path="/colors" element={<AllColorsView />} />
-          <Route path="/colors/:colorId" element={<SingleColorView />} />
-          <Route path="/edit/colors" element={<AllColorsEditView />} />
-          <Route path="/edit/colors/:colorId" element={<ColorEditView />} />
-          <Route path="/edit/parts" element={<AddPartView />} />
-          <Route path="/parts" element={<AllPartsView />} />
-          <Route path="/parts/:qpartId" element={<SinglePartView />} />
-          <Route path="/profile" element={<ProfileView />} />
-          <Route path="/profile/messages" element={<AllMessagesView />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/profile/messages" element={<AllMessagesView />} />
-          <Route
-            path="/profile/messages/:messageId"
-            element={<SingleMessageView />}
-          />
-          <Route path="*" element={<NotFoundErrorView />} />
-        </Routes>
+        <div id="root-wrapper">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/colors" element={<AllColorsView />} />
+            <Route path="/color/:colorId" element={<SingleColorView />} />
+            <Route path="/add/color" element={<AddColorView />} />
+            <Route path="/edit/color/:colorId" element={<ColorEditView />} />
+            <Route path="/add/part" element={<AddPartView />} />
+            <Route path="/add/qpart" element={<AddQPartView />} />
+            <Route path="/parts" element={<AllPartsView />} />
+            <Route path="/part/:qpartId" element={<SinglePartView />} />
+            <Route path="/profile" element={<ProfileView />} />
+            <Route path="/profile/messages" element={<AllMessagesView />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route
+              path="/profile/messages/:messageId"
+              element={<SingleMessageView />}
+            />
+            <Route path="*" element={<NotFoundErrorView />} />
+          </Routes>
+        </div>
         <Footer />
       </QueryClientProvider>
     </AppProvider>

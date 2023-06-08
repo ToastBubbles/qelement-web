@@ -97,7 +97,9 @@ export interface ILoginDTO {
 export interface iPartDTO {
   name: string;
   number: string;
+  secondaryNumber: string;
   CatId: number;
+  note: string;
 }
 
 export interface category {

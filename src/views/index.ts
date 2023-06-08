@@ -3,7 +3,7 @@ import NotFoundErrorView from "./NotFoundErrorView";
 import Register from "./Register";
 import AllColorsView from "./colors/AllColorsView";
 import SingleColorView from "./colors/SingleColorView";
-import AllColorsEditView from "./edit/colors/AllColorsEditView";
+import AllColorsEditView from "./edit/colors/AddColorView";
 import ColorEditView from "./edit/colors/ColorEditView";
 import AddPartView from "./edit/parts/AddPartView";
 import AllPartsView from "./parts/AllPartsView";

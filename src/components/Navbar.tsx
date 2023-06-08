@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { logout } from "../auth/auth";
 import { AppContext } from "../context/context";
 import LoginBtn from "./LoginBtn";
+import ColorWheel from "./ColorWheel";
 
 function Navbar() {
   // let toggleDropdown = false;
@@ -36,11 +37,12 @@ function Navbar() {
     <nav className="navbar">
       <>
         <div className="text-logo fg-1">
-          <Link to={"/colors"}>
+          <Link to={"/"}>
             <span className="lt-red">q</span>
             <span>element</span>
           </Link>
         </div>
+        <ColorWheel />
 
         {/* {payload.username && <p>Hello, {payload.username}</p>} */}
         {token === "" ? (
