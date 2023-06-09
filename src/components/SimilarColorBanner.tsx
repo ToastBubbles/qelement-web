@@ -8,31 +8,34 @@ interface IProps {
 }
 
 function SimilarColorBanner({ similarColors }: IProps) {
-  return (
-    <>
-      <div className="simBanner">
-        <div className="simBannerText">This color is similar to:</div>
-        {similarColors.length > 0 &&
-          similarColors.map((color) => {
-            //   console.log(color.colorId2);
-            const thisColor = getSimilarColorData(color.colorId2);
+  if (similarColors.length == 0)
+    return <div className="w-100" style={{ marginBottom: "2.55em" }}></div>;
+  else
+    return (
+      <>
+        <div className="simBanner">
+          <div className="simBannerText">This color is similar to:</div>
+          {similarColors.length > 0 &&
+            similarColors.map((color) => {
+              //   console.log(color.colorId2);
+              const thisColor = getSimilarColorData(color.colorId2);
 
-            return (
-              <Link
-                to={"/colors/" + thisColor?.id}
-                className="flag flag-spacer"
-                style={{ backgroundColor: "#" + thisColor?.hex }}
-              >
-                {thisColor?.bl_name.length == 0
-                  ? thisColor?.tlg_name
-                  : thisColor?.bl_name}
-              </Link>
-            );
-          })}
-        {/* <div>{similarColors.length}</div> */}
-      </div>
-    </>
-  );
+              return (
+                <Link
+                  to={"/color/" + thisColor?.id}
+                  className="flag flag-spacer"
+                  style={{ backgroundColor: "#" + thisColor?.hex }}
+                >
+                  {thisColor?.bl_name.length == 0
+                    ? thisColor?.tlg_name
+                    : thisColor?.bl_name}
+                </Link>
+              );
+            })}
+          {/* <div>{similarColors.length}</div> */}
+        </div>
+      </>
+    );
 }
 
 function getSimilarColorData(cId: number): color | undefined {

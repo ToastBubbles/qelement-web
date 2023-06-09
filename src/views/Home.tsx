@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import NewAdditions from "../components/NewAdditions";
 
 export default function Home() {
   return (
@@ -12,7 +13,7 @@ export default function Home() {
           </Link>
         </div>
 
-        <Link to="#" className="jumbo-btn clickable">
+        <Link to="/about" className="jumbo-btn clickable">
           <div>
             What is qelement? <span>{">>"}</span>
           </div>
@@ -35,9 +36,7 @@ export default function Home() {
             <div className="hp-panel-header-text">new additions</div>
             <div className="head-line"></div>
           </div>
-          <div className="hp-panel-body">
-            <div className="listing new-listing"></div>
-          </div>
+          <NewAdditions />
         </div>
         <div className="hp-panel">
           <div className="hp-panel-header">

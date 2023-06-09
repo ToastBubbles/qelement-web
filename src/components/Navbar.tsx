@@ -1,11 +1,13 @@
 import axios from "axios";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { logout } from "../auth/auth";
 import { AppContext } from "../context/context";
 import LoginBtn from "./LoginBtn";
 import ColorWheel from "./ColorWheel";
+import PartsButton from "./PartsButton";
+import showToast, { Mode } from "../utils/utils";
 
 function Navbar() {
   // let toggleDropdown = false;
@@ -30,8 +32,17 @@ function Navbar() {
         `http://localhost:3000/message/getUnreadCountById/${payload.id}`
       ),
     retry: false,
+    refetchInterval: 30000,
     enabled: !!payload.id,
   });
+
+  useEffect(() => {
+    if (msgData?.data != undefined && msgData.data > 0) {
+      let message = "new message";
+      msgData.data > 1 && (message += "s");
+      showToast(`${msgData.data} ${message}`, Mode.Success);
+    }
+  }, [msgData?.data]);
 
   return (
     <nav className="navbar">
@@ -42,6 +53,7 @@ function Navbar() {
             <span>element</span>
           </Link>
         </div>
+        <PartsButton />
         <ColorWheel />
 
         {/* {payload.username && <p>Hello, {payload.username}</p>} */}
@@ -84,17 +96,35 @@ function Navbar() {
                 "nav-pop-down clickable" + (toggleDropdown ? "" : " hidden")
               }
             >
-              <Link to={"/profile"}>My Profile</Link>
-              <Link to={"/profile"}>My Wanted List</Link>
-              <Link to={"/profile"}>My Inventory</Link>
-              <Link to={"/profile"}>Settings</Link>
-              <div
-                onClick={(e) => {
-                  logout();
-                  // redirect("/colors");
-                }}
-              >
-                Logout
+              <div>
+                <Link to={"/profile"}>My Profile</Link>
+                <Link to={"/profile"}>My Wanted List</Link>
+                <Link to={"/profile"}>My Inventory</Link>
+                <Link to={"/profile"}>Settings</Link>
+                <div
+                  onClick={(e) => {
+                    logout();
+                    // redirect("/colors");
+                  }}
+                >
+                  Logout
+                </div>
+              </div>
+              <div>
+                <div>
+                  Add:
+                  <ul className="nav-pop-down-ul">
+                    <li>
+                      <Link to={"/add/qpart"}>New QElement</Link>
+                    </li>
+                    <li>
+                      <Link to={"/add/part"}>New Part</Link>
+                    </li>
+                    <li>
+                      <Link to={"/add/color"}>New Color</Link>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import axios from "axios";
 import { color } from "../interfaces/general";
 import { Link } from "react-router-dom";
@@ -19,8 +19,8 @@ function AllColors({ search = "" }) {
     hideBrickOwl: false,
     // search,
   });
-  const queryClient = useQueryClient();
-  const { data, isLoading, error, isFetched } = useQuery("todos", () =>
+
+  const { data, isLoading, error, isFetched } = useQuery("allColors", () =>
     axios.get<color[]>("http://localhost:3000/color")
   );
 
@@ -138,7 +138,7 @@ function generateTable(
                   {color.bl_id <= 0 ? "" : color.bl_id}
                 </td>
                 <td className="pl-sm border-top border-bottom border-right cell-shade-yellow">
-                  <Link className="text-black" to={"/colors/" + color.id}>
+                  <Link className="text-black" to={"/color/" + color.id}>
                     {color.bl_name}
                   </Link>
                 </td>
@@ -146,17 +146,17 @@ function generateTable(
                   {color.tlg_id <= 0 ? "" : color.tlg_id}
                 </td>
                 <td className="pl-sm border-top border-bottom border-right cell-shade-red">
-                  <Link className="text-black" to={"/colors/" + color.id}>
+                  <Link className="text-black" to={"/color/" + color.id}>
                     {color.tlg_name}
                   </Link>
                 </td>
                 {!tableOptions.hideBrickOwl && (
                   <>
                     <td className="pr-sm text-right md-grey-text border-top border-bottom border-right-soft cell-shade-blue">
-                      {color.bl_id <= 0 ? "" : color.bl_id}
+                      {color.bo_id <= 0 ? "" : color.bo_id}
                     </td>
                     <td className="pl-sm border-top border-bottom border-right cell-shade-blue">
-                      <Link className="text-black" to={"/colors/" + color.id}>
+                      <Link className="text-black" to={"/color/" + color.id}>
                         {color.bo_name}
                       </Link>
                     </td>

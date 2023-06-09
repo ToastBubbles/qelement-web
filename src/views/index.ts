@@ -6,7 +6,7 @@ import SingleColorView from "./colors/SingleColorView";
 import AllColorsEditView from "./edit/colors/AddColorView";
 import ColorEditView from "./edit/colors/ColorEditView";
 import AddPartView from "./edit/parts/AddPartView";
-import AllPartsView from "./parts/AllPartsView";
+import AllPartsView from "./parts/AllPartCategoriesView";
 import SinglePartView from "./parts/SinglePartView";
 import ProfileView from "./profile/ProfileView";
 import AllMessagesView from "./profile/messages/AllMessagesView";

@@ -1,8 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useNavigate } from "react-router";
-import { IUserDTO } from "../interfaces/general";
+import { IUserDTO, user } from "../interfaces/general";
+import showToast, { Mode } from "../utils/utils";
+import { IQelementError } from "../interfaces/error";
 
 interface passwordValidation {
   isLongEnough: boolean;
@@ -23,13 +25,89 @@ export default function Register() {
     containsNumber: false,
     containsLetter: false,
   });
+
   const [passMatch, setPassMatch] = useState<string>();
+
+  const { refetch: refecthUsernameAvailability } = useQuery(
+    "checkUser",
+    () => {
+      try {
+        if (newUser.name.length > 1) {
+          axios
+            .get<user | IQelementError>(
+              `http://localhost:3000/user/checkInsensitive/${newUser.name.trim()}`
+            )
+            .then((res) => {
+              console.log(res.data);
+
+              if (res.data?.message == "not found") {
+                if (
+                  passMatch == newUser.password &&
+                  passValidate?.containsLetter &&
+                  passValidate?.containsNumber &&
+                  passValidate?.isLongEnough &&
+                  newUser.email.length > 5 &&
+                  newUser.email.includes("@")
+                ) {
+                  userMutation.mutate({
+                    name: newUser.name,
+                    email: newUser.email,
+                    password: newUser.password,
+                    role: newUser.role,
+                  });
+                  navigate("/login");
+                } else {
+                  showToast("Error creating account", Mode.Error);
+                }
+              } else {
+                showToast("Username is already taken", Mode.Warning);
+              }
+            });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    {
+      staleTime: 100,
+      enabled: false,
+    }
+  );
 
   const userMutation = useMutation({
     mutationFn: (userDTO: IUserDTO) =>
       axios.post<IUserDTO>(`http://localhost:3000/user`, userDTO),
-    onSuccess: () => {},
+    onSuccess: () => {
+      showToast("Account successfully created!", Mode.Success);
+    },
   });
+
+  // async function submitInfo() {
+  //   refecthUsernameAvailability().then(() => {
+  //     if (
+  //       passMatch == newUser.password &&
+  //       passValidate?.containsLetter &&
+  //       passValidate?.containsNumber &&
+  //       passValidate?.isLongEnough &&
+  //       usernameAvailable
+  //     ) {
+  //       userMutation.mutate({
+  //         name: newUser.name,
+  //         email: newUser.email,
+  //         password: newUser.password,
+  //         role: newUser.role,
+  //       });
+  //       navigate("/login");
+  //     } else {
+  //       if (!usernameAvailable) {
+  //         showToast("Username is already taken", Mode.Warning);
+  //       } else {
+  //         showToast("Error creating account", Mode.Error);
+  //       }
+  //     }
+  //   });
+  // }
+
   return (
     <>
       <div className="logincontainer">
@@ -96,31 +174,14 @@ export default function Register() {
             onChange={(e) => setPassMatch(e.target.value)}
           />
           <p>
-            - re-entered password matches{" "}
+            - re-entered password matches
             {passMatch == newUser.password ? "✔️" : "❌"}
           </p>
           <button
             onClick={() => {
               // checkUsername(newUser.name).then((result) => {
               // if (result) {
-              if (
-                passMatch == newUser.password &&
-                passValidate?.containsLetter &&
-                passValidate?.containsNumber &&
-                passValidate?.isLongEnough
-              ) {
-                userMutation.mutate({
-                  name: newUser.name,
-                  email: newUser.email,
-                  password: newUser.password,
-                  role: newUser.role,
-                });
-                navigate("/login");
-              }
-              // } else {
-              //   alert("Username already exists!");
-              // }
-              // });
+              refecthUsernameAvailability();
             }}
           >
             Register

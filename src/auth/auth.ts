@@ -1,4 +1,3 @@
-
 // Short duration JWT token (5-10 min)
 // export function getJwtToken() {
 //   return sessionStorage.getItem("jwt");
@@ -8,7 +7,7 @@ import axios from "axios";
 import { importSPKI, jwtVerify } from "jose";
 import { ILoginDTO } from "../interfaces/general";
 import Cookies from "js-cookie";
-
+import showToast, { Mode } from "../utils/utils";
 
 // export function setJwtToken(token: any) {
 //   sessionStorage.setItem("jwt", token);
@@ -85,6 +84,7 @@ export async function login(
             });
           });
         } else {
+          showToast("Incorrect login credentials", Mode.Error);
           reject();
         }
       });

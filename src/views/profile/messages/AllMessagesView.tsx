@@ -4,7 +4,13 @@ import { useQuery, useMutation } from "react-query";
 import Message from "../../../components/Message";
 import { AppContext } from "../../../context/context";
 import { IQelementError } from "../../../interfaces/error";
-import { IMessageDTO, IExtendedMessageDTO, user, IMailbox } from "../../../interfaces/general";
+import {
+  IMessageDTO,
+  IExtendedMessageDTO,
+  user,
+  IMailbox,
+} from "../../../interfaces/general";
+import showToast, { Mode } from "../../../utils/utils";
 
 export default function AllMessagesView() {
   const [activeTab, setActiveTab] = useState<number>(0);
@@ -63,11 +69,11 @@ export default function AllMessagesView() {
           console.log("calling api with", recipientName);
           axios
             .get<user | IQelementError>(
-              `http://localhost:3000/user/${recipientName.trim()}`
+              `http://localhost:3000/user/username/${recipientName.trim()}`
             )
             .then((res) => {
               if (res.data?.message == "not found") {
-                console.log("not found");
+                showToast("Recipient does not exist", Mode.Error);
                 setIsBadRecipient(true);
               } else {
                 console.log(res.data);
@@ -94,8 +100,8 @@ export default function AllMessagesView() {
   //   error: msgError,
   //   isFetched: isMsgFetched,
   //   refetch: msgRefetch,
-  // } = 
-  
+  // } =
+
   useQuery(
     "getMsgs",
     () => {
@@ -143,11 +149,10 @@ export default function AllMessagesView() {
       newMessage.senderId != -1 &&
       !isBadRecipient
     ) {
-      console.log("sent");
-
       messageMutation.mutate(newMessage);
+      showToast(`Message sent to ${recipientName}`, Mode.Success);
     } else {
-      console.log("send failed");
+      showToast(`Error`, Mode.Error);
     }
   }
   // if (!isLoading && data) return data.data.id;

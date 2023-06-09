@@ -1,7 +1,7 @@
 import React from "react";
 import { useRouter } from "next/router";
 import colors from "@/utils/data.js";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import axios from "axios";
 import { color } from "../interfaces/general";
 import { Link } from "react-router-dom";
@@ -17,8 +17,7 @@ function statusLookup(partId: number, colorId: string) {
 }
 
 function AllColorStatus({ partId = 0 }) {
-  const queryClient = useQueryClient();
-  const { data, isLoading, error } = useQuery("todos", () =>
+  const { data, isLoading, error } = useQuery("allColors", () =>
     axios.get<color[]>("http://localhost:3000/color")
   );
 
@@ -26,13 +25,13 @@ function AllColorStatus({ partId = 0 }) {
     <div>
       {!isLoading && data ? (
         data.data.map((color) => (
-          <div className="color-row">
+          <div key={color.id} className="color-row">
             <div className="table-id">
               {color.tlg_id == 0 ? "" : color.tlg_id}
             </div>
             <Link
-              to={"/colors/" + color.id}
-              className="flag"
+              to={"/color/" + color.id}
+              className="flag lt-grey"
               style={{ backgroundColor: "#" + color.hex }}
             >
               {color.bl_name.length == 0 ? color.tlg_name : color.bl_name}
@@ -50,7 +49,7 @@ function AllColorStatus({ partId = 0 }) {
         <div className="color-row">
           <div className="table-id">{singleColor.Lid}</div>
           <Link
-            to={"/colors/" + singleColor.Lid}
+            to={"/color/" + singleColor.Lid}
             className="flag"
             style={{ backgroundColor: "#" + singleColor.color }}
           >

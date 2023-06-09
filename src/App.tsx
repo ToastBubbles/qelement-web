@@ -5,7 +5,6 @@ import {
   AddPartView,
   AllColorsView,
   AllMessagesView,
-  AllPartsView,
   ColorEditView,
   Login,
   NotFoundErrorView,
@@ -20,13 +19,21 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import Home from "./views/Home";
 import AddQPartView from "./views/edit/parts/AddQPartView";
 import AddColorView from "./views/edit/colors/AddColorView";
+import About from "./views/About";
+import AllPartCategoriesView from "./views/parts/AllPartCategoriesView";
+import SinglePartCategoryView from "./views/parts/SinglePartCategoryView";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { staleTime: 10000 } },
+});
 
 function App() {
   return (
     <AppProvider>
       <QueryClientProvider client={queryClient}>
+        <ToastContainer />
         <Navbar />
         <div id="root-wrapper">
           <Routes>
@@ -37,12 +44,20 @@ function App() {
             <Route path="/edit/color/:colorId" element={<ColorEditView />} />
             <Route path="/add/part" element={<AddPartView />} />
             <Route path="/add/qpart" element={<AddQPartView />} />
-            <Route path="/parts" element={<AllPartsView />} />
-            <Route path="/part/:qpartId" element={<SinglePartView />} />
+            <Route
+              path="/part-categories"
+              element={<AllPartCategoriesView />}
+            />
+            <Route
+              path="/part-categories/:catId"
+              element={<SinglePartCategoryView />}
+            />
+            <Route path="/part/:partId" element={<SinglePartView />} />
             <Route path="/profile" element={<ProfileView />} />
             <Route path="/profile/messages" element={<AllMessagesView />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/about" element={<About />} />
             <Route
               path="/profile/messages/:messageId"
               element={<SingleMessageView />}

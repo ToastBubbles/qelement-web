@@ -15,14 +15,7 @@ export default function SingleColorView() {
 
   const [similarColorToAdd, setSimilarColorToAdd] = useState<number>(0);
 
-  // const queryClient = new QueryClient({
-  //   defaultOptions: {
-  //     queries: {
-  //       // ✅ turns retries off
-  //       retry: false,
-  //     },
-  //   },
-  // })
+
 
   const {
     data: colData,
@@ -47,17 +40,6 @@ export default function SingleColorView() {
     enabled: true,
     retry: false,
   });
-  // console.log(sdata);
-  // console.log(simData?.data);
-
-  // const similarColorMutation = useMutation({
-  //   mutationFn: ({ color_one, color_two }: ISimilarColorDTO) =>
-  //     axios.post<color>(`http://localhost:3000/similarColor`, {
-  //       color_one,
-  //       color_two,
-  //     }),
-  //   onSuccess: () => {},
-  // });
 
   if (colError || simError) {
     navigate("/404");
@@ -88,39 +70,14 @@ export default function SingleColorView() {
       </div>
       <div className="fake-hr"></div>
       {!simIsLoading && simData ? (
-        // console.log("data:", simData)
+
         <SimilarColorBanner similarColors={simData.data} />
       ) : (
-        // <SimilarColorBanner {...simData.data} />
-        // simData.data.length > 0 ? (
-        //   simData?.data.forEach((c) => {
-        //     console.log(c);
 
-        //     <span>{c.colorId1}</span>;
-        //   })
-        // ) : (
-        //   <div>no similarities</div>
-        // )
         <p>loading...</p>
       )}
 
-      {/* <input
-        onChange={(e) => setSimilarColorToAdd(Number(e.target.value))}
-        type="number"
-        id="similarId"
-        name="similarId"
-        placeholder="color id"
-      />
-      <button
-        onClick={() => {
-          similarColorMutation.mutate({
-            color_one: Number(colorId),
-            color_two: similarColorToAdd,
-          });
-        }}
-      >
-        Add similarity
-      </button> */}
+
       <div className="color-container">
         <section></section>
         <section>
@@ -184,7 +141,7 @@ export default function SingleColorView() {
               {color?.note ? color.note : "No additional notes"}
             </div>
           </div>
-          <Link to={`/edit/colors/${color?.id}`}>Edit this color</Link>
+          <Link to={`/edit/color/${color?.id}`}>Edit this color</Link>
         </section>
       </div>
     </>

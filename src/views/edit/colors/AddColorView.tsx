@@ -3,44 +3,28 @@ import { useState } from "react";
 import { useMutation } from "react-query";
 import AllColors from "../../../components/AllColors";
 import { color, IColorDTO } from "../../../interfaces/general";
+import showToast, { Mode } from "../../../utils/utils";
 
 export default function AddColorView() {
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [newColor, setNewColor] = useState<color>({
-    id: 0,
+  const baseValues: IColorDTO = {
     bl_name: "",
     tlg_name: "",
     bo_name: "",
     hex: "",
-    bl_id: 0,
-    tlg_id: 0,
+    bl_id: -1,
+    tlg_id: -1,
+    bo_id: -1,
     type: "solid",
     note: "",
-    updatedAt: "",
-    createdAt: "",
-  });
+  };
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [newColor, setNewColor] = useState<IColorDTO>(baseValues);
   const colorMutation = useMutation({
-    mutationFn: ({
-      bl_name,
-      tlg_name,
-      bo_name,
-      hex,
-      bl_id,
-      tlg_id,
-      type,
-      note,
-    }: IColorDTO) =>
-      axios.post<color>(`http://localhost:3000/color`, {
-        bl_name,
-        tlg_name,
-        bo_name,
-        hex,
-        bl_id,
-        tlg_id,
-        type,
-        note,
-      }),
-    onSuccess: () => {},
+    mutationFn: (colorInfo: IColorDTO) =>
+      axios.post<IColorDTO>(`http://localhost:3000/color`, colorInfo),
+    onSuccess: () => {
+      showToast("Color successfully added!", Mode.Success);
+    },
   });
   return (
     <>
@@ -60,6 +44,7 @@ export default function AddColorView() {
                     ...{ bl_name: e.target.value },
                   }))
                 }
+                value={newColor.bl_name}
               />
               <input
                 className="formInput w-10"
@@ -71,6 +56,7 @@ export default function AddColorView() {
                     ...{ bl_id: e.target.valueAsNumber },
                   }))
                 }
+                value={newColor.bl_id == -1 ? "" : newColor.bl_id}
               />
             </div>
           </div>
@@ -87,6 +73,7 @@ export default function AddColorView() {
                     ...{ tlg_name: e.target.value },
                   }))
                 }
+                value={newColor.tlg_name}
               />
               <input
                 className="formInput w-10"
@@ -98,6 +85,7 @@ export default function AddColorView() {
                     ...{ tlg_id: e.target.valueAsNumber },
                   }))
                 }
+                value={newColor.tlg_id == -1 ? "" : newColor.tlg_id}
               />
             </div>
           </div>
@@ -114,16 +102,18 @@ export default function AddColorView() {
                     ...{ bo_name: e.target.value },
                   }))
                 }
+                value={newColor.bo_name}
               />
               <input
                 className="formInput w-10"
                 placeholder="ID"
-                // onChange={(e) =>
-                //   setNewColor((newColor) => ({
-                //     ...newColor,
-                //     ...{ bo_name: e.target.value },
-                //   }))
-                // }
+                onChange={(e) =>
+                  setNewColor((newColor) => ({
+                    ...newColor,
+                    ...{ bo_id: Number(e.target.value) },
+                  }))
+                }
+                value={newColor.bo_id == -1 ? "" : newColor.bo_id}
               />
             </div>
           </div>
@@ -140,6 +130,7 @@ export default function AddColorView() {
                     ...{ hex: e.target.value },
                   }))
                 }
+                value={newColor.hex}
               />
               <div
                 className={"showHEX " + newColor.type}
@@ -164,6 +155,7 @@ export default function AddColorView() {
                   ...{ type: e.target.value },
                 }))
               }
+              value={newColor.type}
             >
               <option value="solid">solid</option>
               <option value="transparent">transparent</option>
@@ -205,27 +197,15 @@ export default function AddColorView() {
               if (newColor.hex.length == 6) {
                 console.log("adding...");
 
-                colorMutation.mutate({
-                  bl_name: newColor.bl_name,
-                  tlg_name: newColor.tlg_name,
-                  bo_name: newColor.bo_name,
-                  hex: newColor.hex,
-                  bl_id: newColor.bl_id,
-                  tlg_id: newColor.tlg_id,
-                  type: newColor.type,
-                  note: newColor.note,
-                });
+                colorMutation.mutate(newColor);
+                setNewColor(baseValues);
               }
             }}
           >
             Add Color
           </button>
-
-          <div className="fake-hr"></div>
         </div>
       </div>
     </>
   );
 }
-
-// function addColor(newColor:color, mutation: UseMutationResult<AxiosResponse<color, any>, unknown, IColorDTO, unknown>) {}

@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import { AppContext } from "../context/context";
 import { Types } from "../context/jwt/reducer";
 import { ILoginDTO } from "../interfaces/general";
+import showToast, { Mode } from "../utils/utils";
 
 export default function Login() {
   const { state, dispatch } = useContext(AppContext);
@@ -28,6 +29,7 @@ export default function Login() {
       if (res) {
         navigate("/profile");
       } else {
+        
         setLoginError(true);
       }
     });
@@ -70,7 +72,7 @@ export default function Login() {
           >
             Login
           </button>
-          {loginError && <div>incorrect login</div>}
+
           <a href="#">forgot password?</a>
           <Link to="/register">Register for an account</Link>
         </div>

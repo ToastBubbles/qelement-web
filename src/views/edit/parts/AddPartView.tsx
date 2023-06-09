@@ -19,7 +19,7 @@ export default function AddPartView() {
     error,
     isFetched,
     refetch,
-  } = useQuery("todos", () =>
+  } = useQuery("allCats", () =>
     axios.get<category[]>("http://localhost:3000/categories")
   );
 

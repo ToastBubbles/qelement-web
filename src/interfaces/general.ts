@@ -9,6 +9,7 @@ export interface IColorDTO {
   hex: string;
   bl_id: number;
   tlg_id: number;
+  bo_id: number;
   type: string;
   note: string;
 }
@@ -20,6 +21,7 @@ export interface color {
   hex: string;
   bl_id: number;
   tlg_id: number;
+  bo_id: number;
   type: string;
   note: string;
   createdAt: string;
@@ -44,15 +46,23 @@ export interface similarColor {
   updatedAt: string;
 }
 
-export interface iQPartDTO {
+export interface IQPartDTO {
   id: number;
-  isKnown: string;
   partId: number;
   colorId: number;
   creatorId: number;
+  note: string;
+  elementId: string;
+  secondaryElementId: string;
   rarety: number;
-  // createdAt: string;
-  // updatedAt: string;
+}
+export interface iQPartDTO {
+  partId: number;
+  colorId: number;
+  elementId: string;
+  secondaryElementId: string;
+  creatorId: number;
+  note: string;
 }
 export interface part {
   id: number;
@@ -63,7 +73,6 @@ export interface part {
   updatedAt: string;
 }
 export interface IRatingDTO {
-  // id: number;
   rating: number;
   qpartId: number;
   creatorId: number;
