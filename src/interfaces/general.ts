@@ -45,7 +45,11 @@ export interface similarColor {
   createdAt: string;
   updatedAt: string;
 }
-
+export interface IUploadImageDetails {
+  part: part;
+  qpartId: number;
+  color: color;
+}
 export interface IQPartDTO {
   id: number;
   partId: number;

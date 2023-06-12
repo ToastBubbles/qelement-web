@@ -24,48 +24,56 @@ import AllPartCategoriesView from "./views/parts/AllPartCategoriesView";
 import SinglePartCategoryView from "./views/parts/SinglePartCategoryView";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AppWrapper from "./components/AppWrapper";
+import UploadImageView from "./views/edit/UploadImageView";
 
 const queryClient = new QueryClient({
-  defaultOptions: { queries: { staleTime: 10000 } },
+  defaultOptions: {
+    // queries: { staleTime: 10000 }
+  },
 });
 
 function App() {
   return (
     <AppProvider>
       <QueryClientProvider client={queryClient}>
-        <ToastContainer />
-        <Navbar />
-        <div id="root-wrapper">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/colors" element={<AllColorsView />} />
-            <Route path="/color/:colorId" element={<SingleColorView />} />
-            <Route path="/add/color" element={<AddColorView />} />
-            <Route path="/edit/color/:colorId" element={<ColorEditView />} />
-            <Route path="/add/part" element={<AddPartView />} />
-            <Route path="/add/qpart" element={<AddQPartView />} />
-            <Route
-              path="/part-categories"
-              element={<AllPartCategoriesView />}
-            />
-            <Route
-              path="/part-categories/:catId"
-              element={<SinglePartCategoryView />}
-            />
-            <Route path="/part/:partId" element={<SinglePartView />} />
-            <Route path="/profile" element={<ProfileView />} />
-            <Route path="/profile/messages" element={<AllMessagesView />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/about" element={<About />} />
-            <Route
-              path="/profile/messages/:messageId"
-              element={<SingleMessageView />}
-            />
-            <Route path="*" element={<NotFoundErrorView />} />
-          </Routes>
-        </div>
-        <Footer />
+        <AppWrapper>
+          <ToastContainer />
+          <Navbar />
+          <div id="root-wrapper">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/colors" element={<AllColorsView />} />
+              <Route path="/color/:colorId" element={<SingleColorView />} />
+              <Route path="/add/color" element={<AddColorView />} />
+              <Route path="/edit/color/:colorId" element={<ColorEditView />} />
+              <Route path="/add/part" element={<AddPartView />} />
+              <Route path="/add/qpart" element={<AddQPartView />} />
+              <Route path="/add/qpart/image" element={<UploadImageView />} />
+
+              <Route
+                path="/part-categories"
+                element={<AllPartCategoriesView />}
+              />
+              <Route
+                path="/part-categories/:catId"
+                element={<SinglePartCategoryView />}
+              />
+              <Route path="/part/:partId" element={<SinglePartView />} />
+              <Route path="/profile" element={<ProfileView />} />
+              <Route path="/profile/messages" element={<AllMessagesView />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/about" element={<About />} />
+              <Route
+                path="/profile/messages/:messageId"
+                element={<SingleMessageView />}
+              />
+              <Route path="*" element={<NotFoundErrorView />} />
+            </Routes>
+          </div>
+          <Footer />
+        </AppWrapper>
       </QueryClientProvider>
     </AppProvider>
   );

@@ -7,6 +7,8 @@ import RatingCard from "../../components/RatingCard";
 import { iQPartDTO, color, part, IQPartDTO } from "../../interfaces/general";
 import { useState } from "react";
 import Notification from "../../components/Notification";
+import ImageUploader from "../../components/ImageUploader";
+import { Link } from "react-router-dom";
 
 export default function SinglePartView() {
   const queryParameters = new URLSearchParams(window.location.search);
@@ -128,7 +130,6 @@ export default function SinglePartView() {
     return (
       <>
         <div className="main-container">
-          
           <div className="left-col">
             <Navpane />
           </div>
@@ -148,8 +149,8 @@ export default function SinglePartView() {
                 {!partIsLoading && partData ? part?.name : "loading"}
               </div>
               <select
-                name="cat"
-                id="cat"
+                name="qpartcolors"
+                id="qpartcolors"
                 className="qpart-color-dropdown"
                 onChange={(e) => setSelectedQPartid(Number(e.target.value))}
                 value={selectedQPartid}
@@ -169,6 +170,9 @@ export default function SinglePartView() {
                   src="https://via.placeholder.com/1024x768/eee?text=4:3"
                   alt=""
                 />
+                <Link to="/add/qpart/image" state={"this is a tes"}>
+                  Upload an image
+                </Link>
               </div>
               <RatingCard
                 rating={mypart?.rarety != undefined ? mypart?.rarety : -1}

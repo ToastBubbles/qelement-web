@@ -126,7 +126,16 @@ export default function AllMessagesView() {
   );
 
   useEffect(() => {
-    refetch();
+    // console.log(payload);
+    if (payload && payload.username)
+      if (
+        recipientName.trim().toLowerCase() == payload?.username.toLowerCase()
+      ) {
+        showToast("You can't send messages to yourself", Mode.Warning);
+        setIsBadRecipient(true);
+      } else {
+        refetch();
+      }
   }, [recipientIDGetter]);
 
   useEffect(() => {
@@ -135,9 +144,10 @@ export default function AllMessagesView() {
 
   const messageMutation = useMutation({
     mutationFn: (message: IMessageDTO) =>
-      axios.post<IMessageDTO>(`http://localhost:3000/message`, message),
+      axios.post<IMessageDTO>(`http://localhost:3000/read/message`, message),
     onSuccess: () => {},
   });
+
   function sendMessage() {
     console.log("attempting send");
     console.log(newMessage);

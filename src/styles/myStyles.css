@@ -1192,6 +1192,7 @@ input::-webkit-inner-spin-button {
   margin-left: 1em;
 }
 .lt-red {
+  color: var(--lt-red);
   fill: var(--lt-red);
 }
 .fg-1 {
