@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import NewAdditions from "../components/NewAdditions";
+import NewAdditions from "../../components/NewAdditions";
 
 export default function Home() {
   return (

@@ -23,11 +23,33 @@
   white-space: pre;
   font-family: "Courier New", Courier, monospace;
 }
+
 ul,
-li {
+ul > li {
   list-style-type: none;
   margin: 0;
   padding: 0;
+}
+.patreon {
+  fill: var(--lt-red);
+}
+#terms > div,
+#privacy > li,
+#about > li {
+  margin-top: 0.2em;
+  margin-bottom: 1.5em;
+}
+#about > li {
+  font-size: 0.9em;
+  margin-left: 1em;
+  list-style-type: disc;
+}
+
+#terms > li {
+  font-weight: bold;
+}
+#about > li > span {
+  font-weight: bold;
 }
 a:link,
 a:visited,
@@ -129,6 +151,10 @@ body::-webkit-scrollbar {
 .main-container {
   display: flex;
   width: 100%;
+}
+.padded-container {
+  width: 100%;
+  padding: 3em;
 }
 .left-col {
   display: inline-block;
@@ -1083,20 +1109,54 @@ input::-webkit-inner-spin-button {
 }
 
 #root-wrapper {
-  min-height: calc(100vh - 10em - 4rem);
+  min-height: calc(100vh - 15em - 4rem);
 }
 .footer-container {
-  height: 10em;
+  height: 15em;
+  padding: 1em;
   display: flex;
   flex-direction: column;
   background-color: var(--dk-grey);
   color: var(--lt-grey);
+  /* background-color: red; */
 }
-.footer-bottom,
-.footer-top {
+.footer-bottom {
+  color: var(--lt-grey);
+  flex-grow: 1;
   width: 100%;
+  /* background-color: greenyellow; */
 }
+.footer-top {
+  display: flex;
 
+  height: 60%;
+  width: 100%;
+  padding-bottom: 1em;
+  /* background-color: purple; */
+  border-bottom: solid 1px var(--lt-grey);
+}
+.footer-top-left {
+  color: var(--lt-grey);
+  padding: 0.5em;
+  padding-bottom: 0;
+  height: 100%;
+  width: 50%;
+  border-right: solid 1px var(--lt-grey);
+  /* background-color: blue; */
+}
+.footer-top-right {
+  color: var(--lt-grey);
+  padding: 0.5em;
+  padding-bottom: 0;
+  height: 100%;
+  width: 50%;
+
+  /* background-color: pink; */
+}
+.footer-horz-ul > li {
+  display: inline-block;
+  margin: 1em;
+}
 .pass-req {
   list-style-type: none;
   width: 100%;

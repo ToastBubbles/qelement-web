@@ -16,16 +16,19 @@ import {
 } from "./views";
 import { AppProvider } from "./context/context";
 import { QueryClient, QueryClientProvider } from "react-query";
-import Home from "./views/Home";
+import Home from "./views/generic/Home";
 import AddQPartView from "./views/edit/parts/AddQPartView";
 import AddColorView from "./views/edit/colors/AddColorView";
-import About from "./views/About";
+import About from "./views/generic/About";
 import AllPartCategoriesView from "./views/parts/AllPartCategoriesView";
 import SinglePartCategoryView from "./views/parts/SinglePartCategoryView";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AppWrapper from "./components/AppWrapper";
 import UploadImageView from "./views/edit/UploadImageView";
+import Terms from "./views/generic/Terms";
+import Privacy from "./views/generic/Privacy";
+import Contact from "./views/generic/Contact";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -65,6 +68,10 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/about" element={<About />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/contact" element={<Contact />} />
+
               <Route
                 path="/profile/messages/:messageId"
                 element={<SingleMessageView />}

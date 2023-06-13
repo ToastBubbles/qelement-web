@@ -2,9 +2,10 @@ import axios from "axios";
 import { useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { useNavigate } from "react-router";
-import { IUserDTO, user } from "../interfaces/general";
-import showToast, { Mode } from "../utils/utils";
-import { IQelementError } from "../interfaces/error";
+import { IUserDTO, user } from "../../interfaces/general";
+import { IQelementError } from "../../interfaces/error";
+import showToast, { Mode } from "../../utils/utils";
+import { Link } from "react-router-dom";
 
 interface passwordValidation {
   isLongEnough: boolean;
@@ -186,6 +187,10 @@ export default function Register() {
           >
             Register
           </button>
+          <div>
+            By registering for an account, you agree to the{" "}
+            <Link to={"/terms"}>Terms of Service</Link>
+          </div>
         </div>
       </div>
     </>
