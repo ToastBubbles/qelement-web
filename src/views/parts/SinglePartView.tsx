@@ -47,17 +47,6 @@ export default function SinglePartView() {
   let mypart = qpartData?.data.find((x) => x.id == selectedQPartid);
   if (qpartData) console.log("data", qpartData.data);
 
-  // const {
-  //   data: qpartData,
-  //   isLoading: qpartIsLoading,
-  //   error: qpartError,
-  // } = useQuery({
-  //   queryKey: "qpart",
-  //   queryFn: () =>
-  //     axios.get<iQPartDTO>(`http://localhost:3000/qpart/dto/${qpartId}`),
-  //   enabled: true,
-  //   // retry: false,
-  // });
   const {
     data: colData,
     isLoading: colIsLoading,
@@ -77,28 +66,6 @@ export default function SinglePartView() {
     enabled: !!partId,
     // retry: false,
   });
-  // const {
-  //   data: colData,
-  //   isLoading: colIsLoading,
-  //   error: colError,
-  // } = useQuery({
-  //   queryKey: "color",
-  //   queryFn: () =>
-  //     axios.get<color>(
-  //       `http://localhost:3000/color/${qpartData?.data.colorId}`
-  //     ),
-  //   enabled: true && !qpartIsLoading && qpartData?.data.colorId != undefined,
-  //   retry: false,
-  // });
-  // const ratingMutation = useMutation({
-  //   mutationFn: ({ rating, creatorId, qpartId }: IRatingDTO) =>
-  //     axios.post<rating>(`http://localhost:3000/rating`, {
-  //       rating,
-  //       creatorId,
-  //       qpartId,
-  //     }),
-  //   onSuccess: () => {},
-  // });
 
   let part = partData?.data;
   let qparts = qpartData?.data;
@@ -111,11 +78,7 @@ export default function SinglePartView() {
     }
     return "Unnamed Color";
   }
-  // function setQPart(id: number) {
-  //   let part = qparts?.find((x) => x.id == id);
-  //   if (part) setSelectedQPart(part);
-  //   else setSelectedQPart(defaultValues);
-  // }
+
   if (qpartError) {
     console.log(qpartError);
 
@@ -124,7 +87,15 @@ export default function SinglePartView() {
 
   if (qparts && colors) {
     if (selectedQPartid == -1) {
-      setSelectedQPartid(qparts[1].id);
+      if (urlColorId) {
+        let targetQPartId = qparts.find(
+          (x) => x.colorId == Number(urlColorId)
+        )?.id;
+        if (targetQPartId) setSelectedQPartid(targetQPartId);
+        else setSelectedQPartid(qparts[0].id);
+      } else {
+        setSelectedQPartid(qparts[0].id);
+      }
     }
 
     return (
@@ -168,11 +139,8 @@ export default function SinglePartView() {
                 <img
                   className="element-image-actual"
                   src="https://via.placeholder.com/1024x768/eee?text=4:3"
-                  alt=""
+                  alt="placeholder"
                 />
-                <Link to="/add/qpart/image" state={"this is a tes"}>
-                  Upload an image
-                </Link>
               </div>
               <RatingCard
                 rating={mypart?.rarety != undefined ? mypart?.rarety : -1}
@@ -181,55 +149,36 @@ export default function SinglePartView() {
 
                 // rating={100}
               />
-              {/* <input
-              type="number"
-              placeholder="rating"
-              onChange={(e) => setMyRating(e.target.valueAsNumber)}
-            />
-            <button
-              onClick={() => {
-                if (myRating != -1) {
-                  console.log("adding...");
+              <div className="d-flex flex-col jc-space-b border-left">
+                <ul className="actions">
+                  <span>Actions:</span>
+                  <li>
+                    <a href="#">Add to My Collection</a>
+                  </li>
+                  <li>
+                    <a href="#">Add to My Watchlist</a>
+                  </li>
+                  <li>
+                    <Link to="/add/qpart/image">Add photo</Link>
+                  </li>
+                  <li>
+                    <a href="#">Submit status change</a>
+                  </li>
+                </ul>
+                <ul className="actions">
+                  <span>Links:</span>
 
-                  ratingMutation.mutate({
-                    rating: myRating,
-                    creatorId: 1,
-                    qpartId: qpart?.id as number,
-                  });
-                }
-              }}
-            >
-              Add Rating
-            </button> */}
-              <ul className="actions">
-                <span>Actions:</span>
-                <li>
-                  <a href="#">Change my rarity rating</a>
-                </li>
-                <li>
-                  <a href="#">Add to My Collection</a>
-                </li>
-                <li>
-                  <a href="#">Add to My Watchlist</a>
-                </li>
-                <li>
-                  <a href="#">Add photo</a>
-                </li>
-                <li>
-                  <a href="#">Submit status change</a>
-                </li>
-                <span>Links:</span>
-
-                <li>
-                  <a href="#">bricklink</a>
-                </li>
-                <li>
-                  <a href="#">brickowl</a>
-                </li>
-                <li>
-                  <a href="#">rebrickable</a>
-                </li>
-              </ul>
+                  <li>
+                    <a href="#">bricklink</a>
+                  </li>
+                  <li>
+                    <a href="#">brickowl</a>
+                  </li>
+                  <li>
+                    <a href="#">rebrickable</a>
+                  </li>
+                </ul>
+              </div>
               <fieldset className="status">
                 <legend>Status</legend>
                 <div className="tag-found">FOUND</div>
@@ -251,14 +200,7 @@ export default function SinglePartView() {
                       src="/img/scatter-example.png"
                     />
                   </div>
-                  <div className="tabcontent comments">
-                    {/* <Comment id={1} />
-                  <Comment id={1} />
-                  <Comment id={1} />
-                  <Comment id={1} />
-                  <Comment id={1} />
-                  <Comment id={1} /> */}
-                  </div>
+                  <div className="tabcontent comments"></div>
                 </div>
                 <div className="lower-center-right">
                   <form id="search-form" action="/ads">

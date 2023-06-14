@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { IExtendedMessageDTO, IMessageDTO } from "../interfaces/general";
 import axios from "axios";
 import { useMutation } from "react-query";
-import showToast, { Mode } from "../utils/utils";
+import showToast, { Mode, formatDate } from "../utils/utils";
 import { useState } from "react";
 
 interface IMessageProps {
@@ -10,24 +10,7 @@ interface IMessageProps {
   sent: boolean;
 }
 
-function formatDate(dateStr: string) {
-  var date = new Date(dateStr);
 
-  var now_utc = Date.UTC(
-    date.getUTCFullYear(),
-    date.getUTCMonth(),
-    date.getUTCDate(),
-    date.getUTCHours(),
-    date.getUTCMinutes()
-  );
-
-  let thisdate = new Date(now_utc);
-  return (
-    thisdate.toDateString() +
-    " @ " +
-    thisdate.toLocaleTimeString().replace(":00 ", " ")
-  );
-}
 
 function Message({ msg, sent }: IMessageProps) {
   const [isDeleted, setIsDeleted] = useState<boolean>(false);

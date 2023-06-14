@@ -369,11 +369,13 @@ body::-webkit-scrollbar {
 fieldset > legend {
   color: #666;
 }
+.border-left {
+  border-left: solid 1px var(--lt-grey);
+}
 .actions {
   list-style-type: none;
   margin: 0;
   padding: 0 1em 0 1em;
-  border-left: solid 1px var(--lt-grey);
 }
 .actions > li {
   padding-top: 0.3em;
@@ -659,10 +661,33 @@ fieldset > legend {
   height: 100%;
 }
 .listing {
+  display: flex;
+  /* flex-direction: column; */
+  align-items: center;
   width: 100%;
+  max-height: 5em;
   border: solid 1px #ccc;
-  aspect-ratio: 16 / 4;
+  /* aspect-ratio: 16 / 4; */
+  padding: 0.75em;
 }
+.listing-color {
+  display: flex;
+  align-items: center;
+}
+.listing-color-swatch {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border: solid 1px var(--dk-grey);
+  margin-right: 0.2em;
+}
+.listing-img {
+  height: 95%;
+  aspect-ratio: 1 / 1;
+  border: solid 1px var(--dk-grey);
+  margin-right: 0.25em;
+}
+
 a:link,
 a:visited {
   /* color: #fff; */

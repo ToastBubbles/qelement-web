@@ -4,6 +4,7 @@ import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router";
 import { AppContext } from "../../../context/context";
 import { IExtendedMessageDTO } from "../../../interfaces/general";
+import { formatDate } from "../../../utils/utils";
 
 
 export default function SingleMessageView() {
@@ -86,21 +87,3 @@ export default function SingleMessageView() {
   );
 }
 
-function formatDate(dateStr: string) {
-  var date = new Date(dateStr);
-
-  var now_utc = Date.UTC(
-    date.getUTCFullYear(),
-    date.getUTCMonth(),
-    date.getUTCDate(),
-    date.getUTCHours(),
-    date.getUTCMinutes()
-  );
-
-  let thisdate = new Date(now_utc);
-  return (
-    thisdate.toDateString() +
-    " @ " +
-    thisdate.toLocaleTimeString().replace(":00 ", " ")
-  );
-}

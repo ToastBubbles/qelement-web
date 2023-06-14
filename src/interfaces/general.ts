@@ -50,6 +50,18 @@ export interface IUploadImageDetails {
   qpartId: number;
   color: color;
 }
+export interface qpart {
+  id: number;
+  partId: number;
+  colorId: number;
+  creatorId: number;
+  note: string;
+  elementId: string;
+  secondaryElementId: string;
+  rarety: number;
+  createdAt: string;
+  updatedAt: string;
+}
 export interface IQPartDTO {
   id: number;
   partId: number;

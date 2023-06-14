@@ -63,3 +63,22 @@ export default function showToast(message: string, mode: Mode = Mode.Success) {
     }
   }
 }
+
+export function formatDate(dateStr: string) {
+  var date = new Date(dateStr);
+
+  var now_utc = Date.UTC(
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate(),
+    date.getUTCHours(),
+    date.getUTCMinutes()
+  );
+
+  let thisdate = new Date(now_utc);
+  return (
+    thisdate.toDateString() +
+    " @ " +
+    thisdate.toLocaleTimeString().replace(":00 ", " ")
+  );
+}
