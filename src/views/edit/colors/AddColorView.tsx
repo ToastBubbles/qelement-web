@@ -28,9 +28,9 @@ export default function AddColorView() {
   });
   return (
     <>
-      <div className="logincontainer">
+      <div className="formcontainer">
         <h1>add new color</h1>
-        <div className="loginRegForm">
+        <div className="mainform">
           <div className="w-100 d-flex jc-space-b">
             <label htmlFor="colorBl">Bricklink Name / ID</label>
             <div className="d-flex jc-end">

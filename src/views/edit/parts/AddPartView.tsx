@@ -41,9 +41,9 @@ export default function AddPartView() {
   if (isFetched && catData) {
     return (
       <>
-        <div className="logincontainer">
+        <div className="formcontainer">
           <h1>add new part</h1>
-          <div className="loginRegForm">
+          <div className="mainform">
             <div className="w-100 d-flex jc-space-b">
               <label htmlFor="partname">Part Name</label>
               <input

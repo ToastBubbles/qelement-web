@@ -5,7 +5,6 @@ import { useNavigate, useParams } from "react-router";
 import ImageUploader from "../../components/ImageUploader";
 import { IUploadImageDetails } from "../../interfaces/general";
 
-
 export default function UploadImageView() {
   //   const { colorId } = useParams();
   //   const [similarColorToAdd, setSimilarColorToAdd] = useState<number>(0);
@@ -50,9 +49,9 @@ export default function UploadImageView() {
 
   return (
     <>
-      <div className="logincontainer">
+      <div className="formcontainer">
         <h1>upload image</h1>
-        <div className="loginRegForm">
+        <div className="mainform">
           <ImageUploader />
         </div>
       </div>

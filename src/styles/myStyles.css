@@ -346,16 +346,43 @@ body::-webkit-scrollbar {
   font-size: 1.5em;
   color: #aaa;
 }
-
-.tag-found {
+.status-tag {
   display: inline-block;
-  background-color: forestgreen;
   color: azure;
   text-shadow: #2c2c2c 1px 1px 0;
   padding: 0.3em;
   border-radius: 0.25em;
 }
+.tag-grey {
+  background-color: #b1b1b1;
+}
+.tag-found {
+  background-color: forestgreen;
+}
+.tag-unknown {
+  background-color: rgb(153, 12, 106);
+}
+.tag-known {
+  background-color: rgb(107, 131, 184);
+}
+.tag-other {
+  background-color: rgb(48, 48, 48);
+}
+.tag-prototype {
+  background-color: var(--lt-red);
+}
+.tag-employee {
+  background-color: gold;
+}
+.tag-nightshift {
+  background-color: rgb(70, 15, 75);
+}
+.tag-seen {
+  background-color: rgb(231, 228, 7);
+}
+
 .status-date {
+  margin-left: 0.3em;
   display: inline-block;
   color: #525252;
 }
@@ -659,6 +686,29 @@ fieldset > legend {
   margin-top: 1em;
   width: 90%;
   height: 100%;
+}
+.tt-list {
+  padding-left: 1em;
+}
+.tt-list > li {
+  margin: 0.5em 0;
+  list-style-type: disc;
+}
+.tt-list > li > span {
+  text-decoration: underline;
+  font-weight: bold;
+}
+.mytooltip {
+  display: inline-block;
+  text-align: center;
+  /* vertical-align: m; */
+  /* padding: 0.2em; */
+  margin-left: 0.2em;
+  color: var(--lt-grey);
+  background-color: var(--dk-grey);
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 1em;
 }
 .listing {
   display: flex;
@@ -1096,7 +1146,7 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-.loginRegForm {
+.mainform {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1106,7 +1156,7 @@ input::-webkit-inner-spin-button {
   max-width: 50em;
   padding: 3em 3em 1em 3em;
 }
-.loginRegForm > input {
+.mainform > input {
   width: 100%;
   margin-bottom: 2em;
   padding: 0.25em;
@@ -1118,19 +1168,23 @@ input::-webkit-inner-spin-button {
 .formInputNM {
   padding: 0.25em;
 }
-.loginRegForm > button {
+.mainform > button {
   padding: 0.25em 0.75em;
   margin-bottom: 2em;
   align-self: flex-end;
 }
-.loginRegForm > a {
+.mainform > a {
   font-size: 0.8em;
 }
-.logincontainer {
+.formcontainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-bottom: 4em;
+}
+#partnote {
+  margin: 0;
 }
 
 #root-wrapper {
@@ -1191,7 +1245,7 @@ input::-webkit-inner-spin-button {
 #repassword-reg {
   margin: 0;
 }
-.loginRegForm > p {
+.mainform > p {
   align-self: flex-start;
 }
 .navbarProfileImg {

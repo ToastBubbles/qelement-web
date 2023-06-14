@@ -33,9 +33,9 @@ export default function Login() {
   };
   return (
     <>
-      <div className="logincontainer">
+      <div className="formcontainer">
         <h1>login</h1>
-        <div className="loginRegForm">
+        <div className="mainform">
           <input
             placeholder="Username"
             // type="email"

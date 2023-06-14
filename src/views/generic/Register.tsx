@@ -111,9 +111,9 @@ export default function Register() {
 
   return (
     <>
-      <div className="logincontainer">
+      <div className="formcontainer">
         <h1>register</h1>
-        <div className="loginRegForm">
+        <div className="mainform">
           <input
             placeholder="Username"
             onChange={(e) =>

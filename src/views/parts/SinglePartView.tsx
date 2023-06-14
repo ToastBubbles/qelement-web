@@ -4,11 +4,18 @@ import { useParams, useNavigate } from "react-router";
 import AllColorStatus from "../../components/AllColorStatus";
 import Navpane from "../../components/Navpane";
 import RatingCard from "../../components/RatingCard";
-import { iQPartDTO, color, part, IQPartDTO } from "../../interfaces/general";
+import {
+  iQPartDTO,
+  color,
+  part,
+  IQPartDTO,
+  IPartStatusDTO,
+} from "../../interfaces/general";
 import { useState } from "react";
-import Notification from "../../components/Notification";
+
 import ImageUploader from "../../components/ImageUploader";
 import { Link } from "react-router-dom";
+import QPartStatusDate from "../../components/QPartStatusDate";
 
 export default function SinglePartView() {
   const queryParameters = new URLSearchParams(window.location.search);
@@ -64,6 +71,21 @@ export default function SinglePartView() {
     queryFn: () => axios.get<part>(`http://localhost:3000/parts/${partId}`),
 
     enabled: !!partId,
+    // retry: false,
+  });
+
+  const {
+    data: statusData,
+    isLoading: statusIsLoading,
+    error: statusError,
+  } = useQuery({
+    queryKey: `status${selectedQPartid}`,
+    queryFn: () =>
+      axios.get<IPartStatusDTO[]>(
+        `http://localhost:3000/partStatus/byQPartId/${selectedQPartid}`
+      ),
+
+    enabled: selectedQPartid != -1,
     // retry: false,
   });
 
@@ -162,7 +184,9 @@ export default function SinglePartView() {
                     <Link to="/add/qpart/image">Add photo</Link>
                   </li>
                   <li>
-                    <a href="#">Submit status change</a>
+                    <Link to={`/add/qpart/status/${selectedQPartid}`}>
+                      Add New Status
+                    </Link>
                   </li>
                 </ul>
                 <ul className="actions">
@@ -181,8 +205,15 @@ export default function SinglePartView() {
               </div>
               <fieldset className="status">
                 <legend>Status</legend>
-                <div className="tag-found">FOUND</div>
-                <div className="status-date">as of 14 Mar 2021</div>
+                {statusData &&
+                  statusData.data.map((status) => (
+                    <QPartStatusDate
+                      key={status.date}
+                      status={status.status}
+                      date={status.date}
+                      isPrimary={statusData.data.indexOf(status) == 0}
+                    />
+                  ))}
               </fieldset>
             </div>
             <div className="lower-center">

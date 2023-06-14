@@ -29,6 +29,7 @@ import UploadImageView from "./views/edit/UploadImageView";
 import Terms from "./views/generic/Terms";
 import Privacy from "./views/generic/Privacy";
 import Contact from "./views/generic/Contact";
+import AddStatusView from "./views/edit/parts/AddStatusView";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -52,6 +53,10 @@ function App() {
               <Route path="/edit/color/:colorId" element={<ColorEditView />} />
               <Route path="/add/part" element={<AddPartView />} />
               <Route path="/add/qpart" element={<AddQPartView />} />
+              <Route
+                path="/add/qpart/status/:qpartId"
+                element={<AddStatusView />}
+              />
               <Route path="/add/qpart/image" element={<UploadImageView />} />
 
               <Route
