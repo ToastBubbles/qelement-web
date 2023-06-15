@@ -4,6 +4,7 @@ import { useMutation } from "react-query";
 import AllColors from "../../../components/AllColors";
 import { color, IColorDTO } from "../../../interfaces/general";
 import showToast, { Mode } from "../../../utils/utils";
+import MyToolTip from "../../../components/MyToolTip";
 
 export default function AddColorView() {
   const baseValues: IColorDTO = {
@@ -23,7 +24,7 @@ export default function AddColorView() {
     mutationFn: (colorInfo: IColorDTO) =>
       axios.post<IColorDTO>(`http://localhost:3000/color`, colorInfo),
     onSuccess: () => {
-      showToast("Color successfully added!", Mode.Success);
+      showToast("Color successfully submitted for approval!", Mode.Success);
     },
   });
   return (
@@ -35,6 +36,7 @@ export default function AddColorView() {
             <label htmlFor="colorBl">Bricklink Name / ID</label>
             <div className="d-flex jc-end">
               <input
+                maxLength={100}
                 id="colorBl"
                 className="formInput fg-1"
                 placeholder="Optional"
@@ -47,6 +49,7 @@ export default function AddColorView() {
                 value={newColor.bl_name}
               />
               <input
+                maxLength={6}
                 className="formInput w-10"
                 type="number"
                 placeholder="ID"
@@ -64,6 +67,7 @@ export default function AddColorView() {
             <label htmlFor="colorl">LEGO Name / ID</label>
             <div className="d-flex jc-end">
               <input
+                maxLength={100}
                 id="colorl"
                 className="formInput fg-1"
                 placeholder="Optional"
@@ -76,6 +80,7 @@ export default function AddColorView() {
                 value={newColor.tlg_name}
               />
               <input
+                maxLength={6}
                 className="formInput w-10"
                 type="number"
                 placeholder="ID"
@@ -93,6 +98,7 @@ export default function AddColorView() {
             <label htmlFor="colorBo">Brickowl Name / ID</label>
             <div className="d-flex jc-end">
               <input
+                maxLength={100}
                 id="colorBo"
                 className="formInput fg-1"
                 placeholder="Optional"
@@ -105,6 +111,7 @@ export default function AddColorView() {
                 value={newColor.bo_name}
               />
               <input
+                maxLength={6}
                 className="formInput w-10"
                 placeholder="ID"
                 onChange={(e) =>
@@ -118,12 +125,32 @@ export default function AddColorView() {
             </div>
           </div>
           <div className="w-100 d-flex jc-space-b">
-            <label htmlFor="colorhex">HEX Color Code (6 Characters)</label>
+            <div>
+              <label htmlFor="colorhex">HEX Color Code (6 Characters)</label>
+              <MyToolTip
+                content={
+                  <div style={{ maxWidth: "20em" }}>
+                    <div style={{ marginBottom: "0.3ems" }}>
+                      HEX Value is a 6 digit alphanumeric code that represents a
+                      color. Characters should only be 0-9 and A-F, 0 is the
+                      lowest value, and F is the highest value.
+                    </div>
+                    The 6 digits are broken up into three pairs of two to
+                    represent RGB. #FF00A1 would represent a shade of Magenta,
+                    FF means it has the max amount of red, 00 means it has no
+                    green, and A1 means it has a medium-high level of blue.
+                    #000000 is Black and #FFFFFF is white.
+                  </div>
+                }
+                id="hex"
+              />
+            </div>
             <div className="d-flex jc-end">
               #
               <input
                 className="formInput w-35"
                 placeholder="Optional"
+                maxLength={6}
                 onChange={(e) =>
                   setNewColor((newColor) => ({
                     ...newColor,
@@ -181,6 +208,7 @@ export default function AddColorView() {
               className="fg-1 formInput"
               rows={5}
               placeholder="Optional"
+              maxLength={255}
               onChange={(e) =>
                 setNewColor((newColor) => ({
                   ...newColor,

@@ -8,6 +8,7 @@ import LoginBtn from "./LoginBtn";
 import ColorWheel from "./ColorWheel";
 import PartsButton from "./PartsButton";
 import showToast, { Mode } from "../utils/utils";
+import { IAPIResponse } from "../interfaces/general";
 
 function Navbar() {
   // let toggleDropdown = false;
@@ -33,6 +34,21 @@ function Navbar() {
       ),
     retry: false,
     refetchInterval: 30000,
+    enabled: !!payload.id,
+  });
+
+  const {
+    data: adminData,
+    isLoading: adminIsLoading,
+    error: adminError,
+  } = useQuery({
+    queryKey: "isAdmin",
+    queryFn: () =>
+      axios.get<IAPIResponse>(
+        `http://localhost:3000/user/checkIfAdmin/${payload.id}`
+      ),
+    retry: false,
+    // refetchInterval: 30000,
     enabled: !!payload.id,
   });
 
@@ -125,6 +141,9 @@ function Navbar() {
                     </li>
                   </ul>
                 </div>
+                {adminData && adminData.data.code == 200 && (
+                  <Link to={"/approve"}>Approve Content</Link>
+                )}
               </div>
             </div>
           </>

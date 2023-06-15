@@ -24,7 +24,7 @@ export default function RecentQPart({
     error: partError,
   } = useQuery({
     queryKey: "part",
-    queryFn: () => axios.get<part>(`http://localhost:3000/parts/${partId}`),
+    queryFn: () => axios.get<part>(`http://localhost:3000/parts/id/${partId}`),
     enabled: !!partId,
   });
 
@@ -33,7 +33,7 @@ export default function RecentQPart({
     isLoading: colIsLoading,
     error: colError,
   } = useQuery(`colors${colorId}`, () =>
-    axios.get<color>(`http://localhost:3000/color/${colorId}`)
+    axios.get<color>(`http://localhost:3000/color/id/${colorId}`)
   );
 
   if (partData && colData) {

@@ -30,6 +30,8 @@ import Terms from "./views/generic/Terms";
 import Privacy from "./views/generic/Privacy";
 import Contact from "./views/generic/Contact";
 import AddStatusView from "./views/edit/parts/AddStatusView";
+import ApproveColorView from "./views/edit/approval/ColorApprovalView";
+import ApproveView from "./views/edit/approval/ApproveView";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -76,6 +78,9 @@ function App() {
               <Route path="/terms" element={<Terms />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/contact" element={<Contact />} />
+
+              <Route path="/approve" element={<ApproveView />} />
+              <Route path="/approve/colors" element={<ApproveColorView />} />
 
               <Route
                 path="/profile/messages/:messageId"

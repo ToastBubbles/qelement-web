@@ -169,6 +169,7 @@ export default function AddStatusView() {
                 />
               </div>
               <input
+                maxLength={100}
                 id="location"
                 className="formInput w-50"
                 placeholder="Optional"
@@ -196,6 +197,7 @@ export default function AddStatusView() {
             </label>
             <div className="w-100 d-flex">
               <textarea
+                maxLength={255}
                 id="satusnote"
                 className="fg-1 formInput"
                 rows={5}

@@ -45,7 +45,7 @@ function getSimilarColorData(cId: number): color | undefined {
     error: scolError,
   } = useQuery({
     queryKey: `color${cId}`,
-    queryFn: () => axios.get<color>(`http://localhost:3000/color/${cId}`),
+    queryFn: () => axios.get<color>(`http://localhost:3000/color/id/${cId}`),
     enabled: true,
     retry: false,
   });

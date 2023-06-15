@@ -22,7 +22,8 @@ export default function ColorEditView() {
     error: colError,
   } = useQuery({
     queryKey: "color",
-    queryFn: () => axios.get<color>(`http://localhost:3000/color/${colorId}`),
+    queryFn: () =>
+      axios.get<color>(`http://localhost:3000/color/id/${colorId}`),
     enabled: true,
     retry: false,
   });
@@ -50,7 +51,7 @@ export default function ColorEditView() {
       type,
       note,
     }: IColorDTO) =>
-      axios.post<color>(`http://localhost:3000/color/${color?.id}`, {
+      axios.post<color>(`http://localhost:3000/color/id/${color?.id}`, {
         bl_name,
         tlg_name,
         bo_name,
@@ -106,6 +107,7 @@ export default function ColorEditView() {
         <div className="hexbar" style={{ backgroundColor: hex }}>
           #
           <input
+            maxLength={6}
             className="edit-hex"
             defaultValue={color?.hex}
             onChange={(e) =>
@@ -129,6 +131,7 @@ export default function ColorEditView() {
         <section>
           <div className="edit-similarity">
             <input
+              maxLength={6}
               onChange={(e) => setSimilarColorToAdd(Number(e.target.value))}
               type="number"
               id="similarId"
@@ -156,6 +159,7 @@ export default function ColorEditView() {
               <div>
                 {/* <div className="color-id">{color?.bl_id}</div> */}
                 <input
+                  maxLength={6}
                   className="edit-id-input"
                   defaultValue={color?.bl_id}
                   type="number"
@@ -171,6 +175,7 @@ export default function ColorEditView() {
               <div>
                 {/* <div className="color-id">{color?.tlg_id}</div> */}
                 <input
+                  maxLength={6}
                   className="edit-id-input"
                   defaultValue={color?.tlg_id}
                   type="number"
@@ -186,6 +191,7 @@ export default function ColorEditView() {
               <div>
                 {/* <div className="color-id">{color?.bl_id}</div> */}
                 <input
+                  maxLength={6}
                   className="edit-id-input"
                   defaultValue={color?.bl_id}
                   type="number"
@@ -211,6 +217,7 @@ export default function ColorEditView() {
                 <div className="col-det-name ">Bricklink</div>
                 {/* <div className=" col-det-colname">{color?.bl_name}</div> */}
                 <input
+                  maxLength={100}
                   defaultValue={color?.bl_name}
                   onChange={(e) =>
                     setColorEdits((colorEdits) => ({
@@ -224,6 +231,7 @@ export default function ColorEditView() {
                 <div className="col-det-name ">LEGO</div>
                 {/* <div className=" col-det-colname">{color?.tlg_name}</div> */}
                 <input
+                  maxLength={100}
                   defaultValue={color?.tlg_name}
                   onChange={(e) =>
                     setColorEdits((colorEdits) => ({
@@ -237,6 +245,7 @@ export default function ColorEditView() {
                 <div className="col-det-name ">Brickowl</div>
                 {/* <div className=" col-det-colname">{color?.bo_name}</div> */}
                 <input
+                  maxLength={100}
                   defaultValue={color?.bo_name}
                   onChange={(e) =>
                     setColorEdits((colorEdits) => ({
@@ -252,6 +261,7 @@ export default function ColorEditView() {
             </div>
             {/* <div className="col-det-note">{color?.note}</div> */}
             <textarea
+              maxLength={255}
               className="edit-note"
               defaultValue={color?.note}
               onChange={(e) =>

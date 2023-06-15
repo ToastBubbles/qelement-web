@@ -710,6 +710,23 @@ fieldset > legend {
   height: 1.2em;
   border-radius: 1em;
 }
+.coldeet {
+  width: 100%;
+  border: solid 1px var(--dk-grey);
+  margin-bottom: 0.5em;
+  padding: 0.5em;
+}
+
+.coldeet > div {
+  display: flex;
+  justify-content: space-between;
+}
+.coldeet > button {
+  float: right;
+}
+.wrapbreak {
+  word-wrap: break-word;
+}
 .listing {
   display: flex;
   /* flex-direction: column; */

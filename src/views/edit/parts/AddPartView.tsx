@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useQuery, useMutation } from "react-query";
 import { iPartDTO, category, part } from "../../../interfaces/general";
+import showToast, { Mode } from "../../../utils/utils";
 
 export default function AddPartView() {
   const [newPart, setNewPart] = useState<iPartDTO>({
@@ -26,7 +27,9 @@ export default function AddPartView() {
   const partMutation = useMutation({
     mutationFn: (part: iPartDTO) =>
       axios.post<part>(`http://localhost:3000/parts`, part),
-    onSuccess: () => {},
+    onSuccess: () => {
+      showToast("Part submitted for approval!", Mode.Success);
+    },
   });
   const catMutation = useMutation({
     mutationFn: (name: string) =>
@@ -36,6 +39,7 @@ export default function AddPartView() {
         .catch((err) => console.log(err)),
     onSuccess: () => {
       refetch();
+      showToast("Category submitted for approval!", Mode.Success);
     },
   });
   if (isFetched && catData) {
@@ -47,6 +51,7 @@ export default function AddPartView() {
             <div className="w-100 d-flex jc-space-b">
               <label htmlFor="partname">Part Name</label>
               <input
+                maxLength={100}
                 id="partname"
                 className="formInput fg-1"
                 placeholder="Required"
@@ -62,6 +67,7 @@ export default function AddPartView() {
             <div className="w-100 d-flex jc-space-b">
               <label htmlFor="primary">Part Number</label>
               <input
+                maxLength={20}
                 id="primary"
                 className="formInput w-50"
                 placeholder="Required"
@@ -77,6 +83,7 @@ export default function AddPartView() {
             <div className="w-100 d-flex jc-space-b">
               <label htmlFor="secondary">Secondary Part Number</label>
               <input
+                maxLength={20}
                 className="formInput w-50"
                 placeholder="Optional"
                 id="secondary"
@@ -109,12 +116,13 @@ export default function AddPartView() {
                 ))}
               </select>
             </div>
-            <label htmlFor="partnote" style={{ marginRight: "auto" }}>
+            <label htmlFor="partnote2" style={{ marginRight: "auto" }}>
               Note
             </label>
             <div className="w-100 d-flex">
               <textarea
-                id="partnote"
+                maxLength={255}
+                id="partnote2"
                 className="fg-1 formInput"
                 rows={5}
                 placeholder="Optional"
@@ -144,7 +152,7 @@ export default function AddPartView() {
                   }
                 }}
               >
-                Add Part
+                Submit Part
               </button>
             </div>
             <div className="w-100 d-flex flex-col flex-center">
@@ -154,6 +162,7 @@ export default function AddPartView() {
               </div>
               <div>
                 <input
+                  maxLength={50}
                   className="formInput"
                   placeholder="Category Name"
                   onChange={(e) => setNewCategory(e.target.value)}
@@ -169,7 +178,7 @@ export default function AddPartView() {
                     }
                   }}
                 >
-                  Add Category
+                  Submit Category
                 </button>
               </div>
             </div>

@@ -198,6 +198,7 @@ export default function AddQPartView() {
             <div className="w-100 d-flex jc-space-b">
               <label htmlFor="eid">Element ID</label>
               <input
+                maxLength={20}
                 id="eid"
                 className="formInput w-50"
                 placeholder="Optional"
@@ -213,6 +214,7 @@ export default function AddQPartView() {
             <div className="w-100 d-flex jc-space-b">
               <label htmlFor="seid">Secondary Element ID</label>
               <input
+                maxLength={20}
                 id="seid"
                 className="formInput w-50"
                 placeholder="Optional"
@@ -231,6 +233,7 @@ export default function AddQPartView() {
             </label>
             <div className="w-100 d-flex">
               <textarea
+                maxLength={255}
                 id="partnote"
                 className="fg-1 formInput"
                 rows={5}
@@ -326,6 +329,7 @@ export default function AddQPartView() {
                 />
               </div>
               <input
+                maxLength={100}
                 id="location"
                 className="formInput w-50"
                 placeholder="Optional"
@@ -353,6 +357,7 @@ export default function AddQPartView() {
             </label>
             <div className="w-100 d-flex">
               <textarea
+                maxLength={255}
                 id="satusnote"
                 className="fg-1 formInput"
                 rows={5}

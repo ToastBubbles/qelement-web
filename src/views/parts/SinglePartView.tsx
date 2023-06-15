@@ -68,7 +68,7 @@ export default function SinglePartView() {
     error: partError,
   } = useQuery({
     queryKey: "part",
-    queryFn: () => axios.get<part>(`http://localhost:3000/parts/${partId}`),
+    queryFn: () => axios.get<part>(`http://localhost:3000/parts/id/${partId}`),
 
     enabled: !!partId,
     // retry: false,

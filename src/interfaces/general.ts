@@ -54,6 +54,9 @@ export interface IAPIResponse {
   code: number;
   message: string;
 }
+export interface iIdOnly {
+  id: number;
+}
 export interface IPartStatusDTO {
   status: string;
   date: string;

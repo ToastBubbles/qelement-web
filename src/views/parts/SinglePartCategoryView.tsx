@@ -6,7 +6,7 @@ import { Link, useParams } from "react-router-dom";
 export default function SinglePartCategoryView() {
   const { catId } = useParams();
   const { data: catData, error: catError } = useQuery("singleCat", () =>
-    axios.get<category>(`http://localhost:3000/categories/${catId}`)
+    axios.get<category>(`http://localhost:3000/categories/id/${catId}`)
   );
   const { data: partsData, error: partsError } = useQuery(
     "singleCatParts",

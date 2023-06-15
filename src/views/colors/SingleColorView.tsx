@@ -23,7 +23,7 @@ export default function SingleColorView() {
     error: colError,
   } = useQuery({
     queryKey: "color",
-    queryFn: () => axios.get<color>(`http://localhost:3000/color/${colorId}`),
+    queryFn: () => axios.get<color>(`http://localhost:3000/color/id/${colorId}`),
     enabled: true,
     retry: false,
   });
