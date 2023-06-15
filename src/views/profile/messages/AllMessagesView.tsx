@@ -234,6 +234,7 @@ export default function AllMessagesView() {
               ></input>
               <div>subject</div>
               <input
+                maxLength={255}
                 onChange={(e) =>
                   setNewMessage((newMessage) => ({
                     ...newMessage,
@@ -241,8 +242,9 @@ export default function AllMessagesView() {
                   }))
                 }
               ></input>
-              <div>body</div>
+              <div>body (255 Characters)</div>
               <textarea
+                maxLength={255}
                 rows={20}
                 onChange={(e) =>
                   setNewMessage((newMessage) => ({

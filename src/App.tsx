@@ -32,6 +32,8 @@ import Contact from "./views/generic/Contact";
 import AddStatusView from "./views/edit/parts/AddStatusView";
 import ApproveColorView from "./views/edit/approval/ColorApprovalView";
 import ApproveView from "./views/edit/approval/ApproveView";
+import ApproveCatView from "./views/edit/approval/CatApprovalView";
+import ApprovePartView from "./views/edit/approval/PartApprovalView";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -81,6 +83,8 @@ function App() {
 
               <Route path="/approve" element={<ApproveView />} />
               <Route path="/approve/colors" element={<ApproveColorView />} />
+              <Route path="/approve/categories" element={<ApproveCatView />} />
+              <Route path="/approve/parts" element={<ApprovePartView />} />
 
               <Route
                 path="/profile/messages/:messageId"

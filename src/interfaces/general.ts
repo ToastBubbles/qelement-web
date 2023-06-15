@@ -71,10 +71,12 @@ export interface IQPartDetails {
   qpart: iQPartDTO;
 }
 export interface IPartDTO {
+  id: number;
   name: string;
   number: string;
   secondaryNumber: string;
   CatId: number;
+  creatorId: number;
   note: string;
 }
 export interface qpart {

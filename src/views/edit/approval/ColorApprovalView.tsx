@@ -20,11 +20,23 @@ export default function ApproveColorView() {
     return (
       <>
         <div className="formcontainer">
-          <h1>approve color</h1>
+          <h1>approve colors</h1>
           <div className="mainform">
-            {colors.map((color) => {
-              return <ColorDetails color={color} refetchFn={refetch} />;
-            })}
+            {colors.length > 0 ? (
+              colors.map((color) => {
+                return (
+                  <ColorDetails
+                    key={color.id}
+                    color={color}
+                    refetchFn={refetch}
+                  />
+                );
+              })
+            ) : (
+              <div className="text-center my-1">
+                nothing to approve right now!
+              </div>
+            )}
           </div>
         </div>
       </>

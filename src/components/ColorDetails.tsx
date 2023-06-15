@@ -14,7 +14,7 @@ export default function ColorDetails({ color, refetchFn }: IProps) {
   const colMutation = useMutation({
     mutationFn: (id: number) =>
       axios
-        .post<string>(`http://localhost:3000/color/approve`, { id })
+        .post<number>(`http://localhost:3000/color/approve`, { id })
         .then((res) => console.log(res.data))
         .catch((err) => console.log(err)),
     onSuccess: () => {

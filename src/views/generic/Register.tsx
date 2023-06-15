@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { useNavigate } from "react-router";
-import { IUserDTO, user } from "../../interfaces/general";
+import { IAPIResponse, IUserDTO, user } from "../../interfaces/general";
 import { IQelementError } from "../../interfaces/error";
 import showToast, { Mode } from "../../utils/utils";
 import { Link } from "react-router-dom";
@@ -35,19 +35,20 @@ export default function Register() {
       try {
         if (newUser.name.length > 1) {
           axios
-            .get<user | IQelementError>(
+            .get<IAPIResponse>(
               `http://localhost:3000/user/checkInsensitive/${newUser.name.trim()}`
             )
             .then((res) => {
-              console.log(res.data);
-
-              if (res.data?.message == "not found") {
+              if (res.data?.code == 404) {
                 if (
                   passMatch == newUser.password &&
                   passValidate?.containsLetter &&
                   passValidate?.containsNumber &&
                   passValidate?.isLongEnough &&
                   newUser.email.length > 5 &&
+                  newUser.email.length <= 255 &&
+                  newUser.password.length <= 30 &&
+                  newUser.name.length <= 20 &&
                   newUser.email.includes("@")
                 ) {
                   userMutation.mutate({
@@ -83,38 +84,13 @@ export default function Register() {
     },
   });
 
-  // async function submitInfo() {
-  //   refecthUsernameAvailability().then(() => {
-  //     if (
-  //       passMatch == newUser.password &&
-  //       passValidate?.containsLetter &&
-  //       passValidate?.containsNumber &&
-  //       passValidate?.isLongEnough &&
-  //       usernameAvailable
-  //     ) {
-  //       userMutation.mutate({
-  //         name: newUser.name,
-  //         email: newUser.email,
-  //         password: newUser.password,
-  //         role: newUser.role,
-  //       });
-  //       navigate("/login");
-  //     } else {
-  //       if (!usernameAvailable) {
-  //         showToast("Username is already taken", Mode.Warning);
-  //       } else {
-  //         showToast("Error creating account", Mode.Error);
-  //       }
-  //     }
-  //   });
-  // }
-
   return (
     <>
       <div className="formcontainer">
         <h1>register</h1>
         <div className="mainform">
           <input
+            maxLength={20}
             placeholder="Username"
             onChange={(e) =>
               setNewUser((newUser) => ({
@@ -124,6 +100,7 @@ export default function Register() {
             }
           />
           <input
+            maxLength={255}
             placeholder="Email"
             type="email"
             onChange={(e) =>
@@ -134,6 +111,7 @@ export default function Register() {
             }
           />
           <input
+            maxLength={30}
             id="password-reg"
             placeholder="Password"
             type="password"
@@ -180,8 +158,6 @@ export default function Register() {
           </p>
           <button
             onClick={() => {
-              // checkUsername(newUser.name).then((result) => {
-              // if (result) {
               refecthUsernameAvailability();
             }}
           >
