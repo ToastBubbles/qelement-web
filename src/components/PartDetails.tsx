@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useMutation, useQuery } from "react-query";
 import showToast, { Mode } from "../utils/utils";
-import { IPartDTO, part } from "../interfaces/general";
+import { IPartDTO, category, part } from "../interfaces/general";
 
 interface IProps {
   part: IPartDTO;
@@ -9,7 +9,7 @@ interface IProps {
 }
 
 export default function PartDetails({ part, refetchFn }: IProps) {
-  const colMutation = useMutation({
+  const partMutation = useMutation({
     mutationFn: (id: number) =>
       axios
         .post<number>(`http://localhost:3000/parts/approve`, { id })
@@ -21,7 +21,7 @@ export default function PartDetails({ part, refetchFn }: IProps) {
     },
   });
   const { data: catData } = useQuery(`cat${part.CatId}`, () =>
-    axios.get<part[]>(`http://localhost:3000/categories/id/${part.CatId}`)
+    axios.get<category>(`http://localhost:3000/categories/id/${part.CatId}`)
   );
   if (catData)
     return (
@@ -31,19 +31,15 @@ export default function PartDetails({ part, refetchFn }: IProps) {
           <div>{part.name}</div>
         </div>
         <div>
-          <div>Number:</div>
-          <div>{part.number}</div>
-        </div>
-        <div>
-          <div>2nd Number:</div>
-          <div>{part.secondaryNumber}</div>
+          <div>Category:</div>
+          <div>{catData.data.name}</div>
         </div>
 
         <section>
           Note:
           <div className="wrapbreak">{part.note}</div>
         </section>
-        <button onClick={() => colMutation.mutate(part.id)}>Approve</button>
+        <button onClick={() => partMutation.mutate(part.id)}>Approve</button>
       </div>
     );
   else return <p>Loading</p>;

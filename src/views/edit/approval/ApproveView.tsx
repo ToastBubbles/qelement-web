@@ -10,6 +10,7 @@ export default function ApproveView() {
             <Link to={"/approve/colors"}>Colors</Link>
             <Link to={"/approve/categories"}>Categories</Link>
             <Link to={"/approve/parts"}>Parts</Link>
+            <Link to={"/approve/molds"}>Part Molds</Link>
             <Link to={"/approve/qparts"}>QElements</Link>
             <Link to={"/approve/partStatus"}>Part Status</Link>
             <Link to={"/approve/similarColors"}>Similar Colors</Link>

@@ -73,11 +73,19 @@ export interface IQPartDetails {
 export interface IPartDTO {
   id: number;
   name: string;
-  number: string;
-  secondaryNumber: string;
   CatId: number;
   creatorId: number;
   note: string;
+}
+export interface IPartMoldDTO {
+  id: number;
+  number: string;
+  parentPartId: number;
+  creatorId: number;
+  note: string;
+  approvalDate: string;
+  createdAt: string;
+  parentPart: part;
 }
 export interface qpart {
   id: number;
@@ -91,6 +99,28 @@ export interface qpart {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface IPartDTOIncludes {
+  id: number;
+  name: string;
+  number: string;
+  CatId: number;
+  createdAt: string;
+  updatedAt: string;
+  approvalDate: string;
+  molds: IPartMoldDTO[];
+}
+export interface IQPartDTOInclude {
+  id: number;
+  type: string;
+  mold: IPartMoldDTO;
+  color: color;
+  creator: user;
+  note: string;
+  elementId: string;
+  ratings: rating[];
+  partStatuses: IPartStatusDTO[];
+}
 export interface IQPartDTO {
   id: number;
   partId: number;
@@ -103,7 +133,9 @@ export interface IQPartDTO {
 }
 export interface iQPartDTO {
   partId: number;
+  moldId: number;
   colorId: number;
+  type: string;
   elementId: string;
   secondaryElementId: string;
   creatorId: number;
@@ -116,6 +148,8 @@ export interface part {
   CatId: number;
   createdAt: string;
   updatedAt: string;
+  approvalDate: string;
+  molds: IPartMoldDTO[];
 }
 export interface IRatingDTO {
   rating: number;
@@ -151,14 +185,22 @@ export interface ILoginDTO {
 export interface iPartDTO {
   name: string;
   number: string;
-  secondaryNumber: string;
   CatId: number;
   note: string;
+}
+export interface IPartWithMoldDTO {
+  id: number;
+  name: string;
+  number: string;
+  CatId: number;
+  partNote: string;
+  moldNote: string;
 }
 
 export interface category {
   id: number;
   name: string;
+  parts: part[];
 }
 
 export interface IMessageDTO {

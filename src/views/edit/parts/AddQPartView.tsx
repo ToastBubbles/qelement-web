@@ -10,6 +10,7 @@ import {
   IQPartDTO,
   IPartStatusDTO,
   IAPIResponse,
+  IPartMoldDTO,
 } from "../../../interfaces/general";
 import { Link } from "react-router-dom";
 import MyToolTip from "../../../components/MyToolTip";
@@ -29,7 +30,9 @@ export default function AddQPartView() {
   const defaultValues: iQPartDTO = {
     partId: -1,
     colorId: -1,
+    moldId: -1,
     elementId: "",
+    type: "unknown",
     secondaryElementId: "",
     creatorId: -1,
     note: "",
@@ -47,6 +50,7 @@ export default function AddQPartView() {
     useState<IPartStatusDTO>(defaultStatusValues);
   const [category, setCategory] = useState<number>(-1);
   const [startDate, setStartDate] = useState<Date>(new Date());
+  const [molds, setMolds] = useState<IPartMoldDTO[]>();
 
   const {
     data: colData,
@@ -73,6 +77,13 @@ export default function AddQPartView() {
       ...{ partId: -1 },
     }));
   }, [category]);
+
+  useEffect(() => {
+    if (partsData) {
+      let thesemolds = partsData.data.find((x) => x.id == newQPart.partId);
+      if (thesemolds) setMolds(thesemolds.molds);
+    }
+  }, [newQPart.partId]);
 
   const {
     data: catData,
@@ -112,7 +123,7 @@ export default function AddQPartView() {
     mutationFn: (status: IPartStatusDTO) =>
       axios.post<IPartStatusDTO>(`http://localhost:3000/partStatus`, status),
     onSuccess: () => {
-      showToast("QElement Succesfully added!", Mode.Success);
+      showToast("QElement submitted for approval!", Mode.Success);
       setNewStatus(defaultStatusValues);
       setStartDate(new Date());
     },
@@ -163,6 +174,30 @@ export default function AddQPartView() {
                 ))}
               </select>
             </div>
+
+            <div className="w-100 d-flex jc-space-b">
+              <label htmlFor="par">Part Number</label>
+              <select
+                name="partmold"
+                id="partmold"
+                className="w-50 formInput"
+                onChange={(e) =>
+                  setNewQPart((newQPart) => ({
+                    ...newQPart,
+                    ...{ moldId: Number(e.target.value) },
+                  }))
+                }
+                value={newQPart.moldId}
+              >
+                <option value="-1">--</option>
+                {molds?.map((mold) => (
+                  <option key={mold.id} value={`${mold.id}`}>
+                    {mold.number}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <div className="w-100 d-flex jc-space-b">
               <label htmlFor="par">Color</label>
               <select
@@ -212,20 +247,57 @@ export default function AddQPartView() {
               />
             </div>
             <div className="w-100 d-flex jc-space-b">
-              <label htmlFor="seid">Secondary Element ID</label>
-              <input
-                maxLength={20}
-                id="seid"
+              <div>
+                <label htmlFor="qtype">Type</label>
+                <MyToolTip
+                  content={
+                    <ul className="tt-list">
+                      <li>
+                        <span>unknown:</span> this element may exist, but not
+                        much is known
+                      </li>
+                      <li>
+                        <span>Q-Element:</span> internal parts used mainly by
+                        model builders for scupltures and models
+                      </li>
+                      <li>
+                        <span>prototype:</span> a developmental prototype
+                      </li>
+                      <li>
+                        <span>employee gift:</span> an element made as an
+                        employee gift
+                      </li>
+                      <li>
+                        <span>nightshift:</span> produced by rogue LEGO Factory
+                        employees
+                      </li>
+                      <li>
+                        <span>other:</span> doesn't fit the other categories,
+                        please leave a note if using this option
+                      </li>
+                    </ul>
+                  }
+                  id="type"
+                />
+              </div>
+              <select
                 className="formInput w-50"
-                placeholder="Optional"
+                id="qtype"
                 onChange={(e) =>
                   setNewQPart((newQPart) => ({
                     ...newQPart,
-                    ...{ secondaryElementId: e.target.value },
+                    ...{ type: e.target.value },
                   }))
                 }
-                value={newQPart.secondaryElementId}
-              />
+                value={newQPart.type}
+              >
+                <option value={"unknown"}>Unknown</option>
+                <option value={"qelement"}>Q-Element</option>
+                <option value={"prototype"}>Prototype</option>
+                <option value={"employee"}>Employee Gift</option>
+                <option value={"nightshift"}>Nightshift</option>
+                <option value={"other"}>Other</option>
+              </select>
             </div>
 
             <label htmlFor="partnote" style={{ marginRight: "auto" }}>
@@ -256,34 +328,28 @@ export default function AddQPartView() {
                   content={
                     <ul className="tt-list">
                       <li>
-                        <span>found:</span> you or another collecter has
-                        collected this element
+                        <span>unknown:</span> this element may exist, but not
+                        much is known
+                      </li>
+                      <li>
+                        <span>element ID only:</span> we have an element ID for
+                        this part, but it has yet to be seen/found
                       </li>
                       <li>
                         <span>seen:</span> this element has been seen, but no
                         one has collected one
                       </li>
                       <li>
-                        <span>nightshift:</span> produced by rogue LEGO Factory
-                        employees
-                      </li>
-                      <li>
-                        <span>prototype:</span> a developmental prototype
-                      </li>
-                      <li>
-                        <span>employee:</span> an element made as an employee
-                        gift
+                        <span>found:</span> you or another collecter has
+                        collected this element
                       </li>
                       <li>
                         <span>known:</span> This element has been released in a
                         set or Pick a Brick
                       </li>
                       <li>
-                        <span>unknown:</span> this element may exist, it might
-                        have an element ID, but it has never been seen
-                      </li>
-                      <li>
-                        <span>other:</span> doesn't fit the other categories
+                        <span>other:</span> doesn't fit the other categories,
+                        please leave a note if using this option
                       </li>
                     </ul>
                   }
@@ -300,14 +366,12 @@ export default function AddQPartView() {
                 }
                 value={newStatus.status}
               >
-                <option value={"unknown"}>unknown</option>
-                <option value={"found"}>found</option>
-                <option value={"seen"}>seen</option>
-                <option value={"nightshift"}>nightshift</option>
-                <option value={"prototype"}>prototype</option>
-                <option value={"employee"}>employee</option>
-                <option value={"known"}>known</option>
-                <option value={"other"}>other</option>
+                <option value={"unknown"}>Unknown</option>
+                <option value={"idOnly"}>Element ID Only</option>
+                <option value={"seen"}>Seen</option>
+                <option value={"found"}>Found</option>
+                <option value={"known"}>Known</option>
+                <option value={"other"}>Other</option>
               </select>
             </div>
             <div className="w-100 d-flex jc-space-b">
@@ -316,12 +380,13 @@ export default function AddQPartView() {
                 <MyToolTip
                   content={
                     <ul className="tt-list">
-                      Location that this element is known to exist, examples:
+                      Location that this element was seen, or is known to exist,
+                      examples:
                       <li>LEGOLAND Discovery Center, New York, USA</li>
                       <li>LEGOLAND, Florida, USA, Pick-a-Brick Wall</li>
                       <li>Germany</li>
                       <li>Europe</li>
-                      If found in more than one loaction, list addition in the
+                      If found in more than one loaction, list additional in the
                       Note
                     </ul>
                   }

@@ -10,8 +10,11 @@ import {
   part,
   IQPartDTO,
   IPartStatusDTO,
+  IQPartDTOInclude,
+  rating,
+  IPartMoldDTO,
 } from "../../interfaces/general";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import ImageUploader from "../../components/ImageUploader";
 import { Link } from "react-router-dom";
@@ -22,12 +25,37 @@ export default function SinglePartView() {
   const urlColorId = queryParameters.get("color");
 
   const [selectedQPartid, setSelectedQPartid] = useState<number>(-1);
+  const [multiMoldPart, setMultiMoldPart] = useState<boolean>(false);
+  const [selectedQPartMold, setSelectedQPartMold] = useState<number>(-1);
   // console.log("color", urlColorId);
 
   const { partId } = useParams();
   const navigate = useNavigate();
   console.log("partid", partId);
 
+  // const {
+  //   data: qpartData,
+  //   isLoading: qpartIsLoading,
+  //   error: qpartError,
+  //   refetch: qpartRefetch,
+  // } = useQuery({
+  //   queryKey: "qpart",
+  //   queryFn: () => {
+  //     console.log("rating fetch");
+  //     return axios.get<IQPartDTO[]>(
+  //       `http://localhost:3000/qpart/matchesByPartId/${partId}`
+  //     );
+  //   },
+  //   // onSuccess: () => {
+  //   //   // let mypart = qpartData?.data.find((x) => x.id == selectedQPart.id);
+  //   //   if (mypart) {
+  //   //     setSelectedQPart(mypart);
+  //   //   }
+  //   // },
+  //   staleTime: 0,
+  //   enabled: !!partId,
+  //   // retry: false,
+  // });
   const {
     data: qpartData,
     isLoading: qpartIsLoading,
@@ -37,7 +65,7 @@ export default function SinglePartView() {
     queryKey: "qpart",
     queryFn: () => {
       console.log("rating fetch");
-      return axios.get<IQPartDTO[]>(
+      return axios.get<IQPartDTOInclude[]>(
         `http://localhost:3000/qpart/matchesByPartId/${partId}`
       );
     },
@@ -61,44 +89,60 @@ export default function SinglePartView() {
   } = useQuery("allColors", () =>
     axios.get<color[]>("http://localhost:3000/color")
   );
+  useEffect(() => {
+    if (qpartData) {
+      let type1 = qpartData?.data[0].type;
+      qpartData?.data.forEach(
+        (qpart) => qpart.type != type1 && setMultiMoldPart(true)
+      );
+    }
+  }, [qpartData?.data]);
 
-  const {
-    data: partData,
-    isLoading: partIsLoading,
-    error: partError,
-  } = useQuery({
-    queryKey: "part",
-    queryFn: () => axios.get<part>(`http://localhost:3000/parts/id/${partId}`),
+  // const {
+  //   data: partData,
+  //   isLoading: partIsLoading,
+  //   error: partError,
+  // } = useQuery({
+  //   queryKey: "part",
+  //   queryFn: () => axios.get<part>(`http://localhost:3000/parts/id/${partId}`),
 
-    enabled: !!partId,
-    // retry: false,
-  });
+  //   enabled: !!partId,
+  //   // retry: false,
+  // });
 
-  const {
-    data: statusData,
-    isLoading: statusIsLoading,
-    error: statusError,
-  } = useQuery({
-    queryKey: `status${selectedQPartid}`,
-    queryFn: () =>
-      axios.get<IPartStatusDTO[]>(
-        `http://localhost:3000/partStatus/byQPartId/${selectedQPartid}`
-      ),
+  // const {
+  //   data: statusData,
+  //   isLoading: statusIsLoading,
+  //   error: statusError,
+  // } = useQuery({
+  //   queryKey: `status${selectedQPartid}`,
+  //   queryFn: () =>
+  //     axios.get<IPartStatusDTO[]>(
+  //       `http://localhost:3000/partStatus/byQPartId/${selectedQPartid}`
+  //     ),
 
-    enabled: selectedQPartid != -1,
-    // retry: false,
-  });
+  //   enabled: selectedQPartid != -1,
+  //   // retry: false,
+  // });
 
-  let part = partData?.data;
+  // let part = partData?.data;
   let qparts = qpartData?.data;
   let colors = colData?.data;
-  function getColorName(colorId: number): string {
-    let thisColor = colors?.find((x) => x.id == colorId);
+  // function getColorName(colorId: number): string {
+  //   let thisColor = colors?.find((x) => x.id == colorId);
 
-    if (thisColor) {
-      return thisColor.bl_name ? thisColor.bl_name : thisColor.tlg_name;
+  //   if (thisColor) {
+  //     return thisColor.bl_name ? thisColor.bl_name : thisColor.tlg_name;
+  //   }
+  //   return "Unnamed Color";
+  // }
+  function getRatings(ratings: rating[] | undefined): number {
+    if (ratings != undefined && ratings.length > 0) {
+      let output = 0;
+      ratings.forEach((rating) => (output += rating.rating));
+      return output;
     }
-    return "Unnamed Color";
+    return -1;
   }
 
   if (qpartError) {
@@ -111,13 +155,27 @@ export default function SinglePartView() {
     if (selectedQPartid == -1) {
       if (urlColorId) {
         let targetQPartId = qparts.find(
-          (x) => x.colorId == Number(urlColorId)
+          (x) => x.color.id == Number(urlColorId)
         )?.id;
         if (targetQPartId) setSelectedQPartid(targetQPartId);
         else setSelectedQPartid(qparts[0].id);
       } else {
         setSelectedQPartid(qparts[0].id);
       }
+    }
+
+    function getUnique(): IPartMoldDTO[] {
+      let output: IPartMoldDTO[] = [];
+      qparts.forEach((qpart) => {
+        if (output.length == 0) {
+          output.push(qpart.mold);
+        } else {
+          let checker = output.find((x) => x.id == qpart.mold.id);
+          if (!checker) output.push(qpart.mold);
+        }
+      });
+      console.log(output);
+      return output;
     }
 
     return (
@@ -139,22 +197,43 @@ export default function SinglePartView() {
               </ul>
 
               <div className="element-name">
-                {!partIsLoading && partData ? part?.name : "loading"}
+                {qparts[0].mold.parentPart.name}
               </div>
-              <select
-                name="qpartcolors"
-                id="qpartcolors"
-                className="qpart-color-dropdown"
-                onChange={(e) => setSelectedQPartid(Number(e.target.value))}
-                value={selectedQPartid}
-              >
-                <option value="-1">--</option>
-                {qparts.map((qpart) => (
-                  <option key={qpart.id} value={`${qpart.id}`}>
-                    {getColorName(qpart.colorId)}
-                  </option>
-                ))}
-              </select>
+              <div className="d-flex flex-col">
+                <select
+                  name="qpartmolds"
+                  id="qpartmolds"
+                  className="qpart-color-dropdown"
+                  onChange={(e) => setSelectedQPartMold(Number(e.target.value))}
+                  value={selectedQPartMold}
+                  disabled={!multiMoldPart}
+                >
+                  <option value="-1">--Show All Part Variations--</option>
+                  {getUnique().map((mold) => (
+                    <option key={mold.id} value={`${mold.id}`}>
+                      {mold.number}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  name="qpartcolors"
+                  id="qpartcolors"
+                  className="qpart-color-dropdown"
+                  onChange={(e) => setSelectedQPartid(Number(e.target.value))}
+                  value={selectedQPartid}
+                >
+                  <option value="-1">--</option>
+                  {qparts.map(
+                    (qpart) =>
+                      (qpart.mold.id == selectedQPartMold ||
+                        selectedQPartMold == -1) && (
+                        <option key={qpart.id} value={`${qpart.id}`}>
+                          {qpart.color.bl_name} ({qpart.mold.number})
+                        </option>
+                      )
+                  )}
+                </select>
+              </div>
             </div>
             <div className="center">
               <div className="element-image">
@@ -165,7 +244,7 @@ export default function SinglePartView() {
                 />
               </div>
               <RatingCard
-                rating={mypart?.rarety != undefined ? mypart?.rarety : -1}
+                rating={getRatings(mypart?.ratings)}
                 qpartId={mypart?.id as number}
                 refetchFn={qpartRefetch}
 
@@ -205,13 +284,13 @@ export default function SinglePartView() {
               </div>
               <fieldset className="status">
                 <legend>Status</legend>
-                {statusData &&
-                  statusData.data.map((status) => (
+                {mypart?.partStatuses &&
+                  mypart?.partStatuses.map((status) => (
                     <QPartStatusDate
                       key={status.date}
                       status={status.status}
                       date={status.date}
-                      isPrimary={statusData.data.indexOf(status) == 0}
+                      isPrimary={mypart?.partStatuses.indexOf(status) == 0}
                     />
                   ))}
               </fieldset>
@@ -256,7 +335,7 @@ export default function SinglePartView() {
 
                   <fieldset className="other-colors">
                     <legend>other colors</legend>
-                    <AllColorStatus partId={3001} />
+                    <AllColorStatus partId={Number(partId) || 0} />
                   </fieldset>
                 </div>
               </div>

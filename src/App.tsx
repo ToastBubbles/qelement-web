@@ -34,6 +34,8 @@ import ApproveColorView from "./views/edit/approval/ColorApprovalView";
 import ApproveView from "./views/edit/approval/ApproveView";
 import ApproveCatView from "./views/edit/approval/CatApprovalView";
 import ApprovePartView from "./views/edit/approval/PartApprovalView";
+import ApproveQPartView from "./views/edit/approval/QPartApprovalView";
+import ApprovePartMoldView from "./views/edit/approval/PartMoldApprovalView";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -85,7 +87,8 @@ function App() {
               <Route path="/approve/colors" element={<ApproveColorView />} />
               <Route path="/approve/categories" element={<ApproveCatView />} />
               <Route path="/approve/parts" element={<ApprovePartView />} />
-
+              <Route path="/approve/qparts" element={<ApproveQPartView />} />
+              <Route path="/approve/molds" element={<ApprovePartMoldView />} />
               <Route
                 path="/profile/messages/:messageId"
                 element={<SingleMessageView />}
