@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 import ImageUploader from "../../components/ImageUploader";
 import { Link } from "react-router-dom";
 import QPartStatusDate from "../../components/QPartStatusDate";
+import { sortStatus } from "../../utils/utils";
 
 export default function SinglePartView() {
   const queryParameters = new URLSearchParams(window.location.search);
@@ -285,9 +286,9 @@ export default function SinglePartView() {
               <fieldset className="status">
                 <legend>Status</legend>
                 {mypart?.partStatuses &&
-                  mypart?.partStatuses.map((status) => (
+                  sortStatus(mypart?.partStatuses).map((status) => (
                     <QPartStatusDate
-                      key={status.date}
+                      key={status.id}
                       status={status.status}
                       date={status.date}
                       isPrimary={mypart?.partStatuses.indexOf(status) == 0}
@@ -301,8 +302,19 @@ export default function SinglePartView() {
               <div className="lower-container">
                 <div className="lower-center-left">
                   <div className="tab">
-                    <button className="tablinks active">Price History</button>
+                    <button className="tablinks active">Details</button>
+                    <button className="tablinks">Price History</button>
                     <button className="tablinks">Comments</button>
+                  </div>
+                  <div className="tabcontent tab-details pricehistory">
+                    <div>
+                      <div>Element IDs:</div>
+                      <div>
+                        {mypart?.elementId ? mypart.elementId : "No IDs found"}
+                      </div>
+                    </div>
+                    <div>Note:</div>
+                    <div>{mypart?.note ? mypart.note : "No note"}</div>
                   </div>
                   <div className="tabcontent pricehistory tabhidden">
                     <img
@@ -310,7 +322,7 @@ export default function SinglePartView() {
                       src="/img/scatter-example.png"
                     />
                   </div>
-                  <div className="tabcontent comments"></div>
+                  <div className="tabcontent comments tabhidden"></div>
                 </div>
                 <div className="lower-center-right">
                   <form id="search-form" action="/ads">

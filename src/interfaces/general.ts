@@ -58,6 +58,7 @@ export interface iIdOnly {
   id: number;
 }
 export interface IPartStatusDTO {
+  id: number;
   status: string;
   date: string;
   location: string;
@@ -120,6 +121,7 @@ export interface IQPartDTOInclude {
   elementId: string;
   ratings: rating[];
   partStatuses: IPartStatusDTO[];
+  createdAt: string;
 }
 export interface IQPartDTO {
   id: number;

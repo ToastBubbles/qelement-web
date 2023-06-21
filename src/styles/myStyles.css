@@ -368,19 +368,28 @@ body::-webkit-scrollbar {
 .tag-other {
   background-color: rgb(48, 48, 48);
 }
-.tag-prototype {
+/* .tag-prototype {
   background-color: var(--lt-red);
-}
-.tag-employee {
+} */
+/* .tag-employee {
   background-color: gold;
+} */
+.tag-idOnly {
+  background-color: #d6a82a;
 }
-.tag-nightshift {
+/* .tag-nightshift {
   background-color: rgb(70, 15, 75);
-}
+} */
 .tag-seen {
   background-color: rgb(231, 228, 7);
 }
-
+.tab-details > div {
+  padding: 1em;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+/* .tab-details> */
 .status-date {
   margin-left: 0.3em;
   display: inline-block;
@@ -441,7 +450,18 @@ fieldset > legend {
   height: 1em;
   margin-bottom: 0.75em;
 }
-
+.recentQPartStatus {
+  position: absolute;
+  width: 100%;
+  font-size: 0.7em;
+  padding: 0.1em 0;
+  /* background-color: red; */
+  color: white;
+  height: 1.2em;
+  bottom: 0;
+  text-align: center;
+  /* align-self: flex-end; */
+}
 .table-id {
   display: flex;
   padding-right: 0.2em;
@@ -750,7 +770,9 @@ fieldset > legend {
   margin-right: 0.2em;
 }
 .listing-img {
+  position: relative;
   height: 95%;
+  display: flex;
   aspect-ratio: 1 / 1;
   border: solid 1px var(--dk-grey);
   margin-right: 0.25em;

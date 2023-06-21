@@ -9,9 +9,11 @@ import ColorWheel from "./ColorWheel";
 import PartsButton from "./PartsButton";
 import showToast, { Mode } from "../utils/utils";
 import { IAPIResponse } from "../interfaces/general";
+import NavbarPopdown from "./NavbarPopdown";
+import useComponentVisible from "../utils/hooks";
 
 function Navbar() {
-  // let toggleDropdown = false;
+  const { dropdownRef, isComponentVisible } = useComponentVisible(true);
   const [toggleDropdown, setToggleDropdown] = useState<boolean>(false);
   const [messageCount, setMessageCount] = useState<number>(0);
   const {
@@ -34,21 +36,6 @@ function Navbar() {
       ),
     retry: false,
     refetchInterval: 30000,
-    enabled: !!payload.id,
-  });
-
-  const {
-    data: adminData,
-    isLoading: adminIsLoading,
-    error: adminError,
-  } = useQuery({
-    queryKey: "isAdmin",
-    queryFn: () =>
-      axios.get<IAPIResponse>(
-        `http://localhost:3000/user/checkIfAdmin/${payload.id}`
-      ),
-    retry: false,
-    // refetchInterval: 30000,
     enabled: !!payload.id,
   });
 
@@ -106,46 +93,7 @@ function Navbar() {
                 src="/img/blank_profile.webp"
               />
             </button>
-            {/* <LogoutBtn /> */}
-            <div
-              className={
-                "nav-pop-down clickable" + (toggleDropdown ? "" : " hidden")
-              }
-            >
-              <div>
-                <Link to={"/profile"}>My Profile</Link>
-                <Link to={"/profile"}>My Wanted List</Link>
-                <Link to={"/profile"}>My Inventory</Link>
-                <Link to={"/profile"}>Settings</Link>
-                <div
-                  onClick={(e) => {
-                    logout();
-                    // redirect("/colors");
-                  }}
-                >
-                  Logout
-                </div>
-              </div>
-              <div>
-                <div>
-                  Add:
-                  <ul className="nav-pop-down-ul">
-                    <li>
-                      <Link to={"/add/qpart"}>New QElement</Link>
-                    </li>
-                    <li>
-                      <Link to={"/add/part"}>New Part</Link>
-                    </li>
-                    <li>
-                      <Link to={"/add/color"}>New Color</Link>
-                    </li>
-                  </ul>
-                </div>
-                {adminData && adminData.data.code == 200 && (
-                  <Link to={"/approve"}>Approve Content</Link>
-                )}
-              </div>
-            </div>
+            <div ref={dropdownRef}>{toggleDropdown && <NavbarPopdown />}</div>
           </>
         )}
       </>

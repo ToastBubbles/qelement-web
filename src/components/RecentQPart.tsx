@@ -2,63 +2,47 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-import { color, part } from "../interfaces/general";
-import { formatDate } from "../utils/utils";
+import { IQPartDTOInclude, color, part } from "../interfaces/general";
+import { formatDate, sortStatus } from "../utils/utils";
 
 interface IProps {
-  id: number;
-  partId: number;
-  colorId: number;
-  createdAt: string;
+  qpart: IQPartDTOInclude;
 }
 
-export default function RecentQPart({
-  id,
-  partId,
-  colorId,
-  createdAt,
-}: IProps) {
-  const {
-    data: partData,
-    isLoading: partIsLoading,
-    error: partError,
-  } = useQuery({
-    queryKey: "part",
-    queryFn: () => axios.get<part>(`http://localhost:3000/parts/id/${partId}`),
-    enabled: !!partId,
-  });
+export default function RecentQPart({ qpart }: IProps) {
+  console.log(qpart);
 
-  const {
-    data: colData,
-    isLoading: colIsLoading,
-    error: colError,
-  } = useQuery(`colors${colorId}`, () =>
-    axios.get<color>(`http://localhost:3000/color/id/${colorId}`)
-  );
-
-  if (partData && colData) {
+  if (qpart) {
     return (
       <Link
-        to={`/part/${partId}?color=${colorId}`}
+        to={`/part/${qpart.mold.parentPart.id}?color=${qpart.color.id}`}
         className="listing new-listing"
       >
-        <div className="listing-img"></div>
+        <div className="listing-img">
+          <div
+            className={
+              "recentQPartStatus tag-" +
+              sortStatus(qpart.partStatuses)[0].status
+            }
+          >
+            {sortStatus(qpart.partStatuses)[0].status}
+          </div>
+        </div>
         <div>
-          {" "}
-          <div>{partData.data.name}</div>
+          <div>
+            {qpart.mold.parentPart.name} ({qpart.mold.number})
+          </div>
           <div className="listing-color">
             <div
-              className={"listing-color-swatch " + colData.data.type}
-              style={{ backgroundColor: "#" + colData.data.hex }}
+              className={"listing-color-swatch " + qpart.color.type}
+              style={{ backgroundColor: "#" + qpart.color.hex }}
             ></div>
             <div>
-              {colData.data.bl_name
-                ? colData.data.bl_name
-                : colData.data.tlg_name}
+              {qpart.color.bl_name ? qpart.color.bl_name : qpart.color.tlg_name}
             </div>
           </div>
           <div style={{ fontSize: "0.8em" }}>
-            Added: {formatDate(createdAt)}
+            Added: {formatDate(qpart.createdAt)}
           </div>
         </div>
       </Link>

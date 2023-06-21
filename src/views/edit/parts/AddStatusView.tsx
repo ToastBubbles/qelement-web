@@ -96,34 +96,28 @@ export default function AddStatusView() {
                   content={
                     <ul className="tt-list">
                       <li>
-                        <span>found:</span> you or another collecter has
-                        collected this element
+                        <span>unknown:</span> this element may exist, but not
+                        much is known
+                      </li>
+                      <li>
+                        <span>element ID only:</span> we have an element ID for
+                        this part, but it has yet to be seen/found
                       </li>
                       <li>
                         <span>seen:</span> this element has been seen, but no
                         one has collected one
                       </li>
                       <li>
-                        <span>nightshift:</span> produced by rogue LEGO Factory
-                        employees
-                      </li>
-                      <li>
-                        <span>prototype:</span> a developmental prototype
-                      </li>
-                      <li>
-                        <span>employee:</span> an element made as an employee
-                        gift
+                        <span>found:</span> you or another collecter has
+                        collected this element
                       </li>
                       <li>
                         <span>known:</span> This element has been released in a
                         set or Pick a Brick
                       </li>
                       <li>
-                        <span>unknown:</span> this element may exist, it might
-                        have an element ID, but it has never been seen
-                      </li>
-                      <li>
-                        <span>other:</span> doesn't fit the other categories
+                        <span>other:</span> doesn't fit the other categories,
+                        please leave a note if using this option
                       </li>
                     </ul>
                   }
@@ -140,14 +134,12 @@ export default function AddStatusView() {
                 }
                 value={newStatus.status}
               >
-                <option value={"unknown"}>unknown</option>
-                <option value={"found"}>found</option>
-                <option value={"seen"}>seen</option>
-                <option value={"nightshift"}>nightshift</option>
-                <option value={"prototype"}>prototype</option>
-                <option value={"employee"}>employee</option>
-                <option value={"known"}>known</option>
-                <option value={"other"}>other</option>
+                <option value={"unknown"}>Unknown</option>
+                <option value={"idOnly"}>Element ID Only</option>
+                <option value={"seen"}>Seen</option>
+                <option value={"found"}>Found</option>
+                <option value={"known"}>Known</option>
+                <option value={"other"}>Other</option>
               </select>
             </div>
             <div className="w-100 d-flex jc-space-b">
