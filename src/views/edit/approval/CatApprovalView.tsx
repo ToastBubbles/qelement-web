@@ -2,13 +2,10 @@ import axios from "axios";
 import { useQuery, useMutation } from "react-query";
 import showToast, { Mode } from "../../../utils/utils";
 import { category, color, iIdOnly } from "../../../interfaces/general";
-import ColorDetails from "../../../components/ColorDetails";
 
 export default function ApproveCatView() {
   const {
     data: catData,
-    isLoading,
-    error,
     isFetched,
     refetch,
   } = useQuery("notApprovedCats", () =>

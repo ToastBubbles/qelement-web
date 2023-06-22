@@ -75,8 +75,7 @@ function AllColors({ search = "" }) {
         </section>
       </div>
     );
-
-  return <p>Loading...</p>;
+  else return <p>Loading...</p>;
 }
 
 function generateTable(

@@ -27,7 +27,16 @@ export interface color {
   createdAt: string;
   updatedAt: string;
 }
-
+export interface INotApporvedCounts {
+  colors: number;
+  categories: number;
+  parts: number;
+  partMolds: number;
+  qelements: number;
+  partStatuses: number;
+  similarColors: number;
+  images: number;
+}
 export interface IEditColor {
   bl_name: string;
   tlg_name: string;

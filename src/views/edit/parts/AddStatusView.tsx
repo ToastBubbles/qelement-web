@@ -28,6 +28,7 @@ export default function AddStatusView() {
   const { qpartId } = useParams();
 
   const defaultStatusValues: IPartStatusDTO = {
+    id: 0,
     status: "unknown",
     date: new Date().toLocaleDateString(),
     location: "",
@@ -210,6 +211,7 @@ export default function AddStatusView() {
                   if (qpartId && Number(qpartId) != -1 && payload) {
                     console.log("adding...");
                     partStatusMutation.mutate({
+                      id: 0,
                       status: newStatus.status,
                       location: newStatus.location,
                       note: newStatus.note,
