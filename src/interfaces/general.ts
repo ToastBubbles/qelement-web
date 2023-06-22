@@ -34,6 +34,7 @@ export interface IEditColor {
   bo_name: string;
   hex: string;
   bl_id: number;
+  bo_id: number;
   tlg_id: number;
   type: string;
   note: string;

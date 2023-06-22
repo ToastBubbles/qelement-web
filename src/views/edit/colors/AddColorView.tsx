@@ -148,13 +148,32 @@ export default function AddColorView() {
             <div className="d-flex jc-end">
               #
               <input
-                className="formInput w-35"
+                className="formInput w-50 uppercase"
                 placeholder="Optional"
+                pattern="[0-9a-fA-F]+"
                 maxLength={6}
+                onKeyDown={(e) => {
+                  // Get the pressed key
+                  const key = e.key;
+
+                  // Allow non-character keys like backspace and arrow keys
+                  if (e.code.includes("Arrow") || key === "Backspace") {
+                    return;
+                  }
+
+                  // Regular expression pattern to match hexadecimal characters
+                  const hexPattern = /^[0-9a-fA-F]$/;
+
+                  // Check if the pressed key is a valid hexadecimal character
+                  if (!hexPattern.test(key)) {
+                    e.preventDefault(); // Prevent the character from being entered
+                  } else {
+                  }
+                }}
                 onChange={(e) =>
                   setNewColor((newColor) => ({
                     ...newColor,
-                    ...{ hex: e.target.value },
+                    ...{ hex: e.target.value.toUpperCase() },
                   }))
                 }
                 value={newColor.hex}

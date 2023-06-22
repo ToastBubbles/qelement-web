@@ -1166,10 +1166,14 @@ textarea {
   border-left: none;
   border-radius: 0 2px 2px 0;
 }
+
+.uppercase {
+  text-transform: uppercase;
+}
 .edit-hex {
   display: inline-block;
   color: white;
-  text-transform: capitalize;
+  text-transform: uppercase;
   font-weight: bold;
   text-shadow: #2c2c2c 1px 1px 0;
   font-size: 1.5em;
