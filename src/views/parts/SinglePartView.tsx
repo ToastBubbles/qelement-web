@@ -369,7 +369,13 @@ export default function SinglePartView() {
                   </div>
                   <div className="lower-center-right">
                     <fieldset className="other-colors">
-                      <legend>other colors for {mypart?.mold.number}</legend>
+                      <legend>
+                        other colors for{" "}
+                        {selectedQPartMold == -1
+                          ? "All molds"
+                          : getUnique().find((x) => x.id == selectedQPartMold)
+                              ?.number}
+                      </legend>
                       <form id="search-form" style={{ margin: "0 0 1em 0" }}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -392,7 +398,7 @@ export default function SinglePartView() {
                       </form>
                       <AllColorStatus
                         qparts={qparts}
-                        moldId={mypart?.mold.id || 0}
+                        moldId={selectedQPartMold}
                         search={searchColor}
                       />
                     </fieldset>

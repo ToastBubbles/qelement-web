@@ -11,15 +11,21 @@ interface IProps {
   search: string;
 }
 
-export default function AllColorStatus({ qparts, moldId = 0, search }: IProps) {
+export default function AllColorStatus({ qparts, moldId, search }: IProps) {
   const { data, isLoading, error } = useQuery("allColors", () =>
     axios.get<color[]>("http://localhost:3000/color")
   );
   function statusLookup(mId: number, cId: number) {
     let output = "no status";
     qparts.forEach((qpart) => {
-      if (qpart.color.id == cId && qpart.mold.id == mId) {
-        output = qpart.partStatuses[0].status;
+      if (moldId == -1) {
+        if (qpart.color.id == cId) {
+          output = qpart.partStatuses[0].status;
+        }
+      } else {
+        if (qpart.color.id == cId && qpart.mold.id == mId) {
+          output = qpart.partStatuses[0].status;
+        }
       }
     });
     return output;
