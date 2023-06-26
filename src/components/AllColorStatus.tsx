@@ -5,26 +5,27 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { color } from "../interfaces/general";
 import { Link } from "react-router-dom";
-// const ColorId = () => {
-//   const router = useRouter();
-//   const { colorId } = router.query;
-
-//   return colorId;
-// };
+import { validateSearch } from "../utils/utils";
 
 function statusLookup(partId: number, colorId: string) {
   return "unkown";
 }
 
-function AllColorStatus({ partId = 0 }) {
+interface IProps {
+  partId: number;
+  search: string;
+}
+
+function AllColorStatus({ partId = 0, search }: IProps) {
   const { data, isLoading, error } = useQuery("allColors", () =>
     axios.get<color[]>("http://localhost:3000/color")
   );
 
   return (
-    <div>
+    <div className="allColorStatus">
       {!isLoading && data ? (
         data.data.map((color) => (
+          validateSearch(color, search) &&
           <div key={color.id} className="color-row">
             <div className="table-id">
               {color.tlg_id == 0 ? "" : color.tlg_id}
@@ -40,34 +41,11 @@ function AllColorStatus({ partId = 0 }) {
               {statusLookup(partId, color.tlg_name)}
             </div>
           </div>
-          // <Comment comment={singleComment} key={i + " " + singleComment.id} />
         ))
       ) : (
         <p>loading...</p>
       )}
-      {/* {colors.map((singleColor, i) => (
-        <div className="color-row">
-          <div className="table-id">{singleColor.Lid}</div>
-          <Link
-            to={"/color/" + singleColor.Lid}
-            className="flag"
-            style={{ backgroundColor: "#" + singleColor.color }}
-          >
-            {singleColor.BLName.length == 0
-              ? singleColor.LName
-              : singleColor.BLName}
-          </Link>
-          <div className="flag flag-status flag-unknown">
-            {statusLookup(partId, singleColor.Lid)}
-          </div>
-        </div>
-        // <Comment comment={singleComment} key={i + " " + singleComment.id} />
-      ))} */}
     </div>
-
-    // <Comment comment={singleComment} key={i + " " + singleComment.id} />
-    //   ))}
-    // </div>
   );
 }
 

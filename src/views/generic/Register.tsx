@@ -16,10 +16,12 @@ interface passwordValidation {
 export default function Register() {
   const navigate = useNavigate();
   const [newUser, setNewUser] = useState<IUserDTO>({
+    id: -1,
     name: "",
     email: "",
     password: "",
     role: "user",
+    createdAt: "",
   });
   const [passValidate, setPassValidate] = useState<passwordValidation>({
     isLongEnough: false,
@@ -52,10 +54,12 @@ export default function Register() {
                   newUser.email.includes("@")
                 ) {
                   userMutation.mutate({
+                    id: newUser.id,
                     name: newUser.name,
                     email: newUser.email,
                     password: newUser.password,
                     role: newUser.role,
+                    createdAt: newUser.createdAt,
                   });
                   navigate("/login");
                 } else {

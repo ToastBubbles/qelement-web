@@ -3,6 +3,7 @@ import NewAdditions from "../../components/NewAdditions";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { color, qpart } from "../../interfaces/general";
+import PartOfTheDay from "../../components/PartOfTheDay";
 
 export default function Home() {
   return (
@@ -30,7 +31,8 @@ export default function Home() {
             <div className="head-line"></div>
           </div>
           <div className="hp-panel-body">
-            <div className="listing news-listing"></div>
+            {/* <div className="listing news-listing"></div> */}
+            <PartOfTheDay />
           </div>
         </div>
         <div className="hp-panel hp-panel-center">

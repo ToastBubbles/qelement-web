@@ -121,6 +121,19 @@ export interface IPartDTOIncludes {
   approvalDate: string;
   molds: IPartMoldDTO[];
 }
+export interface ICommentDTO {
+  id: number;
+  creator: user;
+  content: string;
+  qpartId: number;
+  createdAt: string;
+}
+
+export interface ICommentCreationDTO {
+  userId: number;
+  content: string;
+  qpartId: number;
+}
 export interface IQPartDTOInclude {
   id: number;
   type: string;
@@ -130,6 +143,7 @@ export interface IQPartDTOInclude {
   note: string;
   elementId: string;
   ratings: rating[];
+  comments: ICommentDTO[];
   partStatuses: IPartStatusDTO[];
   createdAt: string;
 }
@@ -177,10 +191,13 @@ export interface rating {
   updatedAt: string;
 }
 export interface IUserDTO {
+  id: number;
   name: string;
   email: string;
   password: string;
   role: string;
+
+  createdAt: string;
 }
 export interface user {
   id: number;

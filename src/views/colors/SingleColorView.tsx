@@ -7,6 +7,7 @@ import SimilarColorBanner from "../../components/SimilarColorBanner";
 import { similarColor } from "../../interfaces/general";
 import { useQuery } from "react-query";
 import { color } from "../../interfaces/general";
+import LoadingPage from "../../components/LoadingPage";
 
 export default function SingleColorView() {
   // let color = colors.find((x) => x.Lid == ColorId());
@@ -140,5 +141,5 @@ export default function SingleColorView() {
         </div>
       </>
     );
-  else return <p>Loading...</p>;
+  else return <LoadingPage />;
 }

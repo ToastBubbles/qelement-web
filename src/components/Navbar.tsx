@@ -101,9 +101,4 @@ function Navbar() {
   );
 }
 
-// function doStuff() {
-//   setUserId(payload?.id as number);
-//   msgData && setMessageCount(msgData.data);
-// }
-
 export default Navbar;

@@ -129,7 +129,7 @@ export default function AllMessagesView() {
     // console.log(payload);
     if (payload && payload.username)
       if (
-        recipientName.trim().toLowerCase() == payload?.username.toLowerCase()
+        recipientName.trim().toLowerCase() == payload.username.toLowerCase()
       ) {
         showToast("You can't send messages to yourself", Mode.Warning);
         setIsBadRecipient(true);
@@ -166,10 +166,10 @@ export default function AllMessagesView() {
     }
   }
   // if (!isLoading && data) return data.data.id;
-  if (newMessage.senderId != payload?.id && !!payload.id) {
+  if (newMessage.senderId != payload.id && !!payload.id) {
     setNewMessage((newMessage) => ({
       ...newMessage,
-      ...{ senderId: payload?.id },
+      ...{ senderId: payload.id },
     }));
   }
 

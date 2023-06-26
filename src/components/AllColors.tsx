@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { color } from "../interfaces/general";
 import { Link } from "react-router-dom";
+import { validateSearch } from "../utils/utils";
 // import { similarColor } from "@/pages/colors/[colorId]";
 
 export interface ITableOptions {
@@ -177,23 +178,5 @@ function generateTable(
   if (contentLength > 0) return output;
   return <></>;
 }
-function validateSearch(col: color, query: string): boolean {
-  query = query.toLowerCase().trim();
-  if (
-    !query ||
-    col.bl_name.toLowerCase().includes(query) ||
-    col.tlg_name.toLowerCase().includes(query) ||
-    col.bo_name.toLowerCase().includes(query) ||
-    col.note.toLowerCase().includes(query)
-  )
-    return true;
-  if (!isNaN(parseInt(query))) {
-    if (
-      col.bl_id.toString().includes(query) ||
-      col.tlg_id.toString().includes(query)
-    )
-      return true;
-  }
-  return false;
-}
+
 export default AllColors;

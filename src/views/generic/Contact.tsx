@@ -1,8 +1,10 @@
 export default function Contact() {
   return (
     <>
-      <div className="padded-container">
-        <h1>Contact Us</h1>
+      <div className="page-content-wrapper">
+        <div className="page-content">
+          <h1>Contact Us</h1>
+        </div>
       </div>
     </>
   );

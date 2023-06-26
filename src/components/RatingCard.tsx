@@ -39,12 +39,13 @@ function RatingCard({ rating, qpartId, refetchFn }: IProps) {
       axios.get<number>(
         `http://localhost:3000/rating/${payload.id}/${qpartId}`
       ),
-    enabled: payload.id != undefined,
+    enabled: !!payload.id,
+    retry: false,
     staleTime: 0,
   });
 
   useEffect(() => {
-    ratingRefetch();
+    if (!!payload.id) ratingRefetch();
   }, [qpartId, rating]);
 
   const ratingMutation = useMutation({
@@ -86,11 +87,11 @@ function RatingCard({ rating, qpartId, refetchFn }: IProps) {
           if (myRating != -1) {
             console.log("adding...");
             if (myRating >= 0 && myRating <= 100) {
-              console.log(Number(payload?.id) | 1);
+              console.log(payload.id | 1);
 
               ratingMutation.mutate({
                 rating: myRating,
-                creatorId: Number(payload?.id) || 1,
+                creatorId: payload.id || 1,
                 qpartId: qpartId as number,
               });
               setMyRating(-1);

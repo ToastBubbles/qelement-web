@@ -1,11 +1,6 @@
 import { JwtStateType } from "./context";
 import { ActionMap } from "../../interfaces/context";
 
-interface ISetJwtAction {
-  jwtPayload: object;
-  token: string;
-}
-
 export enum Types {
   SetJwt = 'SET_JWT',
   ClearJWT = 'CLEAR_JWT',
@@ -14,7 +9,7 @@ export enum Types {
 type JwtPayload = {
   [Types.SetJwt] : {
     token: string;
-    jwtPayload: object
+    jwtPayload: JwtPayload
   };
   [Types.ClearJWT]: undefined
 }

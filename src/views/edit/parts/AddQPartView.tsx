@@ -100,12 +100,13 @@ export default function AddQPartView() {
     onSuccess: (data) => {
       if (data.data?.code == 200 && payload) {
         partStatusMutation.mutate({
+          id: -1,
           status: newStatus.status,
           date: startDate.toDateString(),
           location: newStatus.location,
           note: newStatus.note,
           qpartId: Number(data.data.message),
-          creatorId: payload?.id || 1,
+          creatorId: payload.id || 1,
         });
       }
       // partStatusMutation.mutate({
@@ -264,6 +265,10 @@ export default function AddQPartView() {
                         <span>prototype:</span> a developmental prototype
                       </li>
                       <li>
+                        <span>test part:</span> a test part, see about page for
+                        more info
+                      </li>
+                      <li>
                         <span>employee gift:</span> an element made as an
                         employee gift
                       </li>
@@ -294,6 +299,7 @@ export default function AddQPartView() {
                 <option value={"unknown"}>Unknown</option>
                 <option value={"qelement"}>Q-Element</option>
                 <option value={"prototype"}>Prototype</option>
+                <option value={"test"}>Test part</option>
                 <option value={"employee"}>Employee Gift</option>
                 <option value={"nightshift"}>Nightshift</option>
                 <option value={"other"}>Other</option>

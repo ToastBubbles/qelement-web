@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { IPartStatusDTO } from "../interfaces/general";
+import { IPartStatusDTO, color } from "../interfaces/general";
 
 export enum Mode {
   Success,
@@ -63,6 +63,26 @@ export default function showToast(message: string, mode: Mode = Mode.Success) {
       break;
     }
   }
+}
+
+export function validateSearch(col: color, query: string): boolean {
+  query = query.toLowerCase().trim();
+  if (
+    !query ||
+    col.bl_name.toLowerCase().includes(query) ||
+    col.tlg_name.toLowerCase().includes(query) ||
+    col.bo_name.toLowerCase().includes(query) ||
+    col.note.toLowerCase().includes(query)
+  )
+    return true;
+  if (!isNaN(parseInt(query))) {
+    if (
+      col.bl_id.toString().includes(query) ||
+      col.tlg_id.toString().includes(query)
+    )
+      return true;
+  }
+  return false;
 }
 
 export function sortStatus(statuses: IPartStatusDTO[]): IPartStatusDTO[] {

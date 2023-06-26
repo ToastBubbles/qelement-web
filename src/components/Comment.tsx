@@ -1,20 +1,21 @@
 import React from "react";
+import { ICommentDTO } from "../interfaces/general";
+import { formatDate } from "../utils/utils";
 
-function idLookup(id: number) {
-  return {
-    user: "jim",
-    content: "text body",
-  };
+interface IProps {
+  data: ICommentDTO;
 }
 
-function Comment({ id = 0 }) {
-  let commentObject = idLookup(id);
+function Comment({ data }: IProps) {
   return (
     <div className="comment">
       <img className="comment-pic" src="/img/blank_profile.webp" />
-      <div className="comment-content">
-        <div className="comment-username">{commentObject.user}</div>
-        <div className="comment-body">{commentObject.content}</div>
+      <div className="comment-content w-100">
+        <div className="w-100 d-flex jc-space-b">
+          <div className="comment-username">{data.creator.name}</div>
+          <div className="smalldate">{formatDate(data.createdAt)}</div>
+        </div>
+        <div className="comment-body">{data.content}</div>
       </div>
     </div>
   );

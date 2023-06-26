@@ -1,7 +1,8 @@
 export default function Privacy() {
   return (
     <>
-      <div className="padded-container">
+          <div className="page-content-wrapper">
+      <div className="page-content">
         <h1>Privacy Policy</h1>
         <ol id="privacy">
           <li>
@@ -55,7 +56,7 @@ export default function Privacy() {
             at any time, with or without notice.
           </li>
         </ol>
-      </div>
+      </div></div>
     </>
   );
 }

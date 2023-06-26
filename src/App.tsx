@@ -36,6 +36,7 @@ import ApproveCatView from "./views/edit/approval/CatApprovalView";
 import ApprovePartView from "./views/edit/approval/PartApprovalView";
 import ApproveQPartView from "./views/edit/approval/QPartApprovalView";
 import ApprovePartMoldView from "./views/edit/approval/PartMoldApprovalView";
+import ProfileSettingsView from "./views/profile/ProfileSettingsView";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -75,6 +76,10 @@ function App() {
               />
               <Route path="/part/:partId" element={<SinglePartView />} />
               <Route path="/profile" element={<ProfileView />} />
+              <Route
+                path="/profile/settings"
+                element={<ProfileSettingsView />}
+              />
               <Route path="/profile/messages" element={<AllMessagesView />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />

@@ -5,9 +5,9 @@ import React, {
   ReactNode,
   FC,
 } from "react";
-import { jwtInitialState, JwtStateType } from "./jwt/context";
-import { JwtActions, jwtReducer } from "./jwt/reducer";
+import { JwtActions } from "./jwt/reducer";
 import { appReducer, initialState, InitialStateType } from "./reducer";
+import { UserPreferencesActions } from "./userPrefs/reducer";
 
 interface IProps {
   children?: ReactNode;
@@ -15,7 +15,7 @@ interface IProps {
 
 const AppContext = createContext<{
   state: InitialStateType;
-  dispatch: Dispatch<JwtActions>;
+  dispatch: Dispatch<JwtActions | UserPreferencesActions>;
 }>({
   state: initialState,
   dispatch: () => null,

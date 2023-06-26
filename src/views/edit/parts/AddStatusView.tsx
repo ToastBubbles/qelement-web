@@ -215,7 +215,7 @@ export default function AddStatusView() {
                       status: newStatus.status,
                       location: newStatus.location,
                       note: newStatus.note,
-                      creatorId: payload?.id,
+                      creatorId: payload.id,
                       date: startDate.toDateString(),
                       qpartId: Number(qpartId),
                     });

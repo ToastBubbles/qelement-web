@@ -36,7 +36,7 @@ export default function NavbarPopdown() {
         <Link to={"/profile"}>My Profile</Link>
         <Link to={"/profile"}>My Wanted List</Link>
         <Link to={"/profile"}>My Inventory</Link>
-        <Link to={"/profile"}>Settings</Link>
+        <Link to={"/profile/settings"}>Settings</Link>
         <div
           onClick={(e) => {
             logout();
