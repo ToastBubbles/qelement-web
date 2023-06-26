@@ -376,6 +376,15 @@ body::-webkit-scrollbar {
   font-size: 1.5em;
   color: #aaa;
 }
+
+.flag-status {
+  margin-left: auto;
+  display: inline-block;
+  color: azure;
+  text-shadow: #2c2c2c 1px 1px 0;
+  padding: 0.2em;
+  border-radius: 0.25em;
+}
 .status-tag {
   display: inline-block;
   color: azure;
@@ -391,6 +400,10 @@ body::-webkit-scrollbar {
 }
 .tag-unknown {
   background-color: rgb(153, 12, 106);
+}
+.tag-nostatus {
+  background-color: rgb(71, 71, 71);
+  color: #a0a0a0;
 }
 .tag-known {
   background-color: rgb(107, 131, 184);
@@ -508,9 +521,7 @@ fieldset > legend {
   border-radius: 0.2em;
   border: solid 0.5px rgba(41, 41, 41, 0.192);
 }
-.flag-status {
-  margin-left: auto;
-}
+
 .flag-unknown {
   background-color: rgb(255, 255, 173);
 }

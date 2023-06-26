@@ -332,7 +332,7 @@ export default function SinglePartView() {
                     >
                       <div>
                         {mypart?.comments.map((comment) => {
-                          return <Comment data={comment} />;
+                          return <Comment key={comment.id} data={comment} />;
                         })}
                       </div>
                       <div className="w-100 d-flex">
@@ -391,7 +391,8 @@ export default function SinglePartView() {
                         />
                       </form>
                       <AllColorStatus
-                        partId={mypart?.mold.id || 0}
+                        qparts={qparts}
+                        moldId={mypart?.mold.id || 0}
                         search={searchColor}
                       />
                     </fieldset>
