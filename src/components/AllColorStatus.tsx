@@ -55,24 +55,44 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
   if (!isLoading && data) {
     let colors = data.data;
     function sortAndReturnJSX(): ReactNode {
-      let colorsWithStatus = colors.map((color) => {
-        let status = statusLookup(moldId, color.id);
-        return (
-          validateSearch(color, search) &&
-          status != "no status" &&
-          returnJSX(color, status)
-        );
-      });
-      let colorsWithoutStatus = colors.map((color) => {
-        let status = statusLookup(moldId, color.id);
-        return (
-          validateSearch(color, search) &&
-          status == "no status" &&
-          returnJSX(color, status)
-        );
-      });
+      let foundColors: ReactNode,
+        seenColors: ReactNode,
+        idOnlyColors: ReactNode,
+        knownColors: ReactNode,
+        otherColors: ReactNode,
+        colorsWithoutStatus: ReactNode;
 
-      return [colorsWithStatus, ...colorsWithoutStatus];
+      colors.forEach((color) => {
+        if (validateSearch(color, search)) {
+          let status = statusLookup(moldId, color.id);
+          if (status != "no status") {
+            if (status == "found") {
+              foundColors = [foundColors, returnJSX(color, status)];
+            } else if (status == "seen") {
+              seenColors = [seenColors, returnJSX(color, status)];
+            } else if (status == "idOnly") {
+              idOnlyColors = [idOnlyColors, returnJSX(color, status)];
+            } else if (status == "known") {
+              knownColors = [knownColors, returnJSX(color, status)];
+            } else {
+              otherColors = [otherColors, returnJSX(color, status)];
+            }
+          } else {
+            colorsWithoutStatus = [
+              colorsWithoutStatus,
+              returnJSX(color, status),
+            ];
+          }
+        }
+      });
+      return [
+        foundColors,
+        seenColors,
+        idOnlyColors,
+        knownColors,
+        otherColors,
+        colorsWithoutStatus,
+      ];
     }
 
     return <div className="allColorStatus">{sortAndReturnJSX()}</div>;

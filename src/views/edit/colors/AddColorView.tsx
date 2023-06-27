@@ -112,6 +112,7 @@ export default function AddColorView() {
               />
               <input
                 maxLength={6}
+                type="number"
                 className="formInput w-10"
                 placeholder="ID"
                 onChange={(e) =>

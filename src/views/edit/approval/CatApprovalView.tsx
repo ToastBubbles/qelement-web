@@ -1,7 +1,12 @@
 import axios from "axios";
 import { useQuery, useMutation } from "react-query";
 import showToast, { Mode } from "../../../utils/utils";
-import { category, color, iIdOnly } from "../../../interfaces/general";
+import {
+  IAPIResponse,
+  category,
+  color,
+  iIdOnly,
+} from "../../../interfaces/general";
 
 export default function ApproveCatView() {
   const {
@@ -14,12 +19,27 @@ export default function ApproveCatView() {
   const catMutation = useMutation({
     mutationFn: (id: number) =>
       axios
-        .post<number>(`http://localhost:3000/categories/approve`, { id })
+        .post<IAPIResponse>(`http://localhost:3000/categories/approve`, { id })
         .then((res) => console.log(res.data))
         .catch((err) => console.log(err)),
     onSuccess: () => {
       refetch();
       showToast("Category approved!", Mode.Success);
+    },
+  });
+
+  const catDeleteMutation = useMutation({
+    mutationFn: (id: number) =>
+      axios.post<IAPIResponse>(`http://localhost:3000/categories/delete`, {
+        id,
+      }),
+    onSuccess: (e) => {
+      if (e.data.code == 200) {
+        refetch();
+        showToast("Category deleted...", Mode.Info);
+      } else {
+        showToast("Error deleting category", Mode.Error);
+      }
     },
   });
 
@@ -33,16 +53,25 @@ export default function ApproveCatView() {
             {cats.length > 0 ? (
               cats.map((cat) => {
                 return (
-                  <div key={cat.id} className="d-flex jc-space-b w-100 my-1">
+                  <div
+                    key={cat.id}
+                    className="d-flex jc-space-b w-100 p-1 alternating-children"
+                  >
                     <div>{cat.name}</div>
-                    <button onClick={() => catMutation.mutate(cat.id)}>
-                      Approve
-                    </button>
+                    <div>
+                      <button onClick={() => catMutation.mutate(cat.id)}>
+                        Approve
+                      </button>
+                      <div className="button-spacer">|</div>
+                      <button onClick={() => catDeleteMutation.mutate(cat.id)}>
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 );
               })
             ) : (
-              <div className="text-center my-1">
+              <div className="text-center p-1">
                 nothing to approve right now!
               </div>
             )}

@@ -21,7 +21,7 @@ export default function ApproveView() {
                 Colors {counts.colors > 0 && `(${counts.colors})`}
               </Link>
               <Link to={"/approve/categories"}>
-                Categories {counts.colors > 0 && `(${counts.colors})`}
+                Categories {counts.categories > 0 && `(${counts.categories})`}
               </Link>
               <Link to={"/approve/parts"}>
                 Parts {counts.parts > 0 && `(${counts.parts})`}

@@ -6,6 +6,7 @@ import {
   category,
   part,
   IPartWithMoldDTO,
+  IAPIResponse,
 } from "../../../interfaces/general";
 import showToast, { Mode } from "../../../utils/utils";
 import MyToolTip from "../../../components/MyToolTip";
@@ -41,13 +42,23 @@ export default function AddPartView() {
   });
   const catMutation = useMutation({
     mutationFn: (name: string) =>
-      axios
-        .post<string>(`http://localhost:3000/categories`, { name })
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err)),
-    onSuccess: () => {
-      refetch();
-      showToast("Category submitted for approval!", Mode.Success);
+      axios.post<IAPIResponse>(`http://localhost:3000/categories`, { name }),
+    // .then((res) => console.log(res.data))
+    // .catch((err) => console.log(err)),
+    onSuccess: (e) => {
+      console.log("e", e.data);
+      if (e.data.code == 200) {
+        setNewCategory("");
+        refetch();
+        showToast("Category submitted for approval!", Mode.Success);
+      } else if (e.data.code == 501) {
+        showToast(
+          "Category already exists, it may be pending approval. If you believe this is incorrect, please reach out to an admin.",
+          Mode.Warning
+        );
+      } else {
+        showToast("Error adding category", Mode.Error);
+      }
     },
   });
   const handleCheckbox = () => {
@@ -89,7 +100,9 @@ export default function AddPartView() {
               >
                 <option value="-1">--</option>
                 {catData.data.map((cat) => (
-                  <option value={`${cat.id}`}>{cat.name}</option>
+                  <option key={cat.id} value={`${cat.id}`}>
+                    {cat.name}
+                  </option>
                 ))}
               </select>
             </div>
@@ -257,7 +270,6 @@ export default function AddPartView() {
                     if (newCategory) {
                       console.log("adding...");
                       catMutation.mutate(newCategory);
-                      setNewCategory("");
                     }
                   }}
                 >

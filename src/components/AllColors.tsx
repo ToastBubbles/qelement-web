@@ -12,7 +12,8 @@ export interface ITableOptions {
   //   search: string;
 }
 
-function AllColors({ search = "" }) {
+function AllColors() {
+  const [search, setSearchQuery] = useState<string>("");
   //   console.log(search);
 
   const [tableOptions, setTableOptions] = useState<ITableOptions>({
@@ -28,6 +29,13 @@ function AllColors({ search = "" }) {
   if (isFetched && data)
     return (
       <div className="color-table-container">
+                      <input
+                id="searchbar"
+                name="searchbar"
+                type="text"
+                placeholder="Search..."
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
         {generateTable(data, "solid", tableOptions, search)}
         {generateTable(data, "transparent", tableOptions, search)}
         {generateTable(data, "chrome", tableOptions, search)}

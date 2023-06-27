@@ -18,6 +18,8 @@ import LoadingPage from "../../components/LoadingPage";
 import ExpandingTextbox from "../../components/ExpandingTextbox";
 import { AppContext } from "../../context/context";
 import Comment from "../../components/Comment";
+import PopupCollection from "../../components/PopupCollection";
+import PopupFavorites from "../../components/PopupFavorites";
 
 export default function SinglePartView() {
   const {
@@ -32,9 +34,11 @@ export default function SinglePartView() {
   const [selectedQPartid, setSelectedQPartid] = useState<number>(-1);
   const [multiMoldPart, setMultiMoldPart] = useState<boolean>(false);
   const [selectedQPartMold, setSelectedQPartMold] = useState<number>(-1);
+  const [collectionOpen, setCollectionOpen] = useState(false);
+  const [favoritesOpen, setFavoritesOpen] = useState(false);
 
   const [detailsTabActive, setDetailsTabActive] = useState<boolean>(true);
-  const [priceTabActive, setPriceTabActive] = useState<boolean>(false);
+  // const [priceTabActive, setPriceTabActive] = useState<boolean>(false);
   const [commentTabActive, setCommentTabActive] = useState<boolean>(false);
   const [commentContent, setCommentContent] = useState<string>("");
   const [searchColor, setSearchColor] = useState<string>("");
@@ -208,14 +212,38 @@ export default function SinglePartView() {
 
                   // rating={100}
                 />
+                {collectionOpen && mypart && (
+                  <PopupCollection
+                    qpart={mypart}
+                    closePopup={() => setCollectionOpen(false)}
+                  />
+                )}
+
+                {favoritesOpen && mypart && (
+                  <PopupFavorites
+                    qpart={mypart}
+                    closePopup={() => setFavoritesOpen(false)}
+                  />
+                )}
                 <div className="d-flex flex-col jc-space-b border-left">
                   <ul className="actions">
                     <span>Actions:</span>
                     <li>
-                      <a href="#">Add to My Collection</a>
+                      <a
+                        className="clickable"
+                        onClick={() => setCollectionOpen(true)}
+                      >
+                        Add to My Collection
+                      </a>
                     </li>
+
                     <li>
-                      <a href="#">Add to My Watchlist</a>
+                      <a
+                        className="clickable"
+                        onClick={() => setFavoritesOpen(true)}
+                      >
+                        Add to My Favorites
+                      </a>
                     </li>
                     <li>
                       <Link to="/add/qpart/image">Add photo</Link>
@@ -230,7 +258,11 @@ export default function SinglePartView() {
                     <span>Links:</span>
 
                     <li>
-                      <a href="#">bricklink</a>
+                      <a
+                        href={`https://www.bricklink.com/v2/catalog/catalogitem.page?P=${mypart?.mold.number}&C=${mypart?.color.bl_id}`}
+                      >
+                        bricklink
+                      </a>
                     </li>
                     <li>
                       <a href="#">brickowl</a>
@@ -241,7 +273,7 @@ export default function SinglePartView() {
                   </ul>
                 </div>
                 <fieldset className="status">
-                  <legend>Status</legend>
+                  <legend>Status History</legend>
                   {mypart?.partStatuses &&
                     sortStatus(mypart?.partStatuses).map((status) => (
                       <QPartStatusDate
@@ -265,13 +297,13 @@ export default function SinglePartView() {
                         }
                         onClick={() => {
                           setDetailsTabActive(true);
-                          setPriceTabActive(false);
+                          // setPriceTabActive(false);
                           setCommentTabActive(false);
                         }}
                       >
                         Details
                       </button>
-                      <button
+                      {/* <button
                         className={
                           "tablinks" + (priceTabActive ? " active" : "")
                         }
@@ -282,14 +314,14 @@ export default function SinglePartView() {
                         }}
                       >
                         Price History
-                      </button>
+                      </button> */}
                       <button
                         className={
                           "tablinks" + (commentTabActive ? " active" : "")
                         }
                         onClick={() => {
                           setDetailsTabActive(false);
-                          setPriceTabActive(false);
+                          // setPriceTabActive(false);
                           setCommentTabActive(true);
                         }}
                       >
@@ -313,7 +345,7 @@ export default function SinglePartView() {
                       <div>Note:</div>
                       <div>{mypart?.note ? mypart.note : "No note"}</div>
                     </div>
-                    <div
+                    {/* <div
                       className={
                         "tabcontent pricehistory" +
                         (priceTabActive ? "" : " tabhidden")
@@ -323,7 +355,7 @@ export default function SinglePartView() {
                         className="scatter-img"
                         src="/img/scatter-example.png"
                       />
-                    </div>
+                    </div> */}
                     <div
                       className={
                         "tabcontent commenttab" +
@@ -372,7 +404,7 @@ export default function SinglePartView() {
                       <legend>
                         other colors for{" "}
                         {selectedQPartMold == -1
-                          ? "All molds"
+                          ? "all molds"
                           : getUnique().find((x) => x.id == selectedQPartMold)
                               ?.number}
                       </legend>
