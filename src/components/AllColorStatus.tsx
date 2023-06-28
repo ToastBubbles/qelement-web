@@ -37,7 +37,9 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
         <Link
           to={"/color/" + color.id}
           className="flag lt-grey"
+          
           style={{ backgroundColor: "#" + color.hex }}
+          
         >
           {color.bl_name.length == 0 ? color.tlg_name : color.bl_name}
         </Link>

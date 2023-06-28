@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { AppContext } from "../../context/context";
 
-export default function ProfileView() {
+export default function WantedView() {
   const {
     state: {
       jwt: { token, payload },
@@ -11,7 +11,7 @@ export default function ProfileView() {
   return (
     <>
       <div className="padded-container">
-        <h1>Welcome {payload.username as string}</h1>
+        <h1>Your Wanted Items</h1>
       </div>
     </>
   );

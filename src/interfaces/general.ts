@@ -128,6 +128,20 @@ export interface ICommentDTO {
   qpartId: number;
   createdAt: string;
 }
+export interface ICollectionDTO {
+  forTrade: boolean;
+  forSale: boolean;
+  qpartId: number;
+  userId: number;
+  quantity: number;
+  condition: string;
+  note: string;
+}
+export interface IWantedDTO {
+  type: string;
+  qpartId: number;
+  userId: number;
+}
 
 export interface ICommentCreationDTO {
   userId: number;

@@ -37,6 +37,8 @@ import ApprovePartView from "./views/edit/approval/PartApprovalView";
 import ApproveQPartView from "./views/edit/approval/QPartApprovalView";
 import ApprovePartMoldView from "./views/edit/approval/PartMoldApprovalView";
 import ProfileSettingsView from "./views/profile/ProfileSettingsView";
+import WantedView from "./views/profile/WantedView";
+import CollectionView from "./views/profile/CollectionView";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -80,6 +82,8 @@ function App() {
                 path="/profile/settings"
                 element={<ProfileSettingsView />}
               />
+              <Route path="/mycollection" element={<CollectionView />} />
+              <Route path="/mywanted" element={<WantedView />} />
               <Route path="/profile/messages" element={<AllMessagesView />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />

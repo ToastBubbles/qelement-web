@@ -1,7 +1,12 @@
-import { IQPartDTOInclude } from "../interfaces/general";
+import { useMutation } from "react-query";
+import { ICollectionDTO, IQPartDTOInclude } from "../interfaces/general";
 import ConditionSlider from "./ConditionSlider";
 import MyToolTip from "./MyToolTip";
 import SliderToggle from "./SliderToggle";
+import axios from "axios";
+import { useContext, useState } from "react";
+import showToast, { Mode } from "../utils/utils";
+import { AppContext } from "../context/context";
 
 interface IProps {
   qpart: IQPartDTOInclude;
@@ -9,6 +14,43 @@ interface IProps {
 }
 
 export default function PopupCollection({ qpart, closePopup }: IProps) {
+  const {
+    state: {
+      jwt: { token, payload },
+    },
+    dispatch,
+  } = useContext(AppContext);
+  const initialValues: ICollectionDTO = {
+    forTrade: false,
+    forSale: false,
+    qpartId: qpart.id || -1,
+    userId: payload.id || -1,
+    quantity: 1,
+    condition: "used",
+    note: "",
+  };
+
+  const [collectionObj, setCollectionObj] =
+    useState<ICollectionDTO>(initialValues);
+  const collectionMutation = useMutation({
+    mutationFn: (collectionDTO: ICollectionDTO) =>
+      axios.post(`http://localhost:3000/userInventory/add`, collectionDTO),
+    onSuccess: (e) => {
+      if (e.data.code == 200)
+        showToast("Added to your collection!", Mode.Success);
+      else if (e.data.code == 501) {
+        showToast(
+          "This part already exists in your collection, to update the quantity, visit your collection page.",
+          Mode.Warning
+        );
+        console.log(e.data);
+      } else {
+        showToast("Add failed", Mode.Error);
+        console.log(e.data);
+      }
+      //   qpartRefetch();
+    },
+  });
   return (
     <div className="popup-container">
       <div className="popup-body">
@@ -76,12 +118,25 @@ export default function PopupCollection({ qpart, closePopup }: IProps) {
         <div className="w-100 d-flex jc-space-b my-1">
           <div>Condition: </div>
           <div>
-            <ConditionSlider />
+            <ConditionSlider
+              getter={collectionObj.condition}
+              setter={setCollectionObj}
+            />
           </div>
         </div>
         <div className="w-100 d-flex jc-space-b my-1">
           <div>Quantity:</div>
-          <input className="showSpinner w-20" type="number" defaultValue={1} />
+          <input
+            className="showSpinner w-20"
+            type="number"
+            value={collectionObj.quantity}
+            onChange={(e) =>
+              setCollectionObj((collectionObj) => ({
+                ...collectionObj,
+                ...{ quantity: Number(e.target.value) },
+              }))
+            }
+          />
         </div>
         <div className="w-100 d-flex jc-start">Note</div>
         <div className="w-100 d-flex">
@@ -91,15 +146,33 @@ export default function PopupCollection({ qpart, closePopup }: IProps) {
             className="fg-1 formInput"
             rows={5}
             placeholder="Optional"
-            // onChange={(e) =>
-            //   setNewPart((newPart) => ({
-            //     ...newPart,
-            //     ...{ partNote: e.target.value },
-            //   }))
-            // }
-            // value={newPart.partNote}
+            onChange={(e) =>
+              setCollectionObj((collectionObj) => ({
+                ...collectionObj,
+                ...{ note: e.target.value },
+              }))
+            }
+            value={collectionObj.note}
           />
         </div>
+        <button
+          className="formInputNM"
+          onClick={() => {
+            if (
+              collectionObj.userId != -1 &&
+              collectionObj.quantity > 0 &&
+              collectionObj.qpartId != -1 &&
+              collectionObj.note.length <= 255
+            ) {
+              console.log("adding...");
+              collectionMutation.mutate(collectionObj);
+            } else {
+              showToast("Error adding to your collection.", Mode.Error);
+            }
+          }}
+        >
+          Add Part
+        </button>
       </div>
     </div>
   );

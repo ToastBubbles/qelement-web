@@ -1,4 +1,9 @@
-import { IQPartDTOInclude } from "../interfaces/general";
+import axios from "axios";
+import { useContext, useState } from "react";
+import { useMutation } from "react-query";
+import { AppContext } from "../context/context";
+import { IQPartDTOInclude, IWantedDTO } from "../interfaces/general";
+import showToast, { Mode } from "../utils/utils";
 import ConditionSlider from "./ConditionSlider";
 import MyToolTip from "./MyToolTip";
 import SliderToggle from "./SliderToggle";
@@ -9,6 +14,45 @@ interface IProps {
 }
 
 export default function PopupFavorites({ qpart, closePopup }: IProps) {
+  const {
+    state: {
+      jwt: { token, payload },
+    },
+    dispatch,
+  } = useContext(AppContext);
+  const initialValues: IWantedDTO = {
+    qpartId: qpart.id || -1,
+    userId: payload.id || -1,
+    type: "wanted",
+  };
+
+  const [wantedObj, setWantedObj] = useState<IWantedDTO>(initialValues);
+
+  const wantedMutation = useMutation({
+    mutationFn: (wantedDTO: IWantedDTO) =>
+      axios.post(`http://localhost:3000/userFavorite/add`, wantedDTO),
+    onSuccess: (e) => {
+      if (e.data.code == 200)
+        showToast(`Added to your ${wantedObj.type} list!`, Mode.Success);
+      else if (e.data.code == 501) {
+        showToast(
+          `This part already exists in your ${wantedObj.type} list, to update the quantity, visit your ${wantedObj.type} list page.`,
+          Mode.Warning
+        );
+        console.log(e.data);
+      } else if (e.data.code == 502) {
+        showToast(
+          `You already have 5 items in your Top 5, please remove one before adding more`,
+          Mode.Warning
+        );
+        console.log(e.data);
+      } else {
+        showToast("Add failed", Mode.Error);
+        console.log(e.data);
+      }
+      //   qpartRefetch();
+    },
+  });
   return (
     <div className="popup-container">
       <div className="popup-body">
@@ -74,18 +118,36 @@ export default function PopupFavorites({ qpart, closePopup }: IProps) {
             name="favesDrop"
             id="favesDrop"
             className="w-50 formInput"
-            // onChange={(e) =>
-
-            // }
-            // value={newPart.id}
-            // disabled={newPart.CatId == -1}
+            onChange={(e) =>
+              setWantedObj((wantedObj) => ({
+                ...wantedObj,
+                ...{ type: e.target.value },
+              }))
+            }
+            value={wantedObj.type}
           >
-            <option value="0">Wanted List</option>
-            <option value="1">Favorites</option>
-            <option value="2">Top 5</option>
-            <option value="3">Other</option>
+            <option value="wanted">Wanted List</option>
+            <option value="favorite">Favorites</option>
+            <option value="topfive">Top 5</option>
+            <option value="other">Other</option>
           </select>
         </div>
+        <button
+          className="formInputNM"
+          onClick={() => {
+            if (wantedObj.userId != -1 && wantedObj.qpartId != -1) {
+              console.log("adding...");
+              wantedMutation.mutate(wantedObj);
+            } else {
+              showToast(
+                `Error adding to your ${wantedObj.type} list.`,
+                Mode.Error
+              );
+            }
+          }}
+        >
+          Add Part
+        </button>
       </div>
     </div>
   );
