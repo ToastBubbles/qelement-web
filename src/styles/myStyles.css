@@ -34,6 +34,10 @@ input:not(.showSpinner)::-webkit-inner-spin-button {
   -webkit-appearance: inherit;
 } */
 
+.butt {
+  color: green;
+}
+
 /* Removes default focus */
 input[type="range"]:focus {
   outline: none;
@@ -269,9 +273,17 @@ body::-webkit-scrollbar {
 }
 .element-image {
   display: flex;
+  justify-content: center;
+  align-items: center;
   aspect-ratio: 4 / 3;
   width: 20rem;
   border: solid 1px var(--lt-grey);
+  padding: 0.25em;
+}
+.element-image > img {
+  object-fit: contain;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .breadcrumb {
@@ -427,6 +439,20 @@ body::-webkit-scrollbar {
 .ratingInput {
   width: 5em;
   text-align: center;
+}
+
+.listing-img {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 0.8em;
+}
+.listing-img > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 .rating-text {
   font-weight: bold;
@@ -765,10 +791,7 @@ fieldset > legend {
   flex-direction: column;
   padding-left: 0.5em;
 }
-.element-image-actual {
-  width: 100%;
-  height: 100%;
-}
+
 .jumbotron {
   position: relative;
   display: flex;
@@ -928,13 +951,16 @@ fieldset > legend {
 }
 .listing-img {
   position: relative;
-  height: 95%;
+  height: 3.8em;
+  width: 3.5em;
   display: flex;
   aspect-ratio: 1 / 1;
   border: solid 1px var(--dk-grey);
   margin-right: 0.25em;
 }
-
+.my-ribbon {
+  background-color: var(--lt-red);
+}
 a:link,
 a:visited {
   /* color: #fff; */
@@ -1325,6 +1351,15 @@ textarea {
 .edit-save {
   margin-top: 1em;
 }
+/* .my-ribbon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+} */
 
 .showHEX {
   display: inline-block;

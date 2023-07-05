@@ -22,6 +22,7 @@ import PopupCollection from "../../components/PopupCollection";
 import PopupFavorites from "../../components/PopupFavorites";
 
 export default function SinglePartView() {
+  const imagePath = "http://localhost:9000/q-part-images/";
   const {
     state: {
       jwt: { token, payload },
@@ -70,6 +71,30 @@ export default function SinglePartView() {
     // retry: false,
   });
   let mypart = qpartData?.data.find((x) => x.id == selectedQPartid);
+
+  // const {
+  //   data: qpartImageData,
+  //   error: qpartImageError,
+  //   refetch: qpartImageRefetch,
+  // } = useQuery({
+  //   queryKey: `qpartimage${mypart?.id}`,
+  //   queryFn: () => {
+  //     console.log("image fetch");
+  //     return axios.get<any>(
+  //       `http://localhost:3000/image/name/${mypart?.images[0].fileName}`
+  //     );
+  //   },
+  //   onSuccess: (d) => {
+  //     console.log(d.data);
+  //   },
+  //   staleTime: 0,
+  //   enabled: !!mypart && mypart.images?.length > 0,
+  //   // retry: false,
+  // });
+  // console.log("images:", mypart?.images);
+  // console.log("length", mypart?.images?.length);
+  // if (qpartImageData) console.log("i hope it got it", qpartImageData);
+
   if (qpartData) console.log("data", qpartData.data);
 
   function getRatings(ratings: rating[] | undefined): number {
@@ -137,6 +162,24 @@ export default function SinglePartView() {
       return output;
     }
 
+    function formatURL(): string {
+      // if (qpartImageData) {
+      //   let url = qpartImageData.data;
+      //   const questionMarkIndex = url.indexOf("?");
+      //   let formattedURL = url;
+
+      //   if (questionMarkIndex !== -1) {
+      //     formattedURL = url.substring(0, questionMarkIndex);
+      //   }
+
+      //   formattedURL = formattedURL.replace("minio", "localhost");
+      //   return formattedURL;
+      // }
+      if (mypart && mypart?.images?.length > 0) {
+        return imagePath + mypart.images[0].fileName;
+      }
+      return "https://via.placeholder.com/1024x768/eee?text=4:3";
+    }
     return (
       <>
         <div className="page-content-wrapper">
@@ -205,7 +248,7 @@ export default function SinglePartView() {
                 <div className="element-image">
                   <img
                     className="element-image-actual"
-                    src="https://via.placeholder.com/1024x768/eee?text=4:3"
+                    src={formatURL()}
                     alt="placeholder"
                   />
                 </div>
@@ -250,7 +293,9 @@ export default function SinglePartView() {
                       </a>
                     </li>
                     <li>
-                      <Link to="/add/qpart/image">Add photo</Link>
+                      <Link to={`/add/qpart/image/?qpartId=${mypart?.id}`}>
+                        Add photo
+                      </Link>
                     </li>
                     <li>
                       <Link to={`/add/qpart/status/${selectedQPartid}`}>

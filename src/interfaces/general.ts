@@ -148,6 +148,14 @@ export interface ICommentCreationDTO {
   content: string;
   qpartId: number;
 }
+export interface ImageDTO {
+  id: number;
+  fileName: string;
+  type: string;
+  userId: number;
+  qpartId: number;
+  approvalDate: string;
+}
 export interface IQPartDTOInclude {
   id: number;
   type: string;
@@ -159,6 +167,7 @@ export interface IQPartDTOInclude {
   ratings: rating[];
   comments: ICommentDTO[];
   partStatuses: IPartStatusDTO[];
+  images: ImageDTO[];
   createdAt: string;
 }
 export interface IQPartDTO {

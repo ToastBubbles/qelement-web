@@ -6,6 +6,8 @@ import ImageUploader from "../../components/ImageUploader";
 import { IUploadImageDetails } from "../../interfaces/general";
 
 export default function UploadImageView() {
+  const queryParameters = new URLSearchParams(window.location.search);
+  const urlQPartId = queryParameters.get("qpartId");
   //   const { colorId } = useParams();
   //   const [similarColorToAdd, setSimilarColorToAdd] = useState<number>(0);
   //   const navigate = useNavigate();
@@ -46,15 +48,27 @@ export default function UploadImageView() {
   //   if (colError || simError) {
   //     navigate("/404");
   //   }
-
-  return (
-    <>
-      <div className="formcontainer">
-        <h1>upload image</h1>
-        <div className="mainform">
-          <ImageUploader />
+  if (urlQPartId) {
+    return (
+      <>
+        <div className="formcontainer">
+          <h1>upload image</h1>
+          <div className="mainform">
+            <ImageUploader qpartId={Number(urlQPartId)} />
+          </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  } else {
+    return (
+      <>
+        <div className="formcontainer">
+          <h1>upload image</h1>
+          <div className="mainform">
+            <ImageUploader qpartId={-1} />
+          </div>
+        </div>
+      </>
+    );
+  }
 }
