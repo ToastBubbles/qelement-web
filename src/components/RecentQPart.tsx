@@ -1,7 +1,7 @@
 import { Ribbon, RibbonContainer } from "react-ribbons";
 import { Link } from "react-router-dom";
 import { IQPartDTOInclude, color, part } from "../interfaces/general";
-import { formatDate, sortStatus } from "../utils/utils";
+import { filterImages, formatDate, sortStatus } from "../utils/utils";
 
 interface IProps {
   qpart: IQPartDTOInclude;
@@ -27,8 +27,10 @@ export default function RecentQPart({ qpart }: IProps) {
       return `${age}hrs ago`;
     }
   }
+
   if (qpart) {
     let age = calculateHoursBetweenDates(qpart.createdAt);
+    let images = filterImages(qpart.images);
     return (
       <RibbonContainer>
         {age <= 24 && (
@@ -51,8 +53,8 @@ export default function RecentQPart({ qpart }: IProps) {
           <div className="listing-img">
             <img
               src={
-                qpart.images.length > 0
-                  ? imagePath + qpart.images[0].fileName
+                images.length > 0
+                  ? imagePath + images[0].fileName
                   : "/img/missingimage.png"
               }
             />

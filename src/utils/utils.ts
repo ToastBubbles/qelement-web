@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { IPartStatusDTO, color } from "../interfaces/general";
+import { IPartStatusDTO, ImageDTO, color } from "../interfaces/general";
 
 export enum Mode {
   Success,
@@ -64,6 +64,12 @@ export default function showToast(message: string, mode: Mode = Mode.Success) {
     }
   }
 }
+
+export function filterImages(images: ImageDTO[]): ImageDTO[] {
+  return images.filter((obj) => obj.approvalDate !== null);
+}
+
+
 
 export function validateSearch(col: color, query: string): boolean {
   query = query.toLowerCase().trim();

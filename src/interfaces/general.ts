@@ -156,6 +156,15 @@ export interface ImageDTO {
   qpartId: number;
   approvalDate: string;
 }
+
+export interface ImageDTOExtended {
+  id: number;
+  fileName: string;
+  type: string;
+  uploader: user;
+  qpart: IQPartDTOIncludeLess;
+  approvalDate: string;
+}
 export interface IQPartDTOInclude {
   id: number;
   type: string;
@@ -168,6 +177,17 @@ export interface IQPartDTOInclude {
   comments: ICommentDTO[];
   partStatuses: IPartStatusDTO[];
   images: ImageDTO[];
+  createdAt: string;
+}
+
+export interface IQPartDTOIncludeLess {
+  id: number;
+  type: string;
+  mold: IPartMoldDTO;
+  color: color;
+  creator: user;
+  note: string;
+  elementId: string;
   createdAt: string;
 }
 export interface IQPartDTO {

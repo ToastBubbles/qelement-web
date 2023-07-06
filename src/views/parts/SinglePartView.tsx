@@ -13,7 +13,7 @@ import {
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import QPartStatusDate from "../../components/QPartStatusDate";
-import showToast, { Mode, sortStatus } from "../../utils/utils";
+import showToast, { Mode, filterImages, sortStatus } from "../../utils/utils";
 import LoadingPage from "../../components/LoadingPage";
 import ExpandingTextbox from "../../components/ExpandingTextbox";
 import { AppContext } from "../../context/context";
@@ -175,8 +175,12 @@ export default function SinglePartView() {
       //   formattedURL = formattedURL.replace("minio", "localhost");
       //   return formattedURL;
       // }
+
       if (mypart && mypart?.images?.length > 0) {
-        return imagePath + mypart.images[0].fileName;
+        let images = filterImages(mypart?.images);
+        if (images.length > 0) {
+          return imagePath + images[0].fileName;
+        }
       }
       return "https://via.placeholder.com/1024x768/eee?text=4:3";
     }

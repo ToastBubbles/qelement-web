@@ -454,6 +454,22 @@ body::-webkit-scrollbar {
   height: 100%;
   object-fit: contain;
 }
+
+.img-approval-container {
+  max-width: 5em;
+  max-height: 5em;
+}
+.popup-img-container {
+  width: 100%;
+  height: 80%;
+}
+.img-approval-container > img,
+.popup-img-container > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .rating-text {
   font-weight: bold;
   /* color: linea; */
@@ -1407,6 +1423,17 @@ textarea {
   max-width: 50em;
   padding: 3em 3em 1em 3em;
 }
+.mainform-wide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: solid 1px rgba(145, 145, 145, 0.336);
+  border-radius: 1em;
+  min-width: 40em;
+  width: 100em;
+  max-width: 80%;
+  padding: 3em 3em 1em 3em;
+}
 .mainform > input {
   width: 100%;
   margin-bottom: 2em;
@@ -1534,6 +1561,20 @@ input:checked + .slider:before {
   right: 30%;
   bottom: 30%;
   top: 30%;
+  padding: 1em;
+  text-align: center;
+  margin: auto;
+  border-radius: 15px;
+  border-color: black;
+  background: azure;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+.popup-body-large {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: 10%;
+  top: 10%;
   padding: 1em;
   text-align: center;
   margin: auto;

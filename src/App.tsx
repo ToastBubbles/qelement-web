@@ -39,6 +39,7 @@ import ApprovePartMoldView from "./views/edit/approval/PartMoldApprovalView";
 import ProfileSettingsView from "./views/profile/ProfileSettingsView";
 import WantedView from "./views/profile/WantedView";
 import CollectionView from "./views/profile/CollectionView";
+import ApproveImageView from "./views/edit/approval/ImageApprovalView";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -95,6 +96,7 @@ function App() {
               <Route path="/approve" element={<ApproveView />} />
               <Route path="/approve/colors" element={<ApproveColorView />} />
               <Route path="/approve/categories" element={<ApproveCatView />} />
+              <Route path="/approve/images" element={<ApproveImageView />} />
               <Route path="/approve/parts" element={<ApprovePartView />} />
               <Route path="/approve/qparts" element={<ApproveQPartView />} />
               <Route path="/approve/molds" element={<ApprovePartMoldView />} />
