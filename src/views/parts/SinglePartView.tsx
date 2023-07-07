@@ -39,7 +39,7 @@ export default function SinglePartView() {
   const [favoritesOpen, setFavoritesOpen] = useState(false);
 
   const [detailsTabActive, setDetailsTabActive] = useState<boolean>(true);
-  // const [priceTabActive, setPriceTabActive] = useState<boolean>(false);
+  const [imageTabActive, setImageTabActive] = useState<boolean>(false);
   const [commentTabActive, setCommentTabActive] = useState<boolean>(false);
   const [commentContent, setCommentContent] = useState<string>("");
   const [searchColor, setSearchColor] = useState<string>("");
@@ -71,29 +71,6 @@ export default function SinglePartView() {
     // retry: false,
   });
   let mypart = qpartData?.data.find((x) => x.id == selectedQPartid);
-
-  // const {
-  //   data: qpartImageData,
-  //   error: qpartImageError,
-  //   refetch: qpartImageRefetch,
-  // } = useQuery({
-  //   queryKey: `qpartimage${mypart?.id}`,
-  //   queryFn: () => {
-  //     console.log("image fetch");
-  //     return axios.get<any>(
-  //       `http://localhost:3000/image/name/${mypart?.images[0].fileName}`
-  //     );
-  //   },
-  //   onSuccess: (d) => {
-  //     console.log(d.data);
-  //   },
-  //   staleTime: 0,
-  //   enabled: !!mypart && mypart.images?.length > 0,
-  //   // retry: false,
-  // });
-  // console.log("images:", mypart?.images);
-  // console.log("length", mypart?.images?.length);
-  // if (qpartImageData) console.log("i hope it got it", qpartImageData);
 
   if (qpartData) console.log("data", qpartData.data);
 
@@ -136,6 +113,8 @@ export default function SinglePartView() {
   if (qpartData) {
     let qparts = qpartData?.data;
     // let colors = colData?.data;
+    console.log("here we go", qparts);
+
     if (selectedQPartid == -1) {
       if (urlColorId) {
         let targetQPartId = qparts.find(
@@ -184,6 +163,8 @@ export default function SinglePartView() {
       }
       return "https://via.placeholder.com/1024x768/eee?text=4:3";
     }
+    console.log(selectedQPartid);
+
     return (
       <>
         <div className="page-content-wrapper">
@@ -218,7 +199,9 @@ export default function SinglePartView() {
                     value={selectedQPartMold}
                     disabled={!multiMoldPart}
                   >
-                    <option value="-1">--Show All Part Variations--</option>
+                    <option key={-1} value="-1">
+                      --Show All Part Variations--
+                    </option>
                     {getUnique().map((mold) => (
                       <option key={mold.id} value={`${mold.id}`}>
                         {mold.number}
@@ -350,11 +333,26 @@ export default function SinglePartView() {
                         }
                         onClick={() => {
                           setDetailsTabActive(true);
-                          // setPriceTabActive(false);
+                          setImageTabActive(false);
                           setCommentTabActive(false);
                         }}
                       >
                         Details
+                      </button>
+                      <button
+                        className={
+                          "tablinks" + (commentTabActive ? " active" : "")
+                        }
+                        onClick={() => {
+                          setDetailsTabActive(false);
+                          setImageTabActive(false);
+                          setCommentTabActive(true);
+                        }}
+                      >
+                        Comments{" "}
+                        {mypart?.comments &&
+                          mypart?.comments.length > 0 &&
+                          `(${mypart?.comments.length})`}
                       </button>
                       {/* <button
                         className={
@@ -370,18 +368,19 @@ export default function SinglePartView() {
                       </button> */}
                       <button
                         className={
-                          "tablinks" + (commentTabActive ? " active" : "")
+                          "tablinks" + (imageTabActive ? " active" : "")
                         }
                         onClick={() => {
                           setDetailsTabActive(false);
-                          // setPriceTabActive(false);
-                          setCommentTabActive(true);
+                          setCommentTabActive(false);
+                          setImageTabActive(true);
                         }}
+                        disabled={mypart?.images.length == 0}
                       >
-                        Comments{" "}
-                        {mypart?.comments &&
-                          mypart?.comments.length > 0 &&
-                          `(${mypart?.comments.length})`}
+                        Images{" "}
+                        {mypart?.images &&
+                          mypart?.images.length > 0 &&
+                          `(${mypart?.images.length})`}
                       </button>
                     </div>
                     <div
@@ -461,6 +460,34 @@ export default function SinglePartView() {
                           </svg>
                         </button>
                       </div>
+                    </div>
+
+                    <div
+                      className={
+                        "tabcontent tab-images" +
+                        (imageTabActive ? "" : " tabhidden")
+                      }
+                    >
+                      {mypart?.images &&
+                        mypart.images.map((image) => {
+                          return (
+                            <div>
+                              <img
+                                src={imagePath + image.fileName}
+                                alt="brick"
+                              />
+                              <div className="d-flex jc-space-b">
+                                <div>
+                                  Type:{" "}
+                                  <div className={"status-tag img-" + image.type}>
+                                    {image.type}
+                                  </div>
+                                </div>
+                                <div>Uploader: {image.uploader.name}</div>
+                              </div>
+                            </div>
+                          );
+                        })}
                     </div>
                   </div>
                   <div className="lower-center-right">

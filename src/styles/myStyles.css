@@ -121,11 +121,11 @@ ul > li {
 }
 #terms > div,
 #privacy > li,
-#about > li {
+.about-ul > li {
   margin-top: 0.2em;
   margin-bottom: 1.5em;
 }
-#about > li {
+.about-ul > li {
   font-size: 0.9em;
   margin-left: 1em;
   list-style-type: disc;
@@ -134,7 +134,7 @@ ul > li {
 #terms > li {
   font-weight: bold;
 }
-#about > li > span {
+.about-ul > li > span {
   font-weight: bold;
 }
 a:link,
@@ -229,6 +229,34 @@ body::-webkit-scrollbar {
   width: 3em;
   margin: 0 1em 0 0.5em;
   border-radius: 50%;
+}
+.tab-images {
+  overflow-y: auto;
+  max-height: 60em;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5em;
+  padding-bottom: 0;
+}
+.tab-images > div {
+  border: solid 1px var(--lt-grey);
+  border-radius: 1em;
+  padding: 1em;
+  margin-bottom: 0.5em;
+}
+.tab-images > div > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.ui-space-out {
+  display: flex;
+  flex-direction: column;
+}
+.ui-space-out > div {
+  display: flex;
+  justify-content: space-between;
 }
 .bi-envelope-fill {
   margin: 0 auto;
@@ -1486,6 +1514,21 @@ textarea {
   height: 0;
 }
 
+.img-part {
+  background-color: rgb(0, 204, 255);
+}
+.img-damaged {
+  background-color: var(--lt-red);
+}
+.img-sculpture {
+  background-color: #e9cf5e;
+}
+.img-suplemental {
+  background-color: #888888;
+}
+.img-other {
+  background-color: #914a91;
+}
 /* The slider */
 .slider {
   position: absolute;

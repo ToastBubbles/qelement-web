@@ -9,7 +9,7 @@ export default function About() {
             of non-production LEGO parts. There is a variety of non-production
             parts, see below for a breakdown:
           </div>
-          <ul id="about">
+          <ul className="about-ul">
             <li>
               <span>Q-element:</span> this generally refers to an existing part
               that was produced in a specific color for model builders in
@@ -42,16 +42,51 @@ export default function About() {
               <span>Employee:</span> this refers to employee gifts, typically
               just Chrome Gold parts
             </li>
+
             <li>
-              <span>Known:</span> this refers to a part that has seen an offical
-              release in a set or through Pick a Brick. Sometimes Q-elements
-              eventually get released, and become 'known' parts, an example of
-              this would be Dark Brown 3001
+              <span>Other/Unknown:</span> this is a catch-all for unique cases
+              where a part might not fit into any of the above categories. An
+              example of this might be the "Trans-Medium Green" 1x6 and 1x8
+              Bricks.
+            </li>
+          </ul>
+          <div style={{ marginBottom: "1em" }}>
+            Additionally, we keep track of each part's status to help users know
+            what to expect when hunting for these non-production parts. Here is
+            a breakdown of the statuses we use:
+          </div>
+          <ul className="about-ul">
+            <li>
+              <span>ID Only:</span> typically The LEGO Group assigns an Element
+              ID to each element, this is a unique number that represents the
+              part/color comnbination. Some parts may have multiple Element IDs,
+              this could be because the part was discontinued, then
+              reintroduced, or it could be a minor design change. Sometimes we
+              have element IDs for parts we have never seen, this hints at their
+              existence, but there is a possiblity that these parts never turn
+              up. Not all known/found parts have known element IDs.
             </li>
             <li>
-              <span>Other:</span> this is a catch-all for unique cases where a
-              part might not fit into any of the above categories. An example of
-              this might be the "Trans-Medium Green" 1x6 and 1x8 Bricks.
+              <span>Seen:</span> this is assigned to parts that have been seen
+              in a model/display, but have not been found/collected. Take these
+              with a grain of salt, the part could have been mis-identified due
+              to lighting, damage, or obstruction.
+            </li>
+            <li>
+              <span>Found:</span> this refers to a part that has been
+              found/collected, but have not been released in an official set.
+            </li>
+            <li>
+              <span>Known:</span> this refers to a part that has seen an offical
+              release in a set or through Shop-At-Home Pick a Brick. Sometimes
+              Q-elements eventually get released, and become 'known' parts, an
+              example of this would be Dark Brown 3001
+            </li>
+            <li>
+              <span>Other/Unknown:</span> this is a catch-all for unique cases
+              where a part might not fit into any of the above categories. A
+              good usecase would be rumoured parts that don't have a known
+              element ID.
             </li>
           </ul>
           <h2>How do we keep track of these parts?</h2>

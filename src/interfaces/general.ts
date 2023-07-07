@@ -152,7 +152,7 @@ export interface ImageDTO {
   id: number;
   fileName: string;
   type: string;
-  userId: number;
+  uploader: user;
   qpartId: number;
   approvalDate: string;
 }
