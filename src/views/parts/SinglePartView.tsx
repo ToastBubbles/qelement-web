@@ -157,8 +157,22 @@ export default function SinglePartView() {
 
       if (mypart && mypart?.images?.length > 0) {
         let images = filterImages(mypart?.images);
+        console.log("images:", images);
         if (images.length > 0) {
-          return imagePath + images[0].fileName;
+          let selectedImage = images[images.length - 1];
+          for (let i = images.length - 1; i >= 0; i--) {
+            console.log("iterating,", images[i]);
+
+            if (images[i].type == "part") {
+              selectedImage = images[i];
+            }
+            if (images[i].isPrimary) {
+              selectedImage = images[i];
+              break;
+            }
+          }
+          return imagePath + selectedImage.fileName;
+          // return imagePath + images[0].fileName;
         }
       }
       return "https://via.placeholder.com/1024x768/eee?text=4:3";
@@ -379,8 +393,8 @@ export default function SinglePartView() {
                       >
                         Images{" "}
                         {mypart?.images &&
-                          mypart?.images.length > 0 &&
-                          `(${mypart?.images.length})`}
+                          filterImages(mypart?.images).length > 0 &&
+                          `(${filterImages(mypart?.images).length})`}
                       </button>
                     </div>
                     <div
@@ -469,7 +483,7 @@ export default function SinglePartView() {
                       }
                     >
                       {mypart?.images &&
-                        mypart.images.map((image) => {
+                       filterImages(mypart.images).map((image) => {
                           return (
                             <div>
                               <img
@@ -479,7 +493,9 @@ export default function SinglePartView() {
                               <div className="d-flex jc-space-b">
                                 <div>
                                   Type:{" "}
-                                  <div className={"status-tag img-" + image.type}>
+                                  <div
+                                    className={"status-tag img-" + image.type}
+                                  >
                                     {image.type}
                                   </div>
                                 </div>

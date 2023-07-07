@@ -151,6 +151,7 @@ export interface ICommentCreationDTO {
 export interface ImageDTO {
   id: number;
   fileName: string;
+  isPrimary: boolean;
   type: string;
   uploader: user;
   qpartId: number;
@@ -161,6 +162,7 @@ export interface ImageDTOExtended {
   id: number;
   fileName: string;
   type: string;
+  isPrimary: boolean;
   uploader: user;
   qpart: IQPartDTOIncludeLess;
   approvalDate: string;

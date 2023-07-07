@@ -31,6 +31,17 @@ export default function RecentQPart({ qpart }: IProps) {
   if (qpart) {
     let age = calculateHoursBetweenDates(qpart.createdAt);
     let images = filterImages(qpart.images);
+    let primaryImage = images[images.length - 1];
+    for (let i = images.length - 1; i >= 0; i--) {
+      if (images[i].type == "part") {
+        primaryImage = images[i];
+      }
+      if (images[i].isPrimary) {
+        primaryImage = images[i];
+        break;
+      }
+    }
+
     return (
       <RibbonContainer>
         {age <= 24 && (
@@ -54,7 +65,7 @@ export default function RecentQPart({ qpart }: IProps) {
             <img
               src={
                 images.length > 0
-                  ? imagePath + images[0].fileName
+                  ? imagePath + primaryImage.fileName
                   : "/img/missingimage.png"
               }
             />
