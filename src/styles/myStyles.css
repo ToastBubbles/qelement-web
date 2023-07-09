@@ -1328,6 +1328,10 @@ textarea {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
+.my-2 {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
 .p-1 {
   padding: 0.5em;
 }
@@ -1363,7 +1367,9 @@ textarea {
   padding-right: 0.25em;
   /* margin: 0.25em 0.5em 0.25em 0; */
 }
-
+.thick-check {
+  width: 3em;
+}
 .align-center {
   align-items: center;
 }
@@ -1577,7 +1583,50 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 /*  */
+.goal-body {
+  display: flex;
+  flex-direction: column;
+  border: solid 1px var(--lt-grey);
+  margin: 0.2em;
+  padding: 0.2em;
+  border-radius: 0.5em;
+  height: 20em;
+  width: 20em;
+}
+.goal-body-colors {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+.goal-meter-container {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 1.5em;
+  min-height: 1.5em;
+  border: solid 1px #1b5c46;
+  border-radius: 3px;
+  /* background-color: #000; */
+}
+.goal-percentage{
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #1b5c46;
+}
+.goal-meter {
+  background-color: #4affc3;
+}
 
+.goal-color-check {
+  width: 1.5em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .popup-container {
   position: fixed;
   width: 100%;

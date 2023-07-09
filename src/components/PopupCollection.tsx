@@ -146,18 +146,20 @@ export default function PopupCollection({ qpart, closePopup }: IProps) {
             className="fg-1 formInput"
             rows={5}
             placeholder="Optional"
+            value={collectionObj.note}
             onChange={(e) =>
               setCollectionObj((collectionObj) => ({
                 ...collectionObj,
                 ...{ note: e.target.value },
               }))
             }
-            value={collectionObj.note}
           />
         </div>
         <button
           className="formInputNM"
           onClick={() => {
+            console.log(collectionObj);
+
             if (
               collectionObj.userId != -1 &&
               collectionObj.quantity > 0 &&

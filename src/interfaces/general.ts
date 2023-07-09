@@ -128,6 +128,15 @@ export interface ICommentDTO {
   qpartId: number;
   createdAt: string;
 }
+export interface ICollectionDTOGET {
+  forTrade: boolean;
+  forSale: boolean;
+  qpart: IQPartDTOIncludeLess;
+  userId: number;
+  quantity: number;
+  condition: string;
+  note: string;
+}
 export interface ICollectionDTO {
   forTrade: boolean;
   forSale: boolean;
@@ -306,4 +315,23 @@ export interface IExtendedMessageDTO {
 export interface IMailbox {
   inbox: IExtendedMessageDTO[];
   outbox: IExtendedMessageDTO[];
+}
+export interface IGoalDTO {
+  userId: number;
+  partId: number;
+  moldId: number;
+  name: string;
+  solid: boolean;
+  trans: boolean;
+  other: boolean;
+}
+export interface IGoalDTOExtended {
+  id: number;
+  userId: number;
+  part: part;
+  partMoldId: number;
+  name: string;
+  includeSolid: boolean;
+  includeTrans: boolean;
+  includeOther: boolean;
 }
