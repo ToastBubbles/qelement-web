@@ -64,12 +64,10 @@ export default function showToast(message: string, mode: Mode = Mode.Success) {
     }
   }
 }
-
+export const imagePath = "http://localhost:9000/q-part-images/";
 export function filterImages(images: ImageDTO[]): ImageDTO[] {
   return images.filter((obj) => obj.approvalDate !== null);
 }
-
-
 
 export function validateSearch(col: color, query: string): boolean {
   query = query.toLowerCase().trim();

@@ -199,6 +199,7 @@ export interface IQPartDTOIncludeLess {
   creator: user;
   note: string;
   elementId: string;
+  images: ImageDTO[];
   createdAt: string;
 }
 export interface IQPartDTO {

@@ -58,12 +58,12 @@ export default function Goal({ goal, collection }: IProps) {
       count++;
     }
     if (goal.includeTrans) {
-      if (count > 0) output += " and ";
+      if (count > 0) output += " & ";
       output += "Transparent";
       count++;
     }
     if (goal.includeOther) {
-      if (count > 0) output += " and ";
+      if (count > 0) output += " & ";
       output += "Other";
       count++;
     }
@@ -73,17 +73,30 @@ export default function Goal({ goal, collection }: IProps) {
   if (qpartData) {
     let qparts = qpartData.data;
     let mappedParts: ICollectionQPart[] = [];
+    console.log(goal.name);
+
     qparts.forEach((qpart) => {
-      let temp = theseParts.find((x) => x.qpart.id == qpart.id);
-      if (temp) {
-        mappedParts.push({ isOwned: true, qpart: qpart });
-      } else {
-        mappedParts.push({ isOwned: false, qpart: qpart });
+      console.log(qpart);
+
+      if (
+        (goal.includeSolid && qpart.color.type == "solid") ||
+        (goal.includeTrans && qpart.color.type == "transparent") ||
+        (goal.includeOther &&
+          qpart.color.type != "solid" &&
+          qpart.color.type != "transparent")
+      ) {
+        let temp = theseParts.find((x) => x.qpart.id == qpart.id);
+
+        if (temp) {
+          mappedParts.push({ isOwned: true, qpart: qpart });
+        } else {
+          mappedParts.push({ isOwned: false, qpart: qpart });
+        }
       }
     });
     function calcPercent() {
       let count = 0;
-      console.log("mappppppped", mappedParts);
+      //   console.log("mappppppped", mappedParts);
 
       for (const item of mappedParts) {
         if (item.isOwned) {
@@ -97,19 +110,21 @@ export default function Goal({ goal, collection }: IProps) {
     }
     return (
       <div className="goal-body">
-        <div style={{ fontSize: "2em" }}>
-          {goal.name ? goal.name : goal.part.name}
+        <div style={{ fontSize: "2em", padding: "0 0.25em " }}>
+          {goal.part.name}
         </div>
 
         <div
           style={{
             color: "var(--dk-grey)",
             borderBottom: "solid 1px var(--lt-grey)",
+            padding: "0 0.5em 0.5em 0.5em",
+            fontSize: "0.9em",
           }}
         >
-          {goal.part.name} - {showMold()} - {showColors()}
+          {showMold()} - {showColors()}
         </div>
-        <div className="goal-body-colors" style={{ padding: "0.5em" }}>
+        <div className="goal-body-colors">
           {mappedParts.map((qpart) => (
             <GoalColor data={qpart} />
           ))}

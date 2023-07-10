@@ -1,15 +1,18 @@
 import { Ribbon, RibbonContainer } from "react-ribbons";
 import { Link } from "react-router-dom";
 import { IQPartDTOInclude, color, part } from "../interfaces/general";
-import { filterImages, formatDate, sortStatus } from "../utils/utils";
+import {
+  filterImages,
+  formatDate,
+  imagePath,
+  sortStatus,
+} from "../utils/utils";
 
 interface IProps {
   qpart: IQPartDTOInclude;
 }
 
 export default function RecentQPart({ qpart }: IProps) {
-  const imagePath = "http://localhost:9000/q-part-images/";
-
   function calculateHoursBetweenDates(startDateStr: string): number {
     const endDate = new Date();
     const startDate = new Date(startDateStr);

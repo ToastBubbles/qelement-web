@@ -470,13 +470,18 @@ body::-webkit-scrollbar {
 }
 
 .listing-img {
-  width: 100%;
-  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   padding-bottom: 0.8em;
+  position: relative;
+  height: 3.8em;
+  width: 3.5em;
+  aspect-ratio: 1 / 1;
+  border: solid 1px var(--dk-grey);
+  margin-right: 0.25em;
 }
+
 .listing-img > img {
   width: 100%;
   height: 100%;
@@ -1588,10 +1593,10 @@ input:checked + .slider:before {
   flex-direction: column;
   border: solid 1px var(--lt-grey);
   margin: 0.2em;
-  padding: 0.2em;
+  /* padding: 0.2em; */
   border-radius: 0.5em;
   height: 20em;
-  width: 20em;
+  width: 22em;
 }
 .goal-body-colors {
   display: flex;
@@ -1606,11 +1611,12 @@ input:checked + .slider:before {
   width: 100%;
   height: 1.5em;
   min-height: 1.5em;
-  border: solid 1px #1b5c46;
+  border-top: solid 1px var(--lt-grey);
+  /* #1b5c46; */
   border-radius: 3px;
   /* background-color: #000; */
 }
-.goal-percentage{
+.goal-percentage {
   position: absolute;
   left: 0;
   right: 0;
@@ -1626,6 +1632,54 @@ input:checked + .slider:before {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.goal-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* padding-bottom: 0.8em; */
+  /* position: relative; */
+  height: 3.5em;
+  width: 3.5em;
+  aspect-ratio: 1 / 1;
+
+  /* border: solid 1px var(--dk-grey); */
+}
+.goal-img > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.goal-item {
+  display: flex;
+
+  border-bottom: solid 1px var(--lt-grey);
+  width: 100%;
+  /* margin-bottom: -1px; */
+}
+.goal-item > div {
+  color: var(--dk-grey);
+}
+.goal-color-swatch {
+  margin-right: 0.25em;
+  border-right: solid 1px var(--lt-grey);
+  width: 0.5em;
+}
+.goal-not-owned {
+  filter: grayscale(100%);
+}
+.goal-check {
+  width: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.check-true {
+  background-color: var(--toastify-color-success);
+}
+.check-false {
+  background-color: var(--lt-red);
 }
 .popup-container {
   position: fixed;
