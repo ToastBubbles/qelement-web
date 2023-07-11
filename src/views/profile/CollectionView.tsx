@@ -6,6 +6,7 @@ import { ICollectionDTOGET, IGoalDTOExtended } from "../../interfaces/general";
 import LoadingPage from "../../components/LoadingPage";
 import PopupGoal from "../../components/PopupGoal";
 import Goal from "../../components/Goal";
+import CollectionPart from "../../components/CollectionPart";
 
 export default function CollectionView() {
   const {
@@ -49,9 +50,8 @@ export default function CollectionView() {
               closePopup={() => setGoalPopupOpen(false)}
             />
           )}
-          <h1>Your Collection</h1>
+          <h1>Your Goals</h1>
           <div>
-            Goals
             <div className="d-flex">
               {goals.map((goal) => (
                 <Goal key={goal.id} goal={goal} collection={myParts} />
@@ -60,6 +60,17 @@ export default function CollectionView() {
             <div className="clickable" onClick={() => setGoalPopupOpen(true)}>
               Create New Goal
             </div>
+          </div>
+          <h1>Your Collection</h1>
+          <div className="col-guide">
+            <div>Sale</div>
+            <div>Trade</div>
+            <div>Qty</div>
+          </div>
+          <div>
+            {myParts.map((myqpart) => (
+              <CollectionPart key={myqpart.id} data={myqpart} />
+            ))}
           </div>
         </div>
       </>

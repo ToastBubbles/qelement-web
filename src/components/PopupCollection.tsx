@@ -28,7 +28,11 @@ export default function PopupCollection({ qpart, closePopup }: IProps) {
     quantity: 1,
     condition: "used",
     note: "",
+    availDupes: false,
   };
+  const [forTrade, setForTrade] = useState<boolean>(false);
+  const [forSale, setForSale] = useState<boolean>(false);
+  const [duplicatesOnly, setDuplicatesOnly] = useState<boolean>(false);
 
   const [collectionObj, setCollectionObj] =
     useState<ICollectionDTO>(initialValues);
@@ -89,7 +93,7 @@ export default function PopupCollection({ qpart, closePopup }: IProps) {
             />
           </div>
           <div>
-            <SliderToggle />
+            <SliderToggle getter={forTrade} setter={setForTrade} />
           </div>
         </div>
         <div className="w-100 d-flex jc-space-b my-1">
@@ -113,7 +117,31 @@ export default function PopupCollection({ qpart, closePopup }: IProps) {
             <input type="checkbox" />
             <span className="slider round"></span>
           </label> */}
-          <SliderToggle />
+          <SliderToggle getter={forSale} setter={setForSale} />
+        </div>
+        <div className="w-100 d-flex jc-space-b my-1">
+          <div>
+            Availability for duplicates only?{" "}
+            <MyToolTip
+              content={
+                <div style={{ maxWidth: "20em" }}>
+                  This will only show this item for sale/trade if you have more
+                  than one in your inventory. Only applies if Quantity is
+                  greater than 1, if you have two of the same part, but in your
+                  collection it shows as one used item, and one new item, this
+                  will not apply.
+                </div>
+              }
+              id="col-dupe"
+            />
+          </div>
+          <div>
+            <SliderToggle
+              getter={duplicatesOnly}
+              setter={setDuplicatesOnly}
+              disabled={!forSale && !forTrade}
+            />
+          </div>
         </div>
         <div className="w-100 d-flex jc-space-b my-1">
           <div>Condition: </div>
@@ -158,6 +186,9 @@ export default function PopupCollection({ qpart, closePopup }: IProps) {
         <button
           className="formInputNM"
           onClick={() => {
+            collectionObj.forSale = forSale;
+            collectionObj.forTrade = forTrade;
+            collectionObj.availDupes = duplicatesOnly;
             console.log(collectionObj);
 
             if (

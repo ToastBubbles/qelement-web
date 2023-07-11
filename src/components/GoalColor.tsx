@@ -4,6 +4,7 @@ import { IQPartDTOIncludeLess, color } from "../interfaces/general";
 import { filterImages, imagePath } from "../utils/utils";
 interface ICollectionQPart {
   isOwned: boolean;
+  condition: string;
   qpart: IQPartDTOIncludeLess;
 }
 interface iProps {
@@ -39,17 +40,20 @@ export default function GoalColor({ data }: iProps) {
           }
         />
       </div>
-      <div style={{ flexGrow: "1", borderLeft: "solid 1px var(--lt-grey)" }}>
-        <div
-          style={{ backgroundColor: "#" + data.qpart.color.hex }}
-          className={"goal-color-swatch " + data.qpart.color.type}
-        ></div>
+      <div
+        style={{ backgroundColor: "#" + data.qpart.color.hex }}
+        className={"goal-color-swatch " + data.qpart.color.type}
+      ></div>
+      <div style={{ flexGrow: "1" }}>
         <div>
           <div style={{ fontSize: "0.8em" }}>
             L: {data.qpart.color.tlg_name}
           </div>
           <div style={{ fontSize: "0.8em" }}>
             BL: {data.qpart.color.bl_name}
+          </div>
+          <div style={{ fontSize: "0.8em" }}>
+            {data.isOwned ? `Condition: ${data.condition}` : ""}
           </div>
         </div>
       </div>

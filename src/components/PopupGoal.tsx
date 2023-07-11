@@ -27,6 +27,7 @@ export default function PopupGoal({ userId, closePopup }: IProps) {
     solid: true,
     trans: true,
     other: true,
+    known: false,
   };
   const [selectedCatId, setSelectedCatId] = useState<number>(-1);
   const [goal, setGoal] = useState<IGoalDTO>(initialValues);
@@ -82,7 +83,7 @@ export default function PopupGoal({ userId, closePopup }: IProps) {
               id="goaltip"
             />
           </div>
-          <div className="w-100 d-flex jc-space-b my-1">
+          {/* <div className="w-100 d-flex jc-space-b my-1">
             <label htmlFor="name">Name:</label>
             <input
               max={100}
@@ -98,7 +99,7 @@ export default function PopupGoal({ userId, closePopup }: IProps) {
               }
               value={goal.name}
             />
-          </div>
+          </div> */}
           <div className="w-100 d-flex jc-space-b my-1">
             <label htmlFor="catDrop">Category:</label>
             <select
@@ -169,6 +170,23 @@ export default function PopupGoal({ userId, closePopup }: IProps) {
                   </option>
                 ))}
             </select>
+          </div>
+          <div className="w-100 d-flex jc-space-b my-2">
+            <label htmlFor="colTypeDrop">Include Known Parts:</label>
+            <label className="switch" htmlFor="cbK">
+              <input
+                type="checkbox"
+                id="cbK"
+                checked={goal.known}
+                onChange={(e) =>
+                  setGoal((goal) => ({
+                    ...goal,
+                    ...{ known: e.target.checked },
+                  }))
+                }
+              />
+              <div className="slider round"></div>
+            </label>
           </div>
           <div className="w-100 d-flex jc-space-b my-2">
             <label htmlFor="colTypeDrop">Include Solid Colors:</label>

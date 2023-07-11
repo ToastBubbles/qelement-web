@@ -15,6 +15,7 @@ interface IProps {
 }
 interface ICollectionQPart {
   isOwned: boolean;
+  condition: string;
   qpart: IQPartDTOIncludeLess;
 }
 export default function Goal({ goal, collection }: IProps) {
@@ -73,24 +74,53 @@ export default function Goal({ goal, collection }: IProps) {
   if (qpartData) {
     let qparts = qpartData.data;
     let mappedParts: ICollectionQPart[] = [];
-    console.log(goal.name);
 
     qparts.forEach((qpart) => {
       console.log(qpart);
+      let isKnown = false;
+      for (let statusData of qpart.partStatuses) {
+        if (statusData.status == "known") {
+          isKnown = true;
+        }
+      }
 
-      if (
-        (goal.includeSolid && qpart.color.type == "solid") ||
-        (goal.includeTrans && qpart.color.type == "transparent") ||
-        (goal.includeOther &&
-          qpart.color.type != "solid" &&
-          qpart.color.type != "transparent")
-      ) {
-        let temp = theseParts.find((x) => x.qpart.id == qpart.id);
+      if ((!goal.includeKnown && !isKnown) || goal.includeKnown) {
+        if (
+          (goal.includeSolid && qpart.color.type == "solid") ||
+          (goal.includeTrans && qpart.color.type == "transparent") ||
+          (goal.includeOther &&
+            qpart.color.type != "solid" &&
+            qpart.color.type != "transparent")
+        ) {
+          let count = 0;
+          let bestCondition = "";
+          let temp;
+          for (const part of theseParts) {
+            if (part.qpart.id === qpart.id) {
+              temp = part.qpart;
+              count++;
+              if (count == 1) {
+                bestCondition = part.condition;
+              } else {
+                if (bestCondition == "damaged") {
+                  bestCondition = part.condition;
+                } else if (bestCondition == "used" && part.condition == "new") {
+                  bestCondition = part.condition;
+                }
+              }
+            }
+          }
+          // let temp = theseParts.find((x) => x.qpart.id == qpart.id);
 
-        if (temp) {
-          mappedParts.push({ isOwned: true, qpart: qpart });
-        } else {
-          mappedParts.push({ isOwned: false, qpart: qpart });
+          if (temp) {
+            mappedParts.push({
+              isOwned: true,
+              qpart: qpart,
+              condition: bestCondition,
+            });
+          } else {
+            mappedParts.push({ isOwned: false, qpart: qpart, condition: "" });
+          }
         }
       }
     });
@@ -108,6 +138,18 @@ export default function Goal({ goal, collection }: IProps) {
 
       return output;
     }
+    function getRatio(): string {
+      let count = 0;
+      //   console.log("mappppppped", mappedParts);
+
+      for (const item of mappedParts) {
+        if (item.isOwned) {
+          count++;
+        }
+      }
+
+      return `${count} / ${mappedParts.length}`;
+    }
     return (
       <div className="goal-body">
         <div style={{ fontSize: "2em", padding: "0 0.25em " }}>
@@ -122,7 +164,8 @@ export default function Goal({ goal, collection }: IProps) {
             fontSize: "0.9em",
           }}
         >
-          {showMold()} - {showColors()}
+          {showMold()} - {goal.includeKnown ? "QParts & Known" : "QParts only"}{" "}
+          - {showColors()}
         </div>
         <div className="goal-body-colors">
           {mappedParts.map((qpart) => (
@@ -130,7 +173,7 @@ export default function Goal({ goal, collection }: IProps) {
           ))}
         </div>
         <div className="goal-meter-container">
-          <div className="goal-percentage">{calcPercent() + "%"}</div>
+          <div className="goal-percentage">{getRatio()}</div>
 
           <div
             className="goal-meter"

@@ -129,8 +129,10 @@ export interface ICommentDTO {
   createdAt: string;
 }
 export interface ICollectionDTOGET {
+  id: number;
   forTrade: boolean;
   forSale: boolean;
+  availDuplicates: boolean;
   qpart: IQPartDTOIncludeLess;
   userId: number;
   quantity: number;
@@ -140,6 +142,7 @@ export interface ICollectionDTOGET {
 export interface ICollectionDTO {
   forTrade: boolean;
   forSale: boolean;
+  availDupes: boolean;
   qpartId: number;
   userId: number;
   quantity: number;
@@ -200,6 +203,7 @@ export interface IQPartDTOIncludeLess {
   note: string;
   elementId: string;
   images: ImageDTO[];
+  partStatuses: IPartStatusDTO[];
   createdAt: string;
 }
 export interface IQPartDTO {
@@ -325,6 +329,7 @@ export interface IGoalDTO {
   solid: boolean;
   trans: boolean;
   other: boolean;
+  known: boolean;
 }
 export interface IGoalDTOExtended {
   id: number;
@@ -335,4 +340,5 @@ export interface IGoalDTOExtended {
   includeSolid: boolean;
   includeTrans: boolean;
   includeOther: boolean;
+  includeKnown: boolean;
 }

@@ -89,6 +89,9 @@ input[type="range"]::-webkit-slider-runnable-track {
 .slide-disabled::-webkit-slider-runnable-track {
   background-color: var(--lt-grey) !important;
 }
+.slide-disabled-fr::-webkit-slider-runnable-track {
+  background-color: #eee !important;
+}
 .slider-Damaged::-webkit-slider-runnable-track {
   background-color: var(--lt-red) !important;
 }
@@ -936,6 +939,10 @@ fieldset > legend {
   width: 90%;
   height: 100%;
 }
+.hp-panel-body>div {
+min-height: unset;
+margin-bottom: -1px;
+}
 .tt-list {
   padding-left: 1em;
 }
@@ -976,6 +983,28 @@ fieldset > legend {
 }
 .wrapbreak {
   word-wrap: break-word;
+}
+.col-guide {
+  display: flex;
+  justify-content: end;
+}
+.col-guide > div {
+  width: 3em;
+  display: flex;
+  justify-content: center;
+}
+.col-part-body {
+  width: 9em;
+  display: flex;
+}
+.col-part-body > div {
+  width: 3em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.lt-grey-txt {
+  color: var(--lt-grey);
 }
 .listing {
   display: flex;
@@ -1681,6 +1710,14 @@ input:checked + .slider:before {
 .check-false {
   background-color: var(--lt-red);
 }
+
+.collection-item {
+  display: flex;
+
+  border: solid 1px var(--lt-grey);
+  margin-bottom: -1px;
+  width: 100%;
+}
 .popup-container {
   position: fixed;
   width: 100%;
@@ -1707,6 +1744,7 @@ input:checked + .slider:before {
   right: 30%;
   bottom: 30%;
   top: 30%;
+  min-height: 32em;
   padding: 1em;
   text-align: center;
   margin: auto;
