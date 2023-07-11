@@ -154,6 +154,12 @@ export interface IWantedDTO {
   qpartId: number;
   userId: number;
 }
+export interface IWantedDTOGET {
+  id: number;
+  type: string;
+  qpart: IQPartDTOIncludeLess;
+  userId: number;
+}
 
 export interface ICommentCreationDTO {
   userId: number;
