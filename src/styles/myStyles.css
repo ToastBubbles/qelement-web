@@ -452,6 +452,7 @@ body::-webkit-scrollbar {
   color: var(--lt-red);
   border: solid 1px var(--lt-red);
 }
+
 .rating-score {
   font-size: 2.8rem;
   height: 75%;
@@ -954,17 +955,25 @@ fieldset > legend {
 .topfive-card {
   background-color: azure;
   filter: drop-shadow(0px 0px 3px #00000050);
-  display: inline-flex;
-  flex-direction: column;
+  /* display: inline-flex;
+  flex-direction: column; */
   /* justify-content: center; */
-  align-items: center;
-
+  /* align-items: center; */
   width: 19%;
   aspect-ratio: 3 / 4;
-  border: solid 1px var(--lt-grey);
+  /* border: solid 1px var(--lt-grey); */
+  border: solid 4px;
   border-radius: 0.5em;
 }
+.topfive-card > div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .topfive-img-container {
+  display: block;
   margin-top: 0.5em;
   margin-bottom: 0.25em;
   border: solid 1px var(--lt-grey);
@@ -981,9 +990,25 @@ fieldset > legend {
   object-fit: contain;
 }
 .topfive-hr {
-  margin-top: 0.25em;
+  margin: 0.25em 0;
   width: 75%;
   border-top: solid 1px var(--lt-grey);
+}
+
+.topfive-tier {
+  padding: 0 0.25em;
+  border-radius: 0.25em;
+  width: 95%;
+  margin-bottom: 0.25em;
+  text-align: center;
+}
+.topfive-body {
+  flex-grow: 1;
+  width: 100%;
+  padding-left: 0.25em;
+}
+.topfive-body-2 {
+  font-size: 0.75em;
 }
 .tt-list {
   padding-left: 1em;

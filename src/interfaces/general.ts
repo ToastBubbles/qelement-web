@@ -157,7 +157,7 @@ export interface IWantedDTO {
 export interface IWantedDTOGET {
   id: number;
   type: string;
-  qpart: IQPartDTOIncludeLess;
+  qpart: IQPartDTOInclude;
   userId: number;
 }
 

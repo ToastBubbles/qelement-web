@@ -89,7 +89,39 @@ export function validateSearch(col: color, query: string): boolean {
   }
   return false;
 }
-
+export function getTier(rating: number): string {
+  let output: string;
+  switch (true) {
+    case rating == -1:
+      output = "Not-Rated";
+      break;
+    case rating < 25:
+      output = "Common";
+      break;
+    case rating < 45:
+      output = "Uncommon";
+      break;
+    case rating < 60:
+      output = "Rare";
+      break;
+    case rating < 85:
+      output = "Exceptional";
+      break;
+    case rating < 95:
+      output = "Legendary";
+      break;
+    case rating < 100:
+      output = "Elusive";
+      break;
+    case rating == 100:
+      output = "Unobtainable";
+      break;
+    default:
+      output = "Error";
+      break;
+  }
+  return output;
+}
 export function sortStatus(statuses: IPartStatusDTO[]): IPartStatusDTO[] {
   function getValue(str: string): number {
     switch (str) {

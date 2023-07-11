@@ -76,9 +76,15 @@ export default function SinglePartView() {
 
   function getRatings(ratings: rating[] | undefined): number {
     if (ratings != undefined && ratings.length > 0) {
+      let count = 0;
+
       let output = 0;
-      ratings.forEach((rating) => (output += rating.rating));
-      return output;
+      ratings.forEach((rating) => {
+        output += rating.rating;
+
+        count++;
+      });
+      return output / count;
     }
     return -1;
   }
@@ -483,7 +489,7 @@ export default function SinglePartView() {
                       }
                     >
                       {mypart?.images &&
-                       filterImages(mypart.images).map((image) => {
+                        filterImages(mypart.images).map((image) => {
                           return (
                             <div>
                               <img

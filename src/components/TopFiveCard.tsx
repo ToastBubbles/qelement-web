@@ -1,6 +1,6 @@
 import { Ribbon, RibbonContainer } from "react-ribbons";
 import { IQPartDTOIncludeLess, IWantedDTOGET } from "../interfaces/general";
-import { filterImages, imagePath, sortStatus } from "../utils/utils";
+import { filterImages, getTier, imagePath, sortStatus } from "../utils/utils";
 import { Link } from "react-router-dom";
 
 interface iProps {
@@ -69,37 +69,75 @@ export default function TopFiveCard({ myWantedPart }: iProps) {
     }
     return font;
   }
-
+  function getRating(): number {
+    if (myWantedPart.qpart.ratings.length > 0) {
+      let total = 0;
+      let count = 0;
+      for (let rating of myWantedPart.qpart.ratings) {
+        total += rating.rating;
+        count++;
+      }
+      return Math.floor(total / count);
+    } else {
+      return -1;
+    }
+  }
+  let rating = getRating();
+  let tier = getTier(rating);
   return (
-    <RibbonContainer className="topfive-card">
-      <Ribbon
-        side="right"
-        type="corner"
-        size="large"
-        backgroundColor={getColor("bg")}
-        color={getColor("font")}
-        withStripes={false}
-        fontFamily="lexend"
-      >
-        {status}
-      </Ribbon>
-      <Link
-        to={`/part/${myWantedPart.qpart.mold.parentPart.id}?color=${myWantedPart.qpart.color.id}`}
-        className="topfive-img-container"
-      >
-        <img
-          src={
-            images.length > 0
-              ? imagePath + primaryImage.fileName
-              : "/img/missingimage.png"
-          }
-        />
-      </Link>
-      <div>
-        {myWantedPart.qpart.mold.parentPart.name} (
-        {myWantedPart.qpart.mold.number})
-      </div>
-      <div className="topfive-hr"></div>
-    </RibbonContainer>
+    <div
+      className="topfive-card"
+      style={{ borderColor: "#" + myWantedPart.qpart.color.hex }}
+    >
+      <RibbonContainer>
+        <Ribbon
+          side="right"
+          type="corner"
+          size="large"
+          backgroundColor={getColor("bg")}
+          color={getColor("font")}
+          withStripes={false}
+          fontFamily="lexend"
+        >
+          {status}
+        </Ribbon>
+
+        <Link
+          to={`/part/${myWantedPart.qpart.mold.parentPart.id}?color=${myWantedPart.qpart.color.id}`}
+          className="topfive-img-container"
+        >
+          <img
+            src={
+              images.length > 0
+                ? imagePath + primaryImage.fileName
+                : "/img/missingimage.png"
+            }
+          />
+        </Link>
+        <div>
+          {myWantedPart.qpart.mold.parentPart.name} (
+          {myWantedPart.qpart.mold.number})
+        </div>
+        <div className="topfive-hr"></div>
+        <div className="topfive-body">
+          <div>
+            {myWantedPart.qpart.color.bl_name
+              ? myWantedPart.qpart.color.bl_name
+              : ""}
+          </div>
+          <div className="topfive-body-2">
+            {myWantedPart.qpart.color.tlg_name
+              ? myWantedPart.qpart.color.tlg_name
+              : ""}
+          </div>
+          <div className="topfive-body-2">
+            {myWantedPart.qpart.color.bo_name
+              ? myWantedPart.qpart.color.bo_name
+              : ""}
+          </div>
+        </div>
+        <div className={"topfive-tier " + tier}>{tier.toUpperCase()}</div>
+      </RibbonContainer>
+    </div>
   );
 }
