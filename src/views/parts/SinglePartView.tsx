@@ -20,6 +20,7 @@ import { AppContext } from "../../context/context";
 import Comment from "../../components/Comment";
 import PopupCollection from "../../components/PopupCollection";
 import PopupFavorites from "../../components/PopupFavorites";
+import QPartDropdown from "../../components/QPartDropdown";
 
 export default function SinglePartView() {
   const imagePath = "http://localhost:9000/q-part-images/";
@@ -41,6 +42,8 @@ export default function SinglePartView() {
   const [detailsTabActive, setDetailsTabActive] = useState<boolean>(true);
   const [imageTabActive, setImageTabActive] = useState<boolean>(false);
   const [commentTabActive, setCommentTabActive] = useState<boolean>(false);
+
+  const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
   const [commentContent, setCommentContent] = useState<string>("");
   const [searchColor, setSearchColor] = useState<string>("");
   // console.log("color", urlColorId);
@@ -228,7 +231,54 @@ export default function SinglePartView() {
                       </option>
                     ))}
                   </select>
-                  <select
+                  <div>
+                    <div
+                      className="qpart-dropdown-btn"
+                      onClick={() => setDropdownVisible(!dropdownVisible)}
+                    >
+                      <div
+                        className={"qpart-dd-row-swatch " + mypart?.color.type}
+                        style={{ backgroundColor: "#" + mypart?.color.hex }}
+                      ></div>
+                      <div style={{ flexGrow: "1" }}>
+                        <div className="d-flex">
+                          <div style={{ width: "2em" }}>BL:</div>
+                          {mypart?.color.bl_name
+                            ? mypart?.color.bl_name
+                            : "Unknown"}
+                        </div>
+                        <div
+                          className="d-flex"
+                          style={{
+                            fontSize: "0.75em",
+                            color: "var(--lt-grey)",
+                          }}
+                        >
+                          <div style={{ width: "2.75em" }}>TLG:</div>
+                          {mypart?.color.tlg_name}
+                        </div>
+                      </div>
+                      <svg
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+                        />
+                      </svg>
+                    </div>
+                    {dropdownVisible && (
+                      <QPartDropdown
+                        qparts={qparts}
+                        setter={setSelectedQPartid}
+                        close={setDropdownVisible}
+                      />
+                    )}
+                  </div>
+                  {/* <select
                     name="qpartcolors"
                     id="qpartcolors"
                     className="qpart-color-dropdown"
@@ -248,7 +298,7 @@ export default function SinglePartView() {
                           </option>
                         )
                     )}
-                  </select>
+                  </select> */}
                 </div>
               </div>
               <div className="center">

@@ -60,7 +60,7 @@ function RatingCard({ rating, qpartId, refetchFn }: IProps) {
       refetchFn();
     },
   });
-
+  rating = Math.round(rating);
   return (
     <div className="rating-container">
       <div className="rating">

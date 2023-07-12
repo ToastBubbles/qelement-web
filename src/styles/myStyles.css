@@ -190,6 +190,31 @@ body::-webkit-scrollbar {
   width: 20rem;
   padding: 0.2em;
 }
+.qpart-dropdown-btn {
+  width: 20rem;
+  padding: 0.2em;
+  background-color: white;
+  display: flex;
+  border: solid 1px var(--lt-grey);
+}
+
+.qpart-dropdown {
+  position: absolute;
+  max-height: 15em;
+  min-width: 20rem;
+  overflow-y: auto;
+  background-color: white;
+  border-radius: 0.25em;
+  filter: drop-shadow(0px 0px 3px #00000050);
+}
+.qpart-dd-row {
+  display: flex;
+  border-bottom: solid 1px var(--lt-grey);
+}
+.qpart-dd-row-swatch {
+  width: 0.75em;
+  margin-right: 0.2em;
+}
 .navbar {
   display: flex;
   align-items: center;

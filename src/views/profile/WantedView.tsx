@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AppContext } from "../../context/context";
 import TopFive from "../../components/TopFive";
 import { IWantedDTOGET } from "../../interfaces/general";
@@ -14,6 +14,8 @@ export default function WantedView() {
     },
     dispatch,
   } = useContext(AppContext);
+
+  const [faveTab, setFaveTab] = useState<boolean>(true);
 
   const { data: mywantedData, refetch: mywantedRefetch } = useQuery({
     queryKey: "mywanted",
@@ -64,6 +66,46 @@ export default function WantedView() {
               <TopFiveCard key={myWantedPart.id} myWantedPart={myWantedPart} />
             ))}
           </div>
+          {/* <div className="tab">
+            <button
+              className={"tablinks" + (detailsTabActive ? " active" : "")}
+              onClick={() => {
+                setDetailsTabActive(true);
+                // setImageTabActive(false);
+                // setCommentTabActive(false);
+              }}
+            >
+              Details
+            </button>
+            <button
+              className={"tablinks" + (commentTabActive ? " active" : "")}
+              onClick={() => {
+                setDetailsTabActive(false);
+                setImageTabActive(false);
+                setCommentTabActive(true);
+              }}
+            >
+              Comments{" "}
+              {mypart?.comments &&
+                mypart?.comments.length > 0 &&
+                `(${mypart?.comments.length})`}
+            </button>
+            
+            <button
+              className={"tablinks" + (imageTabActive ? " active" : "")}
+              onClick={() => {
+                setDetailsTabActive(false);
+                setCommentTabActive(false);
+                setImageTabActive(true);
+              }}
+              disabled={mypart?.images.length == 0}
+            >
+              Images{" "}
+              {mypart?.images &&
+                filterImages(mypart?.images).length > 0 &&
+                `(${filterImages(mypart?.images).length})`}
+            </button>
+          </div> */}
         </div>
       </>
     );
