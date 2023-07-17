@@ -32,7 +32,7 @@ export default function RecentQPart({ qpart }: IProps) {
   }
 
   if (qpart) {
-    let age = calculateHoursBetweenDates(qpart.createdAt);
+    let age = calculateHoursBetweenDates(qpart.approvalDate);
     let images = filterImages(qpart.images);
     let primaryImage = images[images.length - 1];
     for (let i = images.length - 1; i >= 0; i--) {
@@ -97,7 +97,7 @@ export default function RecentQPart({ qpart }: IProps) {
               </div>
             </div>
             <div style={{ fontSize: "0.8em" }}>
-              Added: {formatDate(qpart.createdAt)}
+              Added: {formatDate(qpart.approvalDate)}
             </div>
           </div>
         </Link>

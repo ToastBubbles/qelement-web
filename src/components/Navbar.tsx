@@ -11,6 +11,7 @@ import showToast, { Mode } from "../utils/utils";
 import { IAPIResponse } from "../interfaces/general";
 import NavbarPopdown from "./NavbarPopdown";
 import useComponentVisible from "../utils/hooks";
+import SearchBarMain from "./SearchBarMain";
 
 function Navbar() {
   const { dropdownRef, isComponentVisible } = useComponentVisible(true);
@@ -49,13 +50,17 @@ function Navbar() {
 
   return (
     <nav className="navbar">
-      <>
-        <div className="text-logo fg-1">
-          <Link to={"/"}>
-            <span className="lt-red">q</span>
-            <span>element</span>
-          </Link>
-        </div>
+      <div className="text-logo w-33">
+        <Link to={"/"}>
+          <span className="lt-red">q</span>
+          <span>element</span>
+        </Link>
+      </div>
+      <div className="d-flex jc-center w-33">
+        <SearchBarMain />
+      </div>
+      <div className="w-33">
+        <div className="fg-1"></div>
         <PartsButton />
         <ColorWheel />
 
@@ -96,7 +101,7 @@ function Navbar() {
             <div ref={dropdownRef}>{toggleDropdown && <NavbarPopdown />}</div>
           </>
         )}
-      </>
+      </div>
     </nav>
   );
 }

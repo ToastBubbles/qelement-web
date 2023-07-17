@@ -197,7 +197,13 @@ export interface IQPartDTOInclude {
   comments: ICommentDTO[];
   partStatuses: IPartStatusDTO[];
   images: ImageDTO[];
+  approvalDate: string;
   createdAt: string;
+}
+
+export interface IQPartVerifcation {
+  moldId: number;
+  colorId: number;
 }
 
 export interface IQPartDTOIncludeLess {

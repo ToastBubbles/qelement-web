@@ -223,6 +223,18 @@ body::-webkit-scrollbar {
   height: 4rem;
   min-height: 4rem;
 }
+.navbar > div {
+  display: flex;
+  align-items: center;
+}
+.main-searchbar {
+  background-color: transparent;
+  color: var(--lt-grey);
+  width: 60%;
+  padding: 0.2em 0.75em;
+  border: solid 2px var(--lt-grey);
+  border-radius: 0.5em;
+}
 .logo {
   display: block;
   aspect-ratio: 1 / 1;
@@ -1434,6 +1446,9 @@ textarea {
 }
 .w-25 {
   width: 25%;
+}
+.w-33 {
+  width: 33.3%;
 }
 .w-35 {
   width: 35%;

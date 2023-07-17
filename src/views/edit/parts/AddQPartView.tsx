@@ -11,6 +11,7 @@ import {
   IPartStatusDTO,
   IAPIResponse,
   IPartMoldDTO,
+  IQPartVerifcation,
 } from "../../../interfaces/general";
 import { Link } from "react-router-dom";
 import MyToolTip from "../../../components/MyToolTip";
@@ -38,6 +39,7 @@ export default function AddQPartView() {
     note: "",
   };
   const defaultStatusValues: IPartStatusDTO = {
+    id: -1,
     status: "unknown",
     date: "",
     location: "",
@@ -51,6 +53,8 @@ export default function AddQPartView() {
   const [category, setCategory] = useState<number>(-1);
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [molds, setMolds] = useState<IPartMoldDTO[]>();
+
+  const [qpartExistenceCode, setQpartExistenceCode] = useState<number>(-1);
 
   const {
     data: colData,
@@ -70,6 +74,36 @@ export default function AddQPartView() {
       axios.get<part[]>(`http://localhost:3000/parts/byCatId/${category}`),
     enabled: category != -1,
   });
+
+  const { data: matchData, refetch: matchRefetch } = useQuery({
+    queryKey: `match-p${newQPart.partId}-m${newQPart.moldId}-c${newQPart.colorId}`,
+    queryFn: () =>
+      axios.get<IAPIResponse>(`http://localhost:3000/qpart/checkIfExists`, {
+        params: {
+          moldId: newQPart.moldId,
+          colorId: newQPart.colorId,
+        } as IQPartVerifcation,
+      }),
+    onSuccess: (resp) => {
+      let code = resp.data.code;
+      setQpartExistenceCode(code);
+      if (code == 200) {
+        showToast(
+          `QPart does not exist in database yet, you're good to go!`,
+          Mode.Success
+        );
+      } else if (code == 201) {
+        showToast(
+          `QPart already exists. It may be pending approval.`,
+          Mode.Warning
+        );
+      } else if (code == 500) {
+        showToast(`Error checking part`, Mode.Error);
+      }
+    },
+    enabled: false,
+  });
+
   useEffect(() => {
     partsRefetch();
     setNewQPart((newQPart) => ({
@@ -77,6 +111,12 @@ export default function AddQPartView() {
       ...{ partId: -1 },
     }));
   }, [category]);
+
+  useEffect(() => {
+    if (newQPart.moldId != -1 && newQPart.colorId != -1) {
+      matchRefetch();
+    }
+  }, [newQPart.moldId, newQPart.colorId]);
 
   useEffect(() => {
     if (partsData) {
@@ -454,15 +494,26 @@ export default function AddQPartView() {
                   //   creatorId: -1,
                   //   note: "",
                   // }
-                  if (newQPart.partId != -1 && newQPart.colorId != -1) {
+                  if (
+                    newQPart.partId != -1 &&
+                    newQPart.colorId != -1 &&
+                    qpartExistenceCode == 200
+                  ) {
                     console.log("adding...");
                     partMutation.mutate(newQPart);
                     setNewQPart(defaultValues);
                   } else {
-                    showToast(
-                      "Please make sure you have filled out the form properly",
-                      Mode.Error
-                    );
+                    if (qpartExistenceCode == 201) {
+                      showToast(
+                        "This part already exists in the database, it may be pending approval",
+                        Mode.Warning
+                      );
+                    } else {
+                      showToast(
+                        "Please make sure you have filled out the form properly",
+                        Mode.Error
+                      );
+                    }
                   }
                 }}
               >
