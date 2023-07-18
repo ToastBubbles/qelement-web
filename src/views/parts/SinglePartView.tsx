@@ -24,6 +24,7 @@ import QPartDropdown from "../../components/QPartDropdown";
 
 export default function SinglePartView() {
   const imagePath = "http://localhost:9000/q-part-images/";
+
   const {
     state: {
       jwt: { token, payload },

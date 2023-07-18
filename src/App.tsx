@@ -40,6 +40,7 @@ import ProfileSettingsView from "./views/profile/ProfileSettingsView";
 import WantedView from "./views/profile/WantedView";
 import CollectionView from "./views/profile/CollectionView";
 import ApproveImageView from "./views/edit/approval/ImageApprovalView";
+import SearchView from "./views/SearchView";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -92,6 +93,8 @@ function App() {
               <Route path="/terms" element={<Terms />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/contact" element={<Contact />} />
+
+              <Route path="/search" element={<SearchView />} />
 
               <Route path="/approve" element={<ApproveView />} />
               <Route path="/approve/colors" element={<ApproveColorView />} />
