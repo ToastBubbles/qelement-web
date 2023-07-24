@@ -47,7 +47,6 @@ export default function SinglePartView() {
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
   const [commentContent, setCommentContent] = useState<string>("");
   const [searchColor, setSearchColor] = useState<string>("");
-  // console.log("color", urlColorId);
 
   const { partId } = useParams();
   const navigate = useNavigate();
@@ -59,24 +58,16 @@ export default function SinglePartView() {
   } = useQuery({
     queryKey: "qpart",
     queryFn: () => {
-      console.log("rating fetch");
       return axios.get<IQPartDTOInclude[]>(
         `http://localhost:3000/qpart/matchesByPartId/${partId}`
       );
     },
-    // onSuccess: () => {
-    //   // let mypart = qpartData?.data.find((x) => x.id == selectedQPart.id);
-    //   if (mypart) {
-    //     setSelectedQPart(mypart);
-    //   }
-    // },
+
     staleTime: 0,
     enabled: !!partId,
     // retry: false,
   });
   let mypart = qpartData?.data.find((x) => x.id == selectedQPartid);
-
-  if (qpartData) console.log("data", qpartData.data);
 
   function getRatings(ratings: rating[] | undefined): number {
     if (ratings != undefined && ratings.length > 0) {
@@ -102,10 +93,7 @@ export default function SinglePartView() {
     }
   }, [qpartData?.data]);
 
-  if (qpartError) {
-    console.log(qpartError);
-    navigate("/404");
-  }
+  if (qpartError) navigate("/404");
 
   const commentMutation = useMutation({
     mutationFn: ({ content, userId, qpartId }: ICommentCreationDTO) =>
@@ -122,8 +110,11 @@ export default function SinglePartView() {
 
   if (qpartData) {
     let qparts = qpartData?.data;
-    // let colors = colData?.data;
-    console.log("here we go", qparts);
+    let myDebugger = {
+      selectedQPartid,
+      urlColorId,
+      mypart,
+    };
 
     if (selectedQPartid == -1) {
       if (urlColorId) {
@@ -136,6 +127,7 @@ export default function SinglePartView() {
         setSelectedQPartid(qparts[0].id);
       }
     }
+    console.log(myDebugger);
 
     function getUnique(): IPartMoldDTO[] {
       let output: IPartMoldDTO[] = [];
@@ -147,32 +139,15 @@ export default function SinglePartView() {
           if (!checker) output.push(qpart.mold);
         }
       });
-      console.log(output);
       return output;
     }
 
     function formatURL(): string {
-      // if (qpartImageData) {
-      //   let url = qpartImageData.data;
-      //   const questionMarkIndex = url.indexOf("?");
-      //   let formattedURL = url;
-
-      //   if (questionMarkIndex !== -1) {
-      //     formattedURL = url.substring(0, questionMarkIndex);
-      //   }
-
-      //   formattedURL = formattedURL.replace("minio", "localhost");
-      //   return formattedURL;
-      // }
-
       if (mypart && mypart?.images?.length > 0) {
         let images = filterImages(mypart?.images);
-        console.log("images:", images);
         if (images.length > 0) {
           let selectedImage = images[images.length - 1];
           for (let i = images.length - 1; i >= 0; i--) {
-            console.log("iterating,", images[i]);
-
             if (images[i].type == "part") {
               selectedImage = images[i];
             }
@@ -182,12 +157,10 @@ export default function SinglePartView() {
             }
           }
           return imagePath + selectedImage.fileName;
-          // return imagePath + images[0].fileName;
         }
       }
       return "https://via.placeholder.com/1024x768/eee?text=4:3";
     }
-    console.log(selectedQPartid);
 
     return (
       <>
@@ -266,7 +239,7 @@ export default function SinglePartView() {
                         viewBox="0 0 16 16"
                       >
                         <path
-                          fill-rule="evenodd"
+                          fillRule="evenodd"
                           d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
                         />
                       </svg>
@@ -279,27 +252,6 @@ export default function SinglePartView() {
                       />
                     )}
                   </div>
-                  {/* <select
-                    name="qpartcolors"
-                    id="qpartcolors"
-                    className="qpart-color-dropdown"
-                    onChange={(e) => setSelectedQPartid(Number(e.target.value))}
-                    value={selectedQPartid}
-                  >
-                    <option value="-1">--</option>
-                    {qparts.map(
-                      (qpart) =>
-                        (qpart.mold.id == selectedQPartMold ||
-                          selectedQPartMold == -1) && (
-                          <option key={qpart.id} value={`${qpart.id}`}>
-                            {qpart.color.bl_name
-                              ? qpart.color.bl_name
-                              : qpart.color.tlg_name}{" "}
-                            ({qpart.mold.number})
-                          </option>
-                        )
-                    )}
-                  </select> */}
                 </div>
               </div>
               <div className="center">
@@ -314,8 +266,6 @@ export default function SinglePartView() {
                   rating={getRatings(mypart?.ratings)}
                   qpartId={mypart?.id as number}
                   refetchFn={qpartRefetch}
-
-                  // rating={100}
                 />
                 {collectionOpen && mypart && (
                   <PopupCollection
@@ -360,6 +310,11 @@ export default function SinglePartView() {
                         Add New Status
                       </Link>
                     </li>
+                    <li>
+                      <Link to={`/add/qpart/status/${selectedQPartid}`}>
+                        Add Element ID
+                      </Link>
+                    </li>
                   </ul>
                   <ul className="actions">
                     <span>Links:</span>
@@ -393,7 +348,6 @@ export default function SinglePartView() {
                 </fieldset>
               </div>
               <div className="lower-center">
-                {/* <div className="color">{color?.bl_name}</div> */}
                 <div className="fake-hr"></div>
                 <div className="lower-container">
                   <div className="lower-center-left">
@@ -425,18 +379,6 @@ export default function SinglePartView() {
                           mypart?.comments.length > 0 &&
                           `(${mypart?.comments.length})`}
                       </button>
-                      {/* <button
-                        className={
-                          "tablinks" + (priceTabActive ? " active" : "")
-                        }
-                        onClick={() => {
-                          setDetailsTabActive(false);
-                          setPriceTabActive(true);
-                          setCommentTabActive(false);
-                        }}
-                      >
-                        Price History
-                      </button> */}
                       <button
                         className={
                           "tablinks" + (imageTabActive ? " active" : "")
@@ -471,17 +413,6 @@ export default function SinglePartView() {
                       <div>Note:</div>
                       <div>{mypart?.note ? mypart.note : "No note"}</div>
                     </div>
-                    {/* <div
-                      className={
-                        "tabcontent pricehistory" +
-                        (priceTabActive ? "" : " tabhidden")
-                      }
-                    >
-                      <img
-                        className="scatter-img"
-                        src="/img/scatter-example.png"
-                      />
-                    </div> */}
                     <div
                       className={
                         "tabcontent commenttab" +

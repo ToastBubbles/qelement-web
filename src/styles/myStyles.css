@@ -655,10 +655,10 @@ fieldset > legend {
 .actions {
   list-style-type: none;
   margin: 0;
-  padding: 0 1em 0 1em;
+  padding: 0 1em;
 }
 .actions > li {
-  padding-top: 0.3em;
+  padding-top: 0.2em;
 }
 .actions > span {
   color: #666;
@@ -1789,7 +1789,7 @@ input:checked + .slider:before {
 }
 .goal-item {
   display: flex;
-
+  /* z-index: -1; */
   border-bottom: solid 1px var(--lt-grey);
   width: 100%;
   /* margin-bottom: -1px; */
@@ -1833,6 +1833,7 @@ input:checked + .slider:before {
   left: 0;
   right: 0;
   bottom: 0;
+  z-index: 5;
   background-color: rgba(0, 0, 0, 0.5);
 }
 .popup-close {

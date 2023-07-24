@@ -20,10 +20,7 @@ function RatingCard({ rating, qpartId, refetchFn }: IProps) {
     },
     dispatch,
   } = useContext(AppContext);
-  console.log("payload", payload);
 
-  // console.log(qpartId);
-  // console.log(rating);
   const navigate = useNavigate();
 
   const [myRating, setMyRating] = useState<number>(-1);
@@ -85,9 +82,9 @@ function RatingCard({ rating, qpartId, refetchFn }: IProps) {
       <button
         onClick={() => {
           if (myRating != -1) {
-            console.log("adding...");
+
             if (myRating >= 0 && myRating <= 100) {
-              console.log(payload.id | 1);
+     
 
               ratingMutation.mutate({
                 rating: myRating,
@@ -96,8 +93,6 @@ function RatingCard({ rating, qpartId, refetchFn }: IProps) {
               });
               setMyRating(-1);
               ratingRefetch();
-              console.log(myRating);
-              // router.reload();
             } else {
               showToast("Invalid input", Mode.Error);
             }

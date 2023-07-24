@@ -8,6 +8,7 @@ import { similarColor } from "../../interfaces/general";
 import { useQuery } from "react-query";
 import { color } from "../../interfaces/general";
 import LoadingPage from "../../components/LoadingPage";
+import AllColorParts from "../../components/AllColorParts";
 
 export default function SingleColorView() {
   // let color = colors.find((x) => x.Lid == ColorId());
@@ -64,7 +65,9 @@ export default function SingleColorView() {
         <div className="fake-hr"></div>
         <SimilarColorBanner similarColors={simData.data} />
         <div className="color-container">
-          <section></section>
+          <section>
+            <AllColorParts colorId={color.id} />
+          </section>
           <section>
             <div className="color-details-container">
               <div className="color-details-banner">color details</div>

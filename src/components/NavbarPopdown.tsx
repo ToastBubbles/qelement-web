@@ -6,6 +6,8 @@ import { IAPIResponse } from "../interfaces/general";
 import { useContext } from "react";
 import { AppContext } from "../context/context";
 import useComponentVisible from "../utils/hooks";
+import { Types } from "../context/jwt/reducer";
+import Cookies from "js-cookie";
 
 export default function NavbarPopdown() {
   const { ref, isComponentVisible } = useComponentVisible(true);
@@ -38,8 +40,12 @@ export default function NavbarPopdown() {
         <Link to={"/mycollection"}>My Collection</Link>
         <Link to={"/profile/settings"}>Settings</Link>
         <div
+          className="clickable"
           onClick={(e) => {
-            logout();
+            dispatch({
+              type: Types.ClearJWT,
+            });
+            Cookies.remove("userJWT");
             // redirect("/colors");
           }}
         >

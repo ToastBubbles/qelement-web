@@ -41,12 +41,18 @@ import WantedView from "./views/profile/WantedView";
 import CollectionView from "./views/profile/CollectionView";
 import ApproveImageView from "./views/edit/approval/ImageApprovalView";
 import SearchView from "./views/SearchView";
+import React from "react";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     // queries: { staleTime: 10000 }
   },
 });
+interface userContext {
+  id: number;
+  username: string;
+}
 
 function App() {
   return (
@@ -57,19 +63,17 @@ function App() {
           <Navbar />
           <div id="root-wrapper">
             <Routes>
+              {/* ********************** Basic Pages (Guest) *********************** */}
               <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/contact" element={<Contact />} />
+              {/* ********************** Basic Navigation (Guest) *********************** */}
               <Route path="/colors" element={<AllColorsView />} />
               <Route path="/color/:colorId" element={<SingleColorView />} />
-              <Route path="/add/color" element={<AddColorView />} />
-              <Route path="/edit/color/:colorId" element={<ColorEditView />} />
-              <Route path="/add/part" element={<AddPartView />} />
-              <Route path="/add/qpart" element={<AddQPartView />} />
-              <Route
-                path="/add/qpart/status/:qpartId"
-                element={<AddStatusView />}
-              />
-              <Route path="/add/qpart/image" element={<UploadImageView />} />
-
               <Route
                 path="/part-categories"
                 element={<AllPartCategoriesView />}
@@ -79,34 +83,165 @@ function App() {
                 element={<SinglePartCategoryView />}
               />
               <Route path="/part/:partId" element={<SinglePartView />} />
-              <Route path="/profile" element={<ProfileView />} />
-              <Route
-                path="/profile/settings"
-                element={<ProfileSettingsView />}
-              />
-              <Route path="/mycollection" element={<CollectionView />} />
-              <Route path="/mywanted" element={<WantedView />} />
-              <Route path="/profile/messages" element={<AllMessagesView />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/contact" element={<Contact />} />
 
               <Route path="/search" element={<SearchView />} />
 
-              <Route path="/approve" element={<ApproveView />} />
-              <Route path="/approve/colors" element={<ApproveColorView />} />
-              <Route path="/approve/categories" element={<ApproveCatView />} />
-              <Route path="/approve/images" element={<ApproveImageView />} />
-              <Route path="/approve/parts" element={<ApprovePartView />} />
-              <Route path="/approve/qparts" element={<ApproveQPartView />} />
-              <Route path="/approve/molds" element={<ApprovePartMoldView />} />
+              {/* ********************** Add data forms (User) *********************** */}
+              <Route
+                path="/add/qpart/status/:qpartId"
+                element={
+                  <ProtectedRoute>
+                    <AddStatusView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/add/color"
+                element={
+                  <ProtectedRoute>
+                    <AddColorView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/add/part"
+                element={
+                  <ProtectedRoute>
+                    <AddPartView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/add/qpart"
+                element={
+                  <ProtectedRoute>
+                    <AddQPartView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/add/qpart/image"
+                element={
+                  <ProtectedRoute>
+                    <UploadImageView />
+                  </ProtectedRoute>
+                }
+              />
+              {/* ********************** Profile Pages (User) *********************** */}
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <ProfileView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile/settings"
+                element={
+                  <ProtectedRoute>
+                    <ProfileSettingsView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/mycollection"
+                element={
+                  <ProtectedRoute>
+                    <CollectionView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/mywanted"
+                element={
+                  <ProtectedRoute>
+                    <WantedView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile/messages"
+                element={
+                  <ProtectedRoute>
+                    <AllMessagesView />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="/profile/messages/:messageId"
-                element={<SingleMessageView />}
+                element={
+                  <ProtectedRoute>
+                    <SingleMessageView />
+                  </ProtectedRoute>
+                }
               />
+              {/* ********************** Approval Pages (Admin) *********************** */}
+              <Route
+                path="/approve"
+                element={
+                  <ProtectedRoute level={"admin"}>
+                    <ApproveView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/approve/colors"
+                element={
+                  <ProtectedRoute level={"admin"}>
+                    <ApproveColorView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/approve/categories"
+                element={
+                  <ProtectedRoute level={"admin"}>
+                    <ApproveCatView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/approve/images"
+                element={
+                  <ProtectedRoute level={"admin"}>
+                    <ApproveImageView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/approve/parts"
+                element={
+                  <ProtectedRoute level={"admin"}>
+                    <ApprovePartView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/approve/qparts"
+                element={
+                  <ProtectedRoute level={"admin"}>
+                    <ApproveQPartView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/approve/molds"
+                element={
+                  <ProtectedRoute level={"admin"}>
+                    <ApprovePartMoldView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/edit/color/:colorId"
+                element={
+                  <ProtectedRoute level={"admin"}>
+                    <ColorEditView />
+                  </ProtectedRoute>
+                }
+              />
+              {/* ********************** Catchall/Error Pages (Guest) *********************** */}
               <Route path="*" element={<NotFoundErrorView />} />
             </Routes>
           </div>

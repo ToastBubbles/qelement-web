@@ -29,13 +29,13 @@ function AllColors() {
   if (isFetched && data)
     return (
       <div className="color-table-container">
-                      <input
-                id="searchbar"
-                name="searchbar"
-                type="text"
-                placeholder="Search..."
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
+        <input
+          id="searchbar"
+          name="searchbar"
+          type="text"
+          placeholder="Search..."
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
         {generateTable(data, "solid", tableOptions, search)}
         {generateTable(data, "transparent", tableOptions, search)}
         {generateTable(data, "chrome", tableOptions, search)}
@@ -122,7 +122,7 @@ function generateTable(
           </th>
           <th className="text-left">notes</th>
         </tr>
-        {console.log(search)}
+
         {data.data.map(
           (color: color) =>
             validateSearch(color, search) &&

@@ -152,8 +152,6 @@ export function sortStatus(statuses: IPartStatusDTO[]): IPartStatusDTO[] {
     }
     return dateB.getTime() - dateA.getTime();
   });
-  console.log("output", output);
-
   return output;
 }
 
