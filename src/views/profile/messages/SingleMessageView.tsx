@@ -1,11 +1,10 @@
 import axios from "axios";
 import { useState, useContext } from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router";
 import { AppContext } from "../../../context/context";
-import { IExtendedMessageDTO } from "../../../interfaces/general";
+import { IAPIResponse, IExtendedMessageDTO } from "../../../interfaces/general";
 import { formatDate } from "../../../utils/utils";
-
 
 export default function SingleMessageView() {
   const navigate = useNavigate();
@@ -51,6 +50,14 @@ export default function SingleMessageView() {
   //   setMessage(msgData?.data);
   // }
 
+  const messageReadMutation = useMutation({
+    mutationFn: () =>
+      axios.post<IAPIResponse>(
+        `http://localhost:3000/message/read/${messageId}`
+      ),
+    onSuccess: () => {},
+  });
+
   /// return me
   // if (!!msgData?.data && !!payload.id) {
   //   if (
@@ -69,21 +76,22 @@ export default function SingleMessageView() {
 
   //   setMessage(msgData?.data);
   // }, [!!msgData?.data]);
-
-  return msgIsLoading ? (
-    <p>loading...</p>
-  ) : (
-    <>
-      <div className="page-wrapper">
-        <div>
-          <div>subject: {msgData?.data?.subject}</div>
-          <div>sent: {formatDate(msgData?.data?.createdAt as string)}</div>
-          <div>from: {msgData?.data?.senderName}</div>
-          <div>to: {msgData?.data?.recipientName}</div>
+  if (!msgIsLoading) {
+    messageReadMutation.mutate();
+    return (
+      <>
+        <div className="page-wrapper">
+          <div>
+            <div>subject: {msgData?.data?.subject}</div>
+            <div>sent: {formatDate(msgData?.data?.createdAt as string)}</div>
+            <div>from: {msgData?.data?.senderName}</div>
+            <div>to: {msgData?.data?.recipientName}</div>
+          </div>
+          <div>{msgData?.data?.body}</div>
         </div>
-        <div>{msgData?.data?.body}</div>
-      </div>
-    </>
-  );
+      </>
+    );
+  } else {
+    return <p>loading...</p>;
+  }
 }
-

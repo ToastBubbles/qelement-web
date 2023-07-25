@@ -4,6 +4,7 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { color, qpart } from "../../interfaces/general";
 import PartOfTheDay from "../../components/PartOfTheDay";
+import SiteStats from "../../components/SiteStats";
 
 export default function Home() {
   return (
@@ -33,6 +34,7 @@ export default function Home() {
           <div className="hp-panel-body">
             {/* <div className="listing news-listing"></div> */}
             <PartOfTheDay />
+            <SiteStats />
           </div>
         </div>
         <div className="hp-panel hp-panel-center">
@@ -50,7 +52,9 @@ export default function Home() {
             <div className="head-line"></div>
           </div>
           <div className="hp-panel-body">
-            <div className="listing recent-change"></div>
+            <div className="listing recent-change">
+              Changelog is coming soon!
+            </div>
           </div>
         </div>
       </div>

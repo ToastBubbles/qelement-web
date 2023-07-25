@@ -72,7 +72,7 @@ export default function AllMessagesView() {
               `http://localhost:3000/user/username/${recipientName.trim()}`
             )
             .then((res) => {
-              if (res.data?.message == "not found") {
+              if (res.data?.code == 404) {
                 showToast("Recipient does not exist", Mode.Error);
                 setIsBadRecipient(true);
               } else {
@@ -142,12 +142,16 @@ export default function AllMessagesView() {
     if (newMessage.senderId != -1) setGetMyMail(true);
   }, [newMessage.senderId]);
 
+  // const messageMutation = useMutation({
+  //   mutationFn: (message: IMessageDTO) =>
+  //     axios.post<IMessageDTO>(`http://localhost:3000/read/message`, message),
+  //   onSuccess: () => {},
+  // });
   const messageMutation = useMutation({
     mutationFn: (message: IMessageDTO) =>
-      axios.post<IMessageDTO>(`http://localhost:3000/read/message`, message),
+      axios.post<IMessageDTO>(`http://localhost:3000/message`, message),
     onSuccess: () => {},
   });
-
   function sendMessage() {
     console.log("attempting send");
     console.log(newMessage);

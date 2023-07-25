@@ -325,6 +325,12 @@ body::-webkit-scrollbar {
   max-width: 120rem;
   margin: 3em 0;
 }
+.page-content-wide2 {
+  display: flex;
+  width: 80%;
+  max-width: 120rem;
+  margin: 3em 0;
+}
 .left-col {
   display: inline-block;
   background-color: rgb(215, 229, 229);
@@ -1478,6 +1484,9 @@ textarea {
 }
 .flex-center {
   justify-content: center;
+  align-items: center;
+}
+.ai-center {
   align-items: center;
 }
 .jc-center {
