@@ -10,7 +10,7 @@ export default function ProfileView() {
   } = useContext(AppContext);
   return (
     <>
-      <div className="padded-container">
+      <div className="mx-w">
         <h1>Welcome {payload.username as string}</h1>
       </div>
     </>

@@ -179,7 +179,7 @@ export default function AllMessagesView() {
 
   return (
     <>
-      <div className="page-wrapper">
+      <div className="mx-w">
         <h1>messages</h1>
         <div className="msg-tab-container">
           <div

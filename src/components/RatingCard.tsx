@@ -53,7 +53,7 @@ function RatingCard({ rating, qpartId, refetchFn }: IProps) {
         qpartId,
       }),
     onSuccess: () => {
-      showToast("Rating saved!!", Mode.Success);
+      showToast("Rating saved!", Mode.Success);
       refetchFn();
     },
   });
@@ -82,10 +82,7 @@ function RatingCard({ rating, qpartId, refetchFn }: IProps) {
       <button
         onClick={() => {
           if (myRating != -1) {
-
             if (myRating >= 0 && myRating <= 100) {
-     
-
               ratingMutation.mutate({
                 rating: myRating,
                 creatorId: payload.id || 1,

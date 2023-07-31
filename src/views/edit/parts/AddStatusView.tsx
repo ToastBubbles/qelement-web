@@ -8,6 +8,7 @@ import {
   IQPartDTO,
   IQPartDetails,
   IPartStatusDTO,
+  IQPartDTOIncludeLess,
 } from "../../../interfaces/general";
 import DatePicker from "react-datepicker";
 
@@ -43,7 +44,7 @@ export default function AddStatusView() {
   const { data: qpartData, isFetched: qpartIsFetched } = useQuery({
     queryKey: `qpart${qpartId}`,
     queryFn: () => {
-      return axios.get<IQPartDetails>(
+      return axios.get<IQPartDTOIncludeLess>(
         `http://localhost:3000/qpart/getDetails/${qpartId}`
       );
     },
@@ -62,7 +63,7 @@ export default function AddStatusView() {
   });
 
   if (qpartData?.data && qpartIsFetched) {
-    console.log("info", qpartData.data);
+
     let qpart = qpartData.data;
     return (
       <>
@@ -73,7 +74,7 @@ export default function AddStatusView() {
               <div>Part:</div>
               <div>
                 <div className="formInput">
-                  {qpart.part.name} ({qpart.part.number})
+                  {qpart.mold.parentPart.name} ({qpart.mold.number})
                 </div>
               </div>
             </div>

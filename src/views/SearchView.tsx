@@ -95,7 +95,7 @@ export default function SearchView() {
     let qpartResults = qpartSearchData.data;
     return (
       <>
-        <div>
+        <div className="mx-w">
           <h1>search results for "{searchValue}"</h1>
           <h3>Parts:</h3>
           {partResults.length == 0 ? (

@@ -16,7 +16,7 @@ export default function AllPartCategoriesView() {
   if (catData) {
     return (
       <>
-        <div className="page-wrapper">
+        <div className="mx-w">
           <h1>Part Categories</h1>
           <div className="parts-view">
             {catData.data.map((cat) => {

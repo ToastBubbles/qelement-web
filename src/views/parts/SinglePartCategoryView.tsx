@@ -16,7 +16,7 @@ export default function SinglePartCategoryView() {
   if (catData && partsData) {
     return (
       <>
-        <div className="page-wrapper">
+        <div className="mx-w">
           <h1>{catData.data.name}</h1>
           <div className="parts-view">
             {partsData.data.map((part) => {

@@ -8,6 +8,7 @@ import { AppContext } from "../context/context";
 import useComponentVisible from "../utils/hooks";
 import { Types } from "../context/jwt/reducer";
 import Cookies from "js-cookie";
+import showToast, { Mode } from "../utils/utils";
 
 export default function NavbarPopdown() {
   const { ref, isComponentVisible } = useComponentVisible(true);
@@ -46,6 +47,7 @@ export default function NavbarPopdown() {
               type: Types.ClearJWT,
             });
             Cookies.remove("userJWT");
+            showToast("Successfully Logged Out.", Mode.Info);
             // redirect("/colors");
           }}
         >

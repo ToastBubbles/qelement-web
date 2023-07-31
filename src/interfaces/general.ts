@@ -79,7 +79,7 @@ export interface IPartStatusDTO {
 export interface IQPartDetails {
   part: IPartDTO;
   color: IColorDTO;
-  qpart: iQPartDTO;
+  qpart: IQPartDTOIncludeLess;
 }
 export interface IPartDTO {
   id: number;

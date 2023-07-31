@@ -43,7 +43,7 @@ export default function CollectionView() {
     let myParts = mycollectionData.data;
     return (
       <>
-        <div className="padded-container">
+        <div className="mx-w">
           {goalPopupOpen && (
             <PopupGoal
               userId={payload.id}

@@ -163,7 +163,7 @@ export default function SinglePartView() {
     }
 
     return (
-      <>
+      <div className="mx-w">
         <div className="page-content-wrapper">
           <div className="page-content-wide">
             <div className="right-col">
@@ -524,7 +524,7 @@ export default function SinglePartView() {
             </div>
           </div>
         </div>
-      </>
+      </div>
     );
   } else {
     return <LoadingPage />;

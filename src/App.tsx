@@ -43,6 +43,7 @@ import ApproveImageView from "./views/edit/approval/ImageApprovalView";
 import SearchView from "./views/SearchView";
 import React from "react";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import UpdateView from "./views/generic/UpdateView";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -71,6 +72,7 @@ function App() {
               <Route path="/terms" element={<Terms />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/updates" element={<UpdateView />} />
               {/* ********************** Basic Navigation (Guest) *********************** */}
               <Route path="/colors" element={<AllColorsView />} />
               <Route path="/color/:colorId" element={<SingleColorView />} />

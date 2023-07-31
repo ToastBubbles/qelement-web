@@ -162,7 +162,7 @@ export default function ColorEditView() {
   }
   if (color && simData)
     return (
-      <>
+      <div className="mx-w">
         <div className="colorTop">
           <div className="colorName">
             {color?.bl_name.length == 0 ? color.tlg_name : color?.bl_name}
@@ -402,7 +402,7 @@ export default function ColorEditView() {
             </button>
           </section>
         </div>
-      </>
+      </div>
     );
   else return <p>Loading...</p>;
 }

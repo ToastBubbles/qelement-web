@@ -24,7 +24,7 @@ function Footer() {
           </a>
         </div>
       </div> */}
-      <div className="footer-bottom">
+      <div className="footer-bottom mx-w">
         <div>
           <ul className="footer-horz-ul">
             <li>
@@ -50,6 +50,11 @@ function Footer() {
             <li>
               <Link className="lt-grey" to="/privacy">
                 Privacy Policy
+              </Link>
+            </li>
+            <li>
+              <Link className="lt-grey" to="/updates">
+                Under Construction Updates
               </Link>
             </li>
             <li>

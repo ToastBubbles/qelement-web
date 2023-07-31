@@ -59,7 +59,7 @@ export default function WantedView() {
     }
     return (
       <>
-        <div className="padded-container">
+        <div className="mx-w">
           <h1>Your Wanted Items</h1>
           <div className="topfive-container">
             {myTopFive.map((myWantedPart) => (
