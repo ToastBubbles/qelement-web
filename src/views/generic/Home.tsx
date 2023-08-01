@@ -1,8 +1,5 @@
 import { Link } from "react-router-dom";
 import NewAdditions from "../../components/NewAdditions";
-import { useQuery } from "react-query";
-import axios from "axios";
-import { color, qpart } from "../../interfaces/general";
 import PartOfTheDay from "../../components/PartOfTheDay";
 import SiteStats from "../../components/SiteStats";
 

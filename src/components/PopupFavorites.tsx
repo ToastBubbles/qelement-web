@@ -4,9 +4,7 @@ import { useMutation } from "react-query";
 import { AppContext } from "../context/context";
 import { IQPartDTOInclude, IWantedDTO } from "../interfaces/general";
 import showToast, { Mode } from "../utils/utils";
-import ConditionSlider from "./ConditionSlider";
 import MyToolTip from "./MyToolTip";
-import SliderToggle from "./SliderToggle";
 
 interface IProps {
   qpart: IQPartDTOInclude;
@@ -16,9 +14,8 @@ interface IProps {
 export default function PopupFavorites({ qpart, closePopup }: IProps) {
   const {
     state: {
-      jwt: { token, payload },
+      jwt: {  payload },
     },
-    dispatch,
   } = useContext(AppContext);
   const initialValues: IWantedDTO = {
     qpartId: qpart.id || -1,

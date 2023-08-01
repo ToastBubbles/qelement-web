@@ -1,8 +1,6 @@
 import axios from "axios";
-import { useState, useContext } from "react";
 import { useMutation, useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router";
-import { AppContext } from "../../../context/context";
 import { IAPIResponse, IExtendedMessageDTO } from "../../../interfaces/general";
 import { formatDate } from "../../../utils/utils";
 
@@ -10,16 +8,6 @@ export default function SingleMessageView() {
   const navigate = useNavigate();
   const { messageId } = useParams();
 
-  // const [userId, setUserId] = useState<number>(-1);
-  const [hasMarkedRead, setHasMarkedRead] = useState<boolean>(false);
-  // const [message, setMessage] = useState<IExtendedMessageDTO>();
-
-  const {
-    state: {
-      jwt: { token, payload },
-    },
-    dispatch,
-  } = useContext(AppContext);
 
   const {
     data: msgData,
@@ -55,7 +43,7 @@ export default function SingleMessageView() {
       axios.post<IAPIResponse>(
         `http://localhost:3000/message/read/${messageId}`
       ),
-    onSuccess: () => {},
+    // onSuccess: () => {},
   });
 
   /// return me

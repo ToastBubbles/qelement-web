@@ -1,23 +1,23 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { AppContext } from "../../context/context";
-import TopFive from "../../components/TopFive";
-import { IWantedDTOGET } from "../../interfaces/general";
+
 import axios from "axios";
 import { useQuery } from "react-query";
 import LoadingPage from "../../components/LoadingPage";
 import TopFiveCard from "../../components/TopFiveCard";
+import { IWantedDTOGET } from "../../interfaces/general";
 
 export default function WantedView() {
   const {
     state: {
-      jwt: { token, payload },
+      jwt: { payload },
     },
-    dispatch,
+
   } = useContext(AppContext);
 
-  const [faveTab, setFaveTab] = useState<boolean>(true);
+  // const [faveTab, setFaveTab] = useState<boolean>(true);
 
-  const { data: mywantedData, refetch: mywantedRefetch } = useQuery({
+  const { data: mywantedData } = useQuery({
     queryKey: "mywanted",
     queryFn: () => {
       return axios.get<IWantedDTOGET[]>(
@@ -28,13 +28,13 @@ export default function WantedView() {
     enabled: !!payload.id,
   });
   if (mywantedData) {
-    let myWantedParts = mywantedData.data;
-    let myTopFive: IWantedDTOGET[] = [],
+    const myWantedParts = mywantedData.data;
+    const myTopFive: IWantedDTOGET[] = [],
       myFavorites: IWantedDTOGET[] = [],
       myWanted: IWantedDTOGET[] = [],
       myOther: IWantedDTOGET[] = [];
 
-    for (let part of myWantedParts) {
+    for (const part of myWantedParts) {
       switch (part.type) {
         case "topfive": {
           myTopFive.push(part);

@@ -1,55 +1,56 @@
 import axios from "axios";
-import { useState } from "react";
+import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
-import Navbar from "../../components/Navbar";
-import SimilarColorBanner from "../../components/SimilarColorBanner";
-import { similarColor } from "../../interfaces/general";
-import { useQuery } from "react-query";
-import { color } from "../../interfaces/general";
-import LoadingPage from "../../components/LoadingPage";
 import AllColorParts from "../../components/AllColorParts";
+import LoadingPage from "../../components/LoadingPage";
+import SimilarColorBanner from "../../components/SimilarColorBanner";
+import { colorWSimilar } from "../../interfaces/general";
+import { useEffect } from "react";
 
 export default function SingleColorView() {
   // let color = colors.find((x) => x.Lid == ColorId());
   const { colorId } = useParams();
   const navigate = useNavigate();
 
-  const [similarColorToAdd, setSimilarColorToAdd] = useState<number>(0);
+  // const [similarColorToAdd, setSimilarColorToAdd] = useState<number>(0);
 
   const {
     data: colData,
-    isLoading: colIsLoading,
     error: colError,
+    refetch: colRefetch,
   } = useQuery({
     queryKey: "color",
     queryFn: () =>
-      axios.get<color>(`http://localhost:3000/color/id/${colorId}`),
-    enabled: true,
-    retry: false,
-  });
-  const {
-    data: simData,
-    isLoading: simIsLoading,
-    error: simError,
-  } = useQuery({
-    queryKey: "similarColors",
-    queryFn: () =>
-      axios.get<similarColor[]>(
-        `http://localhost:3000/similarColor/${colorId}`
-      ),
+      axios.get<colorWSimilar>(`http://localhost:3000/color/id/${colorId}`),
     enabled: true,
     retry: false,
   });
 
-  if (colError || simError) {
+  useEffect(() => {
+    colRefetch();
+  }, [colorId]);
+  // const {
+  //   data: simData,
+  //   error: simError,
+  // } = useQuery({
+  //   queryKey: "similarColors",
+  //   queryFn: () =>
+  //     axios.get<similarColor[]>(
+  //       `http://localhost:3000/similarColor/${colorId}`
+  //     ),
+  //   enabled: true,
+  //   retry: false,
+  // });
+
+  if (colError) {
     navigate("/404");
   }
-  let color = colData?.data;
-  let hex = "#" + color?.hex;
+  const color = colData?.data;
+  const hex = "#" + color?.hex;
 
   // console.log(similarColorToAdd);
-  if (color && simData)
+  if (color)
     return (
       <>
         <div className="mx-w">
@@ -62,7 +63,7 @@ export default function SingleColorView() {
             </div>
           </div>
           <div className="fake-hr"></div>
-          <SimilarColorBanner similarColors={simData.data} />
+          <SimilarColorBanner similarColors={color.similar} />
           <div className="color-container">
             <section>
               <AllColorParts colorId={color.id} />

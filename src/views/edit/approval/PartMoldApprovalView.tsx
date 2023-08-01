@@ -15,7 +15,7 @@ export default function ApprovePartMoldView() {
   );
 
   if (isFetched && moldData) {
-    let molds = moldData.data;
+    const molds = moldData.data;
     return (
       <>
         <div className="formcontainer">

@@ -141,7 +141,7 @@ export function sortStatus(statuses: IPartStatusDTO[]): IPartStatusDTO[] {
         return 0;
     }
   }
-  let output = statuses.sort((a, b) => {
+  const output = statuses.sort((a, b) => {
     const dateA = new Date(a.date);
     const dateB = new Date(b.date);
 
@@ -156,9 +156,9 @@ export function sortStatus(statuses: IPartStatusDTO[]): IPartStatusDTO[] {
 }
 
 export function formatDate(dateStr: string) {
-  var date = new Date(dateStr);
+  const date = new Date(dateStr);
 
-  var now_utc = Date.UTC(
+  const now_utc = Date.UTC(
     date.getUTCFullYear(),
     date.getUTCMonth(),
     date.getUTCDate(),
@@ -166,7 +166,7 @@ export function formatDate(dateStr: string) {
     date.getUTCMinutes()
   );
 
-  let thisdate = new Date(now_utc);
+  const thisdate = new Date(now_utc);
   return (
     thisdate.toDateString() +
     " @ " +

@@ -1,6 +1,3 @@
-import React, { createContext, useReducer } from "react";
-import { jwtReducer } from "./reducer";
-
 export interface JwtPayload {
   exp: number;
   iat: number;
@@ -19,6 +16,6 @@ export const jwtInitialState = {
     exp: 0,
     iat: 0,
     id: 0,
-    username: '',
+    username: "",
   },
 };

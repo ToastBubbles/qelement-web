@@ -1450,6 +1450,9 @@ td {
 #partname {
   margin-left: 1em;
 }
+.white-text {
+  color: #eee !important;
+}
 
 @media (max-width: 1359px) {
   .mx-w {

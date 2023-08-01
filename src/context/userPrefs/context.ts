@@ -1,5 +1,3 @@
-import React, { createContext, useReducer } from "react";
-import { jwtReducer } from "./reducer";
 
 export interface UserPreferencesStateType {
   userId: number;

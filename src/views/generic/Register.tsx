@@ -2,10 +2,9 @@ import axios from "axios";
 import { useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { useNavigate } from "react-router";
-import { IAPIResponse, IUserDTO, user } from "../../interfaces/general";
-import { IQelementError } from "../../interfaces/error";
-import showToast, { Mode } from "../../utils/utils";
 import { Link } from "react-router-dom";
+import { IAPIResponse, IUserDTO } from "../../interfaces/general";
+import showToast, { Mode } from "../../utils/utils";
 
 interface passwordValidation {
   isLongEnough: boolean;
@@ -120,9 +119,9 @@ export default function Register() {
             placeholder="Password"
             type="password"
             onChange={(e) => {
-              let lengthBool = e.target.value.length >= 8;
-              let regexpLet = new RegExp(".*[a-zA-Z].*");
-              let regexpNum = new RegExp(".*[1-9,0].*");
+              const lengthBool = e.target.value.length >= 8;
+              const regexpLet = new RegExp(".*[a-zA-Z].*");
+              const regexpNum = new RegExp(".*[1-9,0].*");
               setPassValidate({
                 isLongEnough: lengthBool,
                 containsLetter: regexpLet.test(e.target.value),

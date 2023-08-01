@@ -1,7 +1,7 @@
 import axios from "axios";
-import { useMutation, useQuery } from "react-query";
-import showToast, { Mode } from "../utils/utils";
+import { useMutation } from "react-query";
 import { IPartMoldDTO } from "../interfaces/general";
+import showToast, { Mode } from "../utils/utils";
 
 interface IProps {
   mold: IPartMoldDTO;

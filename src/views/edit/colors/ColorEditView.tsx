@@ -1,6 +1,6 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { useState } from "react";
-import { useQuery, useMutation, UseMutationResult } from "react-query";
+import { useQuery, useMutation } from "react-query";
 import { useNavigate, useParams } from "react-router";
 import SimilarColorBanner from "../../../components/SimilarColorBanner";
 import {
@@ -20,7 +20,7 @@ export default function ColorEditView() {
 
   const {
     data: colData,
-    isLoading: colIsLoading,
+
     error: colError,
   } = useQuery({
     queryKey: "color",
@@ -31,7 +31,7 @@ export default function ColorEditView() {
   });
   const {
     data: simData,
-    isLoading: simIsLoading,
+
     error: simError,
   } = useQuery({
     queryKey: "similarColors",
@@ -77,14 +77,14 @@ export default function ColorEditView() {
         color_one,
         color_two,
       }),
-    onSuccess: () => {},
+    // onSuccess: () => {},
   });
 
   if (colError || simError) {
     navigate("/404");
   }
-  let color = colData?.data;
-  let hex = "#" + color?.hex;
+  const color = colData?.data;
+  const hex = "#" + color?.hex;
 
   const [colorEdits, setColorEdits] = useState<IEditColor>({
     bl_name: "unchanged",
@@ -190,8 +190,9 @@ export default function ColorEditView() {
                 // Check if the pressed key is a valid hexadecimal character
                 if (!hexPattern.test(key)) {
                   e.preventDefault(); // Prevent the character from being entered
-                } else {
                 }
+                //  else {
+                // }
               }}
               onChange={(e) => {
                 setColorEdits((colorEdits) => ({

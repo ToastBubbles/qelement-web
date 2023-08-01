@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router";
-import LoadingPage from "../components/LoadingPage";
-import { useQuery } from "react-query";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
+import { useLocation, useNavigate } from "react-router";
+import { Link } from "react-router-dom";
+import LoadingPage from "../components/LoadingPage";
 import {
   IPartDTO,
   IPartMoldDTO,
   IQPartDTOIncludeLess,
 } from "../interfaces/general";
-import { Link } from "react-router-dom";
 
 export default function SearchView() {
   const [searchValue, setSearchValue] = useState<string>("");
@@ -34,8 +34,7 @@ export default function SearchView() {
 
   const {
     data: partSearchData,
-    error: partSearchError,
-    refetch: partSearchRefetch,
+
   } = useQuery({
     queryKey: `partSearch${searchValue}`,
     queryFn: () => {
@@ -51,8 +50,7 @@ export default function SearchView() {
 
   const {
     data: moldSearchData,
-    error: moldSearchError,
-    refetch: moldSearchRefetch,
+ 
   } = useQuery({
     queryKey: `moldSearch${searchValue}`,
     queryFn: () => {
@@ -71,8 +69,6 @@ export default function SearchView() {
 
   const {
     data: qpartSearchData,
-    error: qpartSearchError,
-    refetch: qpartSearchRefetch,
   } = useQuery({
     queryKey: `qpartSearch${searchValue}`,
     queryFn: () => {
@@ -90,9 +86,9 @@ export default function SearchView() {
   });
 
   if (partSearchData && moldSearchData && qpartSearchData) {
-    let partResults = partSearchData.data;
-    let moldResults = moldSearchData.data;
-    let qpartResults = qpartSearchData.data;
+    const partResults = partSearchData.data;
+    const moldResults = moldSearchData.data;
+    const qpartResults = qpartSearchData.data;
     return (
       <>
         <div className="mx-w">

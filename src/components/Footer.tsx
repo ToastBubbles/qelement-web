@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Link } from "react-router-dom";
 
 function Footer() {
@@ -54,7 +54,7 @@ function Footer() {
             </li>
             <li>
               <Link className="lt-grey" to="/updates">
-                Under Construction Updates
+                Site Updates
               </Link>
             </li>
             <li>

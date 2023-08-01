@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
+
 
 export default function SearchBarMain() {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState<string>("");
 
   function search() {
-    let formattedSearch = searchValue.replace(/ +/g, " ");
+    const formattedSearch = searchValue.replace(/ +/g, " ");
     //.replace(/ /g, "%20");
 
     navigate(`/search?query=${formattedSearch}`);

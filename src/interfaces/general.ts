@@ -27,6 +27,21 @@ export interface color {
   createdAt: string;
   updatedAt: string;
 }
+export interface colorWSimilar {
+  id: number;
+  bl_name: string;
+  tlg_name: string;
+  bo_name: string;
+  hex: string;
+  bl_id: number;
+  tlg_id: number;
+  bo_id: number;
+  type: string;
+  note: string;
+  similar: color[];
+  createdAt: string;
+  updatedAt: string;
+}
 export interface INotApporvedCounts {
   colors: number;
   categories: number;
@@ -52,6 +67,13 @@ export interface similarColor {
   id: number;
   colorId1: number;
   colorId2: number;
+  createdAt: string;
+  updatedAt: string;
+}
+export interface similarColorDetailed {
+  id: number;
+  color1: color;
+  color2: color;
   createdAt: string;
   updatedAt: string;
 }

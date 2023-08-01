@@ -7,13 +7,13 @@ import { login } from "../../auth/auth";
 import { Types } from "../../context/jwt/reducer";
 
 export default function Login() {
-  const { state, dispatch } = useContext(AppContext);
+  const { dispatch } = useContext(AppContext);
 
   const [loginDTO, setLoginDTO] = useState<ILoginDTO>({
     username: "",
     password: "",
   });
-  const [loginError, setLoginError] = useState<boolean>(false);
+  // const [loginError, setLoginError] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const attemptLogin = (creds: ILoginDTO) => {
@@ -26,9 +26,10 @@ export default function Login() {
 
       if (res) {
         navigate("/profile");
-      } else {
-        setLoginError(true);
       }
+      //  else {
+      //   setLoginError(true);
+      // }
     });
   };
   return (

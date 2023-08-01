@@ -1,5 +1,3 @@
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
 import {
   ICollectionDTOGET,
   IGoalDTOExtended,
@@ -19,7 +17,7 @@ interface ICollectionQPart {
   qpart: IQPartDTOIncludeLess;
 }
 export default function Goal({ goal, collection }: IProps) {
-  let theseParts: ICollectionDTOGET[] = [];
+  const theseParts: ICollectionDTOGET[] = [];
 
   collection.forEach((part) => {
     if (goal.partMoldId != null) {
@@ -34,7 +32,7 @@ export default function Goal({ goal, collection }: IProps) {
   });
   console.log("my parts", theseParts);
 
-  const { data: qpartData, refetch: qpartRefetch } = useQuery({
+  const { data: qpartData } = useQuery({
     queryKey: `qpartByPartId${goal.part.id}`,
     queryFn: () => {
       return axios.get<IQPartDTOIncludeLess[]>(
@@ -71,14 +69,40 @@ export default function Goal({ goal, collection }: IProps) {
 
     return (output + " Colors Only").trim();
   }
+  function calcPercent(mappedParts: ICollectionQPart[]) {
+    let count = 0;
+    //   console.log("mappppppped", mappedParts);
+
+    for (const item of mappedParts) {
+      if (item.isOwned) {
+        count++;
+      }
+    }
+    const output = Math.floor((count / mappedParts.length) * 100);
+    console.log(output);
+
+    return output;
+  }
+  function getRatio(mappedParts: ICollectionQPart[]): string {
+    let count = 0;
+    //   console.log("mappppppped", mappedParts);
+
+    for (const item of mappedParts) {
+      if (item.isOwned) {
+        count++;
+      }
+    }
+
+    return `${count} / ${mappedParts.length}`;
+  }
   if (qpartData) {
-    let qparts = qpartData.data;
-    let mappedParts: ICollectionQPart[] = [];
+    const qparts = qpartData.data;
+    const mappedParts: ICollectionQPart[] = [];
 
     qparts.forEach((qpart) => {
       console.log(qpart);
       let isKnown = false;
-      for (let statusData of qpart.partStatuses) {
+      for (const statusData of qpart.partStatuses) {
         if (statusData.status == "known") {
           isKnown = true;
         }
@@ -124,32 +148,7 @@ export default function Goal({ goal, collection }: IProps) {
         }
       }
     });
-    function calcPercent() {
-      let count = 0;
-      //   console.log("mappppppped", mappedParts);
 
-      for (const item of mappedParts) {
-        if (item.isOwned) {
-          count++;
-        }
-      }
-      let output = Math.floor((count / mappedParts.length) * 100);
-      console.log(output);
-
-      return output;
-    }
-    function getRatio(): string {
-      let count = 0;
-      //   console.log("mappppppped", mappedParts);
-
-      for (const item of mappedParts) {
-        if (item.isOwned) {
-          count++;
-        }
-      }
-
-      return `${count} / ${mappedParts.length}`;
-    }
     return (
       <div className="goal-body">
         <div style={{ fontSize: "2em", padding: "0 0.25em " }}>
@@ -173,11 +172,11 @@ export default function Goal({ goal, collection }: IProps) {
           ))}
         </div>
         <div className="goal-meter-container">
-          <div className="goal-percentage">{getRatio()}</div>
+          <div className="goal-percentage">{getRatio(mappedParts)}</div>
 
           <div
             className="goal-meter"
-            style={{ width: calcPercent() + "%" }}
+            style={{ width: calcPercent(mappedParts) + "%" }}
           ></div>
         </div>
       </div>

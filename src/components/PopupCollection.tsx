@@ -16,9 +16,9 @@ interface IProps {
 export default function PopupCollection({ qpart, closePopup }: IProps) {
   const {
     state: {
-      jwt: { token, payload },
+      jwt: { payload },
     },
-    dispatch,
+
   } = useContext(AppContext);
   const initialValues: ICollectionDTO = {
     forTrade: false,

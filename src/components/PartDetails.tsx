@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useMutation, useQuery } from "react-query";
+import { IPartDTO, category } from "../interfaces/general";
 import showToast, { Mode } from "../utils/utils";
-import { IPartDTO, category, part } from "../interfaces/general";
 
 interface IProps {
   part: IPartDTO;

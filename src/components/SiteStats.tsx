@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useQuery } from "react-query";
-import { IQPartDTO, IQPartDTOInclude } from "../interfaces/general";
-import RecentQPart from "./RecentQPart";
+import { IQPartDTOInclude } from "../interfaces/general";
 
 export default function SiteStats() {
   const { data } = useQuery({
@@ -14,7 +13,7 @@ export default function SiteStats() {
   });
 
   if (data) {
-    let qpart = data.data;
+    // const qpart = data.data;
     return (
       <>
         <div className="qpotd" style={{ marginTop: "1em" }}>

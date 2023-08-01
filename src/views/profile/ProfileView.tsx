@@ -4,9 +4,9 @@ import { AppContext } from "../../context/context";
 export default function ProfileView() {
   const {
     state: {
-      jwt: { token, payload },
+      jwt: { payload },
     },
-    dispatch,
+  
   } = useContext(AppContext);
   return (
     <>

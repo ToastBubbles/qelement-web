@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useQuery, useMutation } from "react-query";
 import {
-  iPartDTO,
+
   category,
   part,
   IPartWithMoldDTO,
@@ -20,13 +20,11 @@ export default function AddPartView() {
     partNote: "",
     moldNote: "",
   });
-  const [partNo, setPartNo] = useState<number>(-1);
+  // const [partNo, setPartNo] = useState<number>(-1);
   const [newCategory, setNewCategory] = useState<string>();
   const [isNewPart, setIsNewPart] = useState<boolean>(false);
   const {
     data: catData,
-    isLoading,
-    error,
     isFetched,
     refetch,
   } = useQuery("allCats", () =>
@@ -65,7 +63,7 @@ export default function AddPartView() {
     setIsNewPart(!isNewPart);
   };
   if (isFetched && catData) {
-    let selcat = catData.data.find((x) => x.id == newPart.CatId);
+    const selcat = catData.data.find((x) => x.id == newPart.CatId);
     return (
       <>
         <div className="formcontainer">

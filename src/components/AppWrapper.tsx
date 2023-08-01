@@ -10,7 +10,7 @@ interface IProps {
 }
 
 export default function AppWrapper({ children }: IProps) {
-  const { state, dispatch } = useContext(AppContext);
+  const {  dispatch } = useContext(AppContext);
 
   useEffect(() => {
     const access_token = Cookies.get("userJWT");

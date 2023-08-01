@@ -2,7 +2,7 @@ import axios from "axios";
 import { useMutation, useQuery } from "react-query";
 import { useParams, useNavigate } from "react-router";
 import AllColorStatus from "../../components/AllColorStatus";
-import Navpane from "../../components/Navpane";
+
 import RatingCard from "../../components/RatingCard";
 import {
   IQPartDTOInclude,
@@ -27,9 +27,9 @@ export default function SinglePartView() {
 
   const {
     state: {
-      jwt: { token, payload },
+      jwt: {  payload },
     },
-    dispatch,
+
   } = useContext(AppContext);
   const queryParameters = new URLSearchParams(window.location.search);
   const urlColorId = queryParameters.get("color");
@@ -67,7 +67,7 @@ export default function SinglePartView() {
     enabled: !!partId,
     // retry: false,
   });
-  let mypart = qpartData?.data.find((x) => x.id == selectedQPartid);
+  const mypart = qpartData?.data.find((x) => x.id == selectedQPartid);
 
   function getRatings(ratings: rating[] | undefined): number {
     if (ratings != undefined && ratings.length > 0) {
@@ -86,7 +86,7 @@ export default function SinglePartView() {
 
   useEffect(() => {
     if (qpartData) {
-      let type1 = qpartData?.data[0].type;
+      const type1 = qpartData?.data[0].type;
       qpartData?.data.forEach(
         (qpart) => qpart.type != type1 && setMultiMoldPart(true)
       );
@@ -107,10 +107,41 @@ export default function SinglePartView() {
       qpartRefetch();
     },
   });
+  function getUnique(qpts: IQPartDTOInclude[]): IPartMoldDTO[] {
+    const output: IPartMoldDTO[] = [];
+    qpts.forEach((qpart) => {
+      if (output.length == 0) {
+        output.push(qpart.mold);
+      } else {
+        const checker = output.find((x) => x.id == qpart.mold.id);
+        if (!checker) output.push(qpart.mold);
+      }
+    });
+    return output;
+  }
 
+  function formatURL(): string {
+    if (mypart && mypart?.images?.length > 0) {
+      const images = filterImages(mypart?.images);
+      if (images.length > 0) {
+        let selectedImage = images[images.length - 1];
+        for (let i = images.length - 1; i >= 0; i--) {
+          if (images[i].type == "part") {
+            selectedImage = images[i];
+          }
+          if (images[i].isPrimary) {
+            selectedImage = images[i];
+            break;
+          }
+        }
+        return imagePath + selectedImage.fileName;
+      }
+    }
+    return "https://via.placeholder.com/1024x768/eee?text=4:3";
+  }
   if (qpartData) {
-    let qparts = qpartData?.data;
-    let myDebugger = {
+    const qparts = qpartData?.data;
+    const myDebugger = {
       selectedQPartid,
       urlColorId,
       mypart,
@@ -118,7 +149,7 @@ export default function SinglePartView() {
 
     if (selectedQPartid == -1) {
       if (urlColorId) {
-        let targetQPartId = qparts.find(
+        const targetQPartId = qparts.find(
           (x) => x.color.id == Number(urlColorId)
         )?.id;
         if (targetQPartId) setSelectedQPartid(targetQPartId);
@@ -128,39 +159,6 @@ export default function SinglePartView() {
       }
     }
     console.log(myDebugger);
-
-    function getUnique(): IPartMoldDTO[] {
-      let output: IPartMoldDTO[] = [];
-      qparts.forEach((qpart) => {
-        if (output.length == 0) {
-          output.push(qpart.mold);
-        } else {
-          let checker = output.find((x) => x.id == qpart.mold.id);
-          if (!checker) output.push(qpart.mold);
-        }
-      });
-      return output;
-    }
-
-    function formatURL(): string {
-      if (mypart && mypart?.images?.length > 0) {
-        let images = filterImages(mypart?.images);
-        if (images.length > 0) {
-          let selectedImage = images[images.length - 1];
-          for (let i = images.length - 1; i >= 0; i--) {
-            if (images[i].type == "part") {
-              selectedImage = images[i];
-            }
-            if (images[i].isPrimary) {
-              selectedImage = images[i];
-              break;
-            }
-          }
-          return imagePath + selectedImage.fileName;
-        }
-      }
-      return "https://via.placeholder.com/1024x768/eee?text=4:3";
-    }
 
     return (
       <div className="mx-w">
@@ -199,7 +197,7 @@ export default function SinglePartView() {
                     <option key={-1} value="-1">
                       --Show All Part Variations--
                     </option>
-                    {getUnique().map((mold) => (
+                    {getUnique(qparts).map((mold) => (
                       <option key={mold.id} value={`${mold.id}`}>
                         {mold.number}
                       </option>
@@ -500,8 +498,9 @@ export default function SinglePartView() {
                         other colors for{" "}
                         {selectedQPartMold == -1
                           ? "all molds"
-                          : getUnique().find((x) => x.id == selectedQPartMold)
-                              ?.number}
+                          : getUnique(qparts).find(
+                              (x) => x.id == selectedQPartMold
+                            )?.number}
                       </legend>
                       <form id="search-form" style={{ margin: "0 0 1em 0" }}>
                         <input

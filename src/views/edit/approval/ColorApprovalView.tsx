@@ -1,14 +1,12 @@
 import axios from "axios";
-import { useQuery, useMutation } from "react-query";
-import showToast, { Mode } from "../../../utils/utils";
-import { color, iIdOnly } from "../../../interfaces/general";
+import { useQuery } from "react-query";
 import ColorDetails from "../../../components/ColorDetails";
+import { color } from "../../../interfaces/general";
 
 export default function ApproveColorView() {
   const {
     data: colData,
-    isLoading,
-    error,
+ 
     isFetched,
     refetch,
   } = useQuery("notApprovedColors", () =>
@@ -16,7 +14,7 @@ export default function ApproveColorView() {
   );
 
   if (isFetched && colData) {
-    let colors = colData.data;
+    const colors = colData.data;
     return (
       <>
         <div className="formcontainer">

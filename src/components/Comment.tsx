@@ -1,4 +1,4 @@
-import React from "react";
+
 import { ICommentDTO } from "../interfaces/general";
 import { formatDate } from "../utils/utils";
 

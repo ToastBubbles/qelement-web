@@ -7,7 +7,7 @@ function LogoutBtn() {
     <>
       <Link to="/colors">
         <button
-          onClick={(e) => {
+          onClick={() => {
             logout();
             // redirect("/colors");
           }}

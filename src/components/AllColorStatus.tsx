@@ -12,7 +12,7 @@ interface IProps {
 }
 
 export default function AllColorStatus({ qparts, moldId, search }: IProps) {
-  const { data, isLoading, error } = useQuery("allColors", () =>
+  const { data, isLoading } = useQuery("allColors", () =>
     axios.get<color[]>("http://localhost:3000/color")
   );
   function statusLookup(mId: number, cId: number) {
@@ -37,9 +37,7 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
         <Link
           to={"/color/" + color.id}
           className="flag lt-grey"
-          
           style={{ backgroundColor: "#" + color.hex }}
-          
         >
           {color.bl_name.length == 0 ? color.tlg_name : color.bl_name}
         </Link>
@@ -53,51 +51,47 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
       </div>
     );
   }
+  function sortAndReturnJSX(colors: color[]): ReactNode {
+    let foundColors: ReactNode,
+      seenColors: ReactNode,
+      idOnlyColors: ReactNode,
+      knownColors: ReactNode,
+      otherColors: ReactNode,
+      colorsWithoutStatus: ReactNode;
 
-  if (!isLoading && data) {
-    let colors = data.data;
-    function sortAndReturnJSX(): ReactNode {
-      let foundColors: ReactNode,
-        seenColors: ReactNode,
-        idOnlyColors: ReactNode,
-        knownColors: ReactNode,
-        otherColors: ReactNode,
-        colorsWithoutStatus: ReactNode;
-
-      colors.forEach((color) => {
-        if (validateSearch(color, search)) {
-          let status = statusLookup(moldId, color.id);
-          if (status != "no status") {
-            if (status == "found") {
-              foundColors = [foundColors, returnJSX(color, status)];
-            } else if (status == "seen") {
-              seenColors = [seenColors, returnJSX(color, status)];
-            } else if (status == "idOnly") {
-              idOnlyColors = [idOnlyColors, returnJSX(color, status)];
-            } else if (status == "known") {
-              knownColors = [knownColors, returnJSX(color, status)];
-            } else {
-              otherColors = [otherColors, returnJSX(color, status)];
-            }
+    colors.forEach((color) => {
+      if (validateSearch(color, search)) {
+        const status = statusLookup(moldId, color.id);
+        if (status != "no status") {
+          if (status == "found") {
+            foundColors = [foundColors, returnJSX(color, status)];
+          } else if (status == "seen") {
+            seenColors = [seenColors, returnJSX(color, status)];
+          } else if (status == "idOnly") {
+            idOnlyColors = [idOnlyColors, returnJSX(color, status)];
+          } else if (status == "known") {
+            knownColors = [knownColors, returnJSX(color, status)];
           } else {
-            colorsWithoutStatus = [
-              colorsWithoutStatus,
-              returnJSX(color, status),
-            ];
+            otherColors = [otherColors, returnJSX(color, status)];
           }
+        } else {
+          colorsWithoutStatus = [colorsWithoutStatus, returnJSX(color, status)];
         }
-      });
-      return [
-        foundColors,
-        seenColors,
-        idOnlyColors,
-        knownColors,
-        otherColors,
-        colorsWithoutStatus,
-      ];
-    }
+      }
+    });
+    return [
+      foundColors,
+      seenColors,
+      idOnlyColors,
+      knownColors,
+      otherColors,
+      colorsWithoutStatus,
+    ];
+  }
+  if (!isLoading && data) {
+    const colors = data.data;
 
-    return <div className="allColorStatus">{sortAndReturnJSX()}</div>;
+    return <div className="allColorStatus">{sortAndReturnJSX(colors)}</div>;
   } else {
     return <p>Loading...</p>;
   }

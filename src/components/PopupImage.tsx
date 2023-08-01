@@ -1,12 +1,4 @@
-import axios from "axios";
-import { useContext, useState } from "react";
-import { useMutation } from "react-query";
-import { AppContext } from "../context/context";
-import { IQPartDTOInclude, IWantedDTO } from "../interfaces/general";
-import showToast, { Mode } from "../utils/utils";
-import ConditionSlider from "./ConditionSlider";
-import MyToolTip from "./MyToolTip";
-import SliderToggle from "./SliderToggle";
+import { useState } from "react";
 
 interface IProps {
   imgPath: string;

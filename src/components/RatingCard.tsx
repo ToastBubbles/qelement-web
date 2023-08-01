@@ -1,10 +1,8 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useMutation, useQuery } from "react-query";
-import { useNavigate } from "react-router";
-import { IRatingDTO, rating } from "../interfaces/general";
 import { AppContext } from "../context/context";
-import { toast } from "react-toastify";
+import { IRatingDTO, rating } from "../interfaces/general";
 import showToast, { Mode, getTier } from "../utils/utils";
 
 interface IProps {
@@ -16,19 +14,16 @@ interface IProps {
 function RatingCard({ rating, qpartId, refetchFn }: IProps) {
   const {
     state: {
-      jwt: { token, payload },
+      jwt: { payload },
     },
-    dispatch,
   } = useContext(AppContext);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [myRating, setMyRating] = useState<number>(-1);
 
   const {
     data: ratingData,
-    isLoading: ratingIsLoading,
-    error: ratingError,
     refetch: ratingRefetch,
   } = useQuery({
     queryKey: "myRating",
@@ -42,7 +37,7 @@ function RatingCard({ rating, qpartId, refetchFn }: IProps) {
   });
 
   useEffect(() => {
-    if (!!payload.id) ratingRefetch();
+    if (payload.id) ratingRefetch();
   }, [qpartId, rating]);
 
   const ratingMutation = useMutation({

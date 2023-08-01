@@ -1,5 +1,5 @@
 import { Ribbon, RibbonContainer } from "react-ribbons";
-import { IQPartDTOIncludeLess, IWantedDTOGET } from "../interfaces/general";
+import { IWantedDTOGET } from "../interfaces/general";
 import { filterImages, getTier, imagePath, sortStatus } from "../utils/utils";
 import { Link } from "react-router-dom";
 
@@ -7,7 +7,7 @@ interface iProps {
   myWantedPart: IWantedDTOGET;
 }
 export default function TopFiveCard({ myWantedPart }: iProps) {
-  let images = filterImages(myWantedPart.qpart.images);
+  const images = filterImages(myWantedPart.qpart.images);
   let primaryImage = images[images.length - 1];
   for (let i = images.length - 1; i >= 0; i--) {
     if (images[i].type == "part") {
@@ -19,7 +19,7 @@ export default function TopFiveCard({ myWantedPart }: iProps) {
     }
   }
 
-  let status = sortStatus(
+  const status = sortStatus(
     myWantedPart.qpart.partStatuses
   )[0].status.toUpperCase();
 
@@ -73,7 +73,7 @@ export default function TopFiveCard({ myWantedPart }: iProps) {
     if (myWantedPart.qpart.ratings.length > 0) {
       let total = 0;
       let count = 0;
-      for (let rating of myWantedPart.qpart.ratings) {
+      for (const rating of myWantedPart.qpart.ratings) {
         total += rating.rating;
         count++;
       }
@@ -82,8 +82,8 @@ export default function TopFiveCard({ myWantedPart }: iProps) {
       return -1;
     }
   }
-  let rating = getRating();
-  let tier = getTier(rating);
+  const rating = getRating();
+  const tier = getTier(rating);
   return (
     <div
       className="topfive-card"

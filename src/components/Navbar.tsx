@@ -1,35 +1,26 @@
 import axios from "axios";
-import { useState, useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
-import { logout } from "../auth/auth";
 import { AppContext } from "../context/context";
-import LoginBtn from "./LoginBtn";
-import ColorWheel from "./ColorWheel";
-import PartsButton from "./PartsButton";
 import showToast, { Mode } from "../utils/utils";
-import { IAPIResponse } from "../interfaces/general";
+import ColorWheel from "./ColorWheel";
+import LoginBtn from "./LoginBtn";
 import NavbarPopdown from "./NavbarPopdown";
-import useComponentVisible from "../utils/hooks";
+import PartsButton from "./PartsButton";
 import SearchBarMain from "./SearchBarMain";
 
 function Navbar() {
-  const { dropdownRef, isComponentVisible } = useComponentVisible(true);
+  // const { dropdownRef, isComponentVisible } = useComponentVisible(true);
   const [toggleDropdown, setToggleDropdown] = useState<boolean>(false);
-  const [messageCount, setMessageCount] = useState<number>(0);
+  // const [messageCount, setMessageCount] = useState<number>(0);
   const {
     state: {
       jwt: { token, payload },
     },
-    dispatch,
   } = useContext(AppContext);
 
-  const {
-    data: msgData,
-    isLoading: msgIsLoading,
-    error: msgError,
-    isFetched,
-  } = useQuery({
+  const { data: msgData } = useQuery({
     queryKey: "individualMessage",
     queryFn: () =>
       axios.get<number>(
@@ -88,7 +79,7 @@ function Navbar() {
             </Link>
             <button
               className="navbarProfileImg"
-              onClick={(e) => {
+              onClick={() => {
                 setToggleDropdown(!toggleDropdown);
                 console.log("clicked");
               }}
@@ -98,7 +89,7 @@ function Navbar() {
                 src="/img/blank_profile.webp"
               />
             </button>
-            <div ref={dropdownRef}>{toggleDropdown && <NavbarPopdown />}</div>
+            <div>{toggleDropdown && <NavbarPopdown />}</div>
           </>
         )}
       </div>

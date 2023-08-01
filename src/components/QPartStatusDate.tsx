@@ -1,5 +1,3 @@
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
 
 interface IProps {
   status: string;
@@ -8,7 +6,7 @@ interface IProps {
 }
 
 export default function QPartStatusDate({ status, date, isPrimary }: IProps) {
-  let classType: string = isPrimary ? status : "grey";
+  const classType: string = isPrimary ? status : "grey";
   return (
     <div
       style={{ marginBottom: "0.5em" }}

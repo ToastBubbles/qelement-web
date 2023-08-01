@@ -5,12 +5,9 @@
 
 import axios from "axios";
 import { importSPKI, jwtVerify } from "jose";
-import { ILoginDTO } from "../interfaces/general";
 import Cookies from "js-cookie";
+import { ILoginDTO } from "../interfaces/general";
 import showToast, { Mode } from "../utils/utils";
-import { useContext } from "react";
-import { AppContext } from "../context/context";
-import { Types } from "../context/jwt/reducer";
 
 // export function setJwtToken(token: any) {
 //   sessionStorage.setItem("jwt", token);
@@ -37,7 +34,7 @@ import { Types } from "../context/jwt/reducer";
 //   //   navigate("/some-url");
 // }
 
-export async function getJWT(token: string): Promise<Object> {
+export async function getJWT(token: string): Promise<any> {
   const algorithm = "RS256";
   const spki = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlT9HNfa+VXFuJ+apLiNz

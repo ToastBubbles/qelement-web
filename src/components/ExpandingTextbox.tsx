@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import  { Dispatch, SetStateAction } from "react";
 
 interface IProps {
   setter: Dispatch<SetStateAction<string>>;
@@ -8,17 +8,17 @@ interface IProps {
 export default function ExpandingTextbox({ setter, getter }: IProps) {
   // const [value, setValue] = useState("");
 
-  const handleChange = (event) => {
+  const handleChange = (event: any) => {
     // setValue(event.target.value);
     setter(event.target.value);
   };
 
-  const autoExpand = (element) => {
+  const autoExpand = (element: any) => {
     element.style.height = "auto";
     element.style.height = `${element.scrollHeight}px`;
   };
 
-  const handleInput = (event) => {
+  const handleInput = (event: any) => {
     autoExpand(event.target);
   };
 

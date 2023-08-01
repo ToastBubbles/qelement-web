@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { color } from "../interfaces/general";
@@ -22,7 +22,7 @@ function AllColors() {
     // search,
   });
 
-  const { data, isLoading, error, isFetched } = useQuery("allColors", () =>
+  const { data, isFetched } = useQuery("allColors", () =>
     axios.get<color[]>("http://localhost:3000/color")
   );
 
@@ -94,7 +94,7 @@ function generateTable(
   search: string
 ) {
   let contentLength = 0;
-  let output = (
+  const output = (
     <>
       <h1>{type}</h1>
       <table className="color-table" cellSpacing={0}>

@@ -1,17 +1,12 @@
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useMutation, useQuery } from "react-query";
-import { AppContext } from "../context/context";
 import {
   IGoalDTO,
-  IQPartDTOInclude,
-  IWantedDTO,
-  category,
+  category
 } from "../interfaces/general";
 import showToast, { Mode } from "../utils/utils";
-import ConditionSlider from "./ConditionSlider";
 import MyToolTip from "./MyToolTip";
-import Select from "react-select";
 
 interface IProps {
   userId: number;
@@ -45,8 +40,8 @@ export default function PopupGoal({ userId, closePopup }: IProps) {
     axios.get<category[]>("http://localhost:3000/categories")
   );
   if (catData) {
-    let selcat = catData.data.find((x) => x.id == selectedCatId);
-    let selpart = selcat?.parts.find((x) => x.id == goal.partId);
+    const selcat = catData.data.find((x) => x.id == selectedCatId);
+    const selpart = selcat?.parts.find((x) => x.id == goal.partId);
     return (
       <div className="popup-container">
         <div style={{ minHeight: "35em" }} className="popup-body">

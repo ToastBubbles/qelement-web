@@ -1,6 +1,6 @@
 import { Ribbon, RibbonContainer } from "react-ribbons";
 import { Link } from "react-router-dom";
-import { IQPartDTOInclude, color, part } from "../interfaces/general";
+import { IQPartDTOInclude } from "../interfaces/general";
 import {
   filterImages,
   formatDate,
@@ -32,8 +32,8 @@ export default function RecentQPart({ qpart }: IProps) {
   }
 
   if (qpart) {
-    let age = calculateHoursBetweenDates(qpart.approvalDate);
-    let images = filterImages(qpart.images);
+    const age = calculateHoursBetweenDates(qpart.approvalDate);
+    const images = filterImages(qpart.images);
     let primaryImage = images[images.length - 1];
     for (let i = images.length - 1; i >= 0; i--) {
       if (images[i].type == "part") {

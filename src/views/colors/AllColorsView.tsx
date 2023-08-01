@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+
 import AllColors from "../../components/AllColors";
 export default function AllColorsView() {
 

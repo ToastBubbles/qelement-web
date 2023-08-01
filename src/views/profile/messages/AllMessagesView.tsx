@@ -1,14 +1,12 @@
 import axios from "axios";
-import { useState, useContext, useEffect } from "react";
-import { useQuery, useMutation } from "react-query";
+import { useContext, useEffect, useState } from "react";
+import { useMutation, useQuery } from "react-query";
 import Message from "../../../components/Message";
 import { AppContext } from "../../../context/context";
-import { IQelementError } from "../../../interfaces/error";
 import {
-  IMessageDTO,
   IExtendedMessageDTO,
-  user,
   IMailbox,
+  IMessageDTO
 } from "../../../interfaces/general";
 import showToast, { Mode } from "../../../utils/utils";
 
@@ -28,79 +26,51 @@ export default function AllMessagesView() {
   const [mySentMessages, setMySentMessages] = useState<IExtendedMessageDTO[]>();
   const {
     state: {
-      jwt: { token, payload },
+      jwt: { payload },
     },
-    dispatch,
+
   } = useContext(AppContext);
-  // const { data, isLoading, error, isFetched } = useQuery("todos", () =>
-  //   axios.get<user>(`http://localhost:3000/user/${name.trim()}`)
-  // );
-
-  // function getMyId(username: string) {
-  //   axios
-  //     .get<user>(`http://localhost:3000/user/${username.trim()}`)
-  //     .then((res) => {
-  //       setNewMessage((newMessage) => ({
-  //         ...newMessage,
-  //         ...{ senderId: res.data.id },
-  //       }));
-  //     });
-  // }
-  // function getUsername(id: number) {
-  //   return axios.get<user>(`http://localhost:3000/user/id/${id}`);
-  //   // .then((res) => {
-  //   //   console.log(res.data);
-
-  //   //   return res.data;
-  //   // });
-  // }
-  //example of refetching
-  const {
-    data: recipID,
-    isLoading,
-    error,
-    isFetched,
-    refetch,
-  } = useQuery(
-    "getID",
-    () => {
-      try {
-        if (recipientName.length > 1) {
-          console.log("calling api with", recipientName);
-          axios
-            .get<user | IQelementError>(
-              `http://localhost:3000/user/username/${recipientName.trim()}`
-            )
-            .then((res) => {
-              if (res.data?.code == 404) {
-                showToast("Recipient does not exist", Mode.Error);
-                setIsBadRecipient(true);
-              } else {
-                console.log(res.data);
-                setNewMessage((newMessage) => ({
-                  ...newMessage,
-                  ...{ recipientId: res.data?.id },
-                }));
-                setIsBadRecipient(false);
-              }
-            });
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    {
-      enabled: recipientIDGetter,
-    }
-  );
 
   // const {
-  //   data: messages,
-  //   isLoading: isMsgsLoading,
-  //   error: msgError,
-  //   isFetched: isMsgFetched,
-  //   refetch: msgRefetch,
-  // } =
+  //   data: recipID,
+  //   isLoading,
+  //   error,
+  //   isFetched,
+  //   refetch,
+  // } = useQuery(
+  //   "getID",
+  //   () => {
+  //     try {
+  //       if (recipientName.length > 1) {
+  //         console.log("calling api with", recipientName);
+  //         axios
+  //           .get<user | IQelementError>(
+  //             `http://localhost:3000/user/username/${recipientName.trim()}`
+  //           )
+  //           .then((res) => {
+  //             if (res.data?.code == 404) {
+  //               showToast("Recipient does not exist", Mode.Error);
+  //               setIsBadRecipient(true);
+  //             } else {
+  //               console.log(res.data);
+  //               setNewMessage((newMessage) => ({
+  //                 ...newMessage,
+  //                 ...{ recipientId: res.data?.id },
+  //               }));
+  //               setIsBadRecipient(false);
+  //             }
+  //           });
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   },
+  //   {
+  //     enabled: recipientIDGetter,
+  //   }
+  // );
+
+
 
   useQuery(
     "getMsgs",
@@ -134,7 +104,7 @@ export default function AllMessagesView() {
         showToast("You can't send messages to yourself", Mode.Warning);
         setIsBadRecipient(true);
       } else {
-        refetch();
+        // refetch();
       }
   }, [recipientIDGetter]);
 
@@ -142,15 +112,11 @@ export default function AllMessagesView() {
     if (newMessage.senderId != -1) setGetMyMail(true);
   }, [newMessage.senderId]);
 
-  // const messageMutation = useMutation({
-  //   mutationFn: (message: IMessageDTO) =>
-  //     axios.post<IMessageDTO>(`http://localhost:3000/read/message`, message),
-  //   onSuccess: () => {},
-  // });
+
   const messageMutation = useMutation({
     mutationFn: (message: IMessageDTO) =>
       axios.post<IMessageDTO>(`http://localhost:3000/message`, message),
-    onSuccess: () => {},
+    // onSuccess: () => {},
   });
   function sendMessage() {
     console.log("attempting send");
@@ -258,7 +224,7 @@ export default function AllMessagesView() {
                 }
               ></textarea>
               <button
-                onClick={(e) => {
+                onClick={() => {
                   sendMessage();
                 }}
               >

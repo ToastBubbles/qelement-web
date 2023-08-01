@@ -1,9 +1,8 @@
 import axios from "axios";
 import { useQuery } from "react-query";
 
-import { IQPartDTO, IQPartDTOInclude } from "../../../interfaces/general";
+import { IQPartDTOInclude } from "../../../interfaces/general";
 
-import PartDetails from "../../../components/PartDetails";
 import QPartDetails from "../../../components/QPartDetails";
 
 export default function ApproveQPartView() {
@@ -16,7 +15,7 @@ export default function ApproveQPartView() {
   );
 
   if (isFetched && qpartData) {
-    let qparts = qpartData.data;
+    const qparts = qpartData.data;
     return (
       <>
         <div className="formcontainer">

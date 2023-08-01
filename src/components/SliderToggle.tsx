@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { ICollectionDTO } from "../interfaces/general";
+
 
 interface IProps {
   getter: boolean;

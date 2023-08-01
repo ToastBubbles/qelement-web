@@ -1,11 +1,11 @@
 import axios from "axios";
 import { useQuery } from "react-query";
-import { IQPartDTO, IQPartDTOInclude } from "../interfaces/general";
+import { IQPartDTOInclude } from "../interfaces/general";
 import RecentQPart from "./RecentQPart";
 
-interface IProps {
-  qpart: IQPartDTOInclude;
-}
+// interface IProps {
+//   qpart: IQPartDTOInclude;
+// }
 
 export default function PartOfTheDay() {
   const { data } = useQuery({
@@ -18,7 +18,7 @@ export default function PartOfTheDay() {
   });
 
   if (data) {
-    let qpart = data.data;
+    const qpart = data.data;
     return (
       <>
         <div className="qpotd">Random Q-Element of the Day</div>

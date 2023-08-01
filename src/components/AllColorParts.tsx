@@ -1,17 +1,14 @@
 import axios from "axios";
 import { useQuery } from "react-query";
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
-import { IQPartDTOInclude, IQPartDTOIncludeLess } from "../interfaces/general";
+import { IQPartDTOInclude } from "../interfaces/general";
 import LoadingPage from "./LoadingPage";
-import { filterImages, imagePath } from "../utils/utils";
 import RecentQPart from "./RecentQPart";
 
 interface iProps {
   colorId: number;
 }
 export default function AllColorParts({ colorId }: iProps) {
-  const { data: qpartsData, error: qpartsError } = useQuery({
+  const { data: qpartsData } = useQuery({
     queryKey: "qpartColors" + colorId,
     queryFn: () =>
       axios.get<IQPartDTOInclude[]>(
@@ -22,12 +19,11 @@ export default function AllColorParts({ colorId }: iProps) {
   });
 
   if (qpartsData) {
-    let qparts = qpartsData.data;
+    const qparts = qpartsData.data;
     return (
       <div>
-        
         {qparts.length ? (
-          qparts.map((qpart) => <RecentQPart qpart={qpart} />)
+          qparts.map((qpart) => <RecentQPart key={qpart.id} qpart={qpart} />)
         ) : (
           <div>No parts found</div>
         )}

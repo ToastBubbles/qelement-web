@@ -4,19 +4,19 @@ import { AppContext } from "../context/context";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { IAPIResponse } from "../interfaces/general";
+import showToast, { Mode } from "../utils/utils";
 
 export const ProtectedRoute = ({ level = "user", children }: any) => {
   const {
     state: {
-      jwt: { token, payload },
+      jwt: {  payload },
     },
-    dispatch,
+
   } = useContext(AppContext);
 
   const {
     data: adminData,
-    isLoading: adminIsLoading,
-    error: adminError,
+  
   } = useQuery({
     queryKey: "isAdmin",
     queryFn: () =>
@@ -29,10 +29,15 @@ export const ProtectedRoute = ({ level = "user", children }: any) => {
   });
 
   if (!payload || payload.id == 0 || payload.id == undefined) {
+    showToast("You must be logged in to visit this page!", Mode.Warning);
     return <Navigate to="/" replace />;
   }
 
   if (level == "admin" && adminData?.data.code != 200) {
+    showToast(
+      "You do not have the correct privileges to view this page",
+      Mode.Warning
+    );
     return <Navigate to="/" replace />;
   }
 

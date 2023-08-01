@@ -1,28 +1,25 @@
-import { Link } from "react-router-dom";
-import { logout } from "../auth/auth";
-import { useQuery } from "react-query";
 import axios from "axios";
-import { IAPIResponse } from "../interfaces/general";
-import { useContext } from "react";
-import { AppContext } from "../context/context";
-import useComponentVisible from "../utils/hooks";
-import { Types } from "../context/jwt/reducer";
 import Cookies from "js-cookie";
+import { useContext } from "react";
+import { useQuery } from "react-query";
+import { Link } from "react-router-dom";
+import { AppContext } from "../context/context";
+import { Types } from "../context/jwt/reducer";
+import { IAPIResponse } from "../interfaces/general";
 import showToast, { Mode } from "../utils/utils";
 
 export default function NavbarPopdown() {
-  const { ref, isComponentVisible } = useComponentVisible(true);
+  // const { ref, isComponentVisible } = useComponentVisible(true);
   const {
     state: {
-      jwt: { token, payload },
+      jwt: { payload },
     },
     dispatch,
   } = useContext(AppContext);
 
   const {
     data: adminData,
-    isLoading: adminIsLoading,
-    error: adminError,
+
   } = useQuery({
     queryKey: "isAdmin",
     queryFn: () =>
@@ -42,7 +39,7 @@ export default function NavbarPopdown() {
         <Link to={"/profile/settings"}>Settings</Link>
         <div
           className="clickable"
-          onClick={(e) => {
+          onClick={() => {
             dispatch({
               type: Types.ClearJWT,
             });

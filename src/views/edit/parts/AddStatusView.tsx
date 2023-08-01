@@ -2,11 +2,7 @@ import axios from "axios";
 import { useContext, useState } from "react";
 import { useQuery, useMutation } from "react-query";
 import {
-  iPartDTO,
-  category,
-  part,
-  IQPartDTO,
-  IQPartDetails,
+
   IPartStatusDTO,
   IQPartDTOIncludeLess,
 } from "../../../interfaces/general";
@@ -21,9 +17,9 @@ import { AppContext } from "../../../context/context";
 export default function AddStatusView() {
   const {
     state: {
-      jwt: { token, payload },
+      jwt: { payload },
     },
-    dispatch,
+
   } = useContext(AppContext);
   const [startDate, setStartDate] = useState<Date>(new Date());
   const { qpartId } = useParams();
@@ -64,7 +60,7 @@ export default function AddStatusView() {
 
   if (qpartData?.data && qpartIsFetched) {
 
-    let qpart = qpartData.data;
+    const qpart = qpartData.data;
     return (
       <>
         <div className="formcontainer">

@@ -6,10 +6,7 @@ import { Link } from "react-router-dom";
 export default function AllPartCategoriesView() {
   const {
     data: catData,
-    isLoading,
-    error,
-    isFetched,
-    refetch,
+
   } = useQuery("allCats", () =>
     axios.get<category[]>("http://localhost:3000/categories")
   );

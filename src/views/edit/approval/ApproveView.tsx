@@ -10,7 +10,7 @@ export default function ApproveView() {
     )
   );
   if (data) {
-    let counts = data.data;
+    const counts = data.data;
     return (
       <>
         <div className="formcontainer">

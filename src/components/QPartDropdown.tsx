@@ -1,8 +1,6 @@
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
-import { IQPartDTOInclude, IQPartDTOIncludeLess } from "../interfaces/general";
-import QPartDropdownRow from "./QPartDorpdownRow";
 import { Dispatch, SetStateAction } from "react";
+import { IQPartDTOInclude } from "../interfaces/general";
+import QPartDropdownRow from "./QPartDorpdownRow";
 
 interface iProps {
   qparts: IQPartDTOInclude[];

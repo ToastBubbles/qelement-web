@@ -1,12 +1,7 @@
 import axios from "axios";
-import { useQuery, useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
+import { IAPIResponse, category } from "../../../interfaces/general";
 import showToast, { Mode } from "../../../utils/utils";
-import {
-  IAPIResponse,
-  category,
-  color,
-  iIdOnly,
-} from "../../../interfaces/general";
 
 export default function ApproveCatView() {
   const {
@@ -44,7 +39,7 @@ export default function ApproveCatView() {
   });
 
   if (isFetched && catData) {
-    let cats = catData.data;
+    const cats = catData.data;
     return (
       <>
         <div className="formcontainer">

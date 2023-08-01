@@ -1,10 +1,8 @@
-import axios from "axios";
-import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
-import { similarColor, color } from "../interfaces/general";
+import { color } from "../interfaces/general";
 
 interface IProps {
-  similarColors: similarColor[];
+  similarColors: color[];
 }
 
 function SimilarColorBanner({ similarColors }: IProps) {
@@ -17,39 +15,20 @@ function SimilarColorBanner({ similarColors }: IProps) {
           <div className="simBannerText">This color is similar to:</div>
           {similarColors.length > 0 &&
             similarColors.map((color) => {
-              //   console.log(color.colorId2);
-              const thisColor = getSimilarColorData(color.colorId2);
-
               return (
                 <Link
-                  to={"/color/" + thisColor?.id}
-                  className="flag flag-spacer"
-                  style={{ backgroundColor: "#" + thisColor?.hex }}
+                  key={color.id}
+                  to={"/color/" + color.id}
+                  className="flag flag-spacer white-text"
+                  style={{ backgroundColor: "#" + color.hex }}
                 >
-                  {thisColor?.bl_name.length == 0
-                    ? thisColor?.tlg_name
-                    : thisColor?.bl_name}
+                  {color.bl_name.length == 0 ? color.tlg_name : color.bl_name}
                 </Link>
               );
             })}
-          {/* <div>{similarColors.length}</div> */}
         </div>
       </>
     );
-}
-
-function getSimilarColorData(cId: number): color | undefined {
-  const {
-    data: scolData,
-    isLoading: scolIsLoading,
-    error: scolError,
-  } = useQuery({
-    queryKey: `color${cId}`,
-    queryFn: () => axios.get<color>(`http://localhost:3000/color/id/${cId}`),
-    enabled: true,
-    retry: false,
-  });
-  return scolData?.data;
 }
 
 export default SimilarColorBanner;

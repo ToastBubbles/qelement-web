@@ -1,6 +1,5 @@
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
-import { color, iIdOnly } from "../interfaces/general";
+
+import { color } from "../interfaces/general";
 import axios from "axios";
 import { useMutation } from "react-query";
 import showToast, { Mode } from "../utils/utils";

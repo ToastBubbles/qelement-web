@@ -11,13 +11,13 @@ import CollectionPart from "../../components/CollectionPart";
 export default function CollectionView() {
   const {
     state: {
-      jwt: { token, payload },
+      jwt: {payload },
     },
-    dispatch,
+  
   } = useContext(AppContext);
   const [goalPopupOpen, setGoalPopupOpen] = useState(false);
 
-  const { data: mycollectionData, refetch: mycollectionRefetch } = useQuery({
+  const { data: mycollectionData} = useQuery({
     queryKey: "mycollection",
     queryFn: () => {
       return axios.get<ICollectionDTOGET[]>(
@@ -28,7 +28,7 @@ export default function CollectionView() {
     enabled: !!payload.id,
   });
 
-  const { data: myGoalData, refetch: myGoalRefetch } = useQuery({
+  const { data: myGoalData,  } = useQuery({
     queryKey: "mygoals",
     queryFn: () => {
       return axios.get<IGoalDTOExtended[]>(
@@ -39,8 +39,8 @@ export default function CollectionView() {
     enabled: !!payload.id,
   });
   if (mycollectionData && myGoalData) {
-    let goals = myGoalData.data;
-    let myParts = mycollectionData.data;
+    const goals = myGoalData.data;
+    const myParts = mycollectionData.data;
     return (
       <>
         <div className="mx-w">

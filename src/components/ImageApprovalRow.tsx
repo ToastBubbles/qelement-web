@@ -1,11 +1,10 @@
-import { useNavigate } from "react-router";
+import axios from "axios";
+import { useState } from "react";
+import { useMutation } from "react-query";
 import { Link } from "react-router-dom";
 import { IAPIResponse, ImageDTOExtended } from "../interfaces/general";
-import PopupImage from "./PopupImage";
-import { useState } from "react";
-import axios from "axios";
-import { useMutation } from "react-query";
 import showToast, { Mode } from "../utils/utils";
+import PopupImage from "./PopupImage";
 
 interface IProps {
   img: ImageDTOExtended;

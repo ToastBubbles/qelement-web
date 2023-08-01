@@ -15,7 +15,7 @@ export default function ApprovePartView() {
   );
 
   if (isFetched && partData) {
-    let parts = partData.data;
+    const parts = partData.data;
     return (
       <>
         <div className="formcontainer">

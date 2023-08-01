@@ -1,19 +1,16 @@
 import axios from "axios";
-import { useQuery, useMutation, MutationFunction } from "react-query";
-import showToast, { Mode } from "../../../utils/utils";
+import { useQuery } from "react-query";
+
 import {
-  IAPIResponse,
-  ImageDTO,
+
   ImageDTOExtended,
 } from "../../../interfaces/general";
-import PopupImage from "../../../components/PopupImage";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+
 import ImageApprovalRow from "../../../components/ImageApprovalRow";
 
 export default function ApproveImageView() {
-  const [imageOpen, setImageOpen] = useState<boolean>(false);
-  const [imageName, setImageName] = useState<string>("");
+  // const [imageOpen, setImageOpen] = useState<boolean>(false);
+  // const [imageName, setImageName] = useState<string>("");
   const {
     data: imgData,
     isFetched,
@@ -23,12 +20,12 @@ export default function ApproveImageView() {
   );
 
   if (isFetched && imgData) {
-    let imgs = imgData.data;
+    const imgs = imgData.data;
 
-    function formatURL(fileName: string): string {
-      const imagePathStarter = "http://localhost:9000/q-part-images/";
-      return imagePathStarter + fileName;
-    }
+    // function formatURL(fileName: string): string {
+    //   const imagePathStarter = "http://localhost:9000/q-part-images/";
+    //   return imagePathStarter + fileName;
+    // }
     return (
       <>
         {/* {imageOpen && imageName && (

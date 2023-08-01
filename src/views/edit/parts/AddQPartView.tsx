@@ -1,21 +1,18 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { useQuery, useMutation } from "react-query";
-import {
-  iPartDTO,
-  category,
-  part,
-  iQPartDTO,
-  color,
-  IQPartDTO,
-  IPartStatusDTO,
-  IAPIResponse,
-  IPartMoldDTO,
-  IQPartVerifcation,
-} from "../../../interfaces/general";
+import DatePicker from "react-datepicker";
+import { useMutation, useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import MyToolTip from "../../../components/MyToolTip";
-import DatePicker from "react-datepicker";
+import {
+  IAPIResponse,
+  IPartMoldDTO,
+  IPartStatusDTO,
+  category,
+  color,
+  iQPartDTO,
+  part,
+} from "../../../interfaces/general";
 
 import "react-datepicker/dist/react-datepicker.css";
 import { AppContext } from "../../../context/context";
@@ -24,9 +21,8 @@ import showToast, { Mode } from "../../../utils/utils";
 export default function AddQPartView() {
   const {
     state: {
-      jwt: { token, payload },
+      jwt: { payload },
     },
-    dispatch,
   } = useContext(AppContext);
   const defaultValues: iQPartDTO = {
     partId: -1,
@@ -56,53 +52,45 @@ export default function AddQPartView() {
 
   const [qpartExistenceCode, setQpartExistenceCode] = useState<number>(-1);
 
-  const {
-    data: colData,
-    isLoading: colIsLoading,
-    error: colError,
-  } = useQuery("allColors", () =>
+  const { data: colData } = useQuery("allColors", () =>
     axios.get<color[]>("http://localhost:3000/color")
   );
 
-  const {
-    data: partsData,
-    error: partsError,
-    refetch: partsRefetch,
-  } = useQuery({
+  const { data: partsData, refetch: partsRefetch } = useQuery({
     queryKey: "singleCatPartsAdd",
     queryFn: () =>
       axios.get<part[]>(`http://localhost:3000/parts/byCatId/${category}`),
     enabled: category != -1,
   });
 
-  const { data: matchData, refetch: matchRefetch } = useQuery({
-    queryKey: `match-p${newQPart.partId}-m${newQPart.moldId}-c${newQPart.colorId}`,
-    queryFn: () =>
-      axios.get<IAPIResponse>(`http://localhost:3000/qpart/checkIfExists`, {
-        params: {
-          moldId: newQPart.moldId,
-          colorId: newQPart.colorId,
-        } as IQPartVerifcation,
-      }),
-    onSuccess: (resp) => {
-      let code = resp.data.code;
-      setQpartExistenceCode(code);
-      if (code == 200) {
-        showToast(
-          `QPart does not exist in database yet, you're good to go!`,
-          Mode.Success
-        );
-      } else if (code == 201) {
-        showToast(
-          `QPart already exists. It may be pending approval.`,
-          Mode.Warning
-        );
-      } else if (code == 500) {
-        showToast(`Error checking part`, Mode.Error);
-      }
-    },
-    enabled: false,
-  });
+  // const { data: matchData, refetch: matchRefetch } = useQuery({
+  //   queryKey: `match-p${newQPart.partId}-m${newQPart.moldId}-c${newQPart.colorId}`,
+  //   queryFn: () =>
+  //     axios.get<IAPIResponse>(`http://localhost:3000/qpart/checkIfExists`, {
+  //       params: {
+  //         moldId: newQPart.moldId,
+  //         colorId: newQPart.colorId,
+  //       } as IQPartVerifcation,
+  //     }),
+  //   onSuccess: (resp) => {
+  //     const code = resp.data.code;
+  //     setQpartExistenceCode(code);
+  //     if (code == 200) {
+  //       showToast(
+  //         `QPart does not exist in database yet, you're good to go!`,
+  //         Mode.Success
+  //       );
+  //     } else if (code == 201) {
+  //       showToast(
+  //         `QPart already exists. It may be pending approval.`,
+  //         Mode.Warning
+  //       );
+  //     } else if (code == 500) {
+  //       showToast(`Error checking part`, Mode.Error);
+  //     }
+  //   },
+  //   enabled: false,
+  // });
 
   useEffect(() => {
     partsRefetch();
@@ -112,25 +100,20 @@ export default function AddQPartView() {
     }));
   }, [category]);
 
-  useEffect(() => {
-    if (newQPart.moldId != -1 && newQPart.colorId != -1) {
-      matchRefetch();
-    }
-  }, [newQPart.moldId, newQPart.colorId]);
+  // useEffect(() => {
+  //   if (newQPart.moldId != -1 && newQPart.colorId != -1) {
+  //     matchRefetch();
+  //   }
+  // }, [newQPart.moldId, newQPart.colorId]);
 
   useEffect(() => {
     if (partsData) {
-      let thesemolds = partsData.data.find((x) => x.id == newQPart.partId);
+      const thesemolds = partsData.data.find((x) => x.id == newQPart.partId);
       if (thesemolds) setMolds(thesemolds.molds);
     }
   }, [newQPart.partId]);
 
-  const {
-    data: catData,
-    isLoading: catIsLoading,
-    error: catError,
-    isFetched: catIsFetched,
-  } = useQuery("todos", () =>
+  const { data: catData, isFetched: catIsFetched } = useQuery("todos", () =>
     axios.get<category[]>("http://localhost:3000/categories")
   );
 

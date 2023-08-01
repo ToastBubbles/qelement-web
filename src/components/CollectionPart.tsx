@@ -1,20 +1,14 @@
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
-import {
-  ICollectionDTOGET,
-  IQPartDTOIncludeLess,
-  color,
-} from "../interfaces/general";
+import { ICollectionDTOGET } from "../interfaces/general";
 import { filterImages, imagePath } from "../utils/utils";
 
 interface iProps {
   data: ICollectionDTOGET;
 }
 export default function CollectionPart({ data }: iProps) {
-  let hex = "#" + data.qpart.color.hex;
-  console.log(data.qpart);
+  // const hex = "#" + data.qpart.color.hex;
+  // console.log(data.qpart);
 
-  let images = filterImages(data.qpart.images);
+  const images = filterImages(data.qpart.images);
   let primaryImage = images[images.length - 1];
   for (let i = images.length - 1; i >= 0; i--) {
     if (images[i].type == "part") {

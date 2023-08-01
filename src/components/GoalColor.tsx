@@ -1,6 +1,5 @@
-import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-import { IQPartDTOIncludeLess, color } from "../interfaces/general";
+import { IQPartDTOIncludeLess } from "../interfaces/general";
 import { filterImages, imagePath } from "../utils/utils";
 interface ICollectionQPart {
   isOwned: boolean;
@@ -14,7 +13,7 @@ export default function GoalColor({ data }: iProps) {
   let hex: string;
   if (data.isOwned) hex = "#" + data.qpart.color.hex;
   else hex = "#eee";
-  let images = filterImages(data.qpart.images);
+  const images = filterImages(data.qpart.images);
   let primaryImage = images[images.length - 1];
   for (let i = images.length - 1; i >= 0; i--) {
     if (images[i].type == "part") {

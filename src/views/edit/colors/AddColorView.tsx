@@ -1,10 +1,9 @@
 import axios from "axios";
 import { useState } from "react";
 import { useMutation } from "react-query";
-import AllColors from "../../../components/AllColors";
-import { color, IColorDTO } from "../../../interfaces/general";
-import showToast, { Mode } from "../../../utils/utils";
 import MyToolTip from "../../../components/MyToolTip";
+import { IColorDTO } from "../../../interfaces/general";
+import showToast, { Mode } from "../../../utils/utils";
 
 export default function AddColorView() {
   const baseValues: IColorDTO = {
@@ -18,7 +17,7 @@ export default function AddColorView() {
     type: "solid",
     note: "",
   };
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  // const [searchQuery, setSearchQuery] = useState<string>("");
   const [newColor, setNewColor] = useState<IColorDTO>(baseValues);
   const colorMutation = useMutation({
     mutationFn: (colorInfo: IColorDTO) =>
@@ -168,8 +167,9 @@ export default function AddColorView() {
                   // Check if the pressed key is a valid hexadecimal character
                   if (!hexPattern.test(key)) {
                     e.preventDefault(); // Prevent the character from being entered
-                  } else {
                   }
+                  // else {
+                  // }
                 }}
                 onChange={(e) =>
                   setNewColor((newColor) => ({

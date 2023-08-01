@@ -1,8 +1,6 @@
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
+import { Dispatch, SetStateAction } from "react";
+
 import { IQPartDTOInclude } from "../interfaces/general";
-import { Dispatch, SetStateAction, useContext } from "react";
-import { AppContext } from "../context/context";
 interface iProps {
   qpart: IQPartDTOInclude;
   setter: Dispatch<SetStateAction<number>>;
@@ -10,12 +8,7 @@ interface iProps {
   //  refetchFn: () => void;
 }
 export default function QPartDropdownRow({ qpart, setter, close }: iProps) {
-  const {
-    state: {
-      jwt: { token, payload },
-    },
-    dispatch,
-  } = useContext(AppContext);
+ 
   return (
     <div
       className="qpart-dd-row clickable"

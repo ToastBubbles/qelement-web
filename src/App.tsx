@@ -1,6 +1,12 @@
-import { Routes, Route } from "react-router";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { Route, Routes } from "react-router";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import AppWrapper from "./components/AppWrapper";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { AppProvider } from "./context/context";
 import {
   AddPartView,
   AllColorsView,
@@ -14,36 +20,29 @@ import {
   SingleMessageView,
   SinglePartView,
 } from "./views";
-import { AppProvider } from "./context/context";
-import { QueryClient, QueryClientProvider } from "react-query";
-import Home from "./views/generic/Home";
-import AddQPartView from "./views/edit/parts/AddQPartView";
-import AddColorView from "./views/edit/colors/AddColorView";
-import About from "./views/generic/About";
-import AllPartCategoriesView from "./views/parts/AllPartCategoriesView";
-import SinglePartCategoryView from "./views/parts/SinglePartCategoryView";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import AppWrapper from "./components/AppWrapper";
+import SearchView from "./views/SearchView";
 import UploadImageView from "./views/edit/UploadImageView";
-import Terms from "./views/generic/Terms";
-import Privacy from "./views/generic/Privacy";
-import Contact from "./views/generic/Contact";
-import AddStatusView from "./views/edit/parts/AddStatusView";
-import ApproveColorView from "./views/edit/approval/ColorApprovalView";
 import ApproveView from "./views/edit/approval/ApproveView";
 import ApproveCatView from "./views/edit/approval/CatApprovalView";
+import ApproveColorView from "./views/edit/approval/ColorApprovalView";
+import ApproveImageView from "./views/edit/approval/ImageApprovalView";
 import ApprovePartView from "./views/edit/approval/PartApprovalView";
-import ApproveQPartView from "./views/edit/approval/QPartApprovalView";
 import ApprovePartMoldView from "./views/edit/approval/PartMoldApprovalView";
+import ApproveQPartView from "./views/edit/approval/QPartApprovalView";
+import AddColorView from "./views/edit/colors/AddColorView";
+import AddQPartView from "./views/edit/parts/AddQPartView";
+import AddStatusView from "./views/edit/parts/AddStatusView";
+import About from "./views/generic/About";
+import Contact from "./views/generic/Contact";
+import Home from "./views/generic/Home";
+import Privacy from "./views/generic/Privacy";
+import Terms from "./views/generic/Terms";
+import UpdateView from "./views/generic/UpdateView";
+import AllPartCategoriesView from "./views/parts/AllPartCategoriesView";
+import SinglePartCategoryView from "./views/parts/SinglePartCategoryView";
+import CollectionView from "./views/profile/CollectionView";
 import ProfileSettingsView from "./views/profile/ProfileSettingsView";
 import WantedView from "./views/profile/WantedView";
-import CollectionView from "./views/profile/CollectionView";
-import ApproveImageView from "./views/edit/approval/ImageApprovalView";
-import SearchView from "./views/SearchView";
-import React from "react";
-import { ProtectedRoute } from "./components/ProtectedRoute";
-import UpdateView from "./views/generic/UpdateView";
 
 const queryClient = new QueryClient({
   defaultOptions: {

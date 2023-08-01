@@ -1,14 +1,10 @@
 import axios from "axios";
-import { useMutation, useQuery } from "react-query";
-import showToast, { Mode } from "../utils/utils";
-import {
-  IQPartDTO,
-  IQPartDTOInclude,
-  color,
-  part,
-  user,
-} from "../interfaces/general";
+import { useMutation } from "react-query";
 import { Link } from "react-router-dom";
+import {
+  IQPartDTOInclude
+} from "../interfaces/general";
+import showToast, { Mode } from "../utils/utils";
 
 interface IProps {
   qpart: IQPartDTOInclude;

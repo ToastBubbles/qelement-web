@@ -2,16 +2,16 @@ import { useContext } from "react";
 import { AppContext } from "../../context/context";
 import axios from "axios";
 import { useQuery } from "react-query";
-import { IUserDTO, user } from "../../interfaces/general";
+import { IUserDTO } from "../../interfaces/general";
 import LoadingPage from "../../components/LoadingPage";
 import { formatDate } from "../../utils/utils";
 
 export default function ProfileSettingsView() {
   const {
     state: {
-      jwt: { token, payload },
+      jwt: {  payload },
     },
-    dispatch,
+  
   } = useContext(AppContext);
 
   const { data } = useQuery({
@@ -24,7 +24,7 @@ export default function ProfileSettingsView() {
   });
 
   if (data) {
-    let me = data.data;
+    const me = data.data;
     return (
       <>
         <div className="formcontainer">

@@ -1,9 +1,4 @@
-import axios, { AxiosResponse } from "axios";
-import { useState } from "react";
-import { useQuery, useMutation, UseMutationResult } from "react-query";
-import { useNavigate, useParams } from "react-router";
 import ImageUploader from "../../components/ImageUploader";
-import { IUploadImageDetails } from "../../interfaces/general";
 
 export default function UploadImageView() {
   const queryParameters = new URLSearchParams(window.location.search);
