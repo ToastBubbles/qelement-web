@@ -9,15 +9,11 @@ import showToast, { Mode } from "../utils/utils";
 export const ProtectedRoute = ({ level = "user", children }: any) => {
   const {
     state: {
-      jwt: {  payload },
+      jwt: { payload },
     },
-
   } = useContext(AppContext);
 
-  const {
-    data: adminData,
-  
-  } = useQuery({
+  const { data: adminData, isFetched: adminIsFetched } = useQuery({
     queryKey: "isAdmin",
     queryFn: () =>
       axios.get<IAPIResponse>(
@@ -33,7 +29,7 @@ export const ProtectedRoute = ({ level = "user", children }: any) => {
     return <Navigate to="/" replace />;
   }
 
-  if (level == "admin" && adminData?.data.code != 200) {
+  if (level == "admin" && adminIsFetched && adminData?.data.code != 200) {
     showToast(
       "You do not have the correct privileges to view this page",
       Mode.Warning

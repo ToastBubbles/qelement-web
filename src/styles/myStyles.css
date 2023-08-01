@@ -1972,6 +1972,7 @@ input:checked + .slider:before {
   align-self: flex-start;
 }
 .navbarProfileImg {
+  padding: 0.9em 0;
   background: none;
   border: none;
 }

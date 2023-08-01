@@ -13,6 +13,8 @@ import SearchBarMain from "./SearchBarMain";
 function Navbar() {
   // const { dropdownRef, isComponentVisible } = useComponentVisible(true);
   const [toggleDropdown, setToggleDropdown] = useState<boolean>(false);
+
+  const [timerId, setTimerId] = useState<number | null>(null);
   // const [messageCount, setMessageCount] = useState<number>(0);
   const {
     state: {
@@ -38,6 +40,15 @@ function Navbar() {
       showToast(`${msgData.data} ${message}`, Mode.Success);
     }
   }, [msgData?.data]);
+
+  useEffect(() => {
+    return () => {
+      // Clean up the timer when the component unmounts
+      if (timerId) {
+        clearTimeout(timerId);
+      }
+    };
+  }, [timerId]);
 
   return (
     <nav className="navbar">
@@ -77,19 +88,43 @@ function Navbar() {
                 </svg>
               </div>
             </Link>
-            <button
-              className="navbarProfileImg"
-              onClick={() => {
-                setToggleDropdown(!toggleDropdown);
-                console.log("clicked");
+            <div
+              onMouseOver={() => {
+                setToggleDropdown(true);
+                if (timerId) {
+                  clearTimeout(timerId);
+                  setTimerId(null);
+                }
+              }}
+              onMouseLeave={() => {
+                setTimerId(
+                  setTimeout(() => {
+                    setToggleDropdown(false);
+                    setTimerId(null);
+                  }, 500)
+                );
               }}
             >
-              <img
-                className="profile-img clickable"
-                src="/img/blank_profile.webp"
-              />
-            </button>
-            <div>{toggleDropdown && <NavbarPopdown />}</div>
+              <button
+                className="navbarProfileImg"
+                // onClick={() => {
+                //   setToggleDropdown(!toggleDropdown);
+                //   console.log("clicked");
+                // }}
+              >
+                <img
+                  className="profile-img clickable"
+                  src="/img/blank_profile.webp"
+                />
+              </button>
+              <div
+                onClick={() => {
+                  setToggleDropdown(false);
+                }}
+              >
+                {toggleDropdown && <NavbarPopdown />}
+              </div>
+            </div>
           </>
         )}
       </div>

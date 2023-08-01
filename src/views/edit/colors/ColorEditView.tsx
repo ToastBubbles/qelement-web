@@ -10,6 +10,7 @@ import {
   IEditColor,
   color,
   IAPIResponse,
+  colorWSimilar,
 } from "../../../interfaces/general";
 import showToast, { Mode } from "../../../utils/utils";
 
@@ -25,23 +26,11 @@ export default function ColorEditView() {
   } = useQuery({
     queryKey: "color",
     queryFn: () =>
-      axios.get<color>(`http://localhost:3000/color/id/${colorId}`),
+      axios.get<colorWSimilar>(`http://localhost:3000/color/id/${colorId}`),
     enabled: true,
     retry: false,
   });
-  const {
-    data: simData,
 
-    error: simError,
-  } = useQuery({
-    queryKey: "similarColors",
-    queryFn: () =>
-      axios.get<similarColor[]>(
-        `http://localhost:3000/similarColor/${colorId}`
-      ),
-    enabled: true,
-    retry: false,
-  });
   const colorMutation = useMutation({
     mutationFn: ({
       bl_name,
@@ -73,14 +62,33 @@ export default function ColorEditView() {
 
   const similarColorMutation = useMutation({
     mutationFn: ({ color_one, color_two }: ISimilarColorDTO) =>
-      axios.post<color>(`http://localhost:3000/similarColor`, {
+      axios.post<IAPIResponse>(`http://localhost:3000/similarColor`, {
         color_one,
         color_two,
       }),
-    // onSuccess: () => {},
+    onSuccess: (e) => {
+      if (e.data.code == 200) {
+        showToast("Similar Color Pair submitted!", Mode.Success);
+      } else if (e.data.code == 501) {
+        showToast(
+          "Similar Color Relationship already exist between these colors, it may be pending approval",
+          Mode.Warning
+        );
+      } else if (e.data.code == 502) {
+        showToast(
+          "Color does not exist, please make sure you are using the QID",
+          Mode.Error
+        );
+      } else {
+        showToast(
+          "Failed to add Similar Color. Make sure you are using the QID",
+          Mode.Error
+        );
+      }
+    },
   });
 
-  if (colError || simError) {
+  if (colError) {
     navigate("/404");
   }
   const color = colData?.data;
@@ -160,13 +168,12 @@ export default function ColorEditView() {
       else showToast("No changes were saved", Mode.Warning);
     }
   }
-  if (color && simData)
+  if (color) {
+    let name = color?.bl_name.length == 0 ? color.tlg_name : color?.bl_name;
     return (
       <div className="mx-w">
         <div className="colorTop">
-          <div className="colorName">
-            {color?.bl_name.length == 0 ? color.tlg_name : color?.bl_name}
-          </div>
+          <div className="colorName">{name}</div>
 
           <div className="hexbar" style={{ backgroundColor: hex }}>
             #
@@ -205,10 +212,17 @@ export default function ColorEditView() {
         </div>
         <div className="fake-hr"></div>
 
-        <SimilarColorBanner similarColors={simData.data} />
+        <SimilarColorBanner similarColors={color.similar} />
 
         <div className="color-container">
-          <section></section>
+          <section>
+            Similar Colors:
+            {color.similar.map((col) => (
+              <div key={col.id}>
+                {name} | QID: {col.id}
+              </div>
+            ))}
+          </section>
           <section>
             <div className="edit-similarity">
               <input
@@ -221,10 +235,17 @@ export default function ColorEditView() {
               />
               <button
                 onClick={() => {
-                  similarColorMutation.mutate({
-                    color_one: Number(colorId),
-                    color_two: similarColorToAdd,
-                  });
+                  if (Number(colorId) != similarColorToAdd) {
+                    similarColorMutation.mutate({
+                      color_one: Number(colorId),
+                      color_two: similarColorToAdd,
+                    });
+                  } else {
+                    showToast(
+                      `Yes, I'm sure that ${name} is very similar to ${name}, but you need to use a different color.`,
+                      Mode.Info
+                    );
+                  }
                 }}
               >
                 Add similarity
@@ -405,5 +426,5 @@ export default function ColorEditView() {
         </div>
       </div>
     );
-  else return <p>Loading...</p>;
+  } else return <p>Loading...</p>;
 }
