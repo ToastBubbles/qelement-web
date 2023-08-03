@@ -2,7 +2,6 @@ import axios from "axios";
 import { useState } from "react";
 import { useQuery, useMutation } from "react-query";
 import {
-
   category,
   part,
   IPartWithMoldDTO,
@@ -19,6 +18,7 @@ export default function AddPartView() {
     CatId: -1,
     partNote: "",
     moldNote: "",
+    blURL: "",
   });
   // const [partNo, setPartNo] = useState<number>(-1);
   const [newCategory, setNewCategory] = useState<string>();
@@ -70,7 +70,20 @@ export default function AddPartView() {
           <h1>add new part</h1>
           <div className="mainform">
             <div className="w-100 d-flex jc-space-b">
-              <div>Add a new part number/mold to an existing part?</div>
+              <div>
+                Add a new part number/mold to an existing part?
+                <MyToolTip
+                  content={
+                    <div style={{ maxWidth: "25em" }}>
+                      Use this checkbox if the part already exists and you would
+                      like to add a new part number/mold variation. Example: You
+                      would check this box if you were adding part number 3556
+                      to the already existing Brick 2 x 4 (3001).
+                    </div>
+                  }
+                  id={"existing"}
+                />
+              </div>
               <input
                 type="checkbox"
                 className="formInput"
@@ -105,7 +118,19 @@ export default function AddPartView() {
               </select>
             </div>
             <div className="w-100 d-flex jc-space-b">
-              <label htmlFor="partname">Part Name</label>
+              <label htmlFor="partname">
+                Part Name
+                <MyToolTip
+                  content={
+                    <div style={{ maxWidth: "25em" }}>
+                      We like to follow Bricklink Naming conventions for
+                      consistency, please use the name from Bricklink if
+                      applicable. Example: Brick 2 x 4
+                    </div>
+                  }
+                  id={"pName"}
+                />
+              </label>
               {!isNewPart ? (
                 <input
                   maxLength={100}
@@ -144,7 +169,18 @@ export default function AddPartView() {
             </div>
 
             <div className="w-100 d-flex jc-space-b">
-              <label htmlFor="primary">Part Number</label>
+              <label htmlFor="primary">
+                Part Number
+                <MyToolTip
+                  content={
+                    <div style={{ maxWidth: "25em" }}>
+                      If there is more than one part number, just put one, you
+                      can add more after it is approved. Example: 3001
+                    </div>
+                  }
+                  id={"pNo"}
+                />
+              </label>
               <input
                 maxLength={20}
                 id="primary"
@@ -161,6 +197,54 @@ export default function AddPartView() {
             </div>
             {!isNewPart && (
               <>
+                <div className="w-100 d-flex jc-space-b">
+                  <label htmlFor="blURL">
+                    Bricklink URL Parameter:
+                    <MyToolTip
+                      content={
+                        <div style={{ maxWidth: "35em" }}>
+                          <div>
+                            Just include the part number that is used in the
+                            Bricklink URL, Example:
+                            <div style={{ padding: "1em 0" }}>
+                              <span style={{ color: "lightblue" }}>
+                                www.bricklink.com/v2/catalog/catalogitem.page?P=
+                              </span>
+                              <span
+                                style={{
+                                  color: "red",
+                                  textDecoration: "underline",
+                                }}
+                              >
+                                3001
+                              </span>
+                            </div>
+                          </div>
+                          <div>
+                            Some parts, like the 2x4 Brick, have multiple part
+                            numbers, but only one Bricklink page, this lets us
+                            know which URL parameter to use to help our users
+                            navigate easily.
+                          </div>
+                        </div>
+                      }
+                      id={"blURL"}
+                    />
+                  </label>
+                  <input
+                    maxLength={20}
+                    id="blURL"
+                    className="formInput w-50"
+                    placeholder="Optional"
+                    onChange={(e) =>
+                      setNewPart((newPart) => ({
+                        ...newPart,
+                        ...{ blURL: e.target.value },
+                      }))
+                    }
+                    value={newPart.blURL}
+                  />
+                </div>
                 <label htmlFor="partnote2" style={{ marginRight: "auto" }}>
                   Note for part ({newPart.name})
                   <MyToolTip
@@ -242,6 +326,7 @@ export default function AddPartView() {
                       CatId: -1,
                       partNote: "",
                       moldNote: "",
+                      blURL: "",
                     });
                   }
                 }}
@@ -253,6 +338,16 @@ export default function AddPartView() {
               <div className="fake-hr-form"></div>
               <div style={{ marginBottom: "1em" }}>
                 can't find the category? add a new one:
+                <MyToolTip
+                  content={
+                    <div style={{ maxWidth: "25em" }}>
+                      We like to follow Bricklink Naming conventions for
+                      consistency, please use the name from Bricklink if
+                      applicable. Example: Brick, Modified
+                    </div>
+                  }
+                  id={"catNote"}
+                />
               </div>
               <div>
                 <input

@@ -224,6 +224,7 @@ export interface IQPartDTOInclude {
   comments: ICommentDTO[];
   partStatuses: IPartStatusDTO[];
   images: ImageDTO[];
+
   approvalDate: string;
   createdAt: string;
 }
@@ -277,6 +278,7 @@ export interface part {
   updatedAt: string;
   approvalDate: string;
   molds: IPartMoldDTO[];
+  blURL: string;
 }
 export interface IRatingDTO {
   rating: number;
@@ -325,6 +327,7 @@ export interface IPartWithMoldDTO {
   CatId: number;
   partNote: string;
   moldNote: string;
+  blURL: string;
 }
 
 export interface category {

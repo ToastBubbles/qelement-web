@@ -339,7 +339,7 @@ export default function SinglePartView() {
 
                     <li>
                       <a
-                        href={`https://www.bricklink.com/v2/catalog/catalogitem.page?P=${mypart?.mold.number}&C=${mypart?.color.bl_id}`}
+                        href={`https://www.bricklink.com/v2/catalog/catalogitem.page?P=${mypart?.mold.parentPart.blURL}&C=${mypart?.color.bl_id}`}
                       >
                         bricklink
                       </a>
@@ -424,7 +424,9 @@ export default function SinglePartView() {
                         <div>Element IDs:</div>
                         <div>
                           {mypart?.elementIDs
-                            ? mypart.elementIDs.map((eId) => <p>{eId.number}</p>)
+                            ? mypart.elementIDs.map((eId) => (
+                                <p>{eId.number}</p>
+                              ))
                             : "No IDs found"}
                         </div>
                       </div>
