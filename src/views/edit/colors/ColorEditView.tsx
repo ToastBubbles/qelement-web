@@ -169,7 +169,7 @@ export default function ColorEditView() {
     }
   }
   if (color) {
-    let name = color?.bl_name.length == 0 ? color.tlg_name : color?.bl_name;
+    const name = color?.bl_name.length == 0 ? color.tlg_name : color?.bl_name;
     return (
       <div className="mx-w">
         <div className="colorTop">

@@ -8,7 +8,6 @@ interface iProps {
   //  refetchFn: () => void;
 }
 export default function QPartDropdownRow({ qpart, setter, close }: iProps) {
- 
   return (
     <div
       className="qpart-dd-row clickable"
@@ -23,7 +22,7 @@ export default function QPartDropdownRow({ qpart, setter, close }: iProps) {
       ></div>
       <div>
         <div className="d-flex">
-          <div style={{ width: "2em" }}>BL:</div>
+          {qpart.mold.number}{" "}
           {qpart.color.bl_name ? qpart.color.bl_name : "Unknown"}
         </div>
         <div

@@ -98,6 +98,12 @@ export interface IPartStatusDTO {
   qpartId: number;
   creatorId: number;
 }
+export interface IElementID {
+  number: number;
+  id: number;
+  creator: user;
+  createdAt: string;
+}
 export interface IQPartDetails {
   part: IPartDTO;
   color: IColorDTO;
@@ -126,8 +132,7 @@ export interface qpart {
   colorId: number;
   creatorId: number;
   note: string;
-  elementId: string;
-  secondaryElementId: string;
+  elementIDs: IElementID[];
   rarety: number;
   createdAt: string;
   updatedAt: string;
@@ -214,7 +219,7 @@ export interface IQPartDTOInclude {
   color: color;
   creator: user;
   note: string;
-  elementId: string;
+  elementIDs: IElementID[];
   ratings: rating[];
   comments: ICommentDTO[];
   partStatuses: IPartStatusDTO[];
@@ -235,7 +240,7 @@ export interface IQPartDTOIncludeLess {
   color: color;
   creator: user;
   note: string;
-  elementId: string;
+  elementIDs: IElementID[];
   images: ImageDTO[];
   partStatuses: IPartStatusDTO[];
   createdAt: string;
@@ -246,17 +251,20 @@ export interface IQPartDTO {
   colorId: number;
   creatorId: number;
   note: string;
-  elementId: string;
-  secondaryElementId: string;
+  elementIDs: IElementID[];
   rarety: number;
+}
+
+export interface IElementIDCreationDTO {
+  number: number;
+  creatorId: number;
+  qpartId: number;
 }
 export interface iQPartDTO {
   partId: number;
   moldId: number;
   colorId: number;
   type: string;
-  elementId: string;
-  secondaryElementId: string;
   creatorId: number;
   note: string;
 }

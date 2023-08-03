@@ -6,8 +6,10 @@ import { Link } from "react-router-dom";
 import MyToolTip from "../../../components/MyToolTip";
 import {
   IAPIResponse,
+  IElementIDCreationDTO,
   IPartMoldDTO,
   IPartStatusDTO,
+  IQPartVerifcation,
   category,
   color,
   iQPartDTO,
@@ -28,9 +30,7 @@ export default function AddQPartView() {
     partId: -1,
     colorId: -1,
     moldId: -1,
-    elementId: "",
     type: "unknown",
-    secondaryElementId: "",
     creatorId: -1,
     note: "",
   };
@@ -43,6 +43,7 @@ export default function AddQPartView() {
     creatorId: -1,
     qpartId: -1,
   };
+  const [elementId, setElementId] = useState<number>(-1);
   const [newQPart, setNewQPart] = useState<iQPartDTO>(defaultValues);
   const [newStatus, setNewStatus] =
     useState<IPartStatusDTO>(defaultStatusValues);
@@ -63,34 +64,34 @@ export default function AddQPartView() {
     enabled: category != -1,
   });
 
-  // const { data: matchData, refetch: matchRefetch } = useQuery({
-  //   queryKey: `match-p${newQPart.partId}-m${newQPart.moldId}-c${newQPart.colorId}`,
-  //   queryFn: () =>
-  //     axios.get<IAPIResponse>(`http://localhost:3000/qpart/checkIfExists`, {
-  //       params: {
-  //         moldId: newQPart.moldId,
-  //         colorId: newQPart.colorId,
-  //       } as IQPartVerifcation,
-  //     }),
-  //   onSuccess: (resp) => {
-  //     const code = resp.data.code;
-  //     setQpartExistenceCode(code);
-  //     if (code == 200) {
-  //       showToast(
-  //         `QPart does not exist in database yet, you're good to go!`,
-  //         Mode.Success
-  //       );
-  //     } else if (code == 201) {
-  //       showToast(
-  //         `QPart already exists. It may be pending approval.`,
-  //         Mode.Warning
-  //       );
-  //     } else if (code == 500) {
-  //       showToast(`Error checking part`, Mode.Error);
-  //     }
-  //   },
-  //   enabled: false,
-  // });
+  const { refetch: matchRefetch } = useQuery({
+    queryKey: `match-p${newQPart.partId}-m${newQPart.moldId}-c${newQPart.colorId}`,
+    queryFn: () =>
+      axios.get<IAPIResponse>(`http://localhost:3000/qpart/checkIfExists`, {
+        params: {
+          moldId: newQPart.moldId,
+          colorId: newQPart.colorId,
+        } as IQPartVerifcation,
+      }),
+    onSuccess: (resp) => {
+      const code = resp.data.code;
+      setQpartExistenceCode(code);
+      if (code == 200) {
+        showToast(
+          `QPart does not exist in database yet, you're good to go!`,
+          Mode.Success
+        );
+      } else if (code == 201) {
+        showToast(
+          `QPart already exists. It may be pending approval.`,
+          Mode.Warning
+        );
+      } else if (code == 500) {
+        showToast(`Error checking part`, Mode.Error);
+      }
+    },
+    enabled: false,
+  });
 
   useEffect(() => {
     partsRefetch();
@@ -100,11 +101,11 @@ export default function AddQPartView() {
     }));
   }, [category]);
 
-  // useEffect(() => {
-  //   if (newQPart.moldId != -1 && newQPart.colorId != -1) {
-  //     matchRefetch();
-  //   }
-  // }, [newQPart.moldId, newQPart.colorId]);
+  useEffect(() => {
+    if (newQPart.moldId != -1 && newQPart.colorId != -1) {
+      matchRefetch();
+    }
+  }, [newQPart.moldId, newQPart.colorId]);
 
   useEffect(() => {
     if (partsData) {
@@ -131,15 +132,15 @@ export default function AddQPartView() {
           qpartId: Number(data.data.message),
           creatorId: payload.id || 1,
         });
+
+        if (elementId && elementId > 999 && elementId < 999999999) {
+          elementIDMutation.mutate({
+            number: elementId,
+            creatorId: payload.id || 1,
+            qpartId: Number(data.data.message),
+          });
+        }
       }
-      // partStatusMutation.mutate({
-      //   status: "",
-      //   date: "",
-      //   location: "",
-      //   note: "",
-      //   qpartId: 1,
-      //   creatorId: 1,
-      // });
     },
   });
 
@@ -150,6 +151,15 @@ export default function AddQPartView() {
       showToast("QElement submitted for approval!", Mode.Success);
       setNewStatus(defaultStatusValues);
       setStartDate(new Date());
+    },
+  });
+
+  const elementIDMutation = useMutation({
+    mutationFn: (eIdData: IElementIDCreationDTO) =>
+      axios.post<IAPIResponse>(`http://localhost:3000/elementID/add`, eIdData),
+    onSuccess: () => {
+      // showToast("Element ID submitted for approval!", Mode.Success);
+      setElementId(-1);
     },
   });
 
@@ -255,19 +265,27 @@ export default function AddQPartView() {
               </select>
             </div>
             <div className="w-100 d-flex jc-space-b">
-              <label htmlFor="eid">Element ID</label>
+              <label htmlFor="eid">
+                Element ID
+                <MyToolTip
+                  content={
+                    <div style={{ maxWidth: "20em" }}>
+                      Please only add one element ID for now, you can add more
+                      once the q-element is approved.
+                    </div>
+                  }
+                  id="eId"
+                />
+              </label>
+
               <input
-                maxLength={20}
+                maxLength={10}
+                type="number"
                 id="eid"
                 className="formInput w-50"
                 placeholder="Optional"
-                onChange={(e) =>
-                  setNewQPart((newQPart) => ({
-                    ...newQPart,
-                    ...{ elementId: e.target.value },
-                  }))
-                }
-                value={newQPart.elementId}
+                onChange={(e) => setElementId(Number(e.target.value))}
+                value={elementId == -1 ? "" : elementId}
               />
             </div>
             <div className="w-100 d-flex jc-space-b">
@@ -399,7 +417,7 @@ export default function AddQPartView() {
                 <option value={"idOnly"}>Element ID Only</option>
                 <option value={"seen"}>Seen</option>
                 <option value={"found"}>Found</option>
-                <option value={"known"}>Known</option>
+                <option value={"known"}>Known/Released</option>
                 <option value={"other"}>Other</option>
               </select>
             </div>
@@ -469,14 +487,8 @@ export default function AddQPartView() {
               <button
                 className="formInputNM"
                 onClick={() => {
-                  // {
-                  //   partId: -1,
-                  //   colorId: -1,
-                  //   elementId: "",
-                  //   secondaryElementId: "",
-                  //   creatorId: -1,
-                  //   note: "",
-                  // }
+                  console.log("CODE", qpartExistenceCode);
+
                   if (
                     newQPart.partId != -1 &&
                     newQPart.colorId != -1 &&

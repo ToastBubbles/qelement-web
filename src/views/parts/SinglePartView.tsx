@@ -21,15 +21,15 @@ import Comment from "../../components/Comment";
 import PopupCollection from "../../components/PopupCollection";
 import PopupFavorites from "../../components/PopupFavorites";
 import QPartDropdown from "../../components/QPartDropdown";
+import PopupElementID from "../../components/PopupElementID";
 
 export default function SinglePartView() {
   const imagePath = "http://localhost:9000/q-part-images/";
 
   const {
     state: {
-      jwt: {  payload },
+      jwt: { payload },
     },
-
   } = useContext(AppContext);
   const queryParameters = new URLSearchParams(window.location.search);
   const urlColorId = queryParameters.get("color");
@@ -39,6 +39,7 @@ export default function SinglePartView() {
   const [selectedQPartMold, setSelectedQPartMold] = useState<number>(-1);
   const [collectionOpen, setCollectionOpen] = useState(false);
   const [favoritesOpen, setFavoritesOpen] = useState(false);
+  const [eIDOpen, setEIDOpen] = useState(false);
 
   const [detailsTabActive, setDetailsTabActive] = useState<boolean>(true);
   const [imageTabActive, setImageTabActive] = useState<boolean>(false);
@@ -214,7 +215,7 @@ export default function SinglePartView() {
                       ></div>
                       <div style={{ flexGrow: "1" }}>
                         <div className="d-flex">
-                          <div style={{ width: "2em" }}>BL:</div>
+                          {mypart?.mold.number}{" "}
                           {mypart?.color.bl_name
                             ? mypart?.color.bl_name
                             : "Unknown"}
@@ -245,6 +246,7 @@ export default function SinglePartView() {
                     {dropdownVisible && (
                       <QPartDropdown
                         qparts={qparts}
+                        moldId={selectedQPartMold}
                         setter={setSelectedQPartid}
                         close={setDropdownVisible}
                       />
@@ -278,6 +280,12 @@ export default function SinglePartView() {
                     closePopup={() => setFavoritesOpen(false)}
                   />
                 )}
+                {eIDOpen && mypart && payload.id && (
+                  <PopupElementID
+                    qpart={mypart}
+                    closePopup={() => setEIDOpen(false)}
+                  />
+                )}
                 <div className="d-flex flex-col jc-space-b border-left">
                   <ul className="actions">
                     <span>Actions:</span>
@@ -300,7 +308,7 @@ export default function SinglePartView() {
                     </li>
                     <li>
                       <Link to={`/add/qpart/image/?qpartId=${mypart?.id}`}>
-                        Add photo
+                        Add Photo
                       </Link>
                     </li>
                     <li>
@@ -309,9 +317,21 @@ export default function SinglePartView() {
                       </Link>
                     </li>
                     <li>
-                      <Link to={`/add/qpart/status/${selectedQPartid}`}>
+                      <a
+                        className="clickable"
+                        onClick={() => {
+                          if (payload.id) {
+                            setEIDOpen(true);
+                          } else {
+                            showToast(
+                              "You must be logged in to do this!",
+                              Mode.Warning
+                            );
+                          }
+                        }}
+                      >
                         Add Element ID
-                      </Link>
+                      </a>
                     </li>
                   </ul>
                   <ul className="actions">
@@ -403,8 +423,8 @@ export default function SinglePartView() {
                       <div>
                         <div>Element IDs:</div>
                         <div>
-                          {mypart?.elementId
-                            ? mypart.elementId
+                          {mypart?.elementIDs
+                            ? mypart.elementIDs.map((eId) => <p>{eId.number}</p>)
                             : "No IDs found"}
                         </div>
                       </div>
