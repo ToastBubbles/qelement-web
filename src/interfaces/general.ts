@@ -245,6 +245,7 @@ export interface IQPartDTOIncludeLess {
   images: ImageDTO[];
   partStatuses: IPartStatusDTO[];
   createdAt: string;
+  approvalDate: string;
 }
 export interface IQPartDTO {
   id: number;
@@ -279,6 +280,12 @@ export interface part {
   approvalDate: string;
   molds: IPartMoldDTO[];
   blURL: string;
+}
+
+export interface IElementIDSearch {
+  id: number;
+  number: number;
+  qpart: IQPartDTOIncludeLess;
 }
 export interface IRatingDTO {
   rating: number;

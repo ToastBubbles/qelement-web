@@ -716,7 +716,7 @@ fieldset > legend {
   display: flex;
   padding-right: 0.2em;
   justify-content: end;
-  width: 1.75em;
+  width: 2em;
 }
 .flag {
   color: #fff;
@@ -952,6 +952,8 @@ fieldset > legend {
 .hp-low-container {
   display: flex;
   height: 37em;
+  width: 100%;
+  min-width: 40em;
   justify-content: center;
 }
 .hp-panel {

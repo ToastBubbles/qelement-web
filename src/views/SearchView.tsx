@@ -5,10 +5,12 @@ import { useLocation, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import LoadingPage from "../components/LoadingPage";
 import {
+  IElementIDSearch,
   IPartDTO,
   IPartMoldDTO,
   IQPartDTOIncludeLess,
 } from "../interfaces/general";
+import RecentQPart from "../components/RecentQPart";
 
 export default function SearchView() {
   const [searchValue, setSearchValue] = useState<string>("");
@@ -32,10 +34,7 @@ export default function SearchView() {
     }
   }, [searchValue, navigate]);
 
-  const {
-    data: partSearchData,
-
-  } = useQuery({
+  const { data: partSearchData } = useQuery({
     queryKey: `partSearch${searchValue}`,
     queryFn: () => {
       return axios.get<IPartDTO[]>(`http://localhost:3000/parts/search`, {
@@ -48,10 +47,7 @@ export default function SearchView() {
     enabled: !!searchValue && searchValue.length > 0,
   });
 
-  const {
-    data: moldSearchData,
- 
-  } = useQuery({
+  const { data: moldSearchData } = useQuery({
     queryKey: `moldSearch${searchValue}`,
     queryFn: () => {
       return axios.get<IPartMoldDTO[]>(
@@ -67,13 +63,11 @@ export default function SearchView() {
     enabled: !!searchValue && searchValue.length > 0,
   });
 
-  const {
-    data: qpartSearchData,
-  } = useQuery({
+  const { data: qpartSearchData } = useQuery({
     queryKey: `qpartSearch${searchValue}`,
     queryFn: () => {
-      return axios.get<IQPartDTOIncludeLess[]>(
-        `http://localhost:3000/qpart/search`,
+      return axios.get<IElementIDSearch[]>(
+        `http://localhost:3000/elementID/search`,
         {
           params: {
             search: searchValue,
@@ -117,14 +111,22 @@ export default function SearchView() {
           {qpartResults.length == 0 ? (
             <div>No results</div>
           ) : (
-            qpartResults.map((qpart) => (
-              <Link
-                key={qpart.id}
-                to={`/part/${qpart.mold.parentPart.id}?color=${qpart.color.id}`}
-              >
-                <div> {qpart.color.bl_name}</div>
-              </Link>
-            ))
+            <div style={{ width: "30em" }}>
+              {qpartResults.map((eID) => (
+                // <Link
+                //   key={eID.id}
+                //   to={`/part/${eID.qpart.mold.parentPart.id}?color=${eID.qpart.color.id}`}
+                // >
+                //   <div>
+                //     {" "}
+                //     {eID.qpart.color.bl_name} {eID.qpart.mold.parentPart.name} (
+                //     {eID.qpart.mold.number})
+                //   </div>
+
+                // </Link>
+                <RecentQPart key={eID.id} qpartl={eID.qpart} />
+              ))}
+            </div>
           )}
         </div>
       </>

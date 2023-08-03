@@ -1,6 +1,6 @@
 import { Ribbon, RibbonContainer } from "react-ribbons";
 import { Link } from "react-router-dom";
-import { IQPartDTOInclude } from "../interfaces/general";
+import { IQPartDTOInclude, IQPartDTOIncludeLess } from "../interfaces/general";
 import {
   filterImages,
   formatDate,
@@ -9,10 +9,32 @@ import {
 } from "../utils/utils";
 
 interface IProps {
-  qpart: IQPartDTOInclude;
+  qpart?: IQPartDTOInclude;
+  qpartl?: IQPartDTOIncludeLess;
 }
 
-export default function RecentQPart({ qpart }: IProps) {
+export default function RecentQPart({ qpart, qpartl }: IProps) {
+  let thisqpart: IQPartDTOIncludeLess;
+
+  if (qpart) {
+    thisqpart = {
+      id: qpart.id,
+      type: qpart.type,
+      mold: qpart.mold,
+      color: qpart.color,
+      creator: qpart.creator,
+      note: qpart.note,
+      elementIDs: qpart.elementIDs,
+      images: qpart.images,
+      partStatuses: qpart.partStatuses,
+      createdAt: qpart.createdAt,
+      approvalDate: qpart.approvalDate,
+    };
+  } else if (qpartl) {
+    thisqpart = qpartl;
+  } else {
+    return <p>Data mismatch!</p>;
+  }
   function calculateHoursBetweenDates(startDateStr: string): number {
     const endDate = new Date();
     const startDate = new Date(startDateStr);
@@ -31,9 +53,9 @@ export default function RecentQPart({ qpart }: IProps) {
     }
   }
 
-  if (qpart) {
-    const age = calculateHoursBetweenDates(qpart.approvalDate);
-    const images = filterImages(qpart.images);
+  if (thisqpart) {
+    const age = calculateHoursBetweenDates(thisqpart.approvalDate);
+    const images = filterImages(thisqpart.images);
     let primaryImage = images[images.length - 1];
     for (let i = images.length - 1; i >= 0; i--) {
       if (images[i].type == "part") {
@@ -61,7 +83,7 @@ export default function RecentQPart({ qpart }: IProps) {
           </Ribbon>
         )}
         <Link
-          to={`/part/${qpart.mold.parentPart.id}?color=${qpart.color.id}`}
+          to={`/part/${thisqpart.mold.parentPart.id}?color=${thisqpart.color.id}`}
           className="listing new-listing"
         >
           <div className="listing-img">
@@ -75,29 +97,29 @@ export default function RecentQPart({ qpart }: IProps) {
             <div
               className={
                 "recentQPartStatus tag-" +
-                sortStatus(qpart.partStatuses)[0].status
+                sortStatus(thisqpart.partStatuses)[0].status
               }
             >
-              {sortStatus(qpart.partStatuses)[0].status}
+              {sortStatus(thisqpart.partStatuses)[0].status}
             </div>
           </div>
           <div>
             <div>
-              {qpart.mold.parentPart.name} ({qpart.mold.number})
+              {thisqpart.mold.parentPart.name} ({thisqpart.mold.number})
             </div>
             <div className="listing-color">
               <div
-                className={"listing-color-swatch " + qpart.color.type}
-                style={{ backgroundColor: "#" + qpart.color.hex }}
+                className={"listing-color-swatch " + thisqpart.color.type}
+                style={{ backgroundColor: "#" + thisqpart.color.hex }}
               ></div>
               <div>
-                {qpart.color.bl_name
-                  ? qpart.color.bl_name
-                  : qpart.color.tlg_name}
+                {thisqpart.color.bl_name
+                  ? thisqpart.color.bl_name
+                  : thisqpart.color.tlg_name}
               </div>
             </div>
             <div style={{ fontSize: "0.8em" }}>
-              Added: {formatDate(qpart.approvalDate)}
+              Added: {formatDate(thisqpart.approvalDate)}
             </div>
           </div>
         </Link>

@@ -424,9 +424,9 @@ export default function SinglePartView() {
                         <div>Element IDs:</div>
                         <div>
                           {mypart?.elementIDs
-                            ? mypart.elementIDs.map((eId) => (
-                                <p>{eId.number}</p>
-                              ))
+                            ? mypart.elementIDs
+                                .map((eId) => eId.number)
+                                .join(", ")
                             : "No IDs found"}
                         </div>
                       </div>
