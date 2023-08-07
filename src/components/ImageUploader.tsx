@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useContext, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { useQuery } from "react-query";
 import { AppContext } from "../context/context";
 import { IQPartDTOInclude } from "../interfaces/general";
@@ -101,18 +101,10 @@ const ImageUploader = ({ qpartId }: iProps) => {
   if (myqpartData) {
     const myqpart = myqpartData.data;
 
-    const handleSubmit = (event) => {
+    const handleSubmit = (event: FormEvent) => {
       event.preventDefault();
 
       if (selectedImage && imageType != "") {
-        // let data: ImageSubmission = {
-
-        //   qpartId: myqpart.id,
-        //   userId: payload.id,
-        //   type: "part",
-        // };
-        // const formData =
-
         const imageData: ImageSubmission = {
           userId: payload.id,
           qpartId: myqpart.id,

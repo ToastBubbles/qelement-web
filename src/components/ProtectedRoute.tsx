@@ -6,7 +6,12 @@ import axios from "axios";
 import { IAPIResponse } from "../interfaces/general";
 import showToast, { Mode } from "../utils/utils";
 
-export const ProtectedRoute = ({ level = "user", children }: any) => {
+interface iProps {
+  level?: string;
+  children: JSX.Element;
+}
+
+export const ProtectedRoute = ({ level = "user", children }: iProps) => {
   const {
     state: {
       jwt: { payload },

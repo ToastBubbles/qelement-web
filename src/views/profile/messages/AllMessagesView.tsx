@@ -6,7 +6,7 @@ import { AppContext } from "../../../context/context";
 import {
   IExtendedMessageDTO,
   IMailbox,
-  IMessageDTO
+  IMessageDTO,
 } from "../../../interfaces/general";
 import showToast, { Mode } from "../../../utils/utils";
 
@@ -28,7 +28,6 @@ export default function AllMessagesView() {
     state: {
       jwt: { payload },
     },
-
   } = useContext(AppContext);
 
   // const {
@@ -70,8 +69,6 @@ export default function AllMessagesView() {
   //   }
   // );
 
-
-
   useQuery(
     "getMsgs",
     () => {
@@ -106,12 +103,11 @@ export default function AllMessagesView() {
       } else {
         // refetch();
       }
-  }, [recipientIDGetter]);
+  }, [recipientIDGetter, payload, recipientName]);
 
   useEffect(() => {
     if (newMessage.senderId != -1) setGetMyMail(true);
   }, [newMessage.senderId]);
-
 
   const messageMutation = useMutation({
     mutationFn: (message: IMessageDTO) =>

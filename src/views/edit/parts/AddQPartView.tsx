@@ -99,20 +99,20 @@ export default function AddQPartView() {
       ...newQPart,
       ...{ partId: -1 },
     }));
-  }, [category]);
+  }, [category, partsRefetch]);
 
   useEffect(() => {
     if (newQPart.moldId != -1 && newQPart.colorId != -1) {
       matchRefetch();
     }
-  }, [newQPart.moldId, newQPart.colorId]);
+  }, [newQPart.moldId, newQPart.colorId, matchRefetch]);
 
   useEffect(() => {
     if (partsData) {
       const thesemolds = partsData.data.find((x) => x.id == newQPart.partId);
       if (thesemolds) setMolds(thesemolds.molds);
     }
-  }, [newQPart.partId]);
+  }, [newQPart.partId, partsData]);
 
   const { data: catData, isFetched: catIsFetched } = useQuery("todos", () =>
     axios.get<category[]>("http://localhost:3000/categories")
@@ -460,7 +460,9 @@ export default function AddQPartView() {
                 <DatePicker
                   className="w-100 formInput"
                   selected={startDate}
-                  onChange={(date) => setStartDate(date)}
+                  onChange={(date) => {
+                    if (date != null) setStartDate(date);
+                  }}
                 />
               </div>
             </div>

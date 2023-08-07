@@ -4,13 +4,12 @@ import { AppContext } from "../context/context";
 import { Types } from "../context/jwt/reducer";
 import Cookies from "js-cookie";
 
-
 interface IProps {
-    children?: ReactNode
+  children?: ReactNode;
 }
 
 export default function AppWrapper({ children }: IProps) {
-  const {  dispatch } = useContext(AppContext);
+  const { dispatch } = useContext(AppContext);
 
   useEffect(() => {
     const access_token = Cookies.get("userJWT");
@@ -25,7 +24,7 @@ export default function AppWrapper({ children }: IProps) {
         });
       });
     }
-  }, []);
+  }, [dispatch]);
 
   return <>{children}</>;
 }

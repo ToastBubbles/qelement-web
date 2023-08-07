@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import NewAdditions from "../../components/NewAdditions";
 import PartOfTheDay from "../../components/PartOfTheDay";
-import SiteStats from "../../components/SiteStats";
+// import SiteStats from "../../components/SiteStats";
 
 export default function Home() {
   return (
@@ -32,7 +32,7 @@ export default function Home() {
             <div className="hp-panel-body">
               {/* <div className="listing news-listing"></div> */}
               <PartOfTheDay />
-              <SiteStats />
+              {/* <SiteStats /> */}
             </div>
           </div>
           <div className="hp-panel hp-panel-center">

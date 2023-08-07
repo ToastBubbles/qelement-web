@@ -15,7 +15,7 @@ export default function QPartDropdown({
   setter,
   close,
 }: iProps) {
-  let filteredQParts: IQPartDTOInclude[] = [];
+  const filteredQParts: IQPartDTOInclude[] = [];
 
   qparts.forEach((qpart) => {
     if (moldId == -1) {

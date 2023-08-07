@@ -92,7 +92,7 @@ export default function SinglePartView() {
         (qpart) => qpart.type != type1 && setMultiMoldPart(true)
       );
     }
-  }, [qpartData?.data]);
+  }, [qpartData]);
 
   if (qpartError) navigate("/404");
 

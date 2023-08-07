@@ -8,7 +8,7 @@ import {
   IElementIDSearch,
   IPartDTO,
   IPartMoldDTO,
-  IQPartDTOIncludeLess,
+
 } from "../interfaces/general";
 import RecentQPart from "../components/RecentQPart";
 

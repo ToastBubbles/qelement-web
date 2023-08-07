@@ -1,9 +1,7 @@
 import axios from "axios";
 import { useMutation } from "react-query";
 import { Link } from "react-router-dom";
-import {
-  IQPartDTOInclude
-} from "../interfaces/general";
+import { IQPartDTOInclude } from "../interfaces/general";
 import showToast, { Mode } from "../utils/utils";
 
 interface IProps {
@@ -56,10 +54,10 @@ export default function QPartDetails({ qpart, refetchFn }: IProps) {
           <div>Type:</div>
           <div>{qpart.type}</div>
         </div>
-        <div>
+        {/* <div>
           <div>Element ID:</div>
           <div>{qpart.elementId}</div>
-        </div>
+        </div> */}
 
         <div>
           <div>Requestor:</div>

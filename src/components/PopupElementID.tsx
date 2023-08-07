@@ -6,10 +6,10 @@ import {
   IAPIResponse,
   IElementIDCreationDTO,
   IQPartDTOInclude,
-  IWantedDTO,
+
 } from "../interfaces/general";
 import showToast, { Mode } from "../utils/utils";
-import MyToolTip from "./MyToolTip";
+
 
 interface IProps {
   qpart: IQPartDTOInclude;

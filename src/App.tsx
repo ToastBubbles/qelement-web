@@ -49,10 +49,10 @@ const queryClient = new QueryClient({
     // queries: { staleTime: 10000 }
   },
 });
-interface userContext {
-  id: number;
-  username: string;
-}
+// interface userContext {
+//   id: number;
+//   username: string;
+// }
 
 function App() {
   return (

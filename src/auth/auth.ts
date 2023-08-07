@@ -4,7 +4,7 @@
 // }
 
 import axios from "axios";
-import { importSPKI, jwtVerify } from "jose";
+import { JWTPayload, importSPKI, jwtVerify } from "jose";
 import Cookies from "js-cookie";
 import { ILoginDTO } from "../interfaces/general";
 import showToast, { Mode } from "../utils/utils";
@@ -34,7 +34,7 @@ import showToast, { Mode } from "../utils/utils";
 //   //   navigate("/some-url");
 // }
 
-export async function getJWT(token: string): Promise<any> {
+export async function getJWT(token: string): Promise<JWTPayload> {
   const algorithm = "RS256";
   const spki = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlT9HNfa+VXFuJ+apLiNz

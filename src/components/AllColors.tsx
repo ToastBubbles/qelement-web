@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { color } from "../interfaces/general";
@@ -26,7 +26,8 @@ function AllColors() {
     axios.get<color[]>("http://localhost:3000/color")
   );
 
-  if (isFetched && data)
+  if (isFetched && data) {
+    const cdata = data.data;
     return (
       <div className="color-table-container">
         <input
@@ -36,19 +37,19 @@ function AllColors() {
           placeholder="Search..."
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        {generateTable(data, "solid", tableOptions, search)}
-        {generateTable(data, "transparent", tableOptions, search)}
-        {generateTable(data, "chrome", tableOptions, search)}
-        {generateTable(data, "pearl", tableOptions, search)}
-        {generateTable(data, "satin", tableOptions, search)}
-        {generateTable(data, "metallic", tableOptions, search)}
-        {generateTable(data, "milky", tableOptions, search)}
-        {generateTable(data, "glitter", tableOptions, search)}
-        {generateTable(data, "speckle", tableOptions, search)}
-        {generateTable(data, "modulex", tableOptions, search)}
-        {generateTable(data, "modulexFoil", tableOptions, search)}
-        {generateTable(data, "functional", tableOptions, search)}
-        {generateTable(data, "unreleased", tableOptions, search)}
+        {generateTable(cdata, "solid", tableOptions, search)}
+        {generateTable(cdata, "transparent", tableOptions, search)}
+        {generateTable(cdata, "chrome", tableOptions, search)}
+        {generateTable(cdata, "pearl", tableOptions, search)}
+        {generateTable(cdata, "satin", tableOptions, search)}
+        {generateTable(cdata, "metallic", tableOptions, search)}
+        {generateTable(cdata, "milky", tableOptions, search)}
+        {generateTable(cdata, "glitter", tableOptions, search)}
+        {generateTable(cdata, "speckle", tableOptions, search)}
+        {generateTable(cdata, "modulex", tableOptions, search)}
+        {generateTable(cdata, "modulexFoil", tableOptions, search)}
+        {generateTable(cdata, "functional", tableOptions, search)}
+        {generateTable(cdata, "unreleased", tableOptions, search)}
         <section className="temp-footer">
           <h3>options</h3>
           <div>
@@ -84,11 +85,11 @@ function AllColors() {
         </section>
       </div>
     );
-  else return <p>Loading...</p>;
+  } else return <p>Loading...</p>;
 }
 
 function generateTable(
-  data: any,
+  data: color[],
   type: string,
   tableOptions: ITableOptions,
   search: string
@@ -123,7 +124,7 @@ function generateTable(
           <th className="text-left">notes</th>
         </tr>
 
-        {data.data.map(
+        {data.map(
           (color: color) =>
             validateSearch(color, search) &&
             color.type == type &&

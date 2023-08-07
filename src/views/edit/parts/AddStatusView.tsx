@@ -2,7 +2,6 @@ import axios from "axios";
 import { useContext, useState } from "react";
 import { useQuery, useMutation } from "react-query";
 import {
-
   IPartStatusDTO,
   IQPartDTOIncludeLess,
 } from "../../../interfaces/general";
@@ -19,7 +18,6 @@ export default function AddStatusView() {
     state: {
       jwt: { payload },
     },
-
   } = useContext(AppContext);
   const [startDate, setStartDate] = useState<Date>(new Date());
   const { qpartId } = useParams();
@@ -59,7 +57,6 @@ export default function AddStatusView() {
   });
 
   if (qpartData?.data && qpartIsFetched) {
-
     const qpart = qpartData.data;
     return (
       <>
@@ -178,7 +175,9 @@ export default function AddStatusView() {
                 <DatePicker
                   className="w-100 formInput"
                   selected={startDate}
-                  onChange={(date) => setStartDate(date)}
+                  onChange={(date) => {
+                    if (date != null) setStartDate(date);
+                  }}
                 />
               </div>
             </div>

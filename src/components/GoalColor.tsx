@@ -10,9 +10,9 @@ interface iProps {
   data: ICollectionQPart;
 }
 export default function GoalColor({ data }: iProps) {
-  let hex: string;
-  if (data.isOwned) hex = "#" + data.qpart.color.hex;
-  else hex = "#eee";
+  // let hex: string;
+  // if (data.isOwned) hex = "#" + data.qpart.color.hex;
+  // else hex = "#eee";
   const images = filterImages(data.qpart.images);
   let primaryImage = images[images.length - 1];
   for (let i = images.length - 1; i >= 0; i--) {

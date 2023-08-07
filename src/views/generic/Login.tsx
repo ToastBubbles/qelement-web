@@ -27,9 +27,6 @@ export default function Login() {
       if (res) {
         navigate("/profile");
       }
-      //  else {
-      //   setLoginError(true);
-      // }
     });
   };
   return (

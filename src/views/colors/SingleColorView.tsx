@@ -29,7 +29,7 @@ export default function SingleColorView() {
 
   useEffect(() => {
     colRefetch();
-  }, [colorId]);
+  }, [colorId, colRefetch]);
   // const {
   //   data: simData,
   //   error: simError,

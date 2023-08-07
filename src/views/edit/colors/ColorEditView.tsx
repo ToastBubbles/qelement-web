@@ -4,11 +4,9 @@ import { useQuery, useMutation } from "react-query";
 import { useNavigate, useParams } from "react-router";
 import SimilarColorBanner from "../../../components/SimilarColorBanner";
 import {
-  similarColor,
   IColorDTO,
   ISimilarColorDTO,
   IEditColor,
-  color,
   IAPIResponse,
   colorWSimilar,
 } from "../../../interfaces/general";

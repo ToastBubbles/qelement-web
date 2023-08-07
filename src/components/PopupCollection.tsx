@@ -18,7 +18,6 @@ export default function PopupCollection({ qpart, closePopup }: IProps) {
     state: {
       jwt: { payload },
     },
-
   } = useContext(AppContext);
   const initialValues: ICollectionDTO = {
     forTrade: false,
@@ -147,7 +146,7 @@ export default function PopupCollection({ qpart, closePopup }: IProps) {
           <div>Condition: </div>
           <div>
             <ConditionSlider
-              getter={collectionObj.condition}
+              // getter={collectionObj.condition}
               setter={setCollectionObj}
             />
           </div>

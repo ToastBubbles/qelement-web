@@ -22,10 +22,7 @@ function RatingCard({ rating, qpartId, refetchFn }: IProps) {
 
   const [myRating, setMyRating] = useState<number>(-1);
 
-  const {
-    data: ratingData,
-    refetch: ratingRefetch,
-  } = useQuery({
+  const { data: ratingData, refetch: ratingRefetch } = useQuery({
     queryKey: "myRating",
     queryFn: () =>
       axios.get<number>(
@@ -38,7 +35,7 @@ function RatingCard({ rating, qpartId, refetchFn }: IProps) {
 
   useEffect(() => {
     if (payload.id) ratingRefetch();
-  }, [qpartId, rating]);
+  }, [qpartId, rating, ratingRefetch, payload]);
 
   const ratingMutation = useMutation({
     mutationFn: ({ rating, creatorId, qpartId }: IRatingDTO) =>

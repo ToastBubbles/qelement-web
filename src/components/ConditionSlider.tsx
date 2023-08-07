@@ -7,11 +7,11 @@ export enum Condition {
   New,
 }
 interface IProps {
-  getter: string;
+  // getter: string;
   setter: Dispatch<SetStateAction<ICollectionDTO>>;
 }
 
-export default function ConditionSlider({ getter, setter }: IProps) {
+export default function ConditionSlider({ setter }: IProps) {
   const [value, setValue] = useState<number>(1);
   return (
     <div>

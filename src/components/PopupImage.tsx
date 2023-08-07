@@ -14,8 +14,8 @@ export default function PopupImage({ imgPath, closePopup }: IProps) {
     width: 0,
     height: 0,
   });
-  const handleImageLoad = (event) => {
-    const { width, height } = event.target;
+  const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
+    const { width, height } = event.currentTarget;
     setImageProps({
       height,
       width,
