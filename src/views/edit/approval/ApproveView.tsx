@@ -14,7 +14,8 @@ export default function ApproveView() {
     return (
       <>
         <div className="formcontainer">
-          <h1>approve</h1>
+          <h1>Approval Overview</h1>
+
           <div className="mainform">
             <div className="d-flex jc-center flex-col">
               <Link to={"/approve/colors"}>

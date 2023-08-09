@@ -12,6 +12,7 @@ export interface IColorDTO {
   bo_id: number;
   type: string;
   note: string;
+  creatorId: number;
 }
 export interface color {
   id: number;

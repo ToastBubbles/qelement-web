@@ -1,11 +1,17 @@
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useMutation } from "react-query";
 import MyToolTip from "../../../components/MyToolTip";
 import { IColorDTO } from "../../../interfaces/general";
 import showToast, { Mode } from "../../../utils/utils";
+import { AppContext } from "../../../context/context";
 
 export default function AddColorView() {
+  const {
+    state: {
+      jwt: { payload },
+    },
+  } = useContext(AppContext);
   const baseValues: IColorDTO = {
     bl_name: "",
     tlg_name: "",
@@ -16,6 +22,7 @@ export default function AddColorView() {
     bo_id: -1,
     type: "solid",
     note: "",
+    creatorId: -1,
   };
   // const [searchQuery, setSearchQuery] = useState<string>("");
   const [newColor, setNewColor] = useState<IColorDTO>(baseValues);
@@ -26,6 +33,14 @@ export default function AddColorView() {
       showToast("Color successfully submitted for approval!", Mode.Success);
     },
   });
+
+  useEffect(() => {
+    setNewColor((newColor) => ({
+      ...newColor,
+      ...{ creatorId: payload.id },
+    }));
+  }, [payload]);
+
   return (
     <>
       <div className="formcontainer">
@@ -242,11 +257,13 @@ export default function AddColorView() {
           <button
             onClick={() => {
               if (newColor.hex.length == 0) newColor.hex = "UNKNWN";
-              if (newColor.hex.length == 6) {
-                console.log("adding...");
+              if (newColor.hex.length == 6 && newColor.creatorId != -1) {
+                // showToast("Color Submitted for approval!", Mode.Success);
 
                 colorMutation.mutate(newColor);
                 setNewColor(baseValues);
+              } else {
+                showToast("Error adding color.", Mode.Error);
               }
             }}
           >

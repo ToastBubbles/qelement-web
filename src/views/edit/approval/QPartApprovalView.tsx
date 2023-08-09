@@ -4,6 +4,7 @@ import { useQuery } from "react-query";
 import { IQPartDTOInclude } from "../../../interfaces/general";
 
 import QPartDetails from "../../../components/QPartDetails";
+import { Link } from "react-router-dom";
 
 export default function ApproveQPartView() {
   const {
@@ -20,6 +21,7 @@ export default function ApproveQPartView() {
       <>
         <div className="formcontainer">
           <h1>approve qelements</h1>
+          <Link to={"/approve"}>Back to Approval Overview</Link>
           <div className="mainform">
             {qparts.length > 0 ? (
               qparts.map((qpart) => {

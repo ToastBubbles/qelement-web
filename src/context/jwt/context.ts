@@ -10,7 +10,7 @@ export interface JwtStateType {
   payload: JwtPayload;
 }
 
-export const jwtInitialState = {
+export const jwtInitialState: JwtStateType = {
   token: "",
   payload: {
     exp: 0,

@@ -4,6 +4,7 @@ import { useQuery } from "react-query";
 import { IPartMoldDTO } from "../../../interfaces/general";
 
 import PartMoldDetails from "../../../components/PartMoldDetails";
+import { Link } from "react-router-dom";
 
 export default function ApprovePartMoldView() {
   const {
@@ -20,6 +21,7 @@ export default function ApprovePartMoldView() {
       <>
         <div className="formcontainer">
           <h1>approve molds</h1>
+          <Link to={"/approve"}>Back to Approval Overview</Link>
           <div className="mainform">
             {molds.length > 0 ? (
               molds.map((mold) => {

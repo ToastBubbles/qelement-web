@@ -14,13 +14,33 @@ export interface ITableOptions {
 
 function AllColors() {
   const [search, setSearchQuery] = useState<string>("");
-  //   console.log(search);
+  const [sortKey, setSortKey] = useState<string>("id");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
   const [tableOptions, setTableOptions] = useState<ITableOptions>({
     hideQID: false,
     hideBrickOwl: false,
     // search,
   });
+
+  const toggleSort = (key: string) => {
+    if (sortKey === key) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortKey(key);
+      setSortDirection("asc");
+    }
+  };
+  function compareNumericWithNull(a: number | null, b: number | null): number {
+    if (a === null || b === null) {
+      if (a === b) return 0;
+      if (a === null) return 1; // Move nulls to the end
+      if (b === null) return -1; // Move nulls to the end
+    } else {
+      return a - b; // Compare non-null values as usual
+    }
+    return 0;
+  }
 
   const { data, isFetched } = useQuery("allColors", () =>
     axios.get<color[]>("http://localhost:3000/color")
@@ -86,106 +106,195 @@ function AllColors() {
       </div>
     );
   } else return <p>Loading...</p>;
-}
 
-function generateTable(
-  data: color[],
-  type: string,
-  tableOptions: ITableOptions,
-  search: string
-) {
-  let contentLength = 0;
-  const output = (
-    <>
-      <h1>{type}</h1>
-      <table className="color-table" cellSpacing={0}>
-        <tr>
-          {!tableOptions.hideQID && <th style={{ width: "2em" }}>qid</th>}
-          <th style={{ width: "2em" }} className="swatch-header"></th>
-          <th style={{ width: "2em" }}>id</th>
-          <th style={{ width: "14em" }} className="text-left">
-            bricklink name
-          </th>
-          <th style={{ width: "2em" }}>id</th>
-          <th style={{ width: "27em" }} className="text-left">
-            tlg name
-          </th>
-          {!tableOptions.hideBrickOwl && (
-            <>
-              <th style={{ width: "2em" }}>id</th>
-              <th style={{ width: "18em" }} className="text-left">
-                brickowl name
+  function generateTable(
+    data: color[],
+    type: string,
+    tableOptions: ITableOptions,
+    search: string
+  ) {
+    let contentLength = 0;
+
+    const sortedData = data
+      .filter(
+        (color: color) => validateSearch(color, search) && color.type === type
+      )
+      .sort((a: color, b: color) => {
+        if (sortKey) {
+          const aValue = a[sortKey as keyof color];
+          const bValue = b[sortKey as keyof color];
+
+          if (
+            sortKey === "bl_id" ||
+            sortKey === "tlg_id" ||
+            sortKey === "bo_id" ||
+            sortKey === "id"
+          ) {
+            return sortDirection === "asc"
+              ? compareNumericWithNull(aValue as number, bValue as number)
+              : compareNumericWithNull(bValue as number, aValue as number);
+          } else if (aValue === "" || bValue === "") {
+            // Move empty strings to the end
+            if (aValue === bValue) return 0;
+            if (aValue === "") return sortDirection === "asc" ? 1 : -1;
+            if (bValue === "") return sortDirection === "asc" ? -1 : 1;
+          } else {
+            // Compare non-empty values as usual
+            if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
+            if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
+          }
+
+          return 0;
+        }
+        return 0;
+      });
+    const output = (
+      <>
+        <h1>{type}</h1>
+        <table className="color-table" cellSpacing={0}>
+          <thead>
+            <tr>
+              {!tableOptions.hideQID && (
+                <th
+                  style={{ width: "2em" }}
+                  className="clickable"
+                  onClick={() => toggleSort("id")}
+                >
+                  qid
+                </th>
+              )}
+              <th style={{ width: "2em" }} className="swatch-header"></th>
+              <th
+                style={{ width: "2em" }}
+                className="clickable"
+                onClick={() => toggleSort("bl_id")}
+              >
+                id
               </th>
-            </>
-          )}
-          <th style={{ width: "5em" }} className="text-left">
-            hex
-          </th>
-          <th className="text-left">notes</th>
-        </tr>
-
-        {data.map(
-          (color: color) =>
-            validateSearch(color, search) &&
-            color.type == type &&
-            (contentLength++,
-            (
-              <tr key={color.id}>
-                {!tableOptions.hideQID && (
-                  <td className="text-right md-grey-text">{color.id}</td>
-                )}
-                <td className="border-all" style={{ padding: 0 }}>
-                  <div
-                    className={"square h100 b flex-text-center " + type}
-                    style={{ backgroundColor: "#" + color.hex }}
+              <th
+                style={{ width: "14em" }}
+                onClick={() => toggleSort("bl_name")}
+                className="text-left clickable"
+              >
+                bricklink name
+                {sortKey === "bl_name" && (sortDirection === "asc" ? "▲" : "▼")}
+              </th>
+              <th
+                style={{ width: "2em" }}
+                className="clickable"
+                onClick={() => toggleSort("tlg_id")}
+              >
+                id
+              </th>
+              <th
+                style={{ width: "27em" }}
+                onClick={() => toggleSort("tlg_name")}
+                className="text-left clickable"
+              >
+                tlg name
+                {sortKey === "tlg_name" &&
+                  (sortDirection === "asc" ? "▲" : "▼")}
+              </th>
+              {!tableOptions.hideBrickOwl && (
+                <>
+                  <th
+                    style={{ width: "2em" }}
+                    className="clickable"
+                    onClick={() => toggleSort("bo_id")}
                   >
-                    {color.hex == "UNKNWN" && "?"}
-                  </div>
-                </td>
-
-                <td className="pr-sm text-right md-grey-text border-top border-bottom border-right-soft cell-shade-yellow">
-                  {color.bl_id <= 0 ? "" : color.bl_id}
-                </td>
-                <td className="pl-sm border-top border-bottom border-right cell-shade-yellow">
-                  <Link className="text-black" to={"/color/" + color.id}>
-                    {color.bl_name}
-                  </Link>
-                </td>
-                <td className="pr-sm text-right md-grey-text border-top border-bottom border-right-soft cell-shade-red">
-                  {color.tlg_id <= 0 ? "" : color.tlg_id}
-                </td>
-                <td className="pl-sm border-top border-bottom border-right cell-shade-red">
-                  <Link className="text-black" to={"/color/" + color.id}>
-                    {color.tlg_name}
-                  </Link>
-                </td>
-                {!tableOptions.hideBrickOwl && (
-                  <>
-                    <td className="pr-sm text-right md-grey-text border-top border-bottom border-right-soft cell-shade-blue">
-                      {color.bo_id <= 0 ? "" : color.bo_id}
+                    id
+                  </th>
+                  <th
+                    style={{ width: "18em" }}
+                    onClick={() => toggleSort("bo_name")}
+                    className="text-left clickable"
+                  >
+                    brickowl name
+                    {sortKey === "bo_name" &&
+                      (sortDirection === "asc" ? "▲" : "▼")}
+                  </th>
+                </>
+              )}
+              <th style={{ width: "5em" }} className="text-left">
+                hex
+              </th>
+              <th
+                className="text-left clickable"
+                onClick={() => toggleSort("note")}
+              >
+                note
+                {sortKey === "note" && (sortDirection === "asc" ? "▲" : "▼")}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedData.map(
+              (color: color) =>
+                validateSearch(color, search) &&
+                color.type == type &&
+                (contentLength++,
+                (
+                  <tr key={color.id}>
+                    {!tableOptions.hideQID && (
+                      <td className="text-right md-grey-text">{color.id}</td>
+                    )}
+                    <td className="border-all" style={{ padding: 0 }}>
+                      <div
+                        className={"square h100 b flex-text-center " + type}
+                        style={{ backgroundColor: "#" + color.hex }}
+                      >
+                        {color.hex == "UNKNWN" && "?"}
+                      </div>
                     </td>
-                    <td className="pl-sm border-top border-bottom border-right cell-shade-blue">
+
+                    <td className="pr-sm text-right md-grey-text border-top border-bottom border-right-soft cell-shade-yellow">
+                      {color.bl_id <= 0 ? "" : color.bl_id}
+                    </td>
+                    <td className="pl-sm border-top border-bottom border-right cell-shade-yellow">
                       <Link className="text-black" to={"/color/" + color.id}>
-                        {color.bo_name}
+                        {color.bl_name}
                       </Link>
                     </td>
-                  </>
-                )}
+                    <td className="pr-sm text-right md-grey-text border-top border-bottom border-right-soft cell-shade-red">
+                      {color.tlg_id <= 0 ? "" : color.tlg_id}
+                    </td>
+                    <td className="pl-sm border-top border-bottom border-right cell-shade-red">
+                      <Link className="text-black" to={"/color/" + color.id}>
+                        {color.tlg_name}
+                      </Link>
+                    </td>
+                    {!tableOptions.hideBrickOwl && (
+                      <>
+                        <td className="pr-sm text-right md-grey-text border-top border-bottom border-right-soft cell-shade-blue">
+                          {color.bo_id <= 0 ? "" : color.bo_id}
+                        </td>
+                        <td className="pl-sm border-top border-bottom border-right cell-shade-blue">
+                          <Link
+                            className="text-black"
+                            to={"/color/" + color.id}
+                          >
+                            {color.bo_name}
+                          </Link>
+                        </td>
+                      </>
+                    )}
 
-                <td className="border-top border-bottom border-right text-center">
-                  #{color.hex.toUpperCase()}
-                </td>
-                <td className="table-notes border-top border-bottom">
-                  {color.note}
-                </td>
-              </tr>
-            ))
-        )}
-      </table>
-    </>
-  );
-  if (contentLength > 0) return output;
-  return <></>;
+                    <td className="border-top border-bottom border-right text-center">
+                      #{color.hex.toUpperCase()}
+                    </td>
+                    <td className="table-notes border-top border-bottom">
+                      {color.note}
+                    </td>
+                  </tr>
+                ))
+            )}
+          </tbody>
+        </table>
+      </>
+    );
+    if (contentLength > 0) return output;
+    return <></>;
+  }
 }
 
 export default AllColors;

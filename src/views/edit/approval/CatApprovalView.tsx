@@ -2,6 +2,7 @@ import axios from "axios";
 import { useMutation, useQuery } from "react-query";
 import { IAPIResponse, category } from "../../../interfaces/general";
 import showToast, { Mode } from "../../../utils/utils";
+import { Link } from "react-router-dom";
 
 export default function ApproveCatView() {
   const {
@@ -44,6 +45,7 @@ export default function ApproveCatView() {
       <>
         <div className="formcontainer">
           <h1>approve categories</h1>
+          <Link to={"/approve"}>Back to Approval Overview</Link>
           <div className="mainform">
             {cats.length > 0 ? (
               cats.map((cat) => {

@@ -2,6 +2,7 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import ColorDetails from "../../../components/ColorDetails";
 import { color } from "../../../interfaces/general";
+import { Link } from "react-router-dom";
 
 export default function ApproveColorView() {
   const {
@@ -19,6 +20,7 @@ export default function ApproveColorView() {
       <>
         <div className="formcontainer">
           <h1>approve colors</h1>
+          <Link to={"/approve"}>Back to Approval Overview</Link>
           <div className="mainform">
             {colors.length > 0 ? (
               colors.map((color) => {

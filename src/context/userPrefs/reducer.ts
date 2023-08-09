@@ -15,7 +15,7 @@ type userPreferencesPayload = {
 
 export type UserPreferencesActions = ActionMap<userPreferencesPayload>[keyof ActionMap<userPreferencesPayload>];
 
-export const userPreferencesReducer = (state: UserPreferencesStateType, action: UserPreferencesActions) => {
+export const userPreferencesReducer = (state: UserPreferencesStateType, action: UserPreferencesActions): UserPreferencesStateType => {
   switch (action.type) {
     case Types.SetPrefs:
       return {

@@ -4,6 +4,7 @@ import { useQuery } from "react-query";
 import { IPartDTO } from "../../../interfaces/general";
 
 import PartDetails from "../../../components/PartDetails";
+import { Link } from "react-router-dom";
 
 export default function ApprovePartView() {
   const {
@@ -20,6 +21,7 @@ export default function ApprovePartView() {
       <>
         <div className="formcontainer">
           <h1>approve parts</h1>
+          <Link to={"/approve"}>Back to Approval Overview</Link>
           <div className="mainform">
             {parts.length > 0 ? (
               parts.map((part) => {

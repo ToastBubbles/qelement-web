@@ -27,7 +27,7 @@ function Navbar() {
     queryFn: () =>
       axios.get<number>(
         `http://localhost:3000/message/getUnreadCountById/${payload.id}`
-      ),
+      ), 
     retry: false,
     refetchInterval: 30000,
     enabled: !!payload.id,

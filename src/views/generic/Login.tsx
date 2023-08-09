@@ -5,6 +5,7 @@ import { ILoginDTO } from "../../interfaces/general";
 import { AppContext } from "../../context/context";
 import { login } from "../../auth/auth";
 import { Types } from "../../context/jwt/reducer";
+import { JwtPayload } from "../../context/jwt/context";
 
 export default function Login() {
   const { dispatch } = useContext(AppContext);
@@ -21,12 +22,15 @@ export default function Login() {
       console.log("Here I am", res);
       dispatch({
         type: Types.SetJwt,
-        payload: res,
+        payload: res as unknown as JwtPayload,
       });
 
       if (res) {
         navigate("/profile");
       }
+      //  else {
+      //   setLoginError(true);
+      // }
     });
   };
   return (

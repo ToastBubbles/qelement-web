@@ -71,19 +71,30 @@ export function filterImages(images: ImageDTO[]): ImageDTO[] {
 }
 
 export function validateSearch(col: color, query: string): boolean {
-  query = query.toLowerCase().trim();
-  if (
-    !query ||
-    col.bl_name.toLowerCase().includes(query) ||
-    col.tlg_name.toLowerCase().includes(query) ||
-    col.bo_name.toLowerCase().includes(query) ||
-    col.note.toLowerCase().includes(query)
-  )
-    return true;
-  if (!isNaN(parseInt(query))) {
+  let isNumber = false;
+  let numericValue: number;
+  if (!isNaN(parseFloat(query)) && isFinite(Number(query))) {
+    isNumber = true;
+    numericValue = parseFloat(query);
+  } else {
+    query = query.toLowerCase().trim();
+  }
+  if (!isNumber) {
     if (
-      col.bl_id.toString().includes(query) ||
-      col.tlg_id.toString().includes(query)
+      !query ||
+      col.bl_name.toLowerCase().includes(query) ||
+      col.tlg_name.toLowerCase().includes(query) ||
+      col.bo_name.toLowerCase().includes(query) ||
+      col.note.toLowerCase().includes(query)
+    ) {
+      return true;
+    }
+  } else {
+    if (
+      (col.bl_id && col.bl_id.toString().includes(query)) ||
+      (col.tlg_id && col.tlg_id.toString().includes(query)) ||
+      (col.bo_id && col.bo_id.toString().includes(query)) ||
+      (col.id && col.id.toString().includes(query))
     )
       return true;
   }

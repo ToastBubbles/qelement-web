@@ -7,6 +7,7 @@ import {
 } from "../../../interfaces/general";
 
 import ImageApprovalRow from "../../../components/ImageApprovalRow";
+import { Link } from "react-router-dom";
 
 export default function ApproveImageView() {
   // const [imageOpen, setImageOpen] = useState<boolean>(false);
@@ -36,6 +37,7 @@ export default function ApproveImageView() {
         )} */}
         <div className="formcontainer">
           <h1>approve images</h1>
+          <Link to={"/approve"}>Back to Approval Overview</Link>
           <div className="mainform-wide">
             {imgs.length > 0 ? (
               imgs.map((img) => {

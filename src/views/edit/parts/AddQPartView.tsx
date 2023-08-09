@@ -50,6 +50,7 @@ export default function AddQPartView() {
   const [category, setCategory] = useState<number>(-1);
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [molds, setMolds] = useState<IPartMoldDTO[]>();
+  const [wasApproved, setWasApproved] = useState<boolean>(false);
 
   const [qpartExistenceCode, setQpartExistenceCode] = useState<number>(-1);
 
@@ -102,6 +103,13 @@ export default function AddQPartView() {
   }, [category, partsRefetch]);
 
   useEffect(() => {
+    setNewQPart((newQPart) => ({
+      ...newQPart,
+      ...{ creatorId: payload.id },
+    }));
+  }, [payload]);
+
+  useEffect(() => {
     if (newQPart.moldId != -1 && newQPart.colorId != -1) {
       matchRefetch();
     }
@@ -118,11 +126,19 @@ export default function AddQPartView() {
     axios.get<category[]>("http://localhost:3000/categories")
   );
 
-  const partMutation = useMutation({
+  const partMutation = useMutation({ 
     mutationFn: (qpart: iQPartDTO) =>
       axios.post<IAPIResponse>(`http://localhost:3000/qpart`, qpart),
     onSuccess: (data) => {
-      if (data.data?.code == 200 && payload) {
+      console.log(data);
+
+      if ((data.data?.code == 200 || data.data?.code == 201) && payload) {
+        // if (data.data?.code == 201) {
+        //   console.log("approved");
+
+        //   setWasApproved(true);
+        //   // console.log(wasApproved);
+        // }
         partStatusMutation.mutate({
           id: -1,
           status: newStatus.status,
@@ -130,13 +146,13 @@ export default function AddQPartView() {
           location: newStatus.location,
           note: newStatus.note,
           qpartId: Number(data.data.message),
-          creatorId: payload.id || 1,
+          creatorId: payload.id,
         });
 
         if (elementId && elementId > 999 && elementId < 999999999) {
           elementIDMutation.mutate({
             number: elementId,
-            creatorId: payload.id || 1,
+            creatorId: payload.id,
             qpartId: Number(data.data.message),
           });
         }
@@ -148,7 +164,13 @@ export default function AddQPartView() {
     mutationFn: (status: IPartStatusDTO) =>
       axios.post<IPartStatusDTO>(`http://localhost:3000/partStatus`, status),
     onSuccess: () => {
-      showToast("QElement submitted for approval!", Mode.Success);
+      console.log("listen", partMutation.isSuccess, partMutation.data);
+      if (partMutation.data?.data.code == 201) {
+        showToast("QElement added!", Mode.Success);
+        setWasApproved(false);
+      } else {
+        showToast("QElement submitted for approval!", Mode.Success);
+      }
       setNewStatus(defaultStatusValues);
       setStartDate(new Date());
     },
@@ -489,12 +511,14 @@ export default function AddQPartView() {
               <button
                 className="formInputNM"
                 onClick={() => {
-                  console.log("CODE", qpartExistenceCode);
+                  // console.log("CODE", qpartExistenceCode);
+                  console.log(payload);
 
                   if (
                     newQPart.partId != -1 &&
                     newQPart.colorId != -1 &&
-                    qpartExistenceCode == 200
+                    qpartExistenceCode == 200 &&
+                    newQPart.creatorId != -1
                   ) {
                     console.log("adding...");
                     partMutation.mutate(newQPart);
@@ -505,6 +529,8 @@ export default function AddQPartView() {
                         "This part already exists in the database, it may be pending approval",
                         Mode.Warning
                       );
+                    } else if (newQPart.creatorId == -1) {
+                      showToast("User ID Error!", Mode.Error);
                     } else {
                       showToast(
                         "Please make sure you have filled out the form properly",
