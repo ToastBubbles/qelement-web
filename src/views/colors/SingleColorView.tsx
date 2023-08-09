@@ -78,19 +78,19 @@ export default function SingleColorView() {
                 <div className="color-subdetails-id">
                   <div>
                     <div className="color-id">
-                      {color?.bl_id == 0 ? "UNK" : color?.bl_id}
+                      {color?.bl_id == null ? "UNK" : color?.bl_id}
                     </div>
                     <div>Bricklink</div>
                   </div>
                   <div>
                     <div className="color-id">
-                      {color?.tlg_id == 0 ? "UNK" : color?.tlg_id}
+                      {color.tlg_id == null ? "UNK" : color?.tlg_id}
                     </div>
                     <div>LEGO</div>
                   </div>
                   <div>
                     <div className="color-id">
-                      {color?.bl_id == 0 ? "UNK" : color?.bl_id}
+                      {color?.bl_id == null ? "UNK" : color?.bl_id}
                     </div>
                     <div>Brickowl</div>
                   </div>

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useQuery, useMutation } from "react-query";
 import {
   category,
@@ -9,9 +9,18 @@ import {
 } from "../../../interfaces/general";
 import showToast, { Mode } from "../../../utils/utils";
 import MyToolTip from "../../../components/MyToolTip";
-
+import { AppContext } from "../../../context/context";
+interface ICatDTO {
+  name: string;
+  creatorId: number;
+}
 export default function AddPartView() {
-  const [newPart, setNewPart] = useState<IPartWithMoldDTO>({
+  const {
+    state: {
+      jwt: { payload },
+    },
+  } = useContext(AppContext);
+  const defaultValue: IPartWithMoldDTO = {
     id: -1,
     name: "",
     number: "",
@@ -19,7 +28,9 @@ export default function AddPartView() {
     partNote: "",
     moldNote: "",
     blURL: "",
-  });
+    creatorId: -1,
+  };
+  const [newPart, setNewPart] = useState<IPartWithMoldDTO>(defaultValue);
   // const [partNo, setPartNo] = useState<number>(-1);
   const [newCategory, setNewCategory] = useState<string>();
   const [isNewPart, setIsNewPart] = useState<boolean>(false);
@@ -30,19 +41,26 @@ export default function AddPartView() {
   } = useQuery("allCats", () =>
     axios.get<category[]>("http://localhost:3000/categories")
   );
+  useEffect(() => {
+    setNewPart((newPart) => ({
+      ...newPart,
+      ...{ creatorId: payload.id },
+    }));
+  }, [payload]);
 
   const partMutation = useMutation({
     mutationFn: (part: IPartWithMoldDTO) =>
       axios.post<part>(`http://localhost:3000/parts`, part),
     onSuccess: () => {
       showToast("Part submitted for approval!", Mode.Success);
+      setNewPart(defaultValue);
     },
   });
+
   const catMutation = useMutation({
-    mutationFn: (name: string) =>
-      axios.post<IAPIResponse>(`http://localhost:3000/categories`, { name }),
-    // .then((res) => console.log(res.data))
-    // .catch((err) => console.log(err)),
+    mutationFn: (data: ICatDTO) =>
+      axios.post<IAPIResponse>(`http://localhost:3000/categories`, data),
+
     onSuccess: (e) => {
       console.log("e", e.data);
       if (e.data.code == 200) {
@@ -319,15 +337,6 @@ export default function AddPartView() {
                     // } else if (!isNewPart) {
                     console.log("adding...");
                     partMutation.mutate(newPart);
-                    setNewPart({
-                      id: -1,
-                      name: "",
-                      number: "",
-                      CatId: -1,
-                      partNote: "",
-                      moldNote: "",
-                      blURL: "",
-                    });
                   }
                 }}
               >
@@ -362,7 +371,10 @@ export default function AddPartView() {
                   onClick={() => {
                     if (newCategory) {
                       console.log("adding...");
-                      catMutation.mutate(newCategory);
+                      catMutation.mutate({
+                        name: newCategory,
+                        creatorId: payload.id,
+                      });
                     }
                   }}
                 >

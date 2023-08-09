@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useQuery, useMutation } from "react-query";
 import { useNavigate, useParams } from "react-router";
 import SimilarColorBanner from "../../../components/SimilarColorBanner";
@@ -11,10 +11,17 @@ import {
   colorWSimilar,
 } from "../../../interfaces/general";
 import showToast, { Mode } from "../../../utils/utils";
+import { AppContext } from "../../../context/context";
 
 export default function ColorEditView() {
+  const {
+    state: {
+      jwt: { payload },
+    },
+  } = useContext(AppContext);
   const { colorId } = useParams();
   const [similarColorToAdd, setSimilarColorToAdd] = useState<number>(0);
+
   const navigate = useNavigate();
 
   const {
@@ -28,6 +35,12 @@ export default function ColorEditView() {
     enabled: true,
     retry: false,
   });
+  // useEffect(() => {
+  //   setNewColor((newColor) => ({
+  //     ...newColor,
+  //     ...{ creatorId: payload.id },
+  //   }));
+  // }, [payload]);
 
   const colorMutation = useMutation({
     mutationFn: ({
@@ -59,12 +72,15 @@ export default function ColorEditView() {
   });
 
   const similarColorMutation = useMutation({
-    mutationFn: ({ color_one, color_two }: ISimilarColorDTO) =>
+    mutationFn: ({ color_one, color_two, creatorId }: ISimilarColorDTO) =>
       axios.post<IAPIResponse>(`http://localhost:3000/similarColor`, {
         color_one,
         color_two,
+        creatorId,
       }),
     onSuccess: (e) => {
+      console.log(e.data);
+
       if (e.data.code == 200) {
         showToast("Similar Color Pair submitted!", Mode.Success);
       } else if (e.data.code == 501) {
@@ -156,6 +172,7 @@ export default function ColorEditView() {
         tlg_id: colorEdits.tlg_id,
         type: colorEdits.type,
         note: colorEdits.note,
+        creatorId: payload.id,
       });
     } else {
       if (colorEdits.hex.length != 6)
@@ -233,10 +250,17 @@ export default function ColorEditView() {
               />
               <button
                 onClick={() => {
-                  if (Number(colorId) != similarColorToAdd) {
+                  console.log(Number(colorId), similarColorToAdd);
+
+                  if (
+                    Number(colorId) != similarColorToAdd &&
+                    payload.id &&
+                    payload.id != -1
+                  ) {
                     similarColorMutation.mutate({
                       color_one: Number(colorId),
                       color_two: similarColorToAdd,
+                      creatorId: payload.id,
                     });
                   } else {
                     showToast(

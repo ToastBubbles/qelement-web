@@ -57,7 +57,7 @@ export default function SinglePartView() {
     error: qpartError,
     refetch: qpartRefetch,
   } = useQuery({
-    queryKey: "qpart",
+    queryKey: `qpart${partId}`,
     queryFn: () => {
       return axios.get<IQPartDTOInclude[]>(
         `http://localhost:3000/qpart/matchesByPartId/${partId}`
@@ -86,7 +86,7 @@ export default function SinglePartView() {
   }
 
   useEffect(() => {
-    if (qpartData) {
+    if (qpartData && qpartData.data.length > 0) {
       const type1 = qpartData?.data[0].type;
       qpartData?.data.forEach(
         (qpart) => qpart.type != type1 && setMultiMoldPart(true)
@@ -140,7 +140,7 @@ export default function SinglePartView() {
     }
     return "https://via.placeholder.com/1024x768/eee?text=4:3";
   }
-  if (qpartData) {
+  if (qpartData && qpartData.data.length > 0) {
     const qparts = qpartData?.data;
     const myDebugger = {
       selectedQPartid,
@@ -442,7 +442,10 @@ export default function SinglePartView() {
                       <div>
                         {mypart?.comments.length == 0 ? (
                           <div
-                            style={{ paddingBottom: "2em", paddingTop: "1em" }}
+                            style={{
+                              paddingBottom: "2em",
+                              paddingTop: "1em",
+                            }}
                           >
                             No comments yet
                           </div>
@@ -548,6 +551,8 @@ export default function SinglePartView() {
       </div>
     );
   } else {
-    return <LoadingPage />;
+    if (qpartData?.data && qpartData.data.length == 0) {
+      return <p>No Q-Elements exist for this part yet!</p>;
+    } else return <LoadingPage />;
   }
 }

@@ -1,6 +1,7 @@
 export interface ISimilarColorDTO {
   color_one: number;
   color_two: number;
+  creatorId: number;
 }
 export interface IColorDTO {
   bl_name: string;
@@ -336,6 +337,7 @@ export interface IPartWithMoldDTO {
   partNote: string;
   moldNote: string;
   blURL: string;
+  creatorId: number;
 }
 
 export interface category {

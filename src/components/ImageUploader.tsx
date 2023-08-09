@@ -2,7 +2,7 @@ import axios from "axios";
 import { FormEvent, useContext, useState } from "react";
 import { useQuery } from "react-query";
 import { AppContext } from "../context/context";
-import { IQPartDTOInclude } from "../interfaces/general";
+import { IAPIResponse, IQPartDTOInclude } from "../interfaces/general";
 import showToast, { Mode } from "../utils/utils";
 import LoadingPage from "./LoadingPage";
 import MyToolTip from "./MyToolTip";
@@ -25,67 +25,7 @@ const ImageUploader = ({ qpartId }: iProps) => {
   } = useContext(AppContext);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imageType, setImageType] = useState<string>("");
-  // const [partNumber, setPartNumber] = useState<string>("");
 
-  // const {
-  //   data: partData,
-  //   isLoading: partIsLoading,
-  //   error: partError,
-  //   refetch: partRefetch,
-  // } = useQuery({
-  //   queryKey: "partByNumber",
-  //   queryFn: () =>
-  //     axios.get<part | "">(
-  //       `http://localhost:3000/parts/byNumber/${partNumber.trim()}`
-  //     ),
-  //   onSuccess(data) {
-  //     if (data.data === "") {
-  //       showToast("Part number not found", Mode.Error);
-  //     } else {
-  //       showToast("Part retrieved!", Mode.Success);
-  //     }
-  //   },
-  //   enabled: false,
-  // });
-
-  // const {
-  //   data: colData,
-  //   isLoading: colIsLoading,
-  //   error: colError,
-  // } = useQuery("allColors", () =>
-  //   axios.get<color[]>("http://localhost:3000/color")
-  // );
-  // const {
-  //   data: qpartData,
-  //   isLoading: qpartIsLoading,
-  //   error: qpartError,
-  //   refetch: qpartRefetch,
-  // } = useQuery({
-  //   queryKey: "qparts" + partData?.data.id,
-  //   queryFn: () => {
-  //     return axios.get<IQPartDTO[]>(
-  //       `http://localhost:3000/qpart/matchesByPartId/${partData?.data.id}`
-  //     );
-  //   },
-  //   staleTime: 0,
-  //   enabled:
-  //     partData?.data !== "" && !partIsLoading && partData?.data.id != undefined,
-  // });
-
-  // function validatePartNo() {
-  //   partRefetch();
-  // }
-
-  //   qparts = qpartData?.data;
-  // let colors = colData?.data;
-  // function getColorName(colorId: number): string {
-  //   let thisColor = colors?.find((x) => x.id == colorId);
-
-  //   if (thisColor) {
-  //     return thisColor.bl_name ? thisColor.bl_name : thisColor.tlg_name;
-  //   }
-  //   return "Unnamed Color";
-  // }
   const { data: myqpartData } = useQuery({
     queryKey: "qpart" + qpartId,
     queryFn: () => {
@@ -115,16 +55,29 @@ const ImageUploader = ({ qpartId }: iProps) => {
         formData.append("imageData", JSON.stringify(imageData));
 
         try {
-          axios.post("http://localhost:3000/image/upload", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          });
+          axios
+            .post<IAPIResponse>(
+              "http://localhost:3000/image/upload",
+              formData,
+              {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
+              }
+            )
+            .then((resp) => {
+              if (resp.data.code == 201 || resp.data.code == 202) {
+                setImageType("");
+                setSelectedImage(null);
+                if (resp.data.code == 201)
+                  showToast("Image submitted for approval!", Mode.Success);
+                else showToast("Image added!", Mode.Success);
+              } else {
+                showToast("Error uploading image.", Mode.Error);
+              }
+            });
 
           // console.log("Image uploaded successfully");
-          setImageType("");
-          setSelectedImage(null);
-          showToast("Image submitted for approval!", Mode.Success);
         } catch (error) {
           console.error("Error uploading image:", error);
         }
