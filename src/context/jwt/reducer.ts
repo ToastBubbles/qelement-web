@@ -1,4 +1,4 @@
-import { JwtStateType, jwtInitialState } from "./context";
+import { JwtStateType, jwtInitialState, JwtPayload } from "./context";
 import { ActionMap } from "../../interfaces/context";
 
 export enum Types {
@@ -6,7 +6,7 @@ export enum Types {
   ClearJWT = 'CLEAR_JWT',
 }
 
-type JwtPayload = {
+type JwtPayloadActions = {
   [Types.SetJwt] : {
     token: string;
     jwtPayload: JwtPayload
@@ -14,7 +14,7 @@ type JwtPayload = {
   [Types.ClearJWT]: undefined
 }
 
-export type JwtActions = ActionMap<JwtPayload>[keyof ActionMap<JwtPayload>];
+export type JwtActions = ActionMap<JwtPayloadActions>[keyof ActionMap<JwtPayloadActions>];
 
 export const jwtReducer = (state: JwtStateType, action: JwtActions): JwtStateType => {
   switch (action.type) {

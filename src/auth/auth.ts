@@ -60,7 +60,7 @@ i9MgVWxJARlC+RCtzTTg7/UE9fm7fQVSsvbwz7XR8bBWYZZrFD8duejIfNLCHbft
 
 export async function login(
   loginDTO: ILoginDTO
-): Promise<{ token: string; jwtPayload: object }> {
+): Promise<{ token: string; jwtPayload: JWTPayload }> {
   return new Promise((resolve, reject) => {
     axios
       .post<{ access_token: string }>(

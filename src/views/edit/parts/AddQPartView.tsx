@@ -50,7 +50,7 @@ export default function AddQPartView() {
   const [category, setCategory] = useState<number>(-1);
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [molds, setMolds] = useState<IPartMoldDTO[]>();
-  const [wasApproved, setWasApproved] = useState<boolean>(false);
+  // const [wasApproved, setWasApproved] = useState<boolean>(false);
 
   const [qpartExistenceCode, setQpartExistenceCode] = useState<number>(-1);
 
@@ -167,7 +167,7 @@ export default function AddQPartView() {
       console.log("listen", partMutation.isSuccess, partMutation.data);
       if (partMutation.data?.data.code == 201) {
         showToast("QElement added!", Mode.Success);
-        setWasApproved(false);
+        // setWasApproved(false);
       } else {
         showToast("QElement submitted for approval!", Mode.Success);
       }

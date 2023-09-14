@@ -6,17 +6,20 @@ import {
   IAPIResponse,
   IElementIDCreationDTO,
   IQPartDTOInclude,
-
 } from "../interfaces/general";
 import showToast, { Mode } from "../utils/utils";
-
 
 interface IProps {
   qpart: IQPartDTOInclude;
   closePopup: () => void;
+  refetchFn: () => void;
 }
 
-export default function PopupElementID({ qpart, closePopup }: IProps) {
+export default function PopupElementID({
+  qpart,
+  closePopup,
+  refetchFn,
+}: IProps) {
   const {
     state: {
       jwt: { payload },
@@ -28,9 +31,20 @@ export default function PopupElementID({ qpart, closePopup }: IProps) {
   const elementIDMutation = useMutation({
     mutationFn: (eIdData: IElementIDCreationDTO) =>
       axios.post<IAPIResponse>(`http://localhost:3000/elementID/add`, eIdData),
-    onSuccess: () => {
-      showToast("Element ID submitted for approval!", Mode.Success);
-      setElementId(-1);
+    onSuccess: (resp) => {
+      if (resp.data.code == 201) {
+        showToast("Element ID added!", Mode.Success);
+        setElementId(-1);
+        refetchFn();
+      } else if (resp.data.code == 200) {
+        showToast("Element ID submitted for approval!", Mode.Success);
+        setElementId(-1);
+        refetchFn();
+      } else
+        showToast(
+          "Failed to add element ID, it may be in use by another part or pending approval.",
+          Mode.Error
+        );
     },
   });
 

@@ -12,6 +12,7 @@ export default function showToast(message: string, mode: Mode = Mode.Success) {
   switch (mode) {
     case Mode.Success: {
       toast.success(message, {
+        className: "custom-toast",
         position: "bottom-left",
         autoClose: 5000,
         hideProgressBar: true,
@@ -25,6 +26,7 @@ export default function showToast(message: string, mode: Mode = Mode.Success) {
     }
     case Mode.Info: {
       toast.info(message, {
+        className: "custom-toast",
         position: "bottom-left",
         autoClose: 5000,
         hideProgressBar: true,
@@ -38,6 +40,7 @@ export default function showToast(message: string, mode: Mode = Mode.Success) {
     }
     case Mode.Warning: {
       toast.warn(message, {
+        className: "custom-toast",
         position: "bottom-left",
         autoClose: 5000,
         hideProgressBar: true,
@@ -51,6 +54,7 @@ export default function showToast(message: string, mode: Mode = Mode.Success) {
     }
     case Mode.Error: {
       toast.error(message, {
+        className: "custom-toast",
         position: "bottom-left",
         autoClose: 5000,
         hideProgressBar: true,
@@ -72,10 +76,10 @@ export function filterImages(images: ImageDTO[]): ImageDTO[] {
 
 export function validateSearch(col: color, query: string): boolean {
   let isNumber = false;
-  let numericValue: number;
+  // let numericValue: number;
   if (!isNaN(parseFloat(query)) && isFinite(Number(query))) {
     isNumber = true;
-    numericValue = parseFloat(query);
+    // numericValue = parseFloat(query);
   } else {
     query = query.toLowerCase().trim();
   }

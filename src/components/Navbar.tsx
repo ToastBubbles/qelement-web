@@ -27,7 +27,7 @@ function Navbar() {
     queryFn: () =>
       axios.get<number>(
         `http://localhost:3000/message/getUnreadCountById/${payload.id}`
-      ), 
+      ),
     retry: false,
     refetchInterval: 30000,
     enabled: !!payload.id,
@@ -61,7 +61,7 @@ function Navbar() {
       <div className="d-flex jc-center w-33">
         <SearchBarMain />
       </div>
-      <div className="w-33">
+      <div className="w-33 nav-end">
         <div className="fg-1"></div>
         <PartsButton />
         <ColorWheel />

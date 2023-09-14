@@ -96,7 +96,7 @@ export default function About() {
             chart.
           </div>
           <div className="d-flex jc-center" style={{ margin: "3em 0" }}>
-            <img src={"/public/img/db_chart.png"} />
+            <img src={"/img/db_chart.png"} />
           </div>
 
           <h2>Who is behind qelement?</h2>

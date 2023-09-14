@@ -18,14 +18,16 @@ export default function Login() {
   const navigate = useNavigate();
 
   const attemptLogin = (creds: ILoginDTO) => {
-    login(creds).then((res) => {
-      console.log("Here I am", res);
+    login(creds).then(({ token, jwtPayload }) => {
       dispatch({
         type: Types.SetJwt,
-        payload: res as unknown as JwtPayload,
+        payload: {
+          token,
+          jwtPayload: jwtPayload as unknown as JwtPayload,
+        },
       });
 
-      if (res) {
+      if (token && jwtPayload) {
         navigate("/profile");
       }
       //  else {

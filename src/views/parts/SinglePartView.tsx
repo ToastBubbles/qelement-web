@@ -282,11 +282,12 @@ export default function SinglePartView() {
                 )}
                 {eIDOpen && mypart && payload.id && (
                   <PopupElementID
+                    refetchFn={qpartRefetch}
                     qpart={mypart}
                     closePopup={() => setEIDOpen(false)}
                   />
                 )}
-                <div className="d-flex flex-col jc-space-b border-left">
+                <div className="d-flex flex-col jc-space-b border-left action-container">
                   <ul className="actions">
                     <span>Actions:</span>
                     <li>
