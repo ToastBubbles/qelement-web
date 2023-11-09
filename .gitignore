@@ -1,6 +1,6 @@
 *.pem
 .pem
-
+/.history
 
 # Logs
 logs

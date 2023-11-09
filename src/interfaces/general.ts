@@ -311,7 +311,33 @@ export interface IUserDTO {
 
   createdAt: string;
 }
+export interface IUserForgotPwd {
+  name: string;
+  email: string;
+  password: string;
+  q1: string;
+  a1: string;
+  q2: string;
+  a2: string;
+  q3: string;
+  a3: string;
+}
 
+export interface IUserRecoveryDTO {
+  name: string;
+  email: string;
+  password: string;
+  securityQuestions: IRecoveryQuestionDTO[];
+}
+export interface IRecoveryQuestionDTO {
+  id: number;
+  answer: string;
+  predefinedQuestion: IPredefinedSecQuestionRecDTO;
+}
+export interface IPredefinedSecQuestionRecDTO {
+  id: number;
+  question: string;
+}
 export interface IUserWSecQDTO {
   name: string;
   email: string;

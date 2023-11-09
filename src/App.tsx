@@ -43,6 +43,7 @@ import SinglePartCategoryView from "./views/parts/SinglePartCategoryView";
 import CollectionView from "./views/profile/CollectionView";
 import ProfileSettingsView from "./views/profile/ProfileSettingsView";
 import WantedView from "./views/profile/WantedView";
+import ForgotPassword from "./views/generic/ForgotPassword";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -67,6 +68,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/forgot" element={<ForgotPassword />} />
               <Route path="/about" element={<About />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/privacy" element={<Privacy />} />
