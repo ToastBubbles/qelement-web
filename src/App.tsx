@@ -44,6 +44,7 @@ import CollectionView from "./views/profile/CollectionView";
 import ProfileSettingsView from "./views/profile/ProfileSettingsView";
 import WantedView from "./views/profile/WantedView";
 import ForgotPassword from "./views/generic/ForgotPassword";
+import ImageComparisonTool from "./views/generic/ImageComparisonTool";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -74,6 +75,7 @@ function App() {
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/updates" element={<UpdateView />} />
+
               {/* ********************** Basic Navigation (Guest) *********************** */}
               <Route path="/colors" element={<AllColorsView />} />
               <Route path="/color/:colorId" element={<SingleColorView />} />
@@ -88,7 +90,7 @@ function App() {
               <Route path="/part/:partId" element={<SinglePartView />} />
 
               <Route path="/search" element={<SearchView />} />
-
+              <Route path="/compare" element={<ImageComparisonTool />} />
               {/* ********************** Add data forms (User) *********************** */}
               <Route
                 path="/add/qpart/status/:qpartId"

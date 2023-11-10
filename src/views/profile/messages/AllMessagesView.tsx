@@ -4,11 +4,14 @@ import { useMutation, useQuery } from "react-query";
 import Message from "../../../components/Message";
 import { AppContext } from "../../../context/context";
 import {
+  IAPIResponse,
   IExtendedMessageDTO,
   IMailbox,
   IMessageDTO,
+  user,
 } from "../../../interfaces/general";
 import showToast, { Mode } from "../../../utils/utils";
+import { IQelementError } from "../../../interfaces/error";
 
 export default function AllMessagesView() {
   const [activeTab, setActiveTab] = useState<number>(0);
@@ -30,44 +33,45 @@ export default function AllMessagesView() {
     },
   } = useContext(AppContext);
 
-  // const {
-  //   data: recipID,
-  //   isLoading,
-  //   error,
-  //   isFetched,
-  //   refetch,
-  // } = useQuery(
-  //   "getID",
-  //   () => {
-  //     try {
-  //       if (recipientName.length > 1) {
-  //         console.log("calling api with", recipientName);
-  //         axios
-  //           .get<user | IQelementError>(
-  //             `http://localhost:3000/user/username/${recipientName.trim()}`
-  //           )
-  //           .then((res) => {
-  //             if (res.data?.code == 404) {
-  //               showToast("Recipient does not exist", Mode.Error);
-  //               setIsBadRecipient(true);
-  //             } else {
-  //               console.log(res.data);
-  //               setNewMessage((newMessage) => ({
-  //                 ...newMessage,
-  //                 ...{ recipientId: res.data?.id },
-  //               }));
-  //               setIsBadRecipient(false);
-  //             }
-  //           });
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   },
-  //   {
-  //     enabled: recipientIDGetter,
-  //   }
-  // );
+  const {
+    data: recipID,
+    isLoading,
+    error,
+    isFetched,
+    refetch,
+  } = useQuery(
+    "getID",
+    () => {
+      try {
+        if (recipientName.length > 1) {
+          console.log("calling api with", recipientName);
+          axios
+            .get<user | IAPIResponse>(
+              `http://localhost:3000/user/username/${recipientName.trim()}`
+            )
+            .then((res) => {
+              if ("code" in res.data && res.data?.code == 404) {
+                showToast("Recipient does not exist", Mode.Error);
+                setIsBadRecipient(true);
+              } else if ("id" in res.data) {
+                let data = res.data as user;
+                console.log(res.data);
+                setNewMessage((newMessage) => ({
+                  ...newMessage,
+                  ...{ recipientId: data.id },
+                }));
+                setIsBadRecipient(false);
+              }
+            });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    {
+      enabled: recipientIDGetter,
+    }
+  );
 
   useQuery(
     "getMsgs",

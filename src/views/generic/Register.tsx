@@ -9,15 +9,12 @@ import {
   ISecurityQuestionDTO,
   IUserDTO,
   IUserWSecQDTO,
+  passwordValidation,
 } from "../../interfaces/general";
 import showToast, { Mode } from "../../utils/utils";
 import LoadingPage from "../../components/LoadingPage";
 
-interface passwordValidation {
-  isLongEnough: boolean;
-  containsNumber: boolean;
-  containsLetter: boolean;
-}
+
 
 export default function Register() {
   const defaultQuestion: ISecurityQuestionDTO = {

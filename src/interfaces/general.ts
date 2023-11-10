@@ -322,7 +322,11 @@ export interface IUserForgotPwd {
   q3: string;
   a3: string;
 }
-
+export interface passwordValidation {
+  isLongEnough: boolean;
+  containsNumber: boolean;
+  containsLetter: boolean;
+}
 export interface IUserRecoveryDTO {
   name: string;
   email: string;

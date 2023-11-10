@@ -1957,10 +1957,20 @@ input:checked + .slider:before {
 #repassword-reg {
   margin: 0;
 }
-
+.imageAdjustSliderContainer {
+  width: 100%;
+  padding: 0 5%;
+}
+.imageAdjustSlider {
+  width: 100% !important;
+}
+.image-adj-container {
+  display: flex;
+  height: 50em;
+}
 .reg-dropdown {
   width: 100%;
-  padding: .25em 0;
+  padding: 0.25em 0;
   margin-bottom: 1em;
 }
 .mainform > p {
@@ -2159,6 +2169,11 @@ input:checked + .slider:before {
 }
 .parts-view > a {
   margin: 0.25em 0;
+}
+#imageAdjustForm {
+  width: 80%;
+  max-width: unset;
+  padding-bottom: 10em;
 }
 @media (width >= 1000px) {
   .hp-low-container {
