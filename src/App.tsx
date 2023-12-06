@@ -46,6 +46,7 @@ import WantedView from "./views/profile/WantedView";
 import ForgotPassword from "./views/generic/ForgotPassword";
 import ImageComparisonTool from "./views/generic/ImageComparisonTool";
 import SuspendUser from "./views/SuspendUser";
+import DeleteView from "./views/edit/approval/DeleteView";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -252,6 +253,14 @@ function App() {
                 element={
                   <ProtectedRoute level={"admin"}>
                     <SuspendUser />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/delete"
+                element={
+                  <ProtectedRoute level={"admin"}>
+                    <DeleteView />
                   </ProtectedRoute>
                 }
               />

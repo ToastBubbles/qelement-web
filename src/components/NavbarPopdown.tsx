@@ -66,6 +66,7 @@ export default function NavbarPopdown() {
         {adminData && adminData.data.code == 200 && (
           <>
             <Link to={"/approve"}>Approve Content</Link>
+            <Link to={"/delete"}>Delete Content</Link>
             <Link to={"/suspend"}>Suspend User</Link>
           </>
         )}
