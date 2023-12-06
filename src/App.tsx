@@ -45,6 +45,7 @@ import ProfileSettingsView from "./views/profile/ProfileSettingsView";
 import WantedView from "./views/profile/WantedView";
 import ForgotPassword from "./views/generic/ForgotPassword";
 import ImageComparisonTool from "./views/generic/ImageComparisonTool";
+import SuspendUser from "./views/SuspendUser";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -243,6 +244,14 @@ function App() {
                 element={
                   <ProtectedRoute level={"admin"}>
                     <ColorEditView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/suspend"
+                element={
+                  <ProtectedRoute level={"admin"}>
+                    <SuspendUser />
                   </ProtectedRoute>
                 }
               />

@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import { IPartStatusDTO, ImageDTO, color } from "../interfaces/general";
+import tinycolor from "tinycolor2";
 
 export enum Mode {
   Success,
@@ -67,6 +68,14 @@ export default function showToast(message: string, mode: Mode = Mode.Success) {
       break;
     }
   }
+}
+
+export function getTextColor(hex: string): string {
+  if (hex == "UNKNWN") {
+    return "#000";
+  }
+  const bgColor = tinycolor(hex);
+  return bgColor.isLight() ? "#000" : "#FFF";
 }
 export const imagePath = "http://localhost:9000/q-part-images/";
 export function filterImages(images: ImageDTO[]): ImageDTO[] {

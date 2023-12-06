@@ -7,6 +7,7 @@ export interface IColorDTO {
   bl_name: string;
   tlg_name: string;
   bo_name: string;
+  swatchId: number;
   hex: string;
   bl_id: number;
   tlg_id: number;
@@ -20,6 +21,7 @@ export interface color {
   bl_name: string;
   tlg_name: string;
   bo_name: string;
+  swatchId: number;
   hex: string;
   bl_id: number;
   tlg_id: number;
@@ -34,6 +36,7 @@ export interface colorWSimilar {
   bl_name: string;
   tlg_name: string;
   bo_name: string;
+  swatchId: number;
   hex: string;
   bl_id: number;
   tlg_id: number;
@@ -59,6 +62,7 @@ export interface IEditColor {
   tlg_name: string;
   bo_name: string;
   hex: string;
+  swatchId: number;
   bl_id: number;
   bo_id: number;
   tlg_id: number;
@@ -365,6 +369,14 @@ export interface user {
   email: string;
   password: string;
   role: string;
+}
+
+export interface ISuspendUser {
+  type: string;
+  untilDate: string;
+  reason: string;
+  userId: number;
+  adminId: number;
 }
 
 export interface ILoginDTO {

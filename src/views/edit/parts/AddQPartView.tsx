@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { useMutation, useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import MyToolTip from "../../../components/MyToolTip";
@@ -16,7 +17,7 @@ import {
   part,
 } from "../../../interfaces/general";
 
-import "react-datepicker/dist/react-datepicker.css";
+
 import { AppContext } from "../../../context/context";
 import showToast, { Mode } from "../../../utils/utils";
 

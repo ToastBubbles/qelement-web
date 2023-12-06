@@ -17,6 +17,7 @@ export default function AddColorView() {
     tlg_name: "",
     bo_name: "",
     hex: "",
+    swatchId: -1,
     bl_id: -1,
     tlg_id: -1,
     bo_id: -1,
@@ -203,6 +204,42 @@ export default function AddColorView() {
                       : "transparent",
                 }}
               ></div>
+            </div>
+          </div>
+          <div className="w-100 d-flex jc-space-b">
+            <div>
+              <label htmlFor="swatch">Swatch ID</label>
+              <MyToolTip
+                content={
+                  <div style={{ maxWidth: "20em" }}>
+                    Swatch IDs are internal numerical values that are used to
+                    organize colors by shade, you can find the most appropriate
+                    Swatch ID by finding two colors that this new color should
+                    go between, then simply use a number that is between each of
+                    the color's swatch IDs. Example: if adding a new shade of
+                    Red, find where it fits best on the color table, let's say
+                    it fits between Dark Red (900) and Red (1000), we can use
+                    950 as it's swatch ID because it's right in the middle, and
+                    leaves plenty of room for future colors. If you are confused
+                    by this, please leave this field blank.
+                  </div>
+                }
+                id="swatch"
+              />
+            </div>
+            <div className="d-flex jc-end">
+              <input
+                className="formInput w-50"
+                placeholder="Optional"
+                maxLength={10}
+                onChange={(e) =>
+                  setNewColor((newColor) => ({
+                    ...newColor,
+                    ...{ swatchId: Number(e.target.value) },
+                  }))
+                }
+                value={newColor.swatchId == -1 ? "" : newColor.swatchId}
+              />
             </div>
           </div>
           <div className="w-100 d-flex jc-space-b">

@@ -47,6 +47,7 @@ export default function ColorEditView() {
       bl_name,
       tlg_name,
       bo_name,
+      swatchId,
       hex,
       bl_id,
       bo_id,
@@ -59,6 +60,7 @@ export default function ColorEditView() {
         tlg_name,
         bo_name,
         hex,
+        swatchId,
         bl_id,
         bo_id,
         tlg_id,
@@ -113,6 +115,7 @@ export default function ColorEditView() {
     tlg_name: "unchanged",
     bo_name: "unchanged",
     hex: "unchanged",
+    swatchId: -1,
     bl_id: -1,
     bo_id: -1,
     tlg_id: -1,
@@ -157,8 +160,17 @@ export default function ColorEditView() {
       console.log("changed tlg id");
       containsValidEdits = true;
     }
+    if (colorEdits.bo_id !== -1) {
+      console.log("changed bo id");
+      containsValidEdits = true;
+    }
+    if (colorEdits.swatchId !== -1) {
+      console.log("changed swatch id");
+      containsValidEdits = true;
+    }
 
     console.log(containsErrors);
+    console.log(colorEdits);
 
     if (containsValidEdits && !containsErrors) {
       console.log("saved changes");
@@ -167,6 +179,7 @@ export default function ColorEditView() {
         tlg_name: colorEdits.tlg_name,
         bo_name: colorEdits.bo_name,
         hex: colorEdits.hex,
+        swatchId: colorEdits.swatchId,
         bl_id: colorEdits.bl_id,
         bo_id: colorEdits.bo_id,
         tlg_id: colorEdits.tlg_id,
@@ -317,12 +330,12 @@ export default function ColorEditView() {
                   <input
                     maxLength={6}
                     className="edit-id-input"
-                    defaultValue={color?.bl_id}
+                    defaultValue={color?.bo_id}
                     type="number"
                     onChange={(e) =>
                       setColorEdits((colorEdits) => ({
                         ...colorEdits,
-                        ...{ bl_id: e.target.valueAsNumber },
+                        ...{ bo_id: e.target.valueAsNumber },
                       }))
                     }
                   />
@@ -414,6 +427,24 @@ export default function ColorEditView() {
                   <option value="functional">functional</option>
                   <option value="unreleased">unreleased</option>
                 </select>
+              </div>
+              <div
+                className="w-90 d-flex jc-space-b"
+                style={{ width: "90%", marginTop: "1em", marginBottom: "1em" }}
+              >
+                <label htmlFor="swatch">Swatch ID</label>
+                <input
+                  maxLength={10}
+                  className="swatch-input"
+                  defaultValue={color?.swatchId}
+                  type="number"
+                  onChange={(e) =>
+                    setColorEdits((colorEdits) => ({
+                      ...colorEdits,
+                      ...{ swatchId: e.target.valueAsNumber },
+                    }))
+                  }
+                />
               </div>
               <div className="color-detail-header">
                 <span>Note</span>

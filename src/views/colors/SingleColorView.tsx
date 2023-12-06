@@ -7,6 +7,7 @@ import LoadingPage from "../../components/LoadingPage";
 import SimilarColorBanner from "../../components/SimilarColorBanner";
 import { colorWSimilar } from "../../interfaces/general";
 import { useEffect } from "react";
+import MyToolTip from "../../components/MyToolTip";
 
 export default function SingleColorView() {
   // let color = colors.find((x) => x.Lid == ColorId());
@@ -90,7 +91,7 @@ export default function SingleColorView() {
                   </div>
                   <div>
                     <div className="color-id">
-                      {color?.bl_id == null ? "UNK" : color?.bl_id}
+                      {color?.bo_id == null ? "UNK" : color?.bo_id}
                     </div>
                     <div>Brickowl</div>
                   </div>
@@ -131,6 +132,20 @@ export default function SingleColorView() {
                 >
                   <label htmlFor="type">Type</label>
                   <div>{color?.type}</div>
+                </div>
+                <div
+                  className="w-90 d-flex jc-space-b"
+                  style={{ width: "90%", margin: "1em 0" }}
+                >
+                  <label htmlFor="swatch">
+                    Swatch ID{" "}
+                    <MyToolTip
+                      content="Strictly internal, used for organizing by shade"
+                      id="1"
+                    />
+                  </label>
+
+                  <div>{color.swatchId}</div>
                 </div>
                 <div className="color-detail-header">
                   <span>Note</span>

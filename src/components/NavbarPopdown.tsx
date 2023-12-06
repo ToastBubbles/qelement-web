@@ -17,10 +17,7 @@ export default function NavbarPopdown() {
     dispatch,
   } = useContext(AppContext);
 
-  const {
-    data: adminData,
-
-  } = useQuery({
+  const { data: adminData } = useQuery({
     queryKey: "isAdmin",
     queryFn: () =>
       axios.get<IAPIResponse>(
@@ -67,7 +64,10 @@ export default function NavbarPopdown() {
           </ul>
         </div>
         {adminData && adminData.data.code == 200 && (
-          <Link to={"/approve"}>Approve Content</Link>
+          <>
+            <Link to={"/approve"}>Approve Content</Link>
+            <Link to={"/suspend"}>Suspend User</Link>
+          </>
         )}
       </div>
     </div>

@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { IQPartDTOInclude, color } from "../interfaces/general";
 import { Link } from "react-router-dom";
-import { validateSearch } from "../utils/utils";
+import { getTextColor, validateSearch } from "../utils/utils";
 import { ReactNode } from "react";
 
 interface IProps {
@@ -30,14 +30,18 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
     });
     return output;
   }
+  
   function returnJSX(color: color, status: string): ReactNode {
     return (
       <div key={color.id} className="color-row">
         <div className="table-id">{color.tlg_id == 0 ? "" : color.tlg_id}</div>
         <Link
           to={"/color/" + color.id}
-          className="flag lt-grey"
-          style={{ backgroundColor: "#" + color.hex }}
+          className="flag flag-fill"
+          style={{
+            backgroundColor: "#" + color.hex,
+            color: getTextColor(color.hex),
+          }}
         >
           {color.bl_name.length == 0 ? color.tlg_name : color.bl_name}
         </Link>

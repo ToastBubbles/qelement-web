@@ -3,12 +3,13 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { color } from "../interfaces/general";
 import { Link } from "react-router-dom";
-import { validateSearch } from "../utils/utils";
+import { getTextColor, validateSearch } from "../utils/utils";
 // import { similarColor } from "@/pages/colors/[colorId]";
 
 export interface ITableOptions {
   hideQID: boolean;
   hideBrickOwl: boolean;
+  showSwatchId: boolean;
   //   search: string;
 }
 
@@ -20,6 +21,7 @@ function AllColors() {
   const [tableOptions, setTableOptions] = useState<ITableOptions>({
     hideQID: false,
     hideBrickOwl: false,
+    showSwatchId: false,
     // search,
   });
 
@@ -102,6 +104,21 @@ function AllColors() {
             />
             <label htmlFor="option2"> Hide BrickOwl</label>
           </div>
+          <div>
+            <input
+              type="checkbox"
+              id="option3"
+              name="option3"
+              value="showSwatchId"
+              onChange={(e) =>
+                setTableOptions((tableOptions) => ({
+                  ...tableOptions,
+                  ...{ showSwatchId: e.target.checked },
+                }))
+              }
+            />
+            <label htmlFor="option3"> Show Swatch IDs</label>
+          </div>
         </section>
       </div>
     );
@@ -128,7 +145,8 @@ function AllColors() {
             sortKey === "bl_id" ||
             sortKey === "tlg_id" ||
             sortKey === "bo_id" ||
-            sortKey === "id"
+            sortKey === "id" ||
+            sortKey === "swatchId"
           ) {
             return sortDirection === "asc"
               ? compareNumericWithNull(aValue as number, bValue as number)
@@ -163,7 +181,17 @@ function AllColors() {
                   qid
                 </th>
               )}
-              <th style={{ width: "2em" }} className="swatch-header"></th>
+              <th
+                style={{ width: "2em" }}
+                onClick={() => toggleSort("swatchId")}
+                className="swatch-header clickable"
+              >
+                {sortKey === "swatchId"
+                  ? sortDirection === "asc"
+                    ? "▲"
+                    : "▼"
+                  : "c"}
+              </th>
               <th
                 style={{ width: "2em" }}
                 className="clickable"
@@ -241,9 +269,15 @@ function AllColors() {
                     <td className="border-all" style={{ padding: 0 }}>
                       <div
                         className={"square h100 b flex-text-center " + type}
-                        style={{ backgroundColor: "#" + color.hex }}
+                        style={{
+                          backgroundColor: "#" + color.hex,
+                          fontSize: tableOptions.showSwatchId ? 9 : "inherit",
+                          color: getTextColor(color.hex),
+                        }}
                       >
-                        {color.hex == "UNKNWN" && "?"}
+                        {tableOptions.showSwatchId
+                          ? color.swatchId
+                          : color.hex == "UNKNWN" && "?"}
                       </div>
                     </td>
 
