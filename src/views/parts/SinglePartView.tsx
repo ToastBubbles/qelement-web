@@ -304,7 +304,7 @@ export default function SinglePartView() {
                         className="clickable"
                         onClick={() => setFavoritesOpen(true)}
                       >
-                        Add to My Favorites
+                        Add to Wanted List
                       </a>
                     </li>
                     <li>
@@ -340,6 +340,7 @@ export default function SinglePartView() {
 
                     <li>
                       <a
+                      
                         href={`https://www.bricklink.com/v2/catalog/catalogitem.page?P=${mypart?.mold.parentPart.blURL}&C=${mypart?.color.bl_id}`}
                       >
                         bricklink

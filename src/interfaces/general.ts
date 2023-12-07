@@ -3,6 +3,14 @@ export interface ISimilarColorDTO {
   color_two: number;
   creatorId: number;
 }
+export interface IUserPrefDTO {
+  lang: string;
+  isCollectionVisible: boolean;
+  isWantedVisible: boolean;
+  allowMessages: boolean;
+  prefName: string;
+  prefId: string;
+}
 export interface IColorDTO {
   bl_name: string;
   tlg_name: string;
