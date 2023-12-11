@@ -1,8 +1,7 @@
-
 import { jwtInitialState, JwtStateType } from "./jwt/context";
 import { JwtActions, jwtReducer } from "./jwt/reducer";
 import {
-  UserPreferencesStateType,
+  UserPrefStateType,
   userPrefrencesInitialState,
 } from "./userPrefs/context";
 import {
@@ -17,7 +16,7 @@ const initialState = {
 
 type InitialStateType = {
   jwt: JwtStateType;
-  userPreferences: UserPreferencesStateType;
+  userPreferences: UserPrefStateType;
 };
 
 const appReducer = (

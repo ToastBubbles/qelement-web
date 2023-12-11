@@ -17,7 +17,7 @@ export default function SliderToggle2({ getter, setter, disabled }: IProps) {
           //   else setValue(0);
           //   setter(!getter);
           // }}
-          defaultChecked={getter}
+          // defaultChecked={getter}
           checked={getter}
           onChange={(e) => setter(e.target.checked)}
           type="checkbox"

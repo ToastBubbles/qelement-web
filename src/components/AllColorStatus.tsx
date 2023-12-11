@@ -2,8 +2,14 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { IQPartDTOInclude, color } from "../interfaces/general";
 import { Link } from "react-router-dom";
-import { getTextColor, validateSearch } from "../utils/utils";
-import { ReactNode } from "react";
+import {
+  getPrefColorIdString,
+  getPrefColorName,
+  getTextColor,
+  validateSearch,
+} from "../utils/utils";
+import { ReactNode, useContext } from "react";
+import { AppContext } from "../context/context";
 
 interface IProps {
   qparts: IQPartDTOInclude[];
@@ -12,6 +18,11 @@ interface IProps {
 }
 
 export default function AllColorStatus({ qparts, moldId, search }: IProps) {
+  const {
+    state: {
+      userPreferences: { payload: prefPayload },
+    },
+  } = useContext(AppContext);
   const { data, isLoading } = useQuery("allColors", () =>
     axios.get<color[]>("http://localhost:3000/color")
   );
@@ -30,11 +41,13 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
     });
     return output;
   }
-  
+
   function returnJSX(color: color, status: string): ReactNode {
     return (
       <div key={color.id} className="color-row">
-        <div className="table-id">{color.tlg_id == 0 ? "" : color.tlg_id}</div>
+        <div className="table-id">
+          {getPrefColorIdString(color, prefPayload.prefId)}
+        </div>
         <Link
           to={"/color/" + color.id}
           className="flag flag-fill"
@@ -43,7 +56,7 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
             color: getTextColor(color.hex),
           }}
         >
-          {color.bl_name.length == 0 ? color.tlg_name : color.bl_name}
+          {getPrefColorName(color, prefPayload.prefName)}
         </Link>
         <div
           className={

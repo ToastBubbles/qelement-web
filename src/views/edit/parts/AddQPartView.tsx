@@ -17,14 +17,18 @@ import {
   part,
 } from "../../../interfaces/general";
 
-
 import { AppContext } from "../../../context/context";
-import showToast, { Mode } from "../../../utils/utils";
+import showToast, {
+  Mode,
+  getPrefColorIdString,
+  getPrefColorName,
+} from "../../../utils/utils";
 
 export default function AddQPartView() {
   const {
     state: {
       jwt: { payload },
+      userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
   const defaultValues: iQPartDTO = {
@@ -127,7 +131,7 @@ export default function AddQPartView() {
     axios.get<category[]>("http://localhost:3000/categories")
   );
 
-  const partMutation = useMutation({ 
+  const partMutation = useMutation({
     mutationFn: (qpart: iQPartDTO) =>
       axios.post<IAPIResponse>(`http://localhost:3000/qpart`, qpart),
     onSuccess: (data) => {
@@ -276,13 +280,11 @@ export default function AddQPartView() {
                     className="even-nums"
                     value={`${col.id}`}
                   >
-                    {col.tlg_id
-                      ? col.tlg_id
-                          .toString()
-                          .padStart(4, String.fromCharCode(160)) +
-                        String.fromCharCode(160)
-                      : "".padEnd(5, String.fromCharCode(160))}
-                    | {col.bl_name ? col.bl_name : col.tlg_name}
+                    {getPrefColorIdString(col, prefPayload.prefId).padStart(
+                      4,
+                      String.fromCharCode(160)
+                    ) + String.fromCharCode(160)}
+                    | {getPrefColorName(col, prefPayload.prefName)}
                   </option>
                 ))}
               </select>

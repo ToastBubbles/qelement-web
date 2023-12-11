@@ -1,6 +1,4 @@
-
-export interface UserPreferencesStateType {
-  userId: number;
+export interface UserPrefPayload {
   lang: string;
   isCollectionVisible: boolean;
   isWantedVisible: boolean;
@@ -8,13 +6,16 @@ export interface UserPreferencesStateType {
   prefName: string;
   prefId: string;
 }
-
-export const userPrefrencesInitialState: UserPreferencesStateType = {
-  userId: -1,
-  lang: "en",
-  isCollectionVisible: true,
-  isWantedVisible: true,
-  allowMessages: true,
-  prefName: "bl",
-  prefId: "tlg",
+export interface UserPrefStateType {
+  payload: UserPrefPayload;
+}
+export const userPrefrencesInitialState: UserPrefStateType = {
+  payload: {
+    lang: "en",
+    isCollectionVisible: true,
+    isWantedVisible: true,
+    allowMessages: true,
+    prefName: "bl",
+    prefId: "tlg",
+  },
 };

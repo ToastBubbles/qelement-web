@@ -1,5 +1,10 @@
 import { toast } from "react-toastify";
-import { IPartStatusDTO, ImageDTO, color } from "../interfaces/general";
+import {
+  IPartStatusDTO,
+  ImageDTO,
+  color,
+  colorWSimilar,
+} from "../interfaces/general";
 import tinycolor from "tinycolor2";
 
 export enum Mode {
@@ -67,6 +72,174 @@ export default function showToast(message: string, mode: Mode = Mode.Success) {
       });
       break;
     }
+  }
+}
+export function getPrefColorIdString(
+  col: color | colorWSimilar | undefined,
+  pref: string
+): string {
+  if (col == undefined) return "";
+  let output = -1;
+
+  if (pref == "bl") {
+    if (col.bl_id) {
+      output = col.bl_id;
+    }
+  } else if (pref == "tlg") {
+    if (col.tlg_id) {
+      output = col.tlg_id;
+    }
+  } else if (pref == "bo") {
+    if (col.bo_id) {
+      output = col.bo_id;
+    }
+  } else if (pref == "qe") {
+    output = col.id;
+  }
+  if (output <= 0) {
+    return "";
+  }
+  return output.toString();
+}
+
+// export function getPrefColorIdString(
+//   col: color | colorWSimilar,
+//   pref: string,
+//   adjuster: boolean = false
+// ): string {
+//   let output = col.id;
+//   let isPreferred = false;
+
+//   if (pref == "bl") {
+//     if (col.bl_id) {
+//       isPreferred = true;
+//       output = col.bl_id;
+//     } else {
+//       if (col.tlg_id) {
+//         output = col.tlg_id;
+//       } else if (col.bo_id) {
+//         output = col.bo_id;
+//       }
+//     }
+//   } else if (pref == "tlg") {
+//     if (col.tlg_id) {
+//       output = col.tlg_id;
+//       isPreferred = true;
+//     } else {
+//       if (col.bl_id) {
+//         output = col.bl_id;
+//       } else if (col.bo_id) {
+//         output = col.bo_id;
+//       }
+//     }
+//   } else if (pref == "bo") {
+//     if (col.bo_id) {
+//       output = col.bo_id;
+//       isPreferred = true;
+//     } else {
+//       if (col.bl_id) {
+//         output = col.bl_id;
+//       } else if (col.tlg_id) {
+//         output = col.tlg_id;
+//       }
+//     }
+//   } else if (pref == "qe") {
+//     isPreferred = true;
+//   }
+//   if (isPreferred) {
+//     if (adjuster) return output.toString() + " ";
+//     return output.toString();
+//   } else {
+//     if (output == -1) {
+//       return "";
+//     }
+//     return output.toString() + "*";
+//   }
+// }
+export function getPrefColorName(
+  col: color | colorWSimilar | undefined,
+  pref: string,
+  nextBest: boolean = false
+): string {
+  if (col == undefined) return "No name";
+  let nextBestStr = "";
+  let isPreferred = false;
+  let output = "No name";
+  if (pref == "bl") {
+    if (col.bl_name.length > 0) {
+      output = col.bl_name;
+      isPreferred = true;
+    } else {
+      if (col.tlg_name.length > 0) {
+        output = col.tlg_name;
+      } else if (col.bo_name.length > 0) {
+        output = col.bo_name;
+      }
+    }
+    if (nextBest) {
+      if (col.tlg_name.length > 0) {
+        output = col.tlg_name;
+        nextBestStr = "TLG: ";
+      } else {
+        if (col.bo_name.length > 0) {
+          output = col.bo_name;
+          nextBestStr = "BO: ";
+        }
+      }
+    }
+  } else if (pref == "tlg") {
+    if (col.tlg_name.length > 0) {
+      output = col.tlg_name;
+      isPreferred = true;
+    } else {
+      if (col.bl_name.length > 0) {
+        output = col.bl_name;
+      } else if (col.bo_name.length > 0) {
+        output = col.bo_name;
+      }
+    }
+    if (nextBest) {
+      if (col.bl_name.length > 0) {
+        output = col.bl_name;
+        nextBestStr = "BL: ";
+      } else {
+        if (col.bo_name.length > 0) {
+          output = col.bo_name;
+          nextBestStr = "BO: ";
+        }
+      }
+    }
+  } else if (pref == "bo") {
+    if (col.bo_name.length > 0) {
+      output = col.bo_name;
+      isPreferred = true;
+    } else {
+      if (col.bl_name.length > 0) {
+        output = col.bl_name;
+      } else if (col.tlg_name.length > 0) {
+        output = col.tlg_name;
+      }
+    }
+    if (nextBest) {
+      if (col.tlg_name.length > 0) {
+        output = col.tlg_name;
+        nextBestStr = "TLG: ";
+      } else {
+        if (col.bl_name.length > 0) {
+          output = col.bl_name;
+          nextBestStr = "BL: ";
+        }
+      }
+    }
+  }
+  if (!nextBest) {
+    if (isPreferred) {
+      return output;
+    } else {
+      return output + "*";
+    }
+  } else {
+    return nextBestStr + output;
   }
 }
 

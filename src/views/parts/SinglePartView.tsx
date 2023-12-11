@@ -13,7 +13,12 @@ import {
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import QPartStatusDate from "../../components/QPartStatusDate";
-import showToast, { Mode, filterImages, sortStatus } from "../../utils/utils";
+import showToast, {
+  Mode,
+  filterImages,
+  getPrefColorName,
+  sortStatus,
+} from "../../utils/utils";
 import LoadingPage from "../../components/LoadingPage";
 import ExpandingTextbox from "../../components/ExpandingTextbox";
 import { AppContext } from "../../context/context";
@@ -29,6 +34,7 @@ export default function SinglePartView() {
   const {
     state: {
       jwt: { payload },
+      userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
   const queryParameters = new URLSearchParams(window.location.search);
@@ -216,9 +222,10 @@ export default function SinglePartView() {
                       <div style={{ flexGrow: "1" }}>
                         <div className="d-flex">
                           {mypart?.mold.number}{" "}
-                          {mypart?.color.bl_name
-                            ? mypart?.color.bl_name
-                            : "Unknown"}
+                          {getPrefColorName(
+                            mypart?.color,
+                            prefPayload.prefName
+                          )}
                         </div>
                         <div
                           className="d-flex"
@@ -227,8 +234,11 @@ export default function SinglePartView() {
                             color: "var(--lt-grey)",
                           }}
                         >
-                          <div style={{ width: "2.75em" }}>TLG:</div>
-                          {mypart?.color.tlg_name}
+                          {getPrefColorName(
+                            mypart?.color,
+                            prefPayload.prefName,
+                            true
+                          )}
                         </div>
                       </div>
                       <svg
@@ -340,7 +350,6 @@ export default function SinglePartView() {
 
                     <li>
                       <a
-                      
                         href={`https://www.bricklink.com/v2/catalog/catalogitem.page?P=${mypart?.mold.parentPart.blURL}&C=${mypart?.color.bl_id}`}
                       >
                         bricklink

@@ -151,7 +151,7 @@ export default function ProfileSettingsView() {
                       <div>
                         Which color name to display when navigating this site.
                         If a name is not available for the selected preference,
-                        it will fallback to the next best option. i.e. If there
+                        it will fallback to the next best option and add an asterisk (*). i.e. If there
                         is no Bricklink name available, the TLG name will be
                         displayed instead.
                       </div>

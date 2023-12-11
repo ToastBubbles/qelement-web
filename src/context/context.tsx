@@ -1,10 +1,4 @@
-import  {
-  createContext,
-  useReducer,
-  Dispatch,
-  ReactNode,
-  FC,
-} from "react";
+import { createContext, useReducer, Dispatch, ReactNode, FC } from "react";
 import { JwtActions } from "./jwt/reducer";
 import { appReducer, initialState, InitialStateType } from "./reducer";
 import { UserPreferencesActions } from "./userPrefs/reducer";
@@ -32,4 +26,3 @@ const AppProvider: FC<IProps> = ({ children }: IProps) => {
 };
 
 export { AppProvider, AppContext };
- 

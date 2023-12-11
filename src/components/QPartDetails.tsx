@@ -10,7 +10,7 @@ interface IProps {
 }
 
 export default function QPartDetails({ qpart, refetchFn }: IProps) {
-  console.log(qpart);
+  // console.log(qpart);
 
   const qpartMutation = useMutation({
     mutationFn: (id: number) =>

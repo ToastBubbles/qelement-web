@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useContext } from "react";
 import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
@@ -8,6 +9,8 @@ import SimilarColorBanner from "../../components/SimilarColorBanner";
 import { colorWSimilar } from "../../interfaces/general";
 import { useEffect } from "react";
 import MyToolTip from "../../components/MyToolTip";
+import { AppContext } from "../../context/context";
+import { getPrefColorName } from "../../utils/utils";
 
 export default function SingleColorView() {
   // let color = colors.find((x) => x.Lid == ColorId());
@@ -15,6 +18,12 @@ export default function SingleColorView() {
   const navigate = useNavigate();
 
   // const [similarColorToAdd, setSimilarColorToAdd] = useState<number>(0);
+  const {
+    state: {
+      // jwt: { token, payload },
+      userPreferences: { payload: prefPayload },
+    },
+  } = useContext(AppContext);
 
   const {
     data: colData,
@@ -57,7 +66,7 @@ export default function SingleColorView() {
         <div className="mx-w">
           <div className="colorTop">
             <div className="colorName">
-              {color?.bl_name.length == 0 ? color.tlg_name : color?.bl_name}
+              {getPrefColorName(color, prefPayload.prefName)}
             </div>
             <div className="hexbar" style={{ backgroundColor: hex }}>
               {hex}

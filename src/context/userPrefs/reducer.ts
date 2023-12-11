@@ -1,4 +1,8 @@
-import { UserPreferencesStateType, userPrefrencesInitialState } from "./context";
+import {
+  UserPrefPayload,
+  UserPrefStateType,
+  userPrefrencesInitialState,
+} from "./context";
 import { ActionMap } from "../../interfaces/context";
 
 export enum Types {
@@ -8,24 +12,28 @@ export enum Types {
 
 type userPreferencesPayload = {
   [Types.SetPrefs]: {
-    userPreferences: UserPreferencesStateType;
+    prefPayload: UserPrefPayload;
   };
   [Types.ClearPrefs]: undefined;
 };
 
-export type UserPreferencesActions = ActionMap<userPreferencesPayload>[keyof ActionMap<userPreferencesPayload>];
+export type UserPreferencesActions =
+  ActionMap<userPreferencesPayload>[keyof ActionMap<userPreferencesPayload>];
 
-export const userPreferencesReducer = (state: UserPreferencesStateType, action: UserPreferencesActions): UserPreferencesStateType => {
+export const userPreferencesReducer = (
+  state: UserPrefStateType,
+  action: UserPreferencesActions
+): UserPrefStateType => {
   switch (action.type) {
     case Types.SetPrefs:
       return {
         ...state,
-        ...action.payload
+        payload: action.payload?.prefPayload,
       };
     case Types.ClearPrefs:
       return {
         ...state,
-        ...userPrefrencesInitialState
+        payload: userPrefrencesInitialState.payload,
       };
     default:
       return state;

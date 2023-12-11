@@ -1,12 +1,15 @@
 import { Ribbon, RibbonContainer } from "react-ribbons";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { IQPartDTOInclude, IQPartDTOIncludeLess } from "../interfaces/general";
 import {
   filterImages,
   formatDate,
+  getPrefColorName,
   imagePath,
   sortStatus,
 } from "../utils/utils";
+import { AppContext } from "../context/context";
 
 interface IProps {
   qpart?: IQPartDTOInclude;
@@ -14,6 +17,11 @@ interface IProps {
 }
 
 export default function RecentQPart({ qpart, qpartl }: IProps) {
+  const {
+    state: {
+      userPreferences: { payload: prefPayload },
+    },
+  } = useContext(AppContext);
   let thisqpart: IQPartDTOIncludeLess;
 
   if (qpart) {
@@ -113,9 +121,7 @@ export default function RecentQPart({ qpart, qpartl }: IProps) {
                 style={{ backgroundColor: "#" + thisqpart.color.hex }}
               ></div>
               <div>
-                {thisqpart.color.bl_name
-                  ? thisqpart.color.bl_name
-                  : thisqpart.color.tlg_name}
+                {getPrefColorName(thisqpart.color, prefPayload.prefName)}
               </div>
             </div>
             <div style={{ fontSize: "0.8em" }}>

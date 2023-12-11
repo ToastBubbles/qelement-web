@@ -79,7 +79,6 @@ export default function Goal({ goal, collection }: IProps) {
       }
     }
     const output = Math.floor((count / mappedParts.length) * 100);
-    console.log(output);
 
     return output;
   }
