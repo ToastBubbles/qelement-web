@@ -320,7 +320,7 @@ export interface IUserDTO {
   email: string;
   password: string;
   role: string;
-
+  preferences: IUserPrefDTO;
   createdAt: string;
 }
 export interface IUserForgotPwd {

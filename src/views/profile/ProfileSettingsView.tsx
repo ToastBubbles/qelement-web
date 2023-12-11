@@ -7,6 +7,7 @@ import LoadingPage from "../../components/LoadingPage";
 import showToast, { Mode, formatDate } from "../../utils/utils";
 import SliderToggle from "../../components/SliderToggle";
 import MyToolTip from "../../components/MyToolTip";
+import SliderToggle2 from "../../components/SliderToggle2";
 enum ColName {
   TLG = "tlg",
   BL = "bl",
@@ -25,42 +26,73 @@ export default function ProfileSettingsView() {
       jwt: { payload },
     },
   } = useContext(AppContext);
-  const defaultVals: IUserPrefDTO = {
-    lang: "unchanged",
-    isCollectionVisible: true,
-    isWantedVisible: true,
-    allowMessages: true,
-    prefName: "unchanged",
-    prefId: "unchanged",
-  };
-  const [prefDTO, setPrefDTO] = useState<IUserPrefDTO>(defaultVals);
-  const [wantedVisible, setWantedVisible] = useState<boolean>(false);
 
-  const [preferredColorName, setPreferredColorName] = useState<ColName>(
-    ColName.BL
-  );
-  const [preferredColorId, setPreferredColorId] = useState<ColId>(ColId.TLG);
+  const [wantedVisible, setWantedVisible] = useState<boolean>(true);
+  const [collectionVisible, setCollectionVisible] = useState<boolean>(true);
+  const [lang, setLang] = useState<string>("en");
+  const [allowMessages, setAllowMessages] = useState<boolean>(true);
+  const [prefColorName, setPrefColorName] = useState<ColName>(ColName.BL);
+  const [prefColorId, setPrefColorId] = useState<ColId>(ColId.TLG);
   const { data } = useQuery({
     queryKey: `user${payload.id}`,
     queryFn: () =>
       axios.get<IUserDTO>(`http://localhost:3000/user/id/${payload.id}`),
-    // onSuccess() {
-    // },
+    onSuccess(res) {
+      setAllowMessages(res.data.preferences.allowMessages);
+      setCollectionVisible(res.data.preferences.isCollectionVisible);
+      setWantedVisible(res.data.preferences.isWantedVisible);
+      setLang(res.data.preferences.lang);
+      setPrefColorName(res.data.preferences.prefName as ColName);
+      setPrefColorId(res.data.preferences.prefId as ColId);
+      // setPrefDTO({
+      //   lang: res.data.preferences.lang,
+      //   isCollectionVisible: res.data.preferences.isCollectionVisible,
+      //   isWantedVisible: res.data.preferences.isWantedVisible,
+      //   allowMessages: res.data.preferences.allowMessages,
+      //   prefName: res.data.preferences.prefName,
+      //   prefId: res.data.preferences.prefId,
+      // });
+    },
     enabled: !!payload.id,
   });
   const userPrefMutation = useMutation({
     mutationFn: (userPrefs: IUserPrefDTO) =>
       axios.post<IAPIResponse>(
-        `http://localhost:3000/userPreference/userId`,
-        payload.id
+        `http://localhost:3000/userPreference/userId/${payload.id}`,
+        userPrefs
       ),
-    onSuccess: () => {
-      showToast("UserPref successfully submitted for approval!", Mode.Success);
+    onSuccess: (e) => {
+      showToast("Changes saved!", Mode.Success);
+      console.log(e.data.message);
     },
   });
 
   if (data) {
     const me = data.data;
+
+    function checkForChanges(): boolean {
+      let hasChanges = false;
+      if (me.preferences.allowMessages != allowMessages) {
+        hasChanges = true;
+      }
+      if (me.preferences.isWantedVisible != wantedVisible) {
+        hasChanges = true;
+      }
+      if (me.preferences.isCollectionVisible != collectionVisible) {
+        hasChanges = true;
+      }
+      if (me.preferences.lang != lang) {
+        hasChanges = true;
+      }
+      if (me.preferences.prefName != (prefColorName as string)) {
+        hasChanges = true;
+      }
+      if (me.preferences.prefId != (prefColorId as string)) {
+        hasChanges = true;
+      }
+
+      return hasChanges;
+    }
     return (
       <>
         <div className="formcontainer">
@@ -85,16 +117,16 @@ export default function ProfileSettingsView() {
             <div className="w-100 d-flex jc-space-b">
               <div>Allow others to Send Me Messages</div>
               <div>
-                <SliderToggle
-                  getter={wantedVisible}
-                  setter={setWantedVisible}
+                <SliderToggle2
+                  getter={allowMessages}
+                  setter={setAllowMessages}
                 />
               </div>
             </div>
             <div className="w-100 d-flex jc-space-b">
               <div>Allow others to see my Wanted Lists</div>
               <div>
-                <SliderToggle
+                <SliderToggle2
                   getter={wantedVisible}
                   setter={setWantedVisible}
                 />
@@ -103,9 +135,9 @@ export default function ProfileSettingsView() {
             <div className="w-100 d-flex jc-space-b">
               <div>Allow others to see my Collection</div>
               <div>
-                <SliderToggle
-                  getter={wantedVisible}
-                  setter={setWantedVisible}
+                <SliderToggle2
+                  getter={collectionVisible}
+                  setter={setCollectionVisible}
                 />
               </div>
             </div>
@@ -138,10 +170,8 @@ export default function ProfileSettingsView() {
                 <select
                   name="colName"
                   id="colName"
-                  onChange={(e) =>
-                    setPreferredColorName(e.target.value as ColName)
-                  }
-                  value={preferredColorName}
+                  onChange={(e) => setPrefColorName(e.target.value as ColName)}
+                  value={prefColorName}
                 >
                   {Object.values(ColName).map((ColName) => (
                     <option key={ColName} value={ColName}>
@@ -179,8 +209,8 @@ export default function ProfileSettingsView() {
                 <select
                   name="colId"
                   id="colId"
-                  onChange={(e) => setPreferredColorId(e.target.value as ColId)}
-                  value={preferredColorId}
+                  onChange={(e) => setPrefColorId(e.target.value as ColId)}
+                  value={prefColorId}
                 >
                   {Object.values(ColId).map((colId) => (
                     <option key={colId} value={colId}>
@@ -191,7 +221,27 @@ export default function ProfileSettingsView() {
               </div>
             </div>
             <div className="w-100 d-flex jc-center">
-              <button>Save Changes</button>
+              <button
+                onClick={(e) => {
+                  let dto: IUserPrefDTO = {
+                    lang: lang,
+                    allowMessages: allowMessages,
+                    isCollectionVisible: collectionVisible,
+                    isWantedVisible: wantedVisible,
+                    prefName: prefColorName as string,
+                    prefId: prefColorId as string,
+                  };
+                  console.log(dto);
+
+                  if (checkForChanges()) {
+                    userPrefMutation.mutate(dto);
+                  } else {
+                    showToast("No changes to save", Mode.Error);
+                  }
+                }}
+              >
+                Save Changes
+              </button>
             </div>
           </div>
         </div>
