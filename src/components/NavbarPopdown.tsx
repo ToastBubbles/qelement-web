@@ -61,6 +61,9 @@ export default function NavbarPopdown() {
             <li>
               <Link to={"/add/color"}>New Color</Link>
             </li>
+            <li>
+              <Link to={"/add/known"}>Known Elements</Link>
+            </li>
           </ul>
         </div>
         {adminData && adminData.data.code == 200 && (

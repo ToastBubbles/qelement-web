@@ -156,6 +156,14 @@ export function getPrefColorIdString(
 //     return output.toString() + "*";
 //   }
 // }
+
+export function filterString(inputString: string) {
+  // Use a regular expression to replace characters other than a-z, A-Z, 0-9, and *
+  const filteredString = inputString.replace(/[^a-zA-Z0-9]/g, '');
+  return filteredString;
+}
+
+
 export function getPrefColorName(
   col: color | colorWSimilar | undefined,
   pref: string,

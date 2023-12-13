@@ -8,6 +8,8 @@ import showToast, { Mode, formatDate } from "../../utils/utils";
 import SliderToggle from "../../components/SliderToggle";
 import MyToolTip from "../../components/MyToolTip";
 import SliderToggle2 from "../../components/SliderToggle2";
+import { Types } from "../../context/userPrefs/reducer";
+import { UserPrefPayload } from "../../context/userPrefs/context";
 enum ColName {
   TLG = "tlg",
   BL = "bl",
@@ -25,6 +27,7 @@ export default function ProfileSettingsView() {
     state: {
       jwt: { payload },
     },
+    dispatch,
   } = useContext(AppContext);
 
   const [wantedVisible, setWantedVisible] = useState<boolean>(true);
@@ -62,8 +65,23 @@ export default function ProfileSettingsView() {
         userPrefs
       ),
     onSuccess: (e) => {
-      showToast("Changes saved!", Mode.Success);
-      console.log(e.data.message);
+      if (e.data.code == 200) {
+        showToast("Changes saved!", Mode.Success);
+        console.log(e.data.message);
+        dispatch({
+          type: Types.SetPrefs,
+          payload: {
+            prefPayload: {
+              lang: lang,
+              isCollectionVisible: collectionVisible,
+              isWantedVisible: wantedVisible,
+              allowMessages: allowMessages,
+              prefName: prefColorName,
+              prefId: prefColorId,
+            } as unknown as UserPrefPayload,
+          },
+        });
+      }
     },
   });
 
@@ -151,9 +169,9 @@ export default function ProfileSettingsView() {
                       <div>
                         Which color name to display when navigating this site.
                         If a name is not available for the selected preference,
-                        it will fallback to the next best option and add an asterisk (*). i.e. If there
-                        is no Bricklink name available, the TLG name will be
-                        displayed instead.
+                        it will fallback to the next best option and add an
+                        asterisk (*). i.e. If there is no Bricklink name
+                        available, the TLG name will be displayed instead.
                       </div>
                       <div>
                         <ul>

@@ -1593,8 +1593,52 @@ textarea {
 .jc-end {
   justify-content: end;
 }
+.jc-space-a {
+  justify-content: space-around;
+}
 .jc-space-b {
   justify-content: space-between;
+}
+.jc-space-e {
+  justify-content: space-evenly;
+}
+.suggestion-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  left: -3.8em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  position: absolute;
+  z-index: 1000; /* Set a high z-index to make sure it appears over other elements */
+  width: 20em;
+  max-height: 15em;
+  overflow-y: auto;
+}
+
+.suggestion-list li {
+  display: flex;
+  height: 22px;
+  padding: 2px 8px;
+  cursor: pointer;
+  align-items: center;
+  white-space: nowrap;
+}
+.suggestion-list li > div:first-child {
+  min-width: 1.6em;
+  max-width: 1.6em;
+  text-align: right;
+  margin-right: 0.2em;
+}
+
+.suggestion-list li > div:nth-child(2) {
+  margin-right: 0.5em;
+}
+
+.suggestion-list li:hover {
+  background-color: #f0f0f0;
 }
 .button-spacer {
   display: inline-block;
@@ -2076,8 +2120,8 @@ input:checked + .slider:before {
   /* justify-content: space-around; */
   /* justify-content: space-between; */
   background-color: #eeeeee;
-  width: 20em;
-  height: 10em;
+  width: 22em;
+  height: 14em;
   top: 4rem;
   right: 0;
   border-bottom: solid 1px #525252;

@@ -3,7 +3,7 @@ import { FormEvent, useContext, useState } from "react";
 import { useQuery } from "react-query";
 import { AppContext } from "../context/context";
 import { IAPIResponse, IQPartDTOInclude } from "../interfaces/general";
-import showToast, { Mode } from "../utils/utils";
+import showToast, { Mode, getPrefColorName } from "../utils/utils";
 import LoadingPage from "./LoadingPage";
 import MyToolTip from "./MyToolTip";
 
@@ -21,13 +21,14 @@ const ImageUploader = ({ qpartId }: iProps) => {
   const {
     state: {
       jwt: { payload },
+      userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imageType, setImageType] = useState<string>("");
 
   const { data: myqpartData } = useQuery({
-    queryKey: "qpart" + qpartId,
+    queryKey: "qpartimage" + qpartId,
     queryFn: () => {
       return axios.get<IQPartDTOInclude>(
         `http://localhost:3000/qpart/id/${qpartId}`
@@ -40,6 +41,10 @@ const ImageUploader = ({ qpartId }: iProps) => {
 
   if (myqpartData) {
     const myqpart = myqpartData.data;
+    console.log(typeof myqpart);
+
+    console.log("img", myqpart);
+    console.log(myqpart.mold);
 
     const handleSubmit = (event: FormEvent) => {
       event.preventDefault();
@@ -98,11 +103,7 @@ const ImageUploader = ({ qpartId }: iProps) => {
           </div>
           <div>
             <div>Part Color:</div>
-            <div>
-              {myqpart.color.bl_name
-                ? myqpart.color.bl_name
-                : myqpart.color.tlg_name}
-            </div>
+            <div>{getPrefColorName(myqpart.color, prefPayload.prefName)}</div>
           </div>
           <div>
             <div>

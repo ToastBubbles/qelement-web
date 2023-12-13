@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import { useMutation } from "react-query";
 import { AppContext } from "../context/context";
 import { IQPartDTOInclude, IWantedDTO } from "../interfaces/general";
-import showToast, { Mode } from "../utils/utils";
+import showToast, { Mode, getPrefColorName } from "../utils/utils";
 import MyToolTip from "./MyToolTip";
 
 interface IProps {
@@ -14,7 +14,8 @@ interface IProps {
 export default function PopupFavorites({ qpart, closePopup }: IProps) {
   const {
     state: {
-      jwt: {  payload },
+      jwt: { payload },
+      userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
   const initialValues: IWantedDTO = {
@@ -67,7 +68,7 @@ export default function PopupFavorites({ qpart, closePopup }: IProps) {
         </button>
         <h1 style={{ marginBottom: "0.5em" }}>Add to my Favorites:</h1>
         <h3 style={{ marginBottom: "1.5em" }}>
-          {qpart.color.bl_name ? qpart.color.bl_name : qpart.color.tlg_name}{" "}
+          {getPrefColorName(qpart.color, prefPayload.prefName)}{" "}
           {qpart.mold.parentPart.name} ({qpart.mold.number})
         </h3>
         <div className="w-100 d-flex jc-space-b my-1">

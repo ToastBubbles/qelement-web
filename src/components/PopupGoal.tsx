@@ -1,12 +1,10 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useMutation, useQuery } from "react-query";
-import {
-  IGoalDTO,
-  category
-} from "../interfaces/general";
+import { IGoalDTO, category } from "../interfaces/general";
 import showToast, { Mode } from "../utils/utils";
 import MyToolTip from "./MyToolTip";
+import { AppContext } from "../context/context";
 
 interface IProps {
   userId: number;
@@ -14,6 +12,7 @@ interface IProps {
 }
 
 export default function PopupGoal({ userId, closePopup }: IProps) {
+
   const initialValues: IGoalDTO = {
     userId,
     partId: -1,

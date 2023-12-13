@@ -5,7 +5,7 @@ import MyToolTip from "./MyToolTip";
 import SliderToggle from "./SliderToggle";
 import axios from "axios";
 import { useContext, useState } from "react";
-import showToast, { Mode } from "../utils/utils";
+import showToast, { Mode, getPrefColorName } from "../utils/utils";
 import { AppContext } from "../context/context";
 
 interface IProps {
@@ -17,6 +17,7 @@ export default function PopupCollection({ qpart, closePopup }: IProps) {
   const {
     state: {
       jwt: { payload },
+      userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
   const initialValues: ICollectionDTO = {
@@ -71,7 +72,7 @@ export default function PopupCollection({ qpart, closePopup }: IProps) {
         </button>
         <h1 style={{ marginBottom: "0.5em" }}>Add to my Collection:</h1>
         <h3 style={{ marginBottom: "1.5em" }}>
-          {qpart.color.bl_name ? qpart.color.bl_name : qpart.color.tlg_name}{" "}
+          {getPrefColorName(qpart.color, prefPayload.prefName)}{" "}
           {qpart.mold.parentPart.name} ({qpart.mold.number})
         </h3>
         <div className="w-100 d-flex jc-space-b my-1">

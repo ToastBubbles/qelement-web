@@ -47,6 +47,7 @@ import ForgotPassword from "./views/generic/ForgotPassword";
 import ImageComparisonTool from "./views/generic/ImageComparisonTool";
 import SuspendUser from "./views/SuspendUser";
 import DeleteView from "./views/edit/approval/DeleteView";
+import AddKnownView from "./views/edit/parts/AddKnownView";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -123,6 +124,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <AddQPartView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/add/known"
+                element={
+                  <ProtectedRoute>
+                    <AddKnownView />
                   </ProtectedRoute>
                 }
               />
