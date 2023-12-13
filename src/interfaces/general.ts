@@ -242,7 +242,9 @@ export interface IQPartDTOInclude {
   approvalDate: string;
   createdAt: string;
 }
-
+export interface CustomStyles {
+  [key: string]: string | number; // Allow any CSS property
+}
 export interface IQPartVerifcation {
   moldId: number;
   colorId: number;

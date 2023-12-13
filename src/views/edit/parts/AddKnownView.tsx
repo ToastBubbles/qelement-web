@@ -141,10 +141,8 @@ export default function AddKnownView() {
               {rows.map((row, index) => (
                 <KnownPartRow
                   key={row.id}
-                  id={row.id}
                   index={index}
                   values={row.values}
-                  showElementID={true}
                   onChange={(newValues) => updateRowValue(row.id, newValues)}
                   onRemove={() => removeRow(row.id)}
                 />

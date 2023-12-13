@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { CSSProperties, useContext, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useMutation, useQuery } from "react-query";
@@ -23,6 +23,7 @@ import showToast, {
   getPrefColorIdString,
   getPrefColorName,
 } from "../../../utils/utils";
+import ColorTextField from "../../../components/ColorTextField";
 
 export default function AddQPartView() {
   const {
@@ -189,6 +190,10 @@ export default function AddQPartView() {
       setElementId(-1);
     },
   });
+  const colorInputSyles: CSSProperties = {
+    width: "50%",
+    marginBottom: "1.75em",
+  };
 
   if (catIsFetched && catData && colData) {
     return (
@@ -261,7 +266,16 @@ export default function AddQPartView() {
 
             <div className="w-100 d-flex jc-space-b">
               <label htmlFor="par">Color</label>
-              <select
+              <ColorTextField
+                setter={(newColorId) =>
+                  setNewQPart((newQPart) => ({
+                    ...newQPart,
+                    ...{ colorId: newColorId },
+                  }))
+                }
+                customStyles={colorInputSyles}
+              />
+              {/* <select
                 name="par"
                 id="par"
                 className="w-50 formInput"
@@ -287,7 +301,7 @@ export default function AddQPartView() {
                     | {getPrefColorName(col, prefPayload.prefName)}
                   </option>
                 ))}
-              </select>
+              </select> */}
             </div>
             <div className="w-100 d-flex jc-space-b">
               <label htmlFor="eid">
