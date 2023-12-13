@@ -47,7 +47,7 @@ function ColorTextField({ setter, customStyles }: IProps) {
     }
   };
   const handleSuggestionClick = (suggestion: color) => {
-    setInputValue(suggestion.bl_name);
+    setInputValue(getPrefColorName(suggestion, prefPayload.prefName));
 
     setter(suggestion.id);
     setHex(suggestion.hex);
@@ -69,10 +69,12 @@ function ColorTextField({ setter, customStyles }: IProps) {
           className={"square h100 b flex-text-center " + type}
           style={{
             backgroundColor: "#" + hex,
+            border: "1px solid #888",
+            borderRight: "None",
           }}
         ></div>
         <input
-          className="w-100"
+          className="w-100 color-text-field"
           value={inputValue}
           onChange={handleInputChange}
         ></input>

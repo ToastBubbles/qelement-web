@@ -23,7 +23,7 @@ export default function RecentQPart({ qpart, qpartl }: IProps) {
     },
   } = useContext(AppContext);
   let thisqpart: IQPartDTOIncludeLess;
-
+  if (qpart?.partStatuses.length == 0) return <></>;
   if (qpart) {
     thisqpart = {
       id: qpart.id,

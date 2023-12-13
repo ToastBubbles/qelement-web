@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { IRowVals } from "../views/edit/parts/AddKnownView";
 import ColorTextField from "./ColorTextField";
+import { IKnownRow } from "../interfaces/general";
 
 interface IProps {
   index: number;
-  values: IRowVals;
-  onChange: (newValues: IRowVals) => void;
+  values: IKnownRow;
+  onChange: (newValues: IKnownRow) => void;
   onRemove: () => void;
 }
 

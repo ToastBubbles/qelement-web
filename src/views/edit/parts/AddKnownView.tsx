@@ -1,24 +1,20 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
-
+import { useContext, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { useMutation, useQuery } from "react-query";
 import { Link } from "react-router-dom";
-import MyToolTip from "../../../components/MyToolTip";
-import { IPartMoldDTO, color } from "../../../interfaces/general";
-
+import {
+  IAPIResponse,
+  IAPIResponseWithIds,
+  IArrayOfIDs,
+  IKnownRow,
+  IMassKnown,
+  IPartMoldDTO,
+  color,
+} from "../../../interfaces/general";
 import { AppContext } from "../../../context/context";
-import showToast, {
-  Mode,
-  filterString,
-  getPrefColorIdString,
-  getPrefColorName,
-} from "../../../utils/utils";
+import showToast, { Mode, filterString } from "../../../utils/utils";
 import KnownPartRow from "../../../components/KnownPartRow";
-export interface IRowVals {
-  colorId: number;
-  elementId: string;
-}
 
 export default function AddKnownView() {
   const {
@@ -27,28 +23,79 @@ export default function AddKnownView() {
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
-  const defaultVals: IRowVals = {
+  const defaultVals: IKnownRow = {
     colorId: -1,
     elementId: "",
   };
   const [pn, setpn] = useState<string>("");
   const [moldId, setMoldId] = useState<number>(-1);
-  const [rows, setRows] = useState<{ id: number; values: IRowVals }[]>([]);
+  const [rows, setRows] = useState<{ id: number; values: IKnownRow }[]>([]);
 
   const addRow = () => {
     const newRow = { id: rows.length + 1, values: defaultVals };
     setRows([...rows, newRow]);
   };
-
-  const updateRowValue = (id: number, newVals: IRowVals) => {
+  const updateRowValue = (id: number, newVals: IKnownRow) => {
     setRows(
       rows.map((row) => (row.id === id ? { ...row, values: newVals } : row))
     );
   };
-
   const removeRow = (id: number) => {
     setRows(rows.filter((row) => row.id !== id));
   };
+
+  const partMutation = useMutation({
+    mutationFn: (parts: IMassKnown) =>
+      axios.post<IAPIResponseWithIds>(
+        `http://localhost:3000/qpart/mass`,
+        parts
+      ),
+    onSuccess: (data) => {
+      console.log("finished adding parts ", data);
+
+      if ((data.data?.code == 200 || data.data?.code == 201) && payload) {
+        // if (data.data?.code == 201) {
+        //   console.log("approved");
+
+        //   setWasApproved(true);
+        //   // console.log(wasApproved);
+        // }
+        if (data.data.ids != null) {
+          partStatusMutation.mutate({
+            userId: payload.id,
+            ids: data.data.ids,
+          });
+          /**========================TODO============================================================= */
+          // if (elementId && elementId > 999 && elementId < 999999999) {
+          //   elementIDMutation.mutate({
+          //     number: elementId,
+          //     creatorId: payload.id,
+          //     qpartId: Number(data.data.message),
+          //   });
+          // }
+        }
+      }
+    },
+  });
+
+  const partStatusMutation = useMutation({
+    mutationFn: (status: IArrayOfIDs) =>
+      axios.post<IAPIResponse>(`http://localhost:3000/partStatus/mass`, status),
+    onSuccess: (data) => {
+      console.log("listen", data);
+      if (data?.data.code == 201) {
+        showToast("Parts added!", Mode.Success);
+        setRows([{ id: 1, values: { colorId: -1, elementId: "" } }]);
+
+        // setWasApproved(false);
+      } else if (data?.data.code == 200) {
+        showToast("Parts submitted for approval!", Mode.Success);
+        setRows([{ id: 1, values: { colorId: -1, elementId: "" } }]);
+      } else {
+        showToast("Something went wrong", Mode.Error);
+      }
+    },
+  });
 
   const { data: colData } = useQuery("allColors", () =>
     axios.get<color[]>("http://localhost:3000/color")
@@ -209,6 +256,18 @@ export default function AddKnownView() {
                 className="formInputNM"
                 onClick={() => {
                   console.log(rows);
+                  if (partData?.data.id) {
+                    const arrayOfKnownRows: IKnownRow[] = rows.map(
+                      (item) => item.values
+                    );
+                    partMutation.mutate({
+                      userId: payload.id,
+                      moldId: partData?.data.id,
+                      parts: arrayOfKnownRows,
+                    });
+                  } else {
+                    showToast("Missing part number!", Mode.Error);
+                  }
                 }}
               >
                 Add Elements

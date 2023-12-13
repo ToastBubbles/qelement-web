@@ -249,7 +249,24 @@ export interface IQPartVerifcation {
   moldId: number;
   colorId: number;
 }
-
+export interface IArrayOfIDs {
+  userId: number;
+  ids: number[];
+}
+export interface IKnownRow {
+  colorId: number;
+  elementId: string;
+}
+export interface IMassKnown {
+  userId: number;
+  moldId: number;
+  parts: IKnownRow[];
+}
+export interface IAPIResponseWithIds {
+  code: number;
+  message: string;
+  ids: number[] | null;
+}
 export interface IQPartDTOIncludeLess {
   id: number;
   type: string;
