@@ -226,6 +226,37 @@ export interface ImageDTOExtended {
   qpart: IQPartDTOIncludeLess;
   approvalDate: string;
 }
+
+export interface ICreateScupltureDTO {
+  name: string;
+  brickSystem: string;
+  location: string;
+  yearMade: number;
+  yearRetired: number;
+  keywords: string;
+  creatorId: number;
+}
+export interface ISimpleScupltureDTO {
+  id: number;
+  name: string;
+  brickSystem: string;
+  location: string;
+  yearMade: number;
+  yearRetired: number;
+  keywords: string;
+  creator: user;
+}
+export interface IScupltureDTO {
+  id: number;
+  name: string;
+  brickSystem: string;
+  location: string;
+  yearMade: number;
+  yearRetired: number;
+  keywords: string;
+  creator: user;
+  qparts: IQPartDTOInclude[];
+}
 export interface IQPartDTOInclude {
   id: number;
   type: string;

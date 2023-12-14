@@ -48,6 +48,8 @@ import ImageComparisonTool from "./views/generic/ImageComparisonTool";
 import SuspendUser from "./views/SuspendUser";
 import DeleteView from "./views/edit/approval/DeleteView";
 import AddKnownView from "./views/edit/parts/AddKnownView";
+import SingleSculptureView from "./views/sculptures/SingleSculptureView";
+import AddSculptureView from "./views/edit/sculptures/AddSculptureView";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -92,6 +94,8 @@ function App() {
               />
               <Route path="/part/:partId" element={<SinglePartView />} />
 
+              <Route path="/sculpture" element={<SingleSculptureView />} />
+
               <Route path="/search" element={<SearchView />} />
               <Route path="/compare" element={<ImageComparisonTool />} />
               {/* ********************** Add data forms (User) *********************** */}
@@ -120,6 +124,14 @@ function App() {
                 }
               />
               <Route
+                path="/add/sculpture"
+                element={
+                  <ProtectedRoute>
+                    <AddSculptureView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/add/qpart"
                 element={
                   <ProtectedRoute>
@@ -136,7 +148,7 @@ function App() {
                 }
               />
               <Route
-                path="/add/qpart/image"
+                path="/add/image"
                 element={
                   <ProtectedRoute>
                     <UploadImageView />

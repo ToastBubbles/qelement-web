@@ -2,22 +2,28 @@ import axios from "axios";
 import { FormEvent, useContext, useState } from "react";
 import { useQuery } from "react-query";
 import { AppContext } from "../context/context";
-import { IAPIResponse, IQPartDTOInclude } from "../interfaces/general";
+import {
+  IAPIResponse,
+  IQPartDTOInclude,
+  ISimpleScupltureDTO,
+} from "../interfaces/general";
 import showToast, { Mode, getPrefColorName } from "../utils/utils";
 import LoadingPage from "./LoadingPage";
 import MyToolTip from "./MyToolTip";
 
 interface iProps {
-  qpartId: number;
+  qpartId: number | null;
+  sculptureId: number | null;
 }
 interface ImageSubmission {
   // formData: FormData;
-  qpartId: number;
+  qpartId: number | null;
   userId: number;
+  sculptureId: number | null;
   type: string;
 }
 
-const ImageUploader = ({ qpartId }: iProps) => {
+const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
   const {
     state: {
       jwt: { payload },
@@ -36,15 +42,24 @@ const ImageUploader = ({ qpartId }: iProps) => {
     },
     staleTime: 100,
     // enabled: partData?.data !== "" && !partIsLoading,
-    enabled: qpartId != -1,
+    enabled: qpartId != -1 && qpartId != null,
+  });
+  const { data: sculptureData } = useQuery({
+    queryKey: "sculptureimage" + sculptureId,
+    queryFn: () => {
+      return axios.get<ISimpleScupltureDTO>(
+        `http://localhost:3000/sculpture/id/${sculptureId}`
+      );
+    },
+    staleTime: 100,
+    // enabled: partData?.data !== "" && !partIsLoading,
+    enabled: sculptureId != -1 && sculptureId != null,
   });
 
-  if (myqpartData) {
-    const myqpart = myqpartData.data;
-    console.log(typeof myqpart);
-
-    console.log("img", myqpart);
-    console.log(myqpart.mold);
+  if (myqpartData || sculptureData) {
+    // const mode = myqpartData ? "qpart" : "sculpture";
+    const myqpart = myqpartData?.data || null;
+    const mysculpture = sculptureData?.data || null;
 
     const handleSubmit = (event: FormEvent) => {
       event.preventDefault();
@@ -52,8 +67,9 @@ const ImageUploader = ({ qpartId }: iProps) => {
       if (selectedImage && imageType != "") {
         const imageData: ImageSubmission = {
           userId: payload.id,
-          qpartId: myqpart.id,
-          type: imageType,
+          qpartId: myqpart ? myqpart.id : null,
+          sculptureId: mysculpture ? mysculpture.id : null,
+          type: myqpart ? imageType : "sculpture",
         };
         const formData = new FormData();
         formData.append("image", selectedImage);
@@ -93,69 +109,85 @@ const ImageUploader = ({ qpartId }: iProps) => {
     return (
       <div>
         <div className="ui-space-out">
-          <div>
-            <div>Part Name:</div>
-            <div>{myqpart.mold.parentPart.name}</div>
-          </div>
-          <div>
-            <div>Part Number:</div>
-            <div>{myqpart.mold.number}</div>
-          </div>
-          <div>
-            <div>Part Color:</div>
-            <div>{getPrefColorName(myqpart.color, prefPayload.prefName)}</div>
-          </div>
-          <div>
-            <div>
-              Type:
-              <MyToolTip
-                content={
-                  <div
-                    style={{ maxWidth: "20em" }}
-                    className="d-flex flex-col jc-start"
-                  >
-                    <div>See below for a guide:</div>
-                    <ul className="tt-list">
-                      <li>
-                        <span>Part:</span> Use this if the part is the only
-                        subject in the photo, ideally with a neutral background
-                        and clear focus.
-                      </li>
-                      <li>
-                        <span>Suplemental:</span> Use this if the image is
-                        suplemental, this could be a comparison photo including
-                        multiple parts, or it could be a photo of the underside
-                        of a part to show additional details.
-                      </li>
-                      <li>
+          {myqpart && (
+            <>
+              <div>
+                <div>Part Name:</div>
+                <div>{myqpart.mold.parentPart.name}</div>
+              </div>
+              <div>
+                <div>Part Number:</div>
+                <div>{myqpart.mold.number}</div>
+              </div>
+              <div>
+                <div>Part Color:</div>
+                <div>
+                  {getPrefColorName(myqpart.color, prefPayload.prefName)}
+                </div>
+              </div>
+
+              <div>
+                <div>
+                  Type:
+                  <MyToolTip
+                    content={
+                      <div
+                        style={{ maxWidth: "20em" }}
+                        className="d-flex flex-col jc-start"
+                      >
+                        <div>See below for a guide:</div>
+                        <ul className="tt-list">
+                          <li>
+                            <span>Part:</span> Use this if the part is the only
+                            subject in the photo, ideally with a neutral
+                            background and clear focus.
+                          </li>
+                          <li>
+                            <span>Suplemental:</span> Use this if the image is
+                            suplemental, this could be a comparison photo
+                            including multiple parts, or it could be a photo of
+                            the underside of a part to show additional details.
+                          </li>
+                          {/* <li>
                         <span>Sculpture:</span> Use this if the image is of the
                         part used in a build/model/sculpture.
-                      </li>
-                      <li>
-                        <span>Damaged:</span> Use this if the part is visually
-                        and significantly damaged.
-                      </li>
-                      <li>
-                        <span>Other:</span> Use this for other types of images
-                      </li>
-                    </ul>
-                  </div>
-                }
-                id="img-type"
-              />
-            </div>
-            <select
-              onChange={(e) => setImageType(e.target.value)}
-              value={imageType}
-            >
-              <option value={""}>--</option>
-              <option value={"part"}>Part</option>
-              <option value={"suplemental"}>Suplemental</option>
-              <option value={"sculpture"}>Sculpture</option>
-              <option value={"damaged"}>Damaged</option>
-              <option value={"other"}>Other</option>
-            </select>
-          </div>
+                      </li> */}
+                          <li>
+                            <span>Damaged:</span> Use this if the part is
+                            visually and significantly damaged.
+                          </li>
+                          <li>
+                            <span>Other:</span> Use this for other types of
+                            images
+                          </li>
+                        </ul>
+                      </div>
+                    }
+                    id="img-type"
+                  />
+                </div>
+                <select
+                  onChange={(e) => setImageType(e.target.value)}
+                  value={imageType}
+                >
+                  <option value={""}>--</option>
+                  <option value={"part"}>Part</option>
+                  <option value={"suplemental"}>Suplemental</option>
+                  {/* <option value={"sculpture"}>Sculpture</option> */}
+                  <option value={"damaged"}>Damaged</option>
+                  <option value={"other"}>Other</option>
+                </select>
+              </div>
+            </>
+          )}
+          {mysculpture && (
+            <>
+              <div>
+                <div>Sculpture Name:</div>
+                <div>{mysculpture.name}</div>
+              </div>
+            </>
+          )}
         </div>
 
         {selectedImage && (

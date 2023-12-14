@@ -16,7 +16,10 @@ interface IProps {
   moldId: number;
   search: string;
 }
-
+interface IStatusWMoldId {
+  status: string;
+  moldId: number;
+}
 export default function AllColorStatus({ qparts, moldId, search }: IProps) {
   const {
     state: {
@@ -26,30 +29,33 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
   const { data, isLoading } = useQuery("allColors", () =>
     axios.get<color[]>("http://localhost:3000/color")
   );
-  function statusLookup(mId: number, cId: number) {
+  function statusLookup(mId: number, cId: number): IStatusWMoldId {
     let output = "no status";
+    let thisMoldId = -1;
     qparts.forEach((qpart) => {
       if (moldId == -1) {
         if (qpart.color.id == cId) {
           output = qpart.partStatuses[0].status;
+          thisMoldId = qpart.mold.id;
         }
       } else {
         if (qpart.color.id == cId && qpart.mold.id == mId) {
           output = qpart.partStatuses[0].status;
+          thisMoldId = qpart.mold.id;
         }
       }
     });
-    return output;
+    return { status: output, moldId: thisMoldId };
   }
 
-  function returnJSX(color: color, status: string): ReactNode {
+  function returnJSX(color: color, status: string, moldId: number): ReactNode {
     return (
       <div key={color.id} className="color-row">
         <div className="table-id">
           {getPrefColorIdString(color, prefPayload.prefId)}
         </div>
         <Link
-          to={"/color/" + color.id}
+          to={`/part/${moldId}?color=${color.id}`}
           className="flag flag-fill"
           style={{
             backgroundColor: "#" + color.hex,
@@ -78,21 +84,39 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
 
     colors.forEach((color) => {
       if (validateSearch(color, search)) {
-        const status = statusLookup(moldId, color.id);
-        if (status != "no status") {
-          if (status == "found") {
-            foundColors = [foundColors, returnJSX(color, status)];
-          } else if (status == "seen") {
-            seenColors = [seenColors, returnJSX(color, status)];
-          } else if (status == "idOnly") {
-            idOnlyColors = [idOnlyColors, returnJSX(color, status)];
-          } else if (status == "known") {
-            knownColors = [knownColors, returnJSX(color, status)];
+        const statusObj = statusLookup(moldId, color.id);
+        if (statusObj.status != "no status") {
+          if (statusObj.status == "found") {
+            foundColors = [
+              foundColors,
+              returnJSX(color, statusObj.status, statusObj.moldId),
+            ];
+          } else if (statusObj.status == "seen") {
+            seenColors = [
+              seenColors,
+              returnJSX(color, statusObj.status, statusObj.moldId),
+            ];
+          } else if (statusObj.status == "idOnly") {
+            idOnlyColors = [
+              idOnlyColors,
+              returnJSX(color, statusObj.status, statusObj.moldId),
+            ];
+          } else if (statusObj.status == "known") {
+            knownColors = [
+              knownColors,
+              returnJSX(color, statusObj.status, statusObj.moldId),
+            ];
           } else {
-            otherColors = [otherColors, returnJSX(color, status)];
+            otherColors = [
+              otherColors,
+              returnJSX(color, statusObj.status, statusObj.moldId),
+            ];
           }
         } else {
-          colorsWithoutStatus = [colorsWithoutStatus, returnJSX(color, status)];
+          colorsWithoutStatus = [
+            colorsWithoutStatus,
+            returnJSX(color, statusObj.status, statusObj.moldId),
+          ];
         }
       }
     });

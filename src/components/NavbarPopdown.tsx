@@ -62,6 +62,9 @@ export default function NavbarPopdown() {
               <Link to={"/add/color"}>New Color</Link>
             </li>
             <li>
+              <Link to={"/add/sculpture"}>New Sculpture</Link>
+            </li>
+            <li>
               <Link to={"/add/known"}>Known Elements</Link>
             </li>
           </ul>

@@ -318,7 +318,7 @@ export default function SinglePartView() {
                       </a>
                     </li>
                     <li>
-                      <Link to={`/add/qpart/image/?qpartId=${mypart?.id}`}>
+                      <Link to={`/add/image/?qpartId=${mypart?.id}`}>
                         Add Photo
                       </Link>
                     </li>

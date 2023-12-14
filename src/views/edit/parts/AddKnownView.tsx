@@ -85,12 +85,12 @@ export default function AddKnownView() {
       console.log("listen", data);
       if (data?.data.code == 201) {
         showToast("Parts added!", Mode.Success);
-        setRows([{ id: 1, values: { colorId: -1, elementId: "" } }]);
+        setRows([]);
 
         // setWasApproved(false);
       } else if (data?.data.code == 200) {
         showToast("Parts submitted for approval!", Mode.Success);
-        setRows([{ id: 1, values: { colorId: -1, elementId: "" } }]);
+        setRows([]);
       } else {
         showToast("Something went wrong", Mode.Error);
       }
@@ -111,7 +111,7 @@ export default function AddKnownView() {
 
     enabled: false,
     onSuccess(data) {
-      setMoldId(data.data.id);
+      // setMoldId(data.data.id);
       setRows([{ id: 1, values: { colorId: -1, elementId: "" } }]);
     },
   });

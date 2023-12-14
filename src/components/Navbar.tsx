@@ -4,11 +4,10 @@ import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { AppContext } from "../context/context";
 import showToast, { Mode } from "../utils/utils";
-import ColorWheel from "./ColorWheel";
 import LoginBtn from "./LoginBtn";
 import NavbarPopdown from "./NavbarPopdown";
-import PartsButton from "./PartsButton";
 import SearchBarMain from "./SearchBarMain";
+import ColorWheelButton from "./ColorWheelButton";
 
 function Navbar() {
   // const { dropdownRef, isComponentVisible } = useComponentVisible(true);
@@ -63,8 +62,9 @@ function Navbar() {
       </div>
       <div className="w-33 nav-end">
         <div className="fg-1"></div>
-        <PartsButton />
-        <ColorWheel />
+        <ColorWheelButton link="/sculpture" content="sculptures" />
+        <ColorWheelButton link="/part-categories" content="parts" />
+        <ColorWheelButton link="/colors" content="colors" />
 
         {/* {payload.username && <p>Hello, {payload.username}</p>} */}
         {token === "" ? (
