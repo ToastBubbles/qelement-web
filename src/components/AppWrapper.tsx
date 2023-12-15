@@ -32,14 +32,11 @@ export default function AppWrapper({ children }: IProps) {
     queryKey: `user${userId}`,
     queryFn: () =>
       axios.get<IUserDTO>(`http://localhost:3000/user/id/${userId}`),
-    onSuccess: () => {
-      console.log("finished");
-    },
+    onSuccess: () => {},
     enabled: false,
   });
 
   useEffect(() => {
-    console.log("first useEffect triggered");
     const access_token = Cookies.get("userJWT");
     if (access_token != null) {
       let id: number;
@@ -57,10 +54,7 @@ export default function AppWrapper({ children }: IProps) {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log("second useEffect triggered");
-
     if (userId > 0) {
-      console.log("good userId: ", userId);
       refetch().then((d) => {
         if (d.data) {
           let prefs = d.data.data.preferences;
@@ -68,14 +62,12 @@ export default function AppWrapper({ children }: IProps) {
             type: prefType.SetPrefs,
             payload: { prefPayload: prefs as unknown as UserPrefPayload },
           });
-          console.log("done", prefs);
         }
         // console.log("data is here:", data.data.preferences);
 
         // console.log("d", d);
       });
     } else {
-      console.log("bad userId: ", userId);
     }
     // console.log("Got here", userId );
     // if (!!userId) {

@@ -39,6 +39,7 @@ export default function SinglePartView() {
   } = useContext(AppContext);
   const queryParameters = new URLSearchParams(window.location.search);
   const urlColorId = queryParameters.get("color");
+  const urlMoldId = queryParameters.get("mold");
 
   const [selectedQPartid, setSelectedQPartid] = useState<number>(-1);
   const [multiMoldPart, setMultiMoldPart] = useState<boolean>(false);
@@ -165,7 +166,7 @@ export default function SinglePartView() {
         setSelectedQPartid(qparts[0].id);
       }
     }
-    console.log(myDebugger);
+
 
     return (
       <div className="mx-w">

@@ -661,6 +661,12 @@ input:checked + .slider:before {
   align-items: center;
   justify-content: center;
 }
+.flag-sizebyqty-3 {
+  width: 5em !important;
+}
+.flag-sizebyqty-4 {
+  width: 4em !important;
+}
 .status-tag {
   display: inline-block;
   color: azure;

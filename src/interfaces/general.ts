@@ -226,7 +226,10 @@ export interface ImageDTOExtended {
   qpart: IQPartDTOIncludeLess;
   approvalDate: string;
 }
-
+export interface IMoldStatus {
+  moldId: number;
+  status: string;
+}
 export interface ICreateScupltureDTO {
   name: string;
   brickSystem: string;
