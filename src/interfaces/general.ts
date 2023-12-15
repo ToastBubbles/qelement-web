@@ -231,6 +231,7 @@ export interface ICreateScupltureDTO {
   name: string;
   brickSystem: string;
   location: string;
+  note: string;
   yearMade: number;
   yearRetired: number;
   keywords: string;

@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import MyToolTip from "../../../components/MyToolTip";
 import { AppContext } from "../../../context/context";
 import showToast, { Mode } from "../../../utils/utils";
-import { ICreateScupltureDTO } from "../../../interfaces/general";
+import { IAPIResponse, ICreateScupltureDTO } from "../../../interfaces/general";
 
 export default function AddSculptureView() {
   const {
@@ -20,6 +20,7 @@ export default function AddSculptureView() {
     name: "",
     brickSystem: "system",
     location: "",
+    note: "",
     yearMade: -1,
     yearRetired: -1,
     keywords: "",
@@ -27,6 +28,42 @@ export default function AddSculptureView() {
   };
   const [newSculpture, setNewSculpture] =
     useState<ICreateScupltureDTO>(baseValues);
+
+  useEffect(() => {
+    setNewSculpture((newSculpture) => ({
+      ...newSculpture,
+      ...{ creatorId: payload.id },
+    }));
+  }, [payload]);
+
+  const sculptureMutation = useMutation({
+    mutationFn: (sculptureDTO: ICreateScupltureDTO) =>
+      axios.post<IAPIResponse>(
+        `http://localhost:3000/sculpture/add`,
+        sculptureDTO
+      ),
+    onSuccess: (data) => {
+      console.log(data);
+
+      if (data.data?.code == 200) {
+        showToast("Sculpture submitted for approval!", Mode.Success);
+        setNewSculpture(baseValues);
+        setNewSculpture((newSculpture) => ({
+          ...newSculpture,
+          ...{ creatorId: payload.id },
+        }));
+      } else if (data.data?.code == 201) {
+        showToast("Sculpture added!", Mode.Success);
+        setNewSculpture(baseValues);
+        setNewSculpture((newSculpture) => ({
+          ...newSculpture,
+          ...{ creatorId: payload.id },
+        }));
+      } else {
+        showToast("Something went wrong", Mode.Error);
+      }
+    },
+  });
 
   return (
     <>
@@ -79,7 +116,16 @@ export default function AddSculptureView() {
               />
             </label>
 
-            <select className="formInput w-50">
+            <select
+              className="formInput w-50"
+              onChange={(e) =>
+                setNewSculpture((newSculpture) => ({
+                  ...newSculpture,
+                  ...{ brickSystem: e.target.value },
+                }))
+              }
+              value={newSculpture.brickSystem}
+            >
               <option value={"system"}>System</option>
               <option value={"technic"}>Technic</option>
               <option value={"duplo"}>DUPLO</option>
@@ -190,7 +236,7 @@ export default function AddSculptureView() {
               />
             </div>
             <input
-              maxLength={100}
+              maxLength={50}
               id="location"
               className="formInput w-50"
               placeholder="Optional"
@@ -225,17 +271,38 @@ export default function AddSculptureView() {
               />
             </div>
             <input
-              maxLength={4}
+              maxLength={12}
               className="formInput w-50"
-              type="number"
+              type="text"
               placeholder="Optional"
+            />
+          </div>
+          <label htmlFor="sculnote" style={{ marginRight: "auto" }}>
+            Note for sculpture
+          </label>
+          <div className="w-100 d-flex">
+            <textarea
+              maxLength={255}
+              id="sculnote"
+              className="fg-1 formInput"
+              rows={5}
+              placeholder="Optional"
+              onChange={(e) =>
+                setNewSculpture((newSculpture) => ({
+                  ...newSculpture,
+                  ...{ note: e.target.value },
+                }))
+              }
+              value={newSculpture.note}
             />
           </div>
           <div>
             <button
               className="formInputNM"
               onClick={() => {
-                validateDTO();
+                if (validateDTO()) {
+                  sculptureMutation.mutate(newSculpture);
+                }
               }}
             >
               Add Sculpture
