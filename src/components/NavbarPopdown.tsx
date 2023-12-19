@@ -31,8 +31,8 @@ export default function NavbarPopdown() {
     <div className={"nav-pop-down"}>
       <div>
         <Link to={"/profile"}>My Profile</Link>
-        <Link to={"/mywanted"}>My Wanted List</Link>
-        <Link to={"/mycollection"}>My Collection</Link>
+        <Link to={"/profile/wanted"}>My Wanted List</Link>
+        <Link to={"/profile/collection"}>My Collection</Link>
         <Link to={"/profile/settings"}>Settings</Link>
         <div
           className="clickable"

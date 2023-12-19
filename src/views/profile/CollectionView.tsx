@@ -11,13 +11,13 @@ import CollectionPart from "../../components/CollectionPart";
 export default function CollectionView() {
   const {
     state: {
-      jwt: {payload },
+      jwt: { payload },
+      userPreferences: { payload: prefPayload },
     },
-  
   } = useContext(AppContext);
   const [goalPopupOpen, setGoalPopupOpen] = useState(false);
 
-  const { data: mycollectionData} = useQuery({
+  const { data: mycollectionData } = useQuery({
     queryKey: "mycollection",
     queryFn: () => {
       return axios.get<ICollectionDTOGET[]>(
@@ -28,7 +28,7 @@ export default function CollectionView() {
     enabled: !!payload.id,
   });
 
-  const { data: myGoalData,  } = useQuery({
+  const { data: myGoalData } = useQuery({
     queryKey: "mygoals",
     queryFn: () => {
       return axios.get<IGoalDTOExtended[]>(
@@ -53,9 +53,13 @@ export default function CollectionView() {
           <h1>Your Goals</h1>
           <div>
             <div className="d-flex">
-              {goals.map((goal) => (
-                <Goal key={goal.id} goal={goal} collection={myParts} />
-              ))}
+              {goals.length > 0 ? (
+                goals.map((goal) => (
+                  <Goal key={goal.id} goal={goal} collection={myParts} />
+                ))
+              ) : (
+                <p>You currently don't have any goals set up!</p>
+              )}
             </div>
             <div className="clickable" onClick={() => setGoalPopupOpen(true)}>
               Create New Goal
@@ -63,14 +67,23 @@ export default function CollectionView() {
           </div>
           <h1>Your Collection</h1>
           <div className="col-guide">
+            <div>
+              {prefPayload.isCollectionVisible
+                ? "Your Collection is visible to others"
+                : "Your Collection is hidden from others"}
+            </div>
             <div>Sale</div>
             <div>Trade</div>
             <div>Qty</div>
           </div>
           <div>
-            {myParts.map((myqpart) => (
-              <CollectionPart key={myqpart.id} data={myqpart} />
-            ))}
+            {myParts.length > 0 ? (
+              myParts.map((myqpart) => (
+                <CollectionPart key={myqpart.id} data={myqpart} />
+              ))
+            ) : (
+              <p>Your collection is empty!</p>
+            )}
           </div>
         </div>
       </>

@@ -30,9 +30,10 @@ export default function PopupFavorites({ qpart, closePopup }: IProps) {
     mutationFn: (wantedDTO: IWantedDTO) =>
       axios.post(`http://localhost:3000/userFavorite/add`, wantedDTO),
     onSuccess: (e) => {
-      if (e.data.code == 200)
+      if (e.data.code == 200) {
         showToast(`Added to your ${wantedObj.type} list!`, Mode.Success);
-      else if (e.data.code == 501) {
+        closePopup();
+      } else if (e.data.code == 501) {
         showToast(
           `This part already exists in your ${wantedObj.type} list, to update the quantity, visit your ${wantedObj.type} list page.`,
           Mode.Warning

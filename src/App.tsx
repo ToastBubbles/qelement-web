@@ -173,7 +173,7 @@ function App() {
                 }
               />
               <Route
-                path="/mycollection"
+                path="/profile/collection"
                 element={
                   <ProtectedRoute>
                     <CollectionView />
@@ -181,7 +181,7 @@ function App() {
                 }
               />
               <Route
-                path="/mywanted"
+                path="/profile/wanted"
                 element={
                   <ProtectedRoute>
                     <WantedView />

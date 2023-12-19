@@ -649,6 +649,14 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+.rot-text-container {
+  display: flex;
+  justify-content: end;
+}
+.rot-text {
+  transform: rotate(-60deg);
+  transform-origin: left bottom;
+}
 .flag-status {
   margin-left: auto;
   display: flex;
@@ -660,6 +668,16 @@ input:checked + .slider:before {
   width: 7em;
   align-items: center;
   justify-content: center;
+}
+.txt-col-header {
+  width: 7em;
+  text-align: center;
+}
+.text-sizebyqty-3 {
+  width: 5em !important;
+}
+.text-sizebyqty-4 {
+  width: 4em !important;
 }
 .flag-sizebyqty-3 {
   width: 5em !important;
@@ -757,7 +775,11 @@ fieldset > legend {
   margin-top: 2em;
   border-bottom: solid 1px var(--lt-grey);
 }
-
+.fake-hr-80 {
+  width: 80%;
+  margin-bottom: 1em;
+  border-bottom: solid 1px var(--lt-grey);
+}
 .fake-hr-form {
   width: 100%;
   margin: 1em 0;
@@ -767,6 +789,8 @@ fieldset > legend {
   border: solid 1px var(--lt-grey);
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  height: 50em;
 }
 .color-row {
   display: flex;
@@ -1071,11 +1095,25 @@ fieldset > legend {
 }
 .topfive-container {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
+  justify-content: center;
   /* align-items: flex-start; */
   /* justify-content: flex-start; */
   /* flex-direction: row; */
   width: 100%;
+}
+.bi-x {
+  position: relative;
+  z-index: 10;
+}
+.white-fill {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  background: white;
+  padding: 11px;
+  border-radius: 50%;
+  z-index: 1;
 }
 .topfive-card {
   background-color: azure;
@@ -1178,7 +1216,18 @@ fieldset > legend {
 }
 .col-guide {
   display: flex;
-  justify-content: end;
+  /* justify-content: end; */
+}
+.col-guide > div:first-child {
+  flex-grow: 1;
+  display: flex;
+  justify-content: start;
+  color: #aaa;
+  font-weight: 200;
+}
+.grey-txt {
+  color: #aaa;
+  font-weight: 200;
 }
 .col-guide > div {
   width: 3em;
@@ -1562,6 +1611,9 @@ textarea {
 }
 .w-50 {
   width: 50%;
+}
+.w-80 {
+  width: 100%;
 }
 .w-100 {
   width: 100%;
@@ -2222,6 +2274,31 @@ input:checked + .slider:before {
   border-color: var(--lt-red);
 }
 
+.profile-button {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+  width: 20%;
+  border: solid 2px var(--lt-grey);
+  border-radius: 0.5em;
+  padding-bottom: 1.5em;
+  /* background-color: rgb(255, 255, 255); */
+  /* filter: drop-shadow(2px 2px 4px #0000002f); */
+  /* margin: 1em; */
+}
+.profile-btn-container {
+  display: flex;
+  justify-content: space-evenly;
+  /* height: 10em; */
+}
+.profile-btn-img-container {
+  width: 90%;
+}
+.profile-btn-img-container > img {
+  width: 100%;
+}
 .color-wheel {
   position: relative;
   display: flex;

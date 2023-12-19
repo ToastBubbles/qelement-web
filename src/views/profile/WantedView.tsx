@@ -11,13 +11,13 @@ export default function WantedView() {
   const {
     state: {
       jwt: { payload },
+      userPreferences: { payload: prefPayload },
     },
-
   } = useContext(AppContext);
 
   // const [faveTab, setFaveTab] = useState<boolean>(true);
 
-  const { data: mywantedData } = useQuery({
+  const { data: mywantedData, refetch: mywantedrefetch } = useQuery({
     queryKey: "mywanted",
     queryFn: () => {
       return axios.get<IWantedDTOGET[]>(
@@ -57,14 +57,28 @@ export default function WantedView() {
         }
       }
     }
+
     return (
       <>
         <div className="mx-w">
           <h1>Your Wanted Items</h1>
+          <div className="grey-txt">
+            {prefPayload.isWantedVisible
+              ? "Your Wanted Lists are visible to others"
+              : "Your Wanted Lists are hidden from others"}
+          </div>
           <div className="topfive-container">
-            {myTopFive.map((myWantedPart) => (
-              <TopFiveCard key={myWantedPart.id} myWantedPart={myWantedPart} />
-            ))}
+            {myTopFive.length > 0 ? (
+              myTopFive.map((myWantedPart) => (
+                <TopFiveCard
+                  key={myWantedPart.id}
+                  myWantedPart={myWantedPart}
+                  refetchFn={mywantedrefetch}
+                />
+              ))
+            ) : (
+              <p>You don't have anything in your Top Five!</p>
+            )}
           </div>
           {/* <div className="tab">
             <button

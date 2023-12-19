@@ -167,7 +167,6 @@ export default function SinglePartView() {
       }
     }
 
-
     return (
       <div className="mx-w">
         <div className="page-content-wrapper">
@@ -546,6 +545,11 @@ export default function SinglePartView() {
                           type="text"
                           placeholder="Search..."
                           onChange={(e) => setSearchColor(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault(); 
+                            }
+                          }}
                         />
                       </form>
                       <AllColorStatus

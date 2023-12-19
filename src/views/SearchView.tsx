@@ -8,7 +8,6 @@ import {
   IElementIDSearch,
   IPartDTO,
   IPartMoldDTO,
-
 } from "../interfaces/general";
 import RecentQPart from "../components/RecentQPart";
 
@@ -89,7 +88,7 @@ export default function SearchView() {
           <h1>search results for "{searchValue}"</h1>
           <h3>Parts:</h3>
           {partResults.length == 0 ? (
-            <div>No results</div>
+            <div className="grey-txt">No results</div>
           ) : (
             partResults.map((part) => (
               <Link key={part.id} to={`/part/${part.id}`}>
@@ -99,7 +98,7 @@ export default function SearchView() {
           )}
           <h3>Molds:</h3>
           {moldResults.length == 0 ? (
-            <div>No results</div>
+            <div className="grey-txt">No results</div>
           ) : (
             moldResults.map((mold) => (
               <Link key={mold.id} to={`/part/${mold.parentPart.id}`}>
@@ -109,7 +108,7 @@ export default function SearchView() {
           )}
           <h3>Q-Elements:</h3>
           {qpartResults.length == 0 ? (
-            <div>No results</div>
+            <div className="grey-txt">No results</div>
           ) : (
             <div style={{ width: "30em" }}>
               {qpartResults.map((eID) => (

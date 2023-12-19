@@ -40,9 +40,10 @@ export default function PopupCollection({ qpart, closePopup }: IProps) {
     mutationFn: (collectionDTO: ICollectionDTO) =>
       axios.post(`http://localhost:3000/userInventory/add`, collectionDTO),
     onSuccess: (e) => {
-      if (e.data.code == 200)
+      if (e.data.code == 200) {
         showToast("Added to your collection!", Mode.Success);
-      else if (e.data.code == 501) {
+        closePopup();
+      } else if (e.data.code == 501) {
         showToast(
           "This part already exists in your collection, to update the quantity, visit your collection page.",
           Mode.Warning

@@ -36,6 +36,7 @@ export default function PopupElementID({
         showToast("Element ID added!", Mode.Success);
         setElementId(-1);
         refetchFn();
+        closePopup();
       } else if (resp.data.code == 200) {
         showToast("Element ID submitted for approval!", Mode.Success);
         setElementId(-1);
