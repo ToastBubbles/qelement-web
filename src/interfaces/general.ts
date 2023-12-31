@@ -24,6 +24,11 @@ export interface IColorDTO {
   note: string;
   creatorId: number;
 }
+
+export interface IColorWUnk {
+  unknown: boolean;
+  color: color;
+}
 export interface color {
   id: number;
   bl_name: string;
@@ -230,7 +235,12 @@ export interface IMoldStatus {
   moldId: number;
   status: string;
 }
-export interface ICreateScupltureDTO {
+export interface IMoldStatusWUNK {
+  moldId: number;
+  status: string;
+  unknown: boolean;
+}
+export interface ICreateSculptureDTO {
   name: string;
   brickSystem: string;
   location: string;
@@ -240,7 +250,7 @@ export interface ICreateScupltureDTO {
   keywords: string;
   creatorId: number;
 }
-export interface ISimpleScupltureDTO {
+export interface ISimpleSculptureDTO {
   id: number;
   name: string;
   brickSystem: string;
@@ -250,7 +260,7 @@ export interface ISimpleScupltureDTO {
   keywords: string;
   creator: user;
 }
-export interface IScupltureDTO {
+export interface ISculptureDTO {
   id: number;
   name: string;
   brickSystem: string;
@@ -268,6 +278,7 @@ export interface IQPartDTOInclude {
   color: color;
   creator: user;
   note: string;
+  isMoldUnknown: boolean;
   elementIDs: IElementID[];
   ratings: rating[];
   comments: ICommentDTO[];
@@ -306,6 +317,7 @@ export interface IQPartDTOIncludeLess {
   id: number;
   type: string;
   mold: IPartMoldDTO;
+  isMoldUnknown: boolean;
   color: color;
   creator: user;
   note: string;
@@ -320,6 +332,7 @@ export interface IQPartDTO {
   partId: number;
   colorId: number;
   creatorId: number;
+  isMoldUnknown: boolean;
   note: string;
   elementIDs: IElementID[];
   rarety: number;
@@ -334,6 +347,7 @@ export interface iQPartDTO {
   partId: number;
   moldId: number;
   colorId: number;
+  isMoldUnknown: boolean;
   type: string;
   creatorId: number;
   note: string;

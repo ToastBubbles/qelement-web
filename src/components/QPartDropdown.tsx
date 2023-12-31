@@ -5,6 +5,7 @@ import QPartDropdownRow from "./QPartDorpdownRow";
 interface iProps {
   qparts: IQPartDTOInclude[];
   moldId: number;
+
   setter: Dispatch<SetStateAction<number>>;
   close: Dispatch<SetStateAction<boolean>>;
   //  refetchFn: () => void;

@@ -62,7 +62,7 @@ function Navbar() {
       </div>
       <div className="w-33 nav-end">
         <div className="fg-1"></div>
-        <ColorWheelButton link="/sculpture" content="sculptures" />
+        <ColorWheelButton link="/sculpture/all" content="sculptures" />
         <ColorWheelButton link="/part-categories" content="parts" />
         <ColorWheelButton link="/colors" content="colors" />
 

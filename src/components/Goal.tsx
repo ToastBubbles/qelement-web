@@ -30,16 +30,15 @@ export default function Goal({ goal, collection }: IProps) {
       }
     }
   });
-  console.log("my parts", theseParts);
 
   const { data: qpartData } = useQuery({
-    queryKey: `qpartByPartId${goal.part.id}`,
+    queryKey: `qpartByPartId${goal.part.id}m${goal.partMoldId}`,
     queryFn: () => {
       return axios.get<IQPartDTOIncludeLess[]>(
         `http://localhost:3000/qpart/matchesByPartId/${goal.part.id}`
       );
     },
-    staleTime: 100,
+    staleTime: 50,
     // enabled: !!payload.id,
   });
 
@@ -99,7 +98,7 @@ export default function Goal({ goal, collection }: IProps) {
     const mappedParts: ICollectionQPart[] = [];
 
     qparts.forEach((qpart) => {
-      console.log(qpart);
+      // console.log(qpart);
       let isKnown = false;
       for (const statusData of qpart.partStatuses) {
         if (statusData.status == "known") {
@@ -136,13 +135,28 @@ export default function Goal({ goal, collection }: IProps) {
           // let temp = theseParts.find((x) => x.qpart.id == qpart.id);
 
           if (temp) {
-            mappedParts.push({
-              isOwned: true,
-              qpart: qpart,
-              condition: bestCondition,
-            });
+            // console.log("temp", temp);
+            // console.log("goal", goal.partMoldId);
+            if (goal.partMoldId != null && goal.partMoldId == temp.mold.id)
+              mappedParts.push({
+                isOwned: true,
+                qpart: qpart,
+                condition: bestCondition,
+              });
           } else {
-            mappedParts.push({ isOwned: false, qpart: qpart, condition: "" });
+            // console.log("else");
+
+            // console.log(
+            //   `goal: ${goal.partMoldId}  part: ${qpart.color.bl_name} ${qpart.mold.number} (${qpart.mold.id}) temp: ${temp}`
+            // );
+            // console.log(theseParts);
+            // console.log(typeof goal.partMoldId);
+
+            if (
+              (goal.partMoldId != null && goal.partMoldId == qpart.mold.id) ||
+              goal.partMoldId == null
+            )
+              mappedParts.push({ isOwned: false, qpart: qpart, condition: "" });
           }
         }
       }

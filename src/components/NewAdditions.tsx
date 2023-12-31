@@ -9,7 +9,7 @@ function NewAdditions() {
   );
   // if (qData) console.log(qData.data);
   return (
-    <div className="hp-panel-body">
+    <div className="hp-panel-body rib-container">
       {qData?.data.map((qpart) => {
         return <RecentQPart key={qpart.id} qpart={qpart} />;
       })}

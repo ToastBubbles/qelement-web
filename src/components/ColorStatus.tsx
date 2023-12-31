@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { IMoldStatus, color } from "../interfaces/general";
+import { IMoldStatus, IMoldStatusWUNK, color } from "../interfaces/general";
 import {
   getPrefColorIdString,
   getPrefColorName,
@@ -10,9 +10,10 @@ import { ReactNode, useContext } from "react";
 
 interface iProps {
   color: color;
-  statuses: IMoldStatus[];
+
+  statuses: IMoldStatusWUNK[];
 }
-export default function ColorStatus({ color, statuses }: iProps) {
+export default function ColorStatus({ color,  statuses }: iProps) {
   const {
     state: {
       userPreferences: { payload: prefPayload },
@@ -37,6 +38,7 @@ export default function ColorStatus({ color, statuses }: iProps) {
                 } flag-sizebyqty-${statuses.length > 4 ? 4 : statuses.length}`}
               >
                 {statusObj.status.toUpperCase()[0]}
+                {statusObj.unknown ? "*" : ""}
               </div>
             );
         })

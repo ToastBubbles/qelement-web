@@ -36,6 +36,7 @@ export default function AddQPartView() {
     partId: -1,
     colorId: -1,
     moldId: -1,
+    isMoldUnknown: false,
     type: "unknown",
     creatorId: -1,
     note: "",
@@ -54,6 +55,7 @@ export default function AddQPartView() {
   const [newStatus, setNewStatus] =
     useState<IPartStatusDTO>(defaultStatusValues);
   const [category, setCategory] = useState<number>(-1);
+
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [molds, setMolds] = useState<IPartMoldDTO[]>();
   // const [wasApproved, setWasApproved] = useState<boolean>(false);
@@ -120,6 +122,15 @@ export default function AddQPartView() {
       matchRefetch();
     }
   }, [newQPart.moldId, newQPart.colorId, matchRefetch]);
+
+  // useEffect(() => {
+  //   if (
+  //     (unknownPN && newQPart.colorId != -1) ||
+  //     (!unknownPN && newQPart.moldId != -1 && newQPart.colorId != -1)
+  //   ) {
+  //     matchRefetch();
+  //   }
+  // }, [unknownPN, newQPart.colorId]);
 
   useEffect(() => {
     if (partsData) {
@@ -194,7 +205,10 @@ export default function AddQPartView() {
     width: "50%",
     marginBottom: "1.75em",
   };
-
+  const checkboxStyles: CSSProperties = {
+    transform: "scale(1.5)", // Adjust the scale factor as needed
+    marginRight: "8px", // Add some spacing if desired
+  };
   if (catIsFetched && catData && colData) {
     return (
       <>
@@ -247,6 +261,7 @@ export default function AddQPartView() {
                 name="partmold"
                 id="partmold"
                 className="w-50 formInput"
+                style={{ marginBottom: "1em" }}
                 onChange={(e) =>
                   setNewQPart((newQPart) => ({
                     ...newQPart,
@@ -262,6 +277,34 @@ export default function AddQPartView() {
                   </option>
                 ))}
               </select>
+            </div>
+
+            <div className="w-100 d-flex jc-space-b">
+              <label htmlFor="par">
+                Is Part Number Unknown?{" "}
+                <MyToolTip
+                  content={
+                    <div style={{ maxWidth: "20em" }}>
+                      For Part Number, please pick your best guess if clicking
+                      this checkbox. The selected Part Number will be used as a
+                      fallback.
+                    </div>
+                  }
+                  id="pnunk"
+                />
+              </label>
+              <input
+                type="checkbox"
+                className="formInput"
+                style={checkboxStyles}
+                checked={newQPart.isMoldUnknown}
+                onChange={(e) => {
+                  setNewQPart((newQPart) => ({
+                    ...newQPart,
+                    ...{ isMoldUnknown: e.target.checked },
+                  }));
+                }}
+              ></input>
             </div>
 
             <div className="w-100 d-flex jc-space-b">
@@ -323,8 +366,12 @@ export default function AddQPartView() {
                 id="eid"
                 className="formInput w-50"
                 placeholder="Optional"
-                onChange={(e) => setElementId(Number(e.target.value))}
-                value={elementId == -1 ? "" : elementId}
+                onChange={(e) => {
+                  if (Number(e.target.value) == 0) {
+                    setElementId(-1);
+                  } else setElementId(Number(e.target.value));
+                }}
+                value={elementId == -1 || elementId == 0 ? "" : elementId}
               />
             </div>
             <div className="w-100 d-flex jc-space-b">
@@ -535,7 +582,8 @@ export default function AddQPartView() {
                     newQPart.partId != -1 &&
                     newQPart.colorId != -1 &&
                     qpartExistenceCode == 200 &&
-                    newQPart.creatorId != -1
+                    newQPart.creatorId != -1 &&
+                    newQPart.moldId != -1
                   ) {
                     console.log("adding...");
                     partMutation.mutate(newQPart);
@@ -549,6 +597,8 @@ export default function AddQPartView() {
                     } else if (newQPart.creatorId == -1) {
                       showToast("User ID Error!", Mode.Error);
                     } else {
+                      console.log(qpartExistenceCode);
+
                       showToast(
                         "Please make sure you have filled out the form properly",
                         Mode.Error

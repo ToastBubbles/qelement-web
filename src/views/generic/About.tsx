@@ -99,6 +99,18 @@ export default function About() {
             <img src={"/img/db_chart.png"} />
           </div>
 
+          <h2>Our stance on Known parts</h2>
+          <div>
+            The main focus of theqelement.com is to document qparts and other
+            parts that are not easily accessable. Parts that have been released
+            in sets (known parts) are welcome here, but we aren't really
+            interested in their details like year produced, sets released in,
+            sculptures included in, etc. The main reason known parts exist on
+            here is for collections and for rare known parts, like Sky Blue 1x2
+            plate. If the community is not keen on the presence of known parts
+            here, they may be removed or changed to be less apparent.
+          </div>
+
           <h2>Who is behind qelement?</h2>
           <div>
             theqelement.com was designed, developed, and moderated by Jeffrey

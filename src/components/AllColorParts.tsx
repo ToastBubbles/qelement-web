@@ -21,7 +21,7 @@ export default function AllColorParts({ colorId }: iProps) {
   if (qpartsData) {
     const qparts = qpartsData.data;
     return (
-      <div>
+      <div className="rib-container">
         {qparts.length ? (
           qparts.map((qpart) => <RecentQPart key={qpart.id} qpart={qpart} />)
         ) : (

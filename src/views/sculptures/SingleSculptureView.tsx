@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useQuery } from "react-query";
-import { category } from "../../interfaces/general";
-import { Link } from "react-router-dom";
+import { ISculptureDTO, category } from "../../interfaces/general";
+import { Link, useParams } from "react-router-dom";
 import { useState, useContext } from "react";
 import ExpandingTextbox from "../../components/ExpandingTextbox";
 import { AppContext } from "../../context/context";
@@ -13,6 +13,8 @@ export default function SingleSculptureView() {
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
+
+  const { sculptId } = useParams();
   const [partsTabActive, setPartsTabActive] = useState<boolean>(true);
   const [imageTabActive, setImageTabActive] = useState<boolean>(false);
   const [commentTabActive, setCommentTabActive] = useState<boolean>(false);
@@ -36,14 +38,32 @@ export default function SingleSculptureView() {
     // }
     return "https://via.placeholder.com/1024x768/eee?text=4:3";
   }
-  if (true) {
+
+  const {
+    data: sculptData,
+    error: sculptError,
+    refetch: sculptRefetch,
+  } = useQuery({
+    queryKey: `sculpt${sculptId}`,
+    queryFn: () => {
+      return axios.get<ISculptureDTO>(
+        `http://localhost:3000/sculpture/byId/${sculptId}`
+      );
+    },
+
+    staleTime: 0,
+    enabled: !!sculptId,
+    // retry: false,
+  });
+  if (sculptData) {
+    let sculpture = sculptData.data;
     return (
       <div className="mx-w">
         <div className="page-content-wrapper">
           <div className="page-content-wide">
             <div className="right-col">
               <div className="top">
-                <div className="element-name">Sculpture Name</div>
+                <div className="element-name">{sculpture.name}</div>
               </div>
               <div className="center">
                 <div className="d-flex">
@@ -58,10 +78,10 @@ export default function SingleSculptureView() {
                   <div className="d-flex flex-col jc-space-b  action-container">
                     <ul className="actions">
                       <span>Details:</span>
-                      <li>Type: System</li>
-                      <li>Location: Germany</li>
-                      <li>Made: 1999</li>
-                      <li>Retired: 1999</li>
+                      <li>Type: {sculpture.brickSystem}</li>
+                      <li>Location: {sculpture.location}</li>
+                      <li>Made: {sculpture.yearMade}</li>
+                      <li>Retired: {sculpture.yearRetired}</li>
                     </ul>
                     <ul className="actions">
                       <span>Keywords:</span>
@@ -74,10 +94,16 @@ export default function SingleSculptureView() {
                       </li>
                     </ul>
                   </div>
+
+                  <div className="d-flex flex-col jc-space-b  action-container">
+                    <Link to={`/add/sculpture/parts/${sculpture.id}`}>
+                      Add Parts
+                    </Link>
+                  </div>
                 </div>
-                {/* <fieldset className="status">
-                  <legend>Status History</legend>
-                  {mypart?.partStatuses &&
+                <fieldset className="status">
+                  <legend>Colors used</legend>
+                  {/* {mypart?.partStatuses &&
                     sortStatus(mypart?.partStatuses).map((status) => (
                       <QPartStatusDate
                         key={status.id}
@@ -85,8 +111,8 @@ export default function SingleSculptureView() {
                         date={status.date}
                         isPrimary={mypart?.partStatuses.indexOf(status) == 0}
                       />
-                    ))}
-                </fieldset> */}
+                    ))} */}
+                </fieldset>
               </div>
               <div className="lower-center">
                 <div className="fake-hr"></div>

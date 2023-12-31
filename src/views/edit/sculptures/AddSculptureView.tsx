@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import MyToolTip from "../../../components/MyToolTip";
 import { AppContext } from "../../../context/context";
 import showToast, { Mode } from "../../../utils/utils";
-import { IAPIResponse, ICreateScupltureDTO } from "../../../interfaces/general";
+import { IAPIResponse, ICreateSculptureDTO } from "../../../interfaces/general";
 
 export default function AddSculptureView() {
   const {
@@ -16,7 +16,7 @@ export default function AddSculptureView() {
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
-  const baseValues: ICreateScupltureDTO = {
+  const baseValues: ICreateSculptureDTO = {
     name: "",
     brickSystem: "system",
     location: "",
@@ -27,7 +27,7 @@ export default function AddSculptureView() {
     creatorId: -1,
   };
   const [newSculpture, setNewSculpture] =
-    useState<ICreateScupltureDTO>(baseValues);
+    useState<ICreateSculptureDTO>(baseValues);
 
   useEffect(() => {
     setNewSculpture((newSculpture) => ({
@@ -37,7 +37,7 @@ export default function AddSculptureView() {
   }, [payload]);
 
   const sculptureMutation = useMutation({
-    mutationFn: (sculptureDTO: ICreateScupltureDTO) =>
+    mutationFn: (sculptureDTO: ICreateSculptureDTO) =>
       axios.post<IAPIResponse>(
         `http://localhost:3000/sculpture/add`,
         sculptureDTO

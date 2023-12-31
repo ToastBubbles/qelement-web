@@ -149,11 +149,11 @@ export default function SinglePartView() {
   }
   if (qpartData && qpartData.data.length > 0) {
     const qparts = qpartData?.data;
-    const myDebugger = {
-      selectedQPartid,
-      urlColorId,
-      mypart,
-    };
+    // const myDebugger = {
+    //   selectedQPartid,
+    //   urlColorId,
+    //   mypart,
+    // };
 
     if (selectedQPartid == -1) {
       if (urlColorId) {
@@ -221,7 +221,9 @@ export default function SinglePartView() {
                       ></div>
                       <div style={{ flexGrow: "1" }}>
                         <div className="d-flex">
-                          {mypart?.mold.number}{" "}
+                          {mypart?.isMoldUnknown
+                            ? mypart?.mold.number + "*"
+                            : mypart?.mold.number}{" "}
                           {getPrefColorName(
                             mypart?.color,
                             prefPayload.prefName
@@ -547,7 +549,7 @@ export default function SinglePartView() {
                           onChange={(e) => setSearchColor(e.target.value)}
                           onKeyDown={(e) => {
                             if (e.key === "Enter") {
-                              e.preventDefault(); 
+                              e.preventDefault();
                             }
                           }}
                         />

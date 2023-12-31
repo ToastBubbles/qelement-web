@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 import { IQPartDTOInclude } from "../interfaces/general";
 interface iProps {
   qpart: IQPartDTOInclude;
+
   setter: Dispatch<SetStateAction<number>>;
   close: Dispatch<SetStateAction<boolean>>;
   //  refetchFn: () => void;
@@ -22,7 +23,7 @@ export default function QPartDropdownRow({ qpart, setter, close }: iProps) {
       ></div>
       <div>
         <div className="d-flex">
-          {qpart.mold.number}{" "}
+          {qpart.isMoldUnknown ? qpart.mold.number + "*" : qpart.mold.number}{" "}
           {qpart.color.bl_name ? qpart.color.bl_name : "Unknown"}
         </div>
         <div

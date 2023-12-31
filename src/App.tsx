@@ -50,6 +50,8 @@ import DeleteView from "./views/edit/approval/DeleteView";
 import AddKnownView from "./views/edit/parts/AddKnownView";
 import SingleSculptureView from "./views/sculptures/SingleSculptureView";
 import AddSculptureView from "./views/edit/sculptures/AddSculptureView";
+import AllSculptureView from "./views/sculptures/AllScultureView";
+import AddPartsToSculptureView from "./views/edit/sculptures/AddPartsToSculptureView";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -94,8 +96,11 @@ function App() {
               />
               <Route path="/part/:partId" element={<SinglePartView />} />
 
-              <Route path="/sculpture" element={<SingleSculptureView />} />
-
+              <Route
+                path="/sculpture/:sculptId"
+                element={<SingleSculptureView />}
+              />
+              <Route path="/sculpture/all" element={<AllSculptureView />} />
               <Route path="/search" element={<SearchView />} />
               <Route path="/compare" element={<ImageComparisonTool />} />
               {/* ********************** Add data forms (User) *********************** */}
@@ -128,6 +133,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <AddSculptureView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/add/sculpture/parts/:sculptId"
+                element={
+                  <ProtectedRoute>
+                    <AddPartsToSculptureView />
                   </ProtectedRoute>
                 }
               />

@@ -14,9 +14,16 @@ import { AppContext } from "../context/context";
 interface IProps {
   qpart?: IQPartDTOInclude;
   qpartl?: IQPartDTOIncludeLess;
+  hideDate?: boolean;
+  disableLinks?: boolean;
 }
 
-export default function RecentQPart({ qpart, qpartl }: IProps) {
+export default function RecentQPart({
+  qpart,
+  qpartl,
+  hideDate = false,
+  disableLinks = false,
+}: IProps) {
   const {
     state: {
       userPreferences: { payload: prefPayload },
@@ -32,6 +39,7 @@ export default function RecentQPart({ qpart, qpartl }: IProps) {
       color: qpart.color,
       creator: qpart.creator,
       note: qpart.note,
+      isMoldUnknown: qpart.isMoldUnknown,
       elementIDs: qpart.elementIDs,
       images: qpart.images,
       partStatuses: qpart.partStatuses,
@@ -92,7 +100,9 @@ export default function RecentQPart({ qpart, qpartl }: IProps) {
         )}
         <Link
           to={`/part/${thisqpart.mold.parentPart.id}?color=${thisqpart.color.id}`}
-          className="listing new-listing"
+          className={`listing new-listing ${
+            disableLinks ? " disabled-link" : ""
+          }`}
         >
           <div className="listing-img">
             <img
@@ -113,7 +123,9 @@ export default function RecentQPart({ qpart, qpartl }: IProps) {
           </div>
           <div>
             <div>
-              {thisqpart.mold.parentPart.name} ({thisqpart.mold.number})
+              {thisqpart.mold.parentPart.name} (
+              {thisqpart.isMoldUnknown ? "Unknown Mold" : thisqpart.mold.number}
+              )
             </div>
             <div className="listing-color">
               <div
@@ -124,9 +136,11 @@ export default function RecentQPart({ qpart, qpartl }: IProps) {
                 {getPrefColorName(thisqpart.color, prefPayload.prefName)}
               </div>
             </div>
-            <div style={{ fontSize: "0.8em" }}>
-              Added: {formatDate(thisqpart.approvalDate)}
-            </div>
+            {!hideDate && (
+              <div style={{ fontSize: "0.8em" }}>
+                Added: {formatDate(thisqpart.approvalDate)}
+              </div>
+            )}
           </div>
         </Link>
       </RibbonContainer>
