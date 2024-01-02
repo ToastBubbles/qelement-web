@@ -6,9 +6,10 @@ import { useMutation, useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import MyToolTip from "../../../components/MyToolTip";
 import { AppContext } from "../../../context/context";
-import showToast, { Mode } from "../../../utils/utils";
+import showToast, { Mode, getPrefColorName } from "../../../utils/utils";
 import {
   IAPIResponse,
+  IArrayOfIDs,
   ICreateSculptureDTO,
   IQPartDTOInclude,
   ISculptureDTO,
@@ -86,8 +87,32 @@ export default function AddPartsToSculptureView() {
     qpartRefetch();
     setQPartId(-1);
   }, [partId, qpartRefetch]);
+
+  const sculptureMutation = useMutation({
+    mutationFn: (qpartIds: IArrayOfIDs) =>
+      axios.post<IAPIResponse>(
+        `http://localhost:3000/sculptureInventory/addParts/${sculptId}`,
+        qpartIds
+      ),
+    onSuccess: (data) => {
+      console.log(data);
+
+      if (data.data?.code == 200) {
+        showToast("Sculpture parts submitted for approval!", Mode.Success);
+        setQparts([]);
+      } else if (data.data?.code == 201) {
+        showToast("Sculpture parts added!", Mode.Success);
+        setQparts([]);
+        sculptRefetch();
+      } else {
+        showToast("Something went wrong", Mode.Error);
+      }
+    },
+  });
+
   if (sculptData && catData) {
     let sculpture = sculptData.data;
+
     return (
       <>
         <div className="formcontainer">
@@ -150,12 +175,15 @@ export default function AddPartsToSculptureView() {
                   value={qPartId}
                 >
                   <option value="-1">--</option>
-                  {qpartData?.data.map((qpart) => (
-                    <option key={qpart.id} value={`${qpart.id}`}>
-                      {qpart.mold.number}
-                      {qpart.isMoldUnknown ? "*" : ""} {qpart.color.bl_name}
-                    </option>
-                  ))}
+                  {qpartData?.data
+                    .sort((a, b) => a.color.swatchId - b.color.swatchId)
+                    .map((qpart) => (
+                      <option key={qpart.id} value={`${qpart.id}`}>
+                        {qpart.mold.number}
+                        {qpart.isMoldUnknown ? "*" : ""}{" "}
+                        {getPrefColorName(qpart.color, prefPayload.prefName)}
+                      </option>
+                    ))}
                 </select>
               </div>
               <button
@@ -181,11 +209,13 @@ export default function AddPartsToSculptureView() {
                   style={{
                     borderTopRightRadius: "0",
                     borderBottomRightRadius: "0",
+                    overflowY: "auto",
                   }}
                 >
                   {qparts.map((qpart) => {
                     return (
                       <RecentQPart
+                        key={qpart.id}
                         qpart={qpart}
                         hideDate={true}
                         disableLinks={true}
@@ -194,23 +224,47 @@ export default function AddPartsToSculptureView() {
                   })}
                 </div>{" "}
                 <div
-                  className="secondaryform"
+                  className="secondaryform rib-container"
                   style={{
                     borderTopLeftRadius: "0",
                     borderBottomLeftRadius: "0",
                     borderLeft: "none",
+                    overflowY: "auto",
                   }}
-                ></div>
+                >
+                  {sculpture.inventory.map((qpart) => {
+                    return (
+                      <RecentQPart
+                        key={qpart.id}
+                        qpart={qpart}
+                        hideDate={true}
+                        disableLinks={true}
+                      />
+                    );
+                  })}
+                </div>
               </div>
             </div>
             <div>
               <button
                 className="formInputNM"
-                //   onClick={() => {
-                //     if (validateDTO()) {
-                //       sculptureMutation.mutate(newSculpture);
-                //     }
-                //   }}
+                onClick={() => {
+                  if (qparts.length == 0) {
+                    showToast(
+                      "You haven't selected any parts yet!",
+                      Mode.Error
+                    );
+                  } else if (!!sculptId && Number(sculptId) > 0) {
+                    let numbers: number[] = [];
+
+                    qparts.forEach((qpart) => numbers.push(qpart.id));
+                    let output: IArrayOfIDs = {
+                      ids: numbers,
+                      userId: payload.id,
+                    };
+                    sculptureMutation.mutate(output);
+                  }
+                }}
               >
                 Submit Parts
               </button>
@@ -220,8 +274,6 @@ export default function AddPartsToSculptureView() {
       </>
     );
   } else {
-    console.log(sculptId);
-
     return <p>Loading...</p>;
   }
 

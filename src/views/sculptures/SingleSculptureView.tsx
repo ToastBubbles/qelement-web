@@ -1,12 +1,22 @@
 import axios from "axios";
 import { useQuery } from "react-query";
-import { ISculptureDTO, category } from "../../interfaces/general";
+import {
+  IQPartDTOInclude,
+  ISculptureDTO,
+  ImageDTO,
+  category,
+  color,
+} from "../../interfaces/general";
 import { Link, useParams } from "react-router-dom";
 import { useState, useContext } from "react";
 import ExpandingTextbox from "../../components/ExpandingTextbox";
 import { AppContext } from "../../context/context";
+import ColorLink from "../../components/ColorLink";
+import RecentQPart from "../../components/RecentQPart";
+import { filterImages } from "../../utils/utils";
 
 export default function SingleSculptureView() {
+  const imagePath = "http://localhost:9000/q-part-images/";
   const {
     state: {
       jwt: { payload },
@@ -19,23 +29,23 @@ export default function SingleSculptureView() {
   const [imageTabActive, setImageTabActive] = useState<boolean>(false);
   const [commentTabActive, setCommentTabActive] = useState<boolean>(false);
   const [commentContent, setCommentContent] = useState<string>("");
-  function formatURL(): string {
-    // if (mypart && mypart?.images?.length > 0) {
-    //   const images = filterImages(mypart?.images);
-    //   if (images.length > 0) {
-    //     let selectedImage = images[images.length - 1];
-    //     for (let i = images.length - 1; i >= 0; i--) {
-    //       if (images[i].type == "part") {
-    //         selectedImage = images[i];
-    //       }
-    //       if (images[i].isPrimary) {
-    //         selectedImage = images[i];
-    //         break;
-    //       }
-    //     }
-    //     return imagePath + selectedImage.fileName;
-    //   }
-    // }
+  function formatURL(imagesIn: ImageDTO[]): string {
+    if (imagesIn.length > 0) {
+      const images = filterImages(imagesIn);
+      if (images.length > 0) {
+        let selectedImage = images[images.length - 1];
+        for (let i = images.length - 1; i >= 0; i--) {
+          if (images[i].type == "part") {
+            selectedImage = images[i];
+          }
+          if (images[i].isPrimary) {
+            selectedImage = images[i];
+            break;
+          }
+        }
+        return imagePath + selectedImage.fileName;
+      }
+    }
     return "https://via.placeholder.com/1024x768/eee?text=4:3";
   }
 
@@ -57,6 +67,7 @@ export default function SingleSculptureView() {
   });
   if (sculptData) {
     let sculpture = sculptData.data;
+    let colorsUsed = getAllColorsUsed(sculpture.inventory);
     return (
       <div className="mx-w">
         <div className="page-content-wrapper">
@@ -70,7 +81,7 @@ export default function SingleSculptureView() {
                   <div className="element-image">
                     <img
                       className="element-image-actual"
-                      src={formatURL()}
+                      src={formatURL(sculpture.images)}
                       alt="placeholder"
                     />
                   </div>
@@ -95,13 +106,16 @@ export default function SingleSculptureView() {
                     </ul>
                   </div>
 
-                  <div className="d-flex flex-col jc-space-b  action-container">
+                  <div className="d-flex flex-col   action-container">
                     <Link to={`/add/sculpture/parts/${sculpture.id}`}>
                       Add Parts
                     </Link>
+                    <Link to={`/add/image/?sculptureId=${sculpture.id}`}>
+                      Add Photo
+                    </Link>
                   </div>
                 </div>
-                <fieldset className="status">
+                <fieldset className="colors-used">
                   <legend>Colors used</legend>
                   {/* {mypart?.partStatuses &&
                     sortStatus(mypart?.partStatuses).map((status) => (
@@ -112,6 +126,14 @@ export default function SingleSculptureView() {
                         isPrimary={mypart?.partStatuses.indexOf(status) == 0}
                       />
                     ))} */}
+
+                  {colorsUsed.length == 0 ? (
+                    <p>No parts added yet!</p>
+                  ) : (
+                    colorsUsed.map((color) => (
+                      <ColorLink key={color.id} color={color} />
+                    ))
+                  )}
                 </fieldset>
               </div>
               <div className="lower-center">
@@ -165,10 +187,19 @@ export default function SingleSculptureView() {
                     </div>
                     <div
                       className={
-                        "tabcontent tab-parts" +
+                        "tabcontent rib-container tab-parts" +
                         (partsTabActive ? "" : " tabhidden")
                       }
-                    ></div>
+                      style={{ overflowY: "auto" }}
+                    >
+                      {sculpture.inventory.map((qpart) => (
+                        <RecentQPart
+                          key={qpart.id}
+                          qpart={qpart}
+                          hideDate={true}
+                        />
+                      ))}
+                    </div>
                     <div
                       className={
                         "tabcontent commenttab" +
@@ -288,5 +319,16 @@ export default function SingleSculptureView() {
     );
   } else {
     return <p>loading</p>;
+  }
+
+  function getAllColorsUsed(parts: IQPartDTOInclude[]): color[] {
+    let output: color[] = [];
+    parts.forEach((part) => {
+      if (!output.includes(part.color)) {
+        output.push(part.color);
+      }
+    });
+    output.sort((a, b) => a.swatchId - b.swatchId);
+    return output;
   }
 }

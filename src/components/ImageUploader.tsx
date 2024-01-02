@@ -5,7 +5,7 @@ import { AppContext } from "../context/context";
 import {
   IAPIResponse,
   IQPartDTOInclude,
-  ISimpleScupltureDTO,
+  ISculptureDTO,
 } from "../interfaces/general";
 import showToast, { Mode, getPrefColorName } from "../utils/utils";
 import LoadingPage from "./LoadingPage";
@@ -47,8 +47,8 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
   const { data: sculptureData } = useQuery({
     queryKey: "sculptureimage" + sculptureId,
     queryFn: () => {
-      return axios.get<ISimpleScupltureDTO>(
-        `http://localhost:3000/sculpture/id/${sculptureId}`
+      return axios.get<ISculptureDTO>(
+        `http://localhost:3000/sculpture/byId/${sculptureId}`
       );
     },
     staleTime: 100,
@@ -64,13 +64,15 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
     const handleSubmit = (event: FormEvent) => {
       event.preventDefault();
 
-      if (selectedImage && imageType != "") {
+      if (selectedImage) {
         const imageData: ImageSubmission = {
           userId: payload.id,
           qpartId: myqpart ? myqpart.id : null,
           sculptureId: mysculpture ? mysculpture.id : null,
           type: myqpart ? imageType : "sculpture",
         };
+        console.log(imageData);
+
         const formData = new FormData();
         formData.append("image", selectedImage);
         formData.append("imageData", JSON.stringify(imageData));
@@ -87,6 +89,8 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
               }
             )
             .then((resp) => {
+              console.log(resp.data);
+
               if (resp.data.code == 201 || resp.data.code == 202) {
                 setImageType("");
                 setSelectedImage(null);

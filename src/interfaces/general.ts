@@ -269,7 +269,8 @@ export interface ISculptureDTO {
   yearRetired: number;
   keywords: string;
   creator: user;
-  qparts: IQPartDTOInclude[];
+  inventory: IQPartDTOInclude[];
+  images: ImageDTO[];
 }
 export interface IQPartDTOInclude {
   id: number;

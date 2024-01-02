@@ -533,6 +533,7 @@ body::-webkit-scrollbar {
   aspect-ratio: 1 / 1;
   border: solid 1px var(--dk-grey);
   margin-right: 0.25em;
+  background-color: azure;
 }
 
 .listing-img > img {
@@ -744,6 +745,20 @@ input:checked + .slider:before {
 }
 .text-black {
   color: #2c2c2c;
+}
+
+.colors-used {
+  border: solid 1px var(--lt-grey);
+  width: 25%;
+  display: flex;
+  justify-content: start;
+  flex-wrap: wrap;
+  align-items: start;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.colors-used > a {
+  margin-bottom: 0.5em;
 }
 .status {
   border: solid 1px var(--lt-grey);
