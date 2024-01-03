@@ -74,6 +74,7 @@ export interface INotApporvedCounts {
   partStatuses: number;
   similarColors: number;
   images: number;
+  sculptures: number;
 }
 export interface IEditColor {
   bl_name: string;
@@ -278,6 +279,7 @@ export interface ISculptureDTO {
   inventory: IQPartDTOInclude[];
   images: ImageDTO[];
   comments: ICommentDTO[];
+  approvalDate: string;
 }
 export interface IQPartDTOInclude {
   id: number;

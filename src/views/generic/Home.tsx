@@ -38,21 +38,22 @@ export default function Home() {
           <div className="hp-panel hp-panel-center">
             <div className="hp-panel-header">
               <div className="head-line"></div>
-              <div className="hp-panel-header-text">new additions</div>
+              <div className="hp-panel-header-text">new parts</div>
               <div className="head-line"></div>
             </div>
-            <NewAdditions />
+            <NewAdditions type="qpart" />
           </div>
           <div className="hp-panel">
             <div className="hp-panel-header">
               <div className="head-line"></div>
-              <div className="hp-panel-header-text">changes</div>
+              <div className="hp-panel-header-text">new sculptures</div>
               <div className="head-line"></div>
             </div>
+            <NewAdditions type="sculpture" />
             <div className="hp-panel-body">
-              <div className="listing recent-change">
+              {/* <div className="listing recent-change">
                 Changelog is coming soon!
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

@@ -12,7 +12,7 @@ interface IProps {
   refetchFn: () => void;
 }
 
-function Comment({ data, isAdmin, userId, refetchFn }: IProps) {
+export default function Comment({ data, isAdmin, userId, refetchFn }: IProps) {
   const [isHovered, setHovered] = useState(false);
   const handleMouseEnter = () => {
     setHovered(true);
@@ -67,5 +67,3 @@ function Comment({ data, isAdmin, userId, refetchFn }: IProps) {
     });
   }
 }
-
-export default Comment;

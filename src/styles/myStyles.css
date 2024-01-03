@@ -1103,7 +1103,8 @@ fieldset > legend {
 }
 .head-line {
   height: 50%;
-  width: 33%;
+  /* width: 33%; */
+  flex-grow: 1;
   display: inline-block;
   border-bottom: solid 1px #666;
 }

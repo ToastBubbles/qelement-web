@@ -52,6 +52,7 @@ import SingleSculptureView from "./views/sculptures/SingleSculptureView";
 import AddSculptureView from "./views/edit/sculptures/AddSculptureView";
 import AllSculptureView from "./views/sculptures/AllScultureView";
 import AddPartsToSculptureView from "./views/edit/sculptures/AddPartsToSculptureView";
+import ApproveSculptureView from "./views/edit/approval/SculptureApprovalView";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -271,6 +272,14 @@ function App() {
                 element={
                   <ProtectedRoute level={"admin"}>
                     <ApprovePartMoldView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/approve/sculptures"
+                element={
+                  <ProtectedRoute level={"admin"}>
+                    <ApproveSculptureView />
                   </ProtectedRoute>
                 }
               />
