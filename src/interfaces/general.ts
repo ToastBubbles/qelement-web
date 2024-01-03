@@ -25,6 +25,11 @@ export interface IColorDTO {
   creatorId: number;
 }
 
+export interface IDeletionDTO {
+  itemToDeleteId: number;
+  userId: number;
+}
+
 export interface IColorWUnk {
   unknown: boolean;
   color: color;
@@ -210,7 +215,8 @@ export interface IWantedDTOGET {
 export interface ICommentCreationDTO {
   userId: number;
   content: string;
-  qpartId: number;
+  qpartId?: number;
+  sculptureId?: number;
 }
 export interface ImageDTO {
   id: number;
@@ -271,6 +277,7 @@ export interface ISculptureDTO {
   creator: user;
   inventory: IQPartDTOInclude[];
   images: ImageDTO[];
+  comments: ICommentDTO[];
 }
 export interface IQPartDTOInclude {
   id: number;

@@ -9,6 +9,7 @@ import {
   rating,
   IPartMoldDTO,
   ICommentCreationDTO,
+  IAPIResponse,
 } from "../../interfaces/general";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -37,6 +38,17 @@ export default function SinglePartView() {
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
+  const { data: adminData } = useQuery({
+    queryKey: "isAdmin",
+    queryFn: () =>
+      axios.get<IAPIResponse>(
+        `http://localhost:3000/user/checkIfAdmin/${payload.id}`
+      ),
+    retry: false,
+    // refetchInterval: 30000,
+    enabled: !!payload.id,
+  });
+
   const queryParameters = new URLSearchParams(window.location.search);
   const urlColorId = queryParameters.get("color");
   const urlMoldId = queryParameters.get("mold");
@@ -147,7 +159,7 @@ export default function SinglePartView() {
     }
     return "https://via.placeholder.com/1024x768/eee?text=4:3";
   }
-  if (qpartData && qpartData.data.length > 0) {
+  if (qpartData && qpartData.data.length > 0 && adminData) {
     const qparts = qpartData?.data;
     // const myDebugger = {
     //   selectedQPartid,
@@ -464,7 +476,15 @@ export default function SinglePartView() {
                           </div>
                         ) : (
                           mypart?.comments.map((comment) => {
-                            return <Comment key={comment.id} data={comment} />;
+                            return (
+                              <Comment
+                                key={comment.id}
+                                data={comment}
+                                isAdmin={adminData.data.code == 200}
+                                userId={payload.id}
+                                refetchFn={qpartRefetch}
+                              />
+                            );
                           })
                         )}
                       </div>

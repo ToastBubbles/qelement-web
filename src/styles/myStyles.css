@@ -752,10 +752,11 @@ input:checked + .slider:before {
   width: 25%;
   display: flex;
   justify-content: start;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
   align-items: start;
   flex-direction: column;
   overflow-y: auto;
+  height: 20em;
 }
 .colors-used > a {
   margin-bottom: 0.5em;
@@ -982,6 +983,10 @@ fieldset > legend {
 .tabhidden {
   display: none;
 }
+.comment-tab-content {
+  max-height: 20em;
+  overflow-y: auto;
+}
 
 .comment-pic {
   aspect-ratio: 1 / 1;
@@ -997,6 +1002,7 @@ fieldset > legend {
   min-height: 2em;
 }
 .comment {
+  position: relative;
   display: flex;
   width: 97.75%;
   padding: 0.5em;
@@ -1192,7 +1198,8 @@ fieldset > legend {
 .topfive-body {
   flex-grow: 1;
   width: 100%;
-  padding-left: 0.25em;
+  padding-left: 1em;
+  padding-top: 0.25em;
 }
 .topfive-body-2 {
   font-size: 0.75em;

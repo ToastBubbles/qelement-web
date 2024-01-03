@@ -1,6 +1,8 @@
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import {
+  IAPIResponse,
+  ICommentCreationDTO,
   IQPartDTOInclude,
   ISculptureDTO,
   ImageDTO,
@@ -13,7 +15,8 @@ import ExpandingTextbox from "../../components/ExpandingTextbox";
 import { AppContext } from "../../context/context";
 import ColorLink from "../../components/ColorLink";
 import RecentQPart from "../../components/RecentQPart";
-import { filterImages } from "../../utils/utils";
+import showToast, { Mode, filterImages } from "../../utils/utils";
+import Comment from "../../components/Comment";
 
 export default function SingleSculptureView() {
   const imagePath = "http://localhost:9000/q-part-images/";
@@ -23,6 +26,17 @@ export default function SingleSculptureView() {
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
+
+  const { data: adminData } = useQuery({
+    queryKey: "isAdmin",
+    queryFn: () =>
+      axios.get<IAPIResponse>(
+        `http://localhost:3000/user/checkIfAdmin/${payload.id}`
+      ),
+    retry: false,
+    // refetchInterval: 30000,
+    enabled: !!payload.id,
+  });
 
   const { sculptId } = useParams();
   const [partsTabActive, setPartsTabActive] = useState<boolean>(true);
@@ -49,6 +63,19 @@ export default function SingleSculptureView() {
     return "https://via.placeholder.com/1024x768/eee?text=4:3";
   }
 
+  const commentMutation = useMutation({
+    mutationFn: ({ content, userId, sculptureId }: ICommentCreationDTO) =>
+      axios.post(`http://localhost:3000/comment/add`, {
+        content,
+        userId,
+        sculptureId,
+      }),
+    onSuccess: () => {
+      showToast("Comment Added", Mode.Success);
+      sculptRefetch();
+    },
+  });
+
   const {
     data: sculptData,
     error: sculptError,
@@ -65,7 +92,7 @@ export default function SingleSculptureView() {
     enabled: !!sculptId,
     // retry: false,
   });
-  if (sculptData) {
+  if (sculptData && adminData) {
     let sculpture = sculptData.data;
     let colorsUsed = getAllColorsUsed(sculpture.inventory);
     return (
@@ -164,9 +191,9 @@ export default function SingleSculptureView() {
                         }}
                       >
                         Comments{" "}
-                        {/* {mypart?.comments &&
-                          mypart?.comments.length > 0 &&
-                          `(${mypart?.comments.length})`} */}
+                        {sculpture.comments &&
+                          sculpture.comments.length > 0 &&
+                          `(${sculpture.comments.length})`}
                       </button>
                       <button
                         className={
@@ -180,9 +207,9 @@ export default function SingleSculptureView() {
                         // disabled={mypart?.images.length == 0}
                       >
                         Images{" "}
-                        {/* {mypart?.images &&
-                          filterImages(mypart?.images).length > 0 &&
-                          `(${filterImages(mypart?.images).length})`} */}
+                        {sculpture.images &&
+                          filterImages(sculpture.images).length > 0 &&
+                          `(${filterImages(sculpture.images).length})`}
                       </button>
                     </div>
                     <div
@@ -190,7 +217,7 @@ export default function SingleSculptureView() {
                         "tabcontent rib-container tab-parts" +
                         (partsTabActive ? "" : " tabhidden")
                       }
-                      style={{ overflowY: "auto" }}
+                      style={{ overflowY: "auto", height: "30em" }}
                     >
                       {sculpture.inventory.map((qpart) => (
                         <RecentQPart
@@ -206,8 +233,8 @@ export default function SingleSculptureView() {
                         (commentTabActive ? "" : " tabhidden")
                       }
                     >
-                      <div>
-                        {/* {mypart?.comments.length == 0 ? (
+                      <div className="comment-tab-content">
+                        {sculpture.comments.length == 0 ? (
                           <div
                             style={{
                               paddingBottom: "2em",
@@ -217,10 +244,18 @@ export default function SingleSculptureView() {
                             No comments yet
                           </div>
                         ) : (
-                          mypart?.comments.map((comment) => {
-                            return <Comment key={comment.id} data={comment} />;
+                          sculpture.comments.map((comment) => {
+                            return (
+                              <Comment
+                                key={comment.id}
+                                data={comment}
+                                isAdmin={adminData.data.code == 200}
+                                userId={payload.id}
+                                refetchFn={sculptRefetch}
+                              />
+                            );
                           })
-                        )} */}
+                        )}
                       </div>
                       <div className="w-100 d-flex">
                         <ExpandingTextbox
@@ -229,17 +264,21 @@ export default function SingleSculptureView() {
                         />
                         <button
                           className="comment-btn"
-                          // onClick={() => {
-                          //   if (payload.id && commentContent.length > 1) {
-                          //     commentMutation.mutate({
-                          //       content: commentContent,
-                          //       userId: payload.id,
-                          //       qpartId: selectedQPartid,
-                          //     });
-                          //     setCommentContent("");
-                          //   } else
-                          //     showToast("Error adding comment.", Mode.Error);
-                          // }}
+                          onClick={() => {
+                            if (
+                              payload.id &&
+                              commentContent.length > 1 &&
+                              sculptId
+                            ) {
+                              commentMutation.mutate({
+                                content: commentContent,
+                                userId: payload.id,
+                                sculptureId: Number(sculptId),
+                              });
+                              setCommentContent("");
+                            } else
+                              showToast("Error adding comment.", Mode.Error);
+                          }}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -260,8 +299,8 @@ export default function SingleSculptureView() {
                         (imageTabActive ? "" : " tabhidden")
                       }
                     >
-                      {/* {mypart?.images &&
-                        filterImages(mypart.images).map((image) => {
+                      {sculpture.images &&
+                        filterImages(sculpture.images).map((image) => {
                           return (
                             <div>
                               <img
@@ -281,7 +320,7 @@ export default function SingleSculptureView() {
                               </div>
                             </div>
                           );
-                        })} */}
+                        })}
                     </div>
                   </div>
                   {/* <div className="lower-center-right">

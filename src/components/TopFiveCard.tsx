@@ -1,5 +1,5 @@
 import { Ribbon, RibbonContainer } from "react-ribbons";
-import { IWantedDTOGET } from "../interfaces/general";
+import { IDeletionDTO, IWantedDTOGET } from "../interfaces/general";
 import showToast, {
   Mode,
   filterImages,
@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useMutation } from "react-query";
 import axios from "axios";
+import OnHoverX from "./OnHoverX";
 
 interface iProps {
   myWantedPart: IWantedDTOGET;
@@ -30,12 +31,8 @@ export default function TopFiveCard({ myWantedPart, refetchFn }: iProps) {
     }
   }
 
-  interface wantedDelete {
-    wantedId: number;
-    userId: number;
-  }
   const wantedMutation = useMutation({
-    mutationFn: (removalDTO: wantedDelete) =>
+    mutationFn: (removalDTO: IDeletionDTO) =>
       axios.post(`http://localhost:3000/userFavorite/remove`, removalDTO),
     onSuccess: (e) => {
       if (e.data.code == 200) {
@@ -140,44 +137,7 @@ export default function TopFiveCard({ myWantedPart, refetchFn }: iProps) {
         >
           {status}
         </Ribbon>
-        {isHovered && (
-          <div
-            style={{
-              position: "absolute",
-              top: "2px",
-              right: "2px",
-              cursor: "pointer",
-              zIndex: 20,
-            }}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              wantedMutation.mutate({
-                userId: myWantedPart.userId,
-                wantedId: myWantedPart.id,
-              });
-            }}
-          >
-            <div
-              style={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-              }}
-            />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="var(--lt-red)"
-              className="bi bi-x"
-              viewBox="0 0 16 16"
-            >
-              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
-            </svg>
-            <div className="white-fill"></div>
-          </div>
-        )}
+        {isHovered && <OnHoverX onClickFn={removeFromWanted} />}
         <div className="topfive-img-container">
           <img
             src={
@@ -213,4 +173,10 @@ export default function TopFiveCard({ myWantedPart, refetchFn }: iProps) {
       </RibbonContainer>
     </Link>
   );
+  function removeFromWanted() {
+    wantedMutation.mutate({
+      userId: myWantedPart.userId,
+      itemToDeleteId: myWantedPart.id,
+    });
+  }
 }
