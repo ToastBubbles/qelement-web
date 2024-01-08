@@ -8,8 +8,10 @@ import {
   IElementIDSearch,
   IPartDTO,
   IPartMoldDTO,
+  ISculptureDTO,
 } from "../interfaces/general";
 import RecentQPart from "../components/RecentQPart";
+import RecentSculpture from "../components/RecentSculpture";
 
 export default function SearchView() {
   const [searchValue, setSearchValue] = useState<string>("");
@@ -32,7 +34,21 @@ export default function SearchView() {
       navigate("/");
     }
   }, [searchValue, navigate]);
-
+  const { data: sculpSearchData } = useQuery({
+    queryKey: `sculpSearch${searchValue}`,
+    queryFn: () => {
+      return axios.get<ISculptureDTO[]>(
+        `http://localhost:3000/sculpture/search`,
+        {
+          params: {
+            search: searchValue,
+          },
+        }
+      );
+    },
+    staleTime: 0,
+    enabled: !!searchValue && searchValue.length > 0,
+  });
   const { data: partSearchData } = useQuery({
     queryKey: `partSearch${searchValue}`,
     queryFn: () => {
@@ -78,10 +94,11 @@ export default function SearchView() {
     enabled: !!searchValue && searchValue.length > 0,
   });
 
-  if (partSearchData && moldSearchData && qpartSearchData) {
+  if (partSearchData && moldSearchData && qpartSearchData && sculpSearchData) {
     const partResults = partSearchData.data;
     const moldResults = moldSearchData.data;
     const qpartResults = qpartSearchData.data;
+    const sculpResults = sculpSearchData.data;
     return (
       <>
         <div className="mx-w">
@@ -124,6 +141,28 @@ export default function SearchView() {
 
                 // </Link>
                 <RecentQPart key={eID.id} qpartl={eID.qpart} />
+              ))}
+            </div>
+          )}
+          <h3>Sculptures:</h3>
+          {sculpResults.length == 0 ? (
+            <div className="grey-txt">No results</div>
+          ) : (
+            <div style={{ width: "30em" }}>
+              {sculpResults.map((sculpture) => (
+                // <Link
+                //   key={eID.id}
+                //   to={`/part/${eID.qpart.mold.parentPart.id}?color=${eID.qpart.color.id}`}
+                // >
+                //   <div>
+                //     {" "}
+                //     {eID.qpart.color.bl_name} {eID.qpart.mold.parentPart.name} (
+                //     {eID.qpart.mold.number})
+                //   </div>
+
+                // </Link>
+                // <RecentQPart key={eID.id} qpartl={eID.qpart} />
+                <RecentSculpture key={sculpture.id} sculpture={sculpture} />
               ))}
             </div>
           )}

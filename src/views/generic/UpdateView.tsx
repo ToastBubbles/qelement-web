@@ -1,5 +1,3 @@
-
-
 export default function UpdateView() {
   return (
     <>
@@ -10,8 +8,8 @@ export default function UpdateView() {
             <ol id="terms">
               <li>Known Bugs:</li>
               <div></div>
-              <li>Coming Soon:</li>
-              <div>Changes section on homepage</div>
+              <li>What we would like to add soon:</li>
+            
               <div>Site Stats on homepage</div>
               <div>Add a forum</div>
             </ol>

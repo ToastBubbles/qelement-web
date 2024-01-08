@@ -58,6 +58,7 @@ export default function SingleColorView() {
   }
   const color = colData?.data;
   const hex = "#" + color?.hex;
+  console.log(color);
 
   // console.log(similarColorToAdd);
   if (color)

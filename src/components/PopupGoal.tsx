@@ -9,10 +9,10 @@ import { AppContext } from "../context/context";
 interface IProps {
   userId: number;
   closePopup: () => void;
+  refetchFn: () => void;
 }
 
-export default function PopupGoal({ userId, closePopup }: IProps) {
-
+export default function PopupGoal({ userId, closePopup, refetchFn }: IProps) {
   const initialValues: IGoalDTO = {
     userId,
     partId: -1,
@@ -29,8 +29,10 @@ export default function PopupGoal({ userId, closePopup }: IProps) {
     mutationFn: (goalDTO: IGoalDTO) =>
       axios.post(`http://localhost:3000/userGoal/add`, goalDTO),
     onSuccess: (e) => {
-      if (e.data.code == 200) showToast(`Added new Goal!`, Mode.Success);
-      else {
+      if (e.data.code == 200) {
+        showToast(`Added new Goal!`, Mode.Success);
+        refetchFn();
+      } else {
         showToast(`Failed to creat new goal.`, Mode.Warning);
       }
     },

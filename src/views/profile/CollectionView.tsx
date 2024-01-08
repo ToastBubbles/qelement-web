@@ -28,7 +28,7 @@ export default function CollectionView() {
     enabled: !!payload.id,
   });
 
-  const { data: myGoalData } = useQuery({
+  const { data: myGoalData, refetch: myGoalRefetch } = useQuery({
     queryKey: "mygoals",
     queryFn: () => {
       return axios.get<IGoalDTOExtended[]>(
@@ -48,6 +48,7 @@ export default function CollectionView() {
             <PopupGoal
               userId={payload.id}
               closePopup={() => setGoalPopupOpen(false)}
+              refetchFn={myGoalRefetch}
             />
           )}
           <h1>Your Goals</h1>

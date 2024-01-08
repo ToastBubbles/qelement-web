@@ -93,6 +93,7 @@ export default function Goal({ goal, collection }: IProps) {
 
     return `${count} / ${mappedParts.length}`;
   }
+
   if (qpartData) {
     const qparts = qpartData.data;
     const mappedParts: ICollectionQPart[] = [];
@@ -136,8 +137,11 @@ export default function Goal({ goal, collection }: IProps) {
 
           if (temp) {
             // console.log("temp", temp);
-            // console.log("goal", goal.partMoldId);
-            if (goal.partMoldId != null && goal.partMoldId == temp.mold.id)
+            console.log("goal", goal.partMoldId);
+            if (
+              (goal.partMoldId != null && goal.partMoldId == temp.mold.id) ||
+              goal.partMoldId == null
+            )
               mappedParts.push({
                 isOwned: true,
                 qpart: qpart,

@@ -85,7 +85,7 @@ export default function RecentSculpture({
             disableLinks ? " disabled-link" : ""
           }`}
         >
-          <div className="listing-img">
+          <div className="listing-img rm-padding">
             <img
               src={
                 images.length > 0

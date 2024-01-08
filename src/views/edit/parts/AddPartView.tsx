@@ -32,7 +32,7 @@ export default function AddPartView() {
   };
   const [newPart, setNewPart] = useState<IPartWithMoldDTO>(defaultValue);
   // const [partNo, setPartNo] = useState<number>(-1);
-  const [newCategory, setNewCategory] = useState<string>();
+  const [newCategory, setNewCategory] = useState<string>("");
   const [isNewPart, setIsNewPart] = useState<boolean>(false);
   const {
     data: catData,
@@ -66,12 +66,14 @@ export default function AddPartView() {
       if (e.data.code == 200) {
         setNewCategory("");
         refetch();
+        showToast("Category added!", Mode.Success);
+      } else if (e.data.code == 201) {
+        setNewCategory("");
         showToast("Category submitted for approval!", Mode.Success);
-      } else if (e.data.code == 501) {
-        showToast(
-          "Category already exists, it may be pending approval. If you believe this is incorrect, please reach out to an admin.",
-          Mode.Warning
-        );
+      } else if (e.data.code == 505) {
+        showToast("Category already pending approval", Mode.Warning);
+      } else if (e.data.code == 506) {
+        showToast("Category already exists", Mode.Warning);
       } else {
         showToast("Error adding category", Mode.Error);
       }

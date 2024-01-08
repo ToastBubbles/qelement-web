@@ -219,13 +219,19 @@ export default function SingleSculptureView() {
                       }
                       style={{ overflowY: "auto", height: "30em" }}
                     >
-                      {sculpture.inventory.map((qpart) => (
-                        <RecentQPart
-                          key={qpart.id}
-                          qpart={qpart}
-                          hideDate={true}
-                        />
-                      ))}
+                      {sculpture.inventory.length > 0 ? (
+                        sculpture.inventory.map((qpart) => (
+                          <RecentQPart
+                            key={qpart.id}
+                            qpart={qpart}
+                            hideDate={true}
+                          />
+                        ))
+                      ) : (
+                        <div style={{ paddingLeft: "1em", paddingTop: "2em" }}>
+                          No parts yet
+                        </div>
+                      )}
                     </div>
                     <div
                       className={
@@ -299,7 +305,7 @@ export default function SingleSculptureView() {
                         (imageTabActive ? "" : " tabhidden")
                       }
                     >
-                      {sculpture.images &&
+                      {sculpture.images.length > 0 ? (
                         filterImages(sculpture.images).map((image) => {
                           return (
                             <div>
@@ -320,7 +326,18 @@ export default function SingleSculptureView() {
                               </div>
                             </div>
                           );
-                        })}
+                        })
+                      ) : (
+                        <p
+                          style={{
+                            paddingLeft: "0.5em",
+                            paddingTop: "0.5em",
+                            paddingBottom: "1em",
+                          }}
+                        >
+                          No Images yet
+                        </p>
+                      )}
                     </div>
                   </div>
                   {/* <div className="lower-center-right">
