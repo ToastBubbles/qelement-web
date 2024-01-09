@@ -79,7 +79,9 @@ export interface INotApporvedCounts {
   similarColors: number;
   images: number;
   sculptures: number;
+  elementIDs: number;
 }
+
 export interface IEditColor {
   bl_name: string;
   tlg_name: string;
@@ -132,6 +134,9 @@ export interface IElementID {
   id: number;
   creator: user;
   createdAt: string;
+}
+export interface IElementIDWQPart extends IElementID {
+  qpart: IQPartDTOInclude;
 }
 export interface IQPartDetails {
   part: IPartDTO;
