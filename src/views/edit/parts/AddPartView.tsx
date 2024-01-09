@@ -2,10 +2,11 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useQuery, useMutation } from "react-query";
 import {
-  category,
   part,
   IPartWithMoldDTO,
   IAPIResponse,
+  ICategory,
+  ICategoryWParts,
 } from "../../../interfaces/general";
 import showToast, { Mode } from "../../../utils/utils";
 import MyToolTip from "../../../components/MyToolTip";
@@ -39,7 +40,7 @@ export default function AddPartView() {
     isFetched,
     refetch,
   } = useQuery("allCats", () =>
-    axios.get<category[]>("http://localhost:3000/categories")
+    axios.get<ICategoryWParts[]>("http://localhost:3000/categories")
   );
   useEffect(() => {
     setNewPart((newPart) => ({
@@ -53,7 +54,10 @@ export default function AddPartView() {
       axios.post<part>(`http://localhost:3000/parts`, part),
     onSuccess: () => {
       showToast("Part submitted for approval!", Mode.Success);
-      setNewPart(defaultValue);
+      setNewPart((prevPart) => ({
+        ...defaultValue,
+        creatorId: prevPart.creatorId,
+      }));
     },
   });
 

@@ -51,7 +51,10 @@ export default function AddStatusView() {
       axios.post<IPartStatusDTO>(`http://localhost:3000/partStatus`, status),
     onSuccess: () => {
       showToast("Status Succesfully added!", Mode.Success);
-      setNewStatus(defaultStatusValues);
+      setNewStatus((prevVals) => ({
+        ...defaultStatusValues,
+        creatorId: prevVals.creatorId,
+      }));
       setStartDate(new Date());
     },
   });

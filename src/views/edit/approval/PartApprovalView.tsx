@@ -14,9 +14,11 @@ export default function ApprovePartView() {
   } = useQuery("notApprovedParts", () =>
     axios.get<IPartDTO[]>("http://localhost:3000/parts/notApproved")
   );
-
-  if (isFetched && partData) {
+ 
+  if (partData) {
     const parts = partData.data;
+    console.log(parts);
+
     return (
       <>
         <div className="formcontainer">

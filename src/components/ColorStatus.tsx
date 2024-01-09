@@ -13,7 +13,7 @@ interface iProps {
 
   statuses: IMoldStatusWUNK[];
 }
-export default function ColorStatus({ color,  statuses }: iProps) {
+export default function ColorStatus({ color, statuses }: iProps) {
   const {
     state: {
       userPreferences: { payload: prefPayload },
@@ -65,7 +65,7 @@ export default function ColorStatus({ color,  statuses }: iProps) {
   }
 
   return (
-    <div key={color.id} className="color-row">
+    <div className="color-row">
       <div className="table-id">
         {getPrefColorIdString(color, prefPayload.prefId)}
       </div>

@@ -7,29 +7,24 @@ import { Link } from "react-router-dom";
 import MyToolTip from "../../../components/MyToolTip";
 import {
   IAPIResponse,
+  ICategory,
   IElementIDCreationDTO,
   IPartMoldDTO,
   IPartStatusDTO,
   IQPartVerifcation,
-  category,
   color,
   iQPartDTO,
   part,
 } from "../../../interfaces/general";
-
 import { AppContext } from "../../../context/context";
-import showToast, {
-  Mode,
-  getPrefColorIdString,
-  getPrefColorName,
-} from "../../../utils/utils";
+import showToast, { Mode } from "../../../utils/utils";
 import ColorTextField from "../../../components/ColorTextField";
 
 export default function AddQPartView() {
   const {
     state: {
       jwt: { payload },
-      userPreferences: { payload: prefPayload },
+      // userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
   const defaultValues: iQPartDTO = {
@@ -55,10 +50,8 @@ export default function AddQPartView() {
   const [newStatus, setNewStatus] =
     useState<IPartStatusDTO>(defaultStatusValues);
   const [category, setCategory] = useState<number>(-1);
-
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [molds, setMolds] = useState<IPartMoldDTO[]>();
-  // const [wasApproved, setWasApproved] = useState<boolean>(false);
 
   const [qpartExistenceCode, setQpartExistenceCode] = useState<number>(-1);
 
@@ -123,15 +116,6 @@ export default function AddQPartView() {
     }
   }, [newQPart.moldId, newQPart.colorId, matchRefetch]);
 
-  // useEffect(() => {
-  //   if (
-  //     (unknownPN && newQPart.colorId != -1) ||
-  //     (!unknownPN && newQPart.moldId != -1 && newQPart.colorId != -1)
-  //   ) {
-  //     matchRefetch();
-  //   }
-  // }, [unknownPN, newQPart.colorId]);
-
   useEffect(() => {
     if (partsData) {
       const thesemolds = partsData.data.find((x) => x.id == newQPart.partId);
@@ -139,8 +123,8 @@ export default function AddQPartView() {
     }
   }, [newQPart.partId, partsData]);
 
-  const { data: catData, isFetched: catIsFetched } = useQuery("todos", () =>
-    axios.get<category[]>("http://localhost:3000/categories")
+  const { data: catData } = useQuery("todos", () =>
+    axios.get<ICategory[]>("http://localhost:3000/categories")
   );
 
   const partMutation = useMutation({
@@ -150,12 +134,6 @@ export default function AddQPartView() {
       console.log(data);
 
       if ((data.data?.code == 200 || data.data?.code == 201) && payload) {
-        // if (data.data?.code == 201) {
-        //   console.log("approved");
-
-        //   setWasApproved(true);
-        //   // console.log(wasApproved);
-        // }
         partStatusMutation.mutate({
           id: -1,
           status: newStatus.status,
@@ -209,7 +187,7 @@ export default function AddQPartView() {
     transform: "scale(1.5)", // Adjust the scale factor as needed
     marginRight: "8px", // Add some spacing if desired
   };
-  if (catIsFetched && catData && colData) {
+  if (catData && colData) {
     return (
       <>
         <div className="formcontainer">
@@ -318,33 +296,6 @@ export default function AddQPartView() {
                 }
                 customStyles={colorInputSyles}
               />
-              {/* <select
-                name="par"
-                id="par"
-                className="w-50 formInput"
-                onChange={(e) =>
-                  setNewQPart((newQPart) => ({
-                    ...newQPart,
-                    ...{ colorId: Number(e.target.value) },
-                  }))
-                }
-                value={newQPart.colorId}
-              >
-                <option value="-1">--</option>
-                {colData?.data.map((col) => (
-                  <option
-                    key={col.id}
-                    className="even-nums"
-                    value={`${col.id}`}
-                  >
-                    {getPrefColorIdString(col, prefPayload.prefId).padStart(
-                      4,
-                      String.fromCharCode(160)
-                    ) + String.fromCharCode(160)}
-                    | {getPrefColorName(col, prefPayload.prefName)}
-                  </option>
-                ))}
-              </select> */}
             </div>
             <div className="w-100 d-flex jc-space-b">
               <label htmlFor="eid">
@@ -575,9 +526,6 @@ export default function AddQPartView() {
               <button
                 className="formInputNM"
                 onClick={() => {
-                  // console.log("CODE", qpartExistenceCode);
-                  console.log(payload);
-
                   if (
                     newQPart.partId != -1 &&
                     newQPart.colorId != -1 &&
@@ -587,10 +535,10 @@ export default function AddQPartView() {
                   ) {
                     console.log("adding...");
                     partMutation.mutate(newQPart);
-                    setNewQPart(defaultValues);
-                    setNewQPart((newqpart) => ({
-                      ...newqpart,
-                      ...{ creatorId: payload.id },
+
+                    setNewQPart((prevVals) => ({
+                      ...defaultValues,
+                      ...{ creatorId: prevVals.creatorId },
                     }));
                   } else {
                     if (qpartExistenceCode == 201) {

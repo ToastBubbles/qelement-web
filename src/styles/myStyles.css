@@ -2250,6 +2250,8 @@ input:checked + .slider:before {
   display: inline-block;
   margin: 1em;
 }
+
+
 .pass-req {
   list-style-type: none;
   width: 100%;

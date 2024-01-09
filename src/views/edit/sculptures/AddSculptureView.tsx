@@ -47,10 +47,10 @@ export default function AddSculptureView() {
 
       if (data.data?.code == 200) {
         showToast("Sculpture submitted for approval!", Mode.Success);
-        setNewSculpture(baseValues);
-        setNewSculpture((newSculpture) => ({
-          ...newSculpture,
-          ...{ creatorId: payload.id },
+        // setNewSculpture(baseValues);
+        setNewSculpture((prevVals) => ({
+          ...baseValues,
+          ...{ creatorId: prevVals.creatorId },
         }));
       } else if (data.data?.code == 201) {
         showToast("Sculpture added!", Mode.Success);

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useMutation, useQuery } from "react-query";
-import { IAPIResponse, category } from "../../../interfaces/general";
+import { IAPIResponse, ICategory } from "../../../interfaces/general";
 import showToast, { Mode } from "../../../utils/utils";
 import { Link } from "react-router-dom";
 import { useState } from "react";
@@ -16,7 +16,7 @@ export default function ApproveCatView() {
     isFetched,
     refetch,
   } = useQuery("notApprovedCats", () =>
-    axios.get<category[]>("http://localhost:3000/categories/notApproved")
+    axios.get<ICategory[]>("http://localhost:3000/categories/notApproved")
   );
   const catMutation = useMutation({
     mutationFn: (id: number) =>

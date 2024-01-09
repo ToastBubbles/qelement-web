@@ -146,7 +146,7 @@ export interface IQPartDetails {
 export interface IPartDTO {
   id: number;
   name: string;
-  CatId: number;
+  Category: ICategory;
   creatorId: number;
   note: string;
 }
@@ -495,7 +495,12 @@ export interface IPartWithMoldDTO {
   creatorId: number;
 }
 
-export interface category {
+export interface ICategory {
+  id: number;
+  name: string;
+}
+
+export interface ICategoryWParts extends ICategory {
   id: number;
   name: string;
   parts: part[];

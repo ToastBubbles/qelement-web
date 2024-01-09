@@ -1,10 +1,4 @@
-import axios from "axios";
-import { useState, useContext } from "react";
-import { useMutation, useQuery } from "react-query";
-import { IGoalDTO, category } from "../interfaces/general";
-import showToast, { Mode } from "../utils/utils";
-import MyToolTip from "./MyToolTip";
-import { AppContext } from "../context/context";
+
 
 interface IProps {
   onClickFn: () => void;

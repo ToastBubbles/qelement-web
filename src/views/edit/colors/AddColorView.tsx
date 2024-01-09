@@ -377,10 +377,10 @@ export default function AddColorView() {
 
                   colorMutation.mutate(newColor);
 
-                  setNewColor(baseValues);
-                  setNewColor((newColor) => ({
-                    ...newColor,
-                    ...{ creatorId: payload.id },
+                  // setNewColor(baseValues);
+                  setNewColor((prevVals) => ({
+                    ...baseValues,
+                    ...{ creatorId: prevVals.creatorId },
                   }));
                 } else {
                   showToast("Error adding color.", Mode.Error);
