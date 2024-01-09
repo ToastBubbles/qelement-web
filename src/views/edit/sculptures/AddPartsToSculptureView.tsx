@@ -1,19 +1,16 @@
 import axios from "axios";
-import { CSSProperties, useContext, useEffect, useState } from "react";
-import DatePicker from "react-datepicker";
+import { useContext, useEffect, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { useMutation, useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
-import MyToolTip from "../../../components/MyToolTip";
 import { AppContext } from "../../../context/context";
 import showToast, { Mode, getPrefColorName } from "../../../utils/utils";
 import {
   IAPIResponse,
   IArrayOfIDs,
-  ICreateSculptureDTO,
+  ICategoryWParts,
   IQPartDTOInclude,
   ISculptureDTO,
-  category,
   part,
 } from "../../../interfaces/general";
 import RecentQPart from "../../../components/RecentQPart";
@@ -33,38 +30,26 @@ export default function AddPartsToSculptureView() {
 
   const [qparts, setQparts] = useState<IQPartDTOInclude[]>([]);
 
-  const {
-    data: sculptData,
-    error: sculptError,
-    refetch: sculptRefetch,
-  } = useQuery({
+  const { data: sculptData, refetch: sculptRefetch } = useQuery({
     queryKey: `sculpt${sculptId}`,
     queryFn: () => {
       return axios.get<ISculptureDTO>(
         `http://localhost:3000/sculpture/byId/${sculptId}`
       );
     },
-
     staleTime: 0,
     enabled: !!sculptId,
-    // retry: false,
   });
 
-  const {
-    data: qpartData,
-    error: qpartError,
-    refetch: qpartRefetch,
-  } = useQuery({
+  const { data: qpartData, refetch: qpartRefetch } = useQuery({
     queryKey: `qpart${partId}`,
     queryFn: () => {
       return axios.get<IQPartDTOInclude[]>(
         `http://localhost:3000/qpart/matchesByPartId/${partId}`
       );
     },
-
     staleTime: 0,
     enabled: !!partId,
-    // retry: false,
   });
 
   const { data: partsData, refetch: partsRefetch } = useQuery({
@@ -75,7 +60,7 @@ export default function AddPartsToSculptureView() {
   });
 
   const { data: catData, isFetched: catIsFetched } = useQuery("todos", () =>
-    axios.get<category[]>("http://localhost:3000/categories")
+    axios.get<ICategoryWParts[]>("http://localhost:3000/categories")
   );
 
   useEffect(() => {

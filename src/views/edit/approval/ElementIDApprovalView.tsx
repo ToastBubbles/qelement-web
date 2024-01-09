@@ -4,7 +4,7 @@ import {
   IAPIResponse,
   IElementIDWQPart,
   IQPartDTOInclude,
-  category,
+
 } from "../../../interfaces/general";
 import showToast, { Mode } from "../../../utils/utils";
 import { Link } from "react-router-dom";

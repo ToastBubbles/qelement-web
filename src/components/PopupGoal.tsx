@@ -1,10 +1,9 @@
 import axios from "axios";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useMutation, useQuery } from "react-query";
-import { IGoalDTO, category } from "../interfaces/general";
+import { ICategoryWParts, IGoalDTO } from "../interfaces/general";
 import showToast, { Mode } from "../utils/utils";
 import MyToolTip from "./MyToolTip";
-import { AppContext } from "../context/context";
 
 interface IProps {
   userId: number;
@@ -38,7 +37,7 @@ export default function PopupGoal({ userId, closePopup, refetchFn }: IProps) {
     },
   });
   const { data: catData } = useQuery("allCats", () =>
-    axios.get<category[]>("http://localhost:3000/categories")
+    axios.get<ICategoryWParts[]>("http://localhost:3000/categories")
   );
   if (catData) {
     const selcat = catData.data.find((x) => x.id == selectedCatId);

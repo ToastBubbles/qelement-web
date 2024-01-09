@@ -6,7 +6,6 @@ import {
   IQPartDTOInclude,
   ISculptureDTO,
   ImageDTO,
-  category,
   color,
 } from "../../interfaces/general";
 import { Link, useParams } from "react-router-dom";

@@ -2,6 +2,8 @@ import axios from "axios";
 import { useMutation } from "react-query";
 import { IPartMoldDTO } from "../interfaces/general";
 import showToast, { Mode } from "../utils/utils";
+import { useState } from "react";
+import ConfirmPopup from "./ConfirmPopup";
 
 interface IProps {
   mold: IPartMoldDTO;
@@ -9,6 +11,7 @@ interface IProps {
 }
 
 export default function PartMoldDetails({ mold, refetchFn }: IProps) {
+  const [showPopup, setShowPopup] = useState<boolean>(false);
   const partMutation = useMutation({
     mutationFn: (id: number) =>
       axios
@@ -20,9 +23,27 @@ export default function PartMoldDetails({ mold, refetchFn }: IProps) {
       showToast("Part Mold approved!", Mode.Success);
     },
   });
+  const partDeleteMutation = useMutation({
+    mutationFn: (id: number) =>
+      axios
+        .post<number>(`http://localhost:3000/partMold/deny`, { id })
+        .then((res) => console.log(res.data))
+        .catch((err) => console.log(err)),
+    onSuccess: () => {
+      refetchFn();
+      showToast("Part Mold deleted!", Mode.Info);
+    },
+  });
 
   return (
     <div className="coldeet">
+      {showPopup && (
+        <ConfirmPopup
+          content="Are you sure you want to delete this Part Mold? Parent part will remain unaffected."
+          fn={denyRequest}
+          closePopup={closePopUp}
+        />
+      )}
       <div>
         <div>For:</div>
         <div>{mold.parentPart.name}</div>
@@ -41,9 +62,19 @@ export default function PartMoldDetails({ mold, refetchFn }: IProps) {
           Please approve parent part first
         </div>
       ) : (
-        <button onClick={() => partMutation.mutate(mold.id)}>Approve</button>
+        <div style={{ justifyContent: "end" }}>
+          <button onClick={() => partMutation.mutate(mold.id)}>Approve</button>
+          <div style={{ width: "1em", textAlign: "center" }}>|</div>
+          <button onClick={() => setShowPopup(true)}>Deny</button>
+        </div>
       )}
     </div>
   );
-  //   else return <p>Loading</p>;
+  function closePopUp() {
+    setShowPopup(false);
+  }
+  function denyRequest() {
+    partDeleteMutation.mutate(mold.id);
+    setShowPopup(false);
+  }
 }

@@ -2,15 +2,12 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import {
   IColorWUnk,
-  IMoldStatus,
   IMoldStatusWUNK,
   IQPartDTOInclude,
   color,
 } from "../interfaces/general";
-
 import { validateSearch } from "../utils/utils";
 import { useState } from "react";
-
 import ColorStatus from "./ColorStatus";
 
 interface IProps {
@@ -25,10 +22,6 @@ interface IMoldCounter {
   number: string;
 }
 
-// interface IMoldIdWName {
-//   id: number;
-//   number: string;
-// }
 export default function AllColorStatus({ qparts, moldId, search }: IProps) {
   const { data: colorData, isLoading } = useQuery("allColors", () =>
     axios.get<color[]>("http://localhost:3000/color")

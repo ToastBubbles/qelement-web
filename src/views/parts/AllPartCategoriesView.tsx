@@ -1,14 +1,12 @@
 import axios from "axios";
 import { useQuery } from "react-query";
-import { category } from "../../interfaces/general";
+
 import { Link } from "react-router-dom";
+import { ICategory } from "../../interfaces/general";
 
 export default function AllPartCategoriesView() {
-  const {
-    data: catData,
-
-  } = useQuery("allCats", () =>
-    axios.get<category[]>("http://localhost:3000/categories")
+  const { data: catData } = useQuery("allCats", () =>
+    axios.get<ICategory[]>("http://localhost:3000/categories")
   );
   if (catData) {
     return (

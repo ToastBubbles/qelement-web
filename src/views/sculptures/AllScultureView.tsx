@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useQuery } from "react-query";
-import { ISculptureDTO, category } from "../../interfaces/general";
+import { ISculptureDTO} from "../../interfaces/general";
 import { Link } from "react-router-dom";
 
 export default function AllSculptureView() {
