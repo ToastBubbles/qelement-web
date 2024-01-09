@@ -561,10 +561,10 @@ body::-webkit-scrollbar {
   text-align: end;
   font-size: 0.9em;
 }
-.inline-emph{
+.inline-emph {
   display: inline;
-text-decoration: underline;
-font-weight: bold;
+  text-decoration: underline;
+  font-weight: bold;
 }
 .listing-img > img {
   width: 100%;
@@ -1071,7 +1071,7 @@ fieldset > legend {
 .welcome-logo {
   margin-bottom: 1.5em;
 }
-.welcome-logo > a {
+.welcome-logo > div {
   font-size: 3.5em;
 }
 
@@ -2126,14 +2126,20 @@ input:checked + .slider:before {
   background-color: rgba(0, 0, 0, 0.5);
 }
 .popup-close {
-  border-radius: 1em;
   background: none;
   border: none;
   color: var(--dk-grey);
   width: 100%;
-
+  cursor: pointer;
   text-align: end;
   font-size: larger;
+}
+.popup-inner-body{
+  height: 90%;
+  display: flex;
+  justify-content: center;
+
+  flex-direction: column;
 }
 .popup-body {
   position: absolute;
@@ -2519,13 +2525,13 @@ input:checked + .slider:before {
     border-left: none;
     border-right: none;
   }
-  .navbar > .text-logo > a > span {
+  .navbar > .text-logo > div > span {
     font-size: 1em;
   }
-  .text-logo > a > span {
+  .text-logo > div > span {
     font-size: 10vw;
   }
-  .welcome-logo > a {
+  .welcome-logo > div {
     font-size: unset;
   }
   .welcome {

@@ -588,6 +588,10 @@ export default function AddQPartView() {
                     console.log("adding...");
                     partMutation.mutate(newQPart);
                     setNewQPart(defaultValues);
+                    setNewQPart((newqpart) => ({
+                      ...newqpart,
+                      ...{ creatorId: payload.id },
+                    }));
                   } else {
                     if (qpartExistenceCode == 201) {
                       showToast(

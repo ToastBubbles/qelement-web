@@ -49,6 +49,10 @@ export interface color {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface IColorWCreator extends color {
+  creator: user;
+}
 export interface colorWSimilar {
   id: number;
   bl_name: string;

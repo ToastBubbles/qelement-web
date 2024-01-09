@@ -10,10 +10,10 @@ export default function Home() {
         <div className="jumbotron">
           <div className="welcome">welcome to</div>
           <div className="text-logo welcome-logo">
-            <Link to="#">
+            <div>
               <span className="lt-red">q</span>
-              <span>element</span>
-            </Link>
+              <span className="lt-grey">element</span>
+            </div>
           </div>
 
           <Link to="/about" className="jumbo-btn clickable">

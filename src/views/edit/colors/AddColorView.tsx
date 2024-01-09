@@ -365,11 +365,23 @@ export default function AddColorView() {
             <button
               onClick={() => {
                 if (newColor.hex.length == 0) newColor.hex = "UNKNWN";
-                if (newColor.hex.length == 6 && newColor.creatorId != -1) {
+                if (
+                  newColor.hex.length == 6 &&
+                  newColor.creatorId != -1 &&
+                  newColor.bl_name.length +
+                    newColor.bo_name.length +
+                    newColor.tlg_name.length >
+                    3
+                ) {
                   // showToast("Color Submitted for approval!", Mode.Success);
 
                   colorMutation.mutate(newColor);
+
                   setNewColor(baseValues);
+                  setNewColor((newColor) => ({
+                    ...newColor,
+                    ...{ creatorId: payload.id },
+                  }));
                 } else {
                   showToast("Error adding color.", Mode.Error);
                 }

@@ -12,6 +12,7 @@ import {
 } from "../../../interfaces/general";
 import showToast, { Mode } from "../../../utils/utils";
 import { AppContext } from "../../../context/context";
+import ColorTextField from "../../../components/ColorTextField";
 
 export default function ColorEditView() {
   const {
@@ -28,6 +29,7 @@ export default function ColorEditView() {
     data: colData,
 
     error: colError,
+    refetch,
   } = useQuery({
     queryKey: "color",
     queryFn: () =>
@@ -85,6 +87,7 @@ export default function ColorEditView() {
 
       if (e.data.code == 200) {
         showToast("Similar Color Pair submitted!", Mode.Success);
+        refetch();
       } else if (e.data.code == 501) {
         showToast(
           "Similar Color Relationship already exist between these colors, it may be pending approval",
@@ -253,14 +256,16 @@ export default function ColorEditView() {
           </section>
           <section>
             <div className="edit-similarity">
-              <input
+              {/* <input
                 maxLength={6}
                 onChange={(e) => setSimilarColorToAdd(Number(e.target.value))}
                 type="number"
                 id="similarId"
                 name="similarId"
                 placeholder="color QID"
-              />
+              /> */}
+
+              <ColorTextField setter={setSimilarColorToAdd} />
               <button
                 onClick={() => {
                   console.log(Number(colorId), similarColorToAdd);

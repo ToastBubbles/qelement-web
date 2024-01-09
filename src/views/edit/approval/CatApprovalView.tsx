@@ -3,8 +3,14 @@ import { useMutation, useQuery } from "react-query";
 import { IAPIResponse, category } from "../../../interfaces/general";
 import showToast, { Mode } from "../../../utils/utils";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import ConfirmPopup from "../../../components/ConfirmPopup";
 
 export default function ApproveCatView() {
+  const [showPopup, setShowPopup] = useState<boolean>(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
+    null
+  );
   const {
     data: catData,
     isFetched,
@@ -44,6 +50,13 @@ export default function ApproveCatView() {
     return (
       <>
         <div className="formcontainer">
+          {showPopup && (
+            <ConfirmPopup
+              content="Are you sure you want to delete this Category?"
+              closePopup={closePopUp}
+              fn={denyRequest}
+            />
+          )}
           <h1>approve categories</h1>
           <Link to={"/approve"}>Back to Approval Overview</Link>
           <div className="mainform">
@@ -60,9 +73,7 @@ export default function ApproveCatView() {
                         Approve
                       </button>
                       <div className="button-spacer">|</div>
-                      <button onClick={() => catDeleteMutation.mutate(cat.id)}>
-                        Delete
-                      </button>
+                      <button onClick={() => handleDeny(cat.id)}>Delete</button>
                     </div>
                   </div>
                 );
@@ -76,6 +87,18 @@ export default function ApproveCatView() {
         </div>
       </>
     );
+    function handleDeny(id: number) {
+      setSelectedCategoryId(id);
+      setShowPopup(true);
+    }
+    function closePopUp() {
+      setSelectedCategoryId(null);
+      setShowPopup(false);
+    }
+    function denyRequest() {
+      if (selectedCategoryId) catDeleteMutation.mutate(selectedCategoryId);
+      setShowPopup(false);
+    }
   } else {
     return <p>Loading...</p>;
   }

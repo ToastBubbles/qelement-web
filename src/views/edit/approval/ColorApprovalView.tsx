@@ -1,21 +1,23 @@
 import axios from "axios";
 import { useQuery } from "react-query";
 import ColorDetails from "../../../components/ColorDetails";
-import { color } from "../../../interfaces/general";
+import { IColorWCreator, color } from "../../../interfaces/general";
 import { Link } from "react-router-dom";
 
 export default function ApproveColorView() {
   const {
     data: colData,
- 
+
     isFetched,
     refetch,
   } = useQuery("notApprovedColors", () =>
-    axios.get<color[]>("http://localhost:3000/color/notApproved")
+    axios.get<IColorWCreator[]>("http://localhost:3000/color/notApproved")
   );
 
   if (isFetched && colData) {
     const colors = colData.data;
+    console.log(colors);
+
     return (
       <>
         <div className="formcontainer">
