@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { IAPIResponse, ImageDTOExtended } from "../interfaces/general";
 import showToast, { Mode } from "../utils/utils";
 import PopupImage from "./PopupImage";
+import ConfirmPopup from "./ConfirmPopup";
 
 interface IProps {
   img: ImageDTOExtended;
@@ -12,6 +13,7 @@ interface IProps {
 }
 
 export default function ImageApprovalRow({ img, refetchFn }: IProps) {
+  const [showDeletePopup, setShowDeletePopup] = useState<boolean>(false);
   const [imageOpen, setImageOpen] = useState<boolean>(false);
   const [imageName, setImageName] = useState<string>("");
   const [isPrimary, setIsPrimary] = useState<boolean>(false);
@@ -50,6 +52,83 @@ export default function ImageApprovalRow({ img, refetchFn }: IProps) {
     },
   });
   return (
+    // <>
+    //   {imageOpen && imageName && (
+    //     <PopupImage
+    //       imgPath={formatURL(imageName)}
+    //       closePopup={() => setImageOpen(false)}
+    //     />
+    //   )}
+    //   <div
+    //     key={img.id}
+    //     className="d-flex jc-space-b w-100 p-1 alternating-children"
+    //   >
+    //     <div
+    //       className="img-approval-container"
+    //       onClick={() => {
+    //         setImageName(img.fileName);
+    //         setImageOpen(true);
+    //       }}
+    //     >
+    //       <img src={formatURL(img.fileName)} />
+    //     </div>
+
+    //     <div className="d-flex flex-col">
+    //       <div>Type:</div>
+    //       <div>{img.type}</div>
+    //     </div>
+    //     {img.qpart ? (
+    //       <>
+    //         <div className="d-flex flex-col">
+    //           <div>Color:</div>
+    //           <div>
+    //             {img.qpart.color.bl_name
+    //               ? img.qpart.color.bl_name
+    //               : img.qpart.color.tlg_name}
+    //           </div>
+    //         </div>
+    //         <div className="d-flex flex-col">
+    //           <div>Part:</div>
+    //           <Link
+    //             to={`/part/${img.qpart.mold.parentPart.id}?color=${img.qpart.color.id}`}
+    //           >
+    //             {img.qpart.mold.parentPart.name} ({img.qpart.mold.number})
+    //           </Link>
+    //         </div>
+    //       </>
+    //     ) : (
+    //       <>
+    //         <div className="d-flex flex-col"></div>
+    //         <div className="d-flex flex-col"></div>
+    //       </>
+    //     )}
+    //     <div className="d-flex flex-col">
+    //       <div>Uploader:</div>
+    //       <div>{img.uploader.name}</div>
+    //       <div>{img.uploader.email}</div>
+    //     </div>
+    //     <div className="d-flex flex-col">
+    //       <div>Make Primary:</div>
+    //       <input
+    //         type="checkbox"
+    //         onChange={(e) => setIsPrimary(e.target.checked)}
+    //       />
+    //     </div>
+    //     <div>
+    //       <button
+    //         onClick={() => {
+    //           imgMutation.mutate(img.id);
+    //         }}
+    //       >
+    //         Approve
+    //       </button>
+    //       <div className="button-spacer">|</div>
+    //       <button onClick={() => imgDeleteMutation.mutate(img.id)}>
+    //         Delete
+    //       </button>
+    //     </div>
+    //   </div>
+    // </>
     <>
       {imageOpen && imageName && (
         <PopupImage
@@ -57,12 +136,19 @@ export default function ImageApprovalRow({ img, refetchFn }: IProps) {
           closePopup={() => setImageOpen(false)}
         />
       )}
+      {showDeletePopup && (
+        <ConfirmPopup
+          content="Are you sure you want to delete this image?"
+          closePopup={closePopUp}
+          fn={denyRequest}
+        />
+      )}
       <div
         key={img.id}
-        className="d-flex jc-space-b w-100 p-1 alternating-children"
+        className="grid-container-image w-100 p-1 alternating-children"
       >
         <div
-          className="img-approval-container"
+          className="img-approval-container clickable"
           onClick={() => {
             setImageName(img.fileName);
             setImageOpen(true);
@@ -72,32 +158,36 @@ export default function ImageApprovalRow({ img, refetchFn }: IProps) {
         </div>
 
         <div className="d-flex flex-col">
-          <div>Type:</div>
           <div>{img.type}</div>
         </div>
+        {img.qpart ? (
+          <>
+            <div className="d-flex flex-col">
+              <div>
+                {img.qpart.color.bl_name
+                  ? img.qpart.color.bl_name
+                  : img.qpart.color.tlg_name}
+              </div>
+            </div>
+            <div className="d-flex flex-col">
+              <Link
+                to={`/part/${img.qpart.mold.parentPart.id}?color=${img.qpart.color.id}`}
+              >
+                {img.qpart.mold.parentPart.name} ({img.qpart.mold.number})
+              </Link>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="d-flex flex-col"></div>
+            <div className="d-flex flex-col"></div>
+          </>
+        )}
         <div className="d-flex flex-col">
-          <div>Color:</div>
-          <div>
-            {img.qpart.color.bl_name
-              ? img.qpart.color.bl_name
-              : img.qpart.color.tlg_name}
-          </div>
-        </div>
-        <div className="d-flex flex-col">
-          <div>Part:</div>
-          <Link
-            to={`/part/${img.qpart.mold.parentPart.id}?color=${img.qpart.color.id}`}
-          >
-            {img.qpart.mold.parentPart.name} ({img.qpart.mold.number})
-          </Link>
-        </div>
-        <div className="d-flex flex-col">
-          <div>Uploader:</div>
           <div>{img.uploader.name}</div>
           <div>{img.uploader.email}</div>
         </div>
         <div className="d-flex flex-col">
-          <div>Make Primary:</div>
           <input
             type="checkbox"
             onChange={(e) => setIsPrimary(e.target.checked)}
@@ -112,11 +202,19 @@ export default function ImageApprovalRow({ img, refetchFn }: IProps) {
             Approve
           </button>
           <div className="button-spacer">|</div>
-          <button onClick={() => imgDeleteMutation.mutate(img.id)}>
-            Delete
-          </button>
+          <button onClick={() => setShowDeletePopup(true)}>Delete</button>
         </div>
       </div>
     </>
   );
+
+  function closePopUp() {
+    // setSelectedCategoryId(null);
+    setShowDeletePopup(false);
+  }
+  function denyRequest() {
+    // if (selectedCategoryId)
+    imgDeleteMutation.mutate(img.id);
+    setShowDeletePopup(false);
+  }
 }

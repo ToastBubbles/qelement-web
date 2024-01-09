@@ -1,10 +1,7 @@
 import axios from "axios";
 import { useQuery } from "react-query";
 
-import {
-
-  ImageDTOExtended,
-} from "../../../interfaces/general";
+import { ImageDTOExtended } from "../../../interfaces/general";
 
 import ImageApprovalRow from "../../../components/ImageApprovalRow";
 import { Link } from "react-router-dom";
@@ -39,6 +36,15 @@ export default function ApproveImageView() {
           <h1>approve images</h1>
           <Link to={"/approve"}>Back to Approval Overview</Link>
           <div className="mainform-wide">
+            <div className="grid-container-image w-100 p-1">
+              <div>Image</div>
+              <div>Type</div>
+              <div>Color</div>
+              <div>Part</div>
+              <div>Requestor</div>
+              <div>Primary?</div>
+             
+            </div>
             {imgs.length > 0 ? (
               imgs.map((img) => {
                 return <ImageApprovalRow img={img} refetchFn={refetch} />;

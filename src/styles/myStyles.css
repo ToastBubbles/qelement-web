@@ -2197,7 +2197,12 @@ input:checked + .slider:before {
 .lt-black {
   color: #969696;
 }
-
+.grid-container-image {
+  display: grid;
+  grid-template-columns: 0.8fr 0.7fr 1.2fr 1fr 1.2fr 0.5fr 1.2fr;
+  align-items: center;
+  /* grid-template-rows: auto 100px auto auto auto auto auto; */
+}
 .footer-container {
   height: 10em;
   padding: 1em;
