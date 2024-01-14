@@ -129,6 +129,9 @@ export interface IPartStatusDTO {
   qpartId: number;
   creatorId: number;
 }
+export interface IPartStatusWQPart extends IPartStatusDTO {
+  qpart: IQPartDTOInclude;
+}
 export interface IElementID {
   number: number;
   id: number;

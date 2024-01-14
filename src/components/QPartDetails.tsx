@@ -3,6 +3,8 @@ import { useMutation } from "react-query";
 import { Link } from "react-router-dom";
 import { IQPartDTOInclude } from "../interfaces/general";
 import showToast, { Mode } from "../utils/utils";
+import { useState } from "react";
+import ConfirmPopup from "./ConfirmPopup";
 
 interface IProps {
   qpart: IQPartDTOInclude;
@@ -10,7 +12,7 @@ interface IProps {
 }
 
 export default function QPartDetails({ qpart, refetchFn }: IProps) {
-  // console.log(qpart);
+  const [showPopup, setShowPopup] = useState<boolean>(false);
 
   const qpartMutation = useMutation({
     mutationFn: (id: number) =>
@@ -23,21 +25,28 @@ export default function QPartDetails({ qpart, refetchFn }: IProps) {
       showToast("Qelement approved!", Mode.Success);
     },
   });
-  // const { data: partData } = useQuery(`part${qpart.partId}`, () =>
-  //   axios.get<part>(`http://localhost:3000/parts/id/${qpart.partId}`)
-  // );
-
-  // const { data: colData } = useQuery("allColors", () =>
-  //   axios.get<color[]>("http://localhost:3000/color")
-  // );
-
-  // const { data: creatorData } = useQuery(`user${qpart.creatorId}`, () =>
-  //   axios.get<user>(`http://localhost:3000/user/id/${qpart.creatorId}`)
-  // );
+  const qpartDeletionMutation = useMutation({
+    mutationFn: (id: number) =>
+      axios
+        .post<number>(`http://localhost:3000/qpart/deny`, { id })
+        .then((res) => console.log(res.data))
+        .catch((err) => console.log(err)),
+    onSuccess: () => {
+      refetchFn();
+      showToast("Qelement denied!", Mode.Info);
+    },
+  });
 
   if (qpart) {
     return (
       <div className="coldeet">
+        {showPopup && (
+          <ConfirmPopup
+            content="Are you sure you want to delete this Q-Element?"
+            fn={denyRequest}
+            closePopup={closePopUp}
+          />
+        )}
         <div>
           <div>Part:</div>
           <Link to={`/part/${qpart.mold.parentPart.id}`}>
@@ -70,8 +79,21 @@ export default function QPartDetails({ qpart, refetchFn }: IProps) {
           Note:
           <div className="wrapbreak">{qpart.note}</div>
         </section>
-        <button onClick={() => qpartMutation.mutate(qpart.id)}>Approve</button>
+        <div style={{ justifyContent: "end" }}>
+          <button onClick={() => qpartMutation.mutate(qpart.id)}>
+            Approve
+          </button>
+          <div style={{ width: "1em", textAlign: "center" }}>|</div>
+          <button onClick={() => setShowPopup(true)}>Deny</button>
+        </div>
       </div>
     );
   } else return <p>Loading</p>;
+  function closePopUp() {
+    setShowPopup(false);
+  }
+  function denyRequest() {
+    qpartDeletionMutation.mutate(qpart.id);
+    setShowPopup(false);
+  }
 }

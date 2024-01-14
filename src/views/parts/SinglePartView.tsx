@@ -379,7 +379,7 @@ export default function SinglePartView() {
                 </div>
                 <fieldset className="status">
                   <legend>Status History</legend>
-                  {mypart?.partStatuses &&
+                  {mypart?.partStatuses && mypart.partStatuses.length > 0 ? (
                     sortStatus(mypart?.partStatuses).map((status) => (
                       <QPartStatusDate
                         key={status.id}
@@ -387,7 +387,13 @@ export default function SinglePartView() {
                         date={status.date}
                         isPrimary={mypart?.partStatuses.indexOf(status) == 0}
                       />
-                    ))}
+                    ))
+                  ) : (
+                    <div>
+                      <div>No status yet!</div>{" "}
+                      <div>Please consider adding one!</div>
+                    </div>
+                  )}
                 </fieldset>
               </div>
               <div className="lower-center">

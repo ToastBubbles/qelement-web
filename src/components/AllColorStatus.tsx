@@ -116,7 +116,7 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
           });
 
           sameColorQParts.forEach((scQPart) => {
-            if (!alreadyAdded) {
+            if (!alreadyAdded && scQPart.partStatuses.length > 0) {
               const statusObj = scQPart.partStatuses[0].status;
               const category =
                 scQPart.mold.id === sortKey ? "primary" : "secondary";

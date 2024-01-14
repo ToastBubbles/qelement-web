@@ -736,7 +736,8 @@ input:checked + .slider:before {
 .tag-unknown {
   background-color: rgb(153, 12, 106);
 }
-.tag-nostatus {
+.tag-nostatus,
+.tag-none {
   background-color: rgb(71, 71, 71);
   color: #a0a0a0;
 }
@@ -2251,7 +2252,11 @@ input:checked + .slider:before {
   margin: 1em;
 }
 
-
+.status-compare {
+  display: flex;
+  /* justify-content: space-evenly; */
+  padding: 0 8em 2em 8em;
+}
 .pass-req {
   list-style-type: none;
   width: 100%;

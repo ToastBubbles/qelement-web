@@ -33,6 +33,10 @@ export default function ApproveView() {
               <Link to={"/approve/qparts"}>
                 QElements {counts.qelements > 0 && `(${counts.qelements})`}
               </Link>
+              <Link to={"/approve/status"}>
+                Part Statuses{" "}
+                {counts.partStatuses > 0 && `(${counts.partStatuses})`}
+              </Link>
               <Link to={"/approve/elementIDs"}>
                 Element IDs {counts.elementIDs > 0 && `(${counts.elementIDs})`}
               </Link>

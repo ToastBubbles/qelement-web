@@ -24,7 +24,7 @@ export default function RecentQPart({
   hideDate = false,
   disableLinks = false,
 }: IProps) {
-
+  // console.log("here");
 
   const {
     state: {
@@ -32,7 +32,7 @@ export default function RecentQPart({
     },
   } = useContext(AppContext);
   let thisqpart: IQPartDTOIncludeLess;
-  if (qpart?.partStatuses.length == 0) return <></>;
+  // if (qpart?.partStatuses.length == 0) return <></>;
   if (qpart) {
     thisqpart = {
       id: qpart.id,
@@ -73,6 +73,7 @@ export default function RecentQPart({
 
   if (thisqpart) {
     const age = calculateHoursBetweenDates(thisqpart.approvalDate);
+
     const images = filterImages(thisqpart.images);
     let primaryImage = images[images.length - 1];
     for (let i = images.length - 1; i >= 0; i--) {
@@ -84,6 +85,7 @@ export default function RecentQPart({
         break;
       }
     }
+    // console.log(thisqpart);
 
     return (
       <RibbonContainer>
@@ -100,6 +102,19 @@ export default function RecentQPart({
             {makeHoursString(age)}
           </Ribbon>
         )}
+        {thisqpart.approvalDate == null && (
+          <Ribbon
+            side="right"
+            type="corner"
+            size="normal"
+            backgroundColor="red"
+            color="white"
+            withStripes={false}
+            fontFamily="lexend"
+          >
+            <div style={{ fontSize: "0.6em" }}>NOT APPROVED</div>
+          </Ribbon>
+        )}
         <Link
           to={`/part/${thisqpart.mold.parentPart.id}?color=${thisqpart.color.id}`}
           className={`listing new-listing ${
@@ -114,14 +129,18 @@ export default function RecentQPart({
                   : "/img/missingimage.png"
               }
             />
-            <div
-              className={
-                "recentQPartStatus tag-" +
-                sortStatus(thisqpart.partStatuses)[0].status
-              }
-            >
-              {sortStatus(thisqpart.partStatuses)[0].status}
-            </div>
+            {thisqpart.partStatuses.length > 0 ? (
+              <div
+                className={
+                  "recentQPartStatus tag-" +
+                  sortStatus(thisqpart.partStatuses)[0].status
+                }
+              >
+                {sortStatus(thisqpart.partStatuses)[0].status}
+              </div>
+            ) : (
+              <div className={"recentQPartStatus tag-nostatus"}>No Status</div>
+            )}
           </div>
           <div>
             <div>
