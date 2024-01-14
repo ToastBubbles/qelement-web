@@ -1,18 +1,8 @@
 import { Ribbon, RibbonContainer } from "react-ribbons";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import {
-  IQPartDTOInclude,
-  IQPartDTOIncludeLess,
-  ISculptureDTO,
-} from "../interfaces/general";
-import {
-  filterImages,
-  formatDate,
-  getPrefColorName,
-  imagePath,
-  sortStatus,
-} from "../utils/utils";
+import { ISculptureDTO } from "../interfaces/general";
+import { filterImages, formatDate, imagePath } from "../utils/utils";
 import { AppContext } from "../context/context";
 
 interface IProps {
@@ -51,6 +41,8 @@ export default function RecentSculpture({
   }
 
   if (sculpture) {
+    console.log(sculpture);
+
     const age = calculateHoursBetweenDates(sculpture.approvalDate);
     const images = filterImages(sculpture.images);
     let primaryImage = images[images.length - 1];
@@ -107,7 +99,7 @@ export default function RecentSculpture({
               {sculpture.name} ({sculpture.brickSystem})
             </div>
             <div className="listing-color">
-              <div>{sculpture.inventory.length} unique parts</div>
+              <div>{getUniquePartCount()} parts listed</div>
             </div>
             {!hideDate && (
               <div style={{ fontSize: "0.8em" }}>
@@ -119,4 +111,12 @@ export default function RecentSculpture({
       </RibbonContainer>
     );
   } else return <div className="listing new-listing">Loading...</div>;
+
+  function getUniquePartCount(): number {
+    let output = 0;
+    sculpture.inventory.forEach((item) => {
+      if (item.SculptureInventory.approvalDate != null) output++;
+    });
+    return output;
+  }
 }

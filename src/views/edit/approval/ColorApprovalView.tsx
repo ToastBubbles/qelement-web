@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useQuery } from "react-query";
-import ColorDetails from "../../../components/ColorDetails";
+import ColorDetails from "../../../components/Approval Componenents/ColorDetails";
 import { IColorWCreator, color } from "../../../interfaces/general";
 import { Link } from "react-router-dom";
 

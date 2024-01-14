@@ -34,7 +34,7 @@ export default function AddPartsToSculptureView() {
     queryKey: `sculpt${sculptId}`,
     queryFn: () => {
       return axios.get<ISculptureDTO>(
-        `http://localhost:3000/sculpture/byId/${sculptId}`
+        `http://localhost:3000/sculpture/byIdWithPendingParts/${sculptId}`
       );
     },
     staleTime: 0,
@@ -218,6 +218,22 @@ export default function AddPartsToSculptureView() {
                   }}
                 >
                   {sculpture.inventory.map((qpart) => {
+                    if (qpart.SculptureInventory.approvalDate == null) {
+                      return (
+                        <RecentQPart
+                          key={qpart.id}
+                          qpart={qpart}
+                          hideDate={true}
+                          disableLinks={true}
+                          ribbonOverride={{
+                            content: "Pending",
+                            bgColor: "#aaa",
+                            fgColor: "#000",
+                            fontSize: "1em",
+                          }}
+                        />
+                      );
+                    }
                     return (
                       <RecentQPart
                         key={qpart.id}

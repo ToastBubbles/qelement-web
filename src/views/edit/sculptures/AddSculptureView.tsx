@@ -249,7 +249,7 @@ export default function AddSculptureView() {
               value={newSculpture.location}
             />
           </div>
-          <div className="w-100 d-flex jc-space-b">
+          {/* <div className="w-100 d-flex jc-space-b">
             <div>
               <label htmlFor="yearret">Keywords</label>
               <MyToolTip
@@ -276,7 +276,7 @@ export default function AddSculptureView() {
               type="text"
               placeholder="Optional"
             />
-          </div>
+          </div> */}
           <label htmlFor="sculnote" style={{ marginRight: "auto" }}>
             Note for sculpture
           </label>

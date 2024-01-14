@@ -94,6 +94,8 @@ export default function SingleSculptureView() {
   if (sculptData && adminData) {
     let sculpture = sculptData.data;
     let colorsUsed = getAllColorsUsed(sculpture.inventory);
+    console.log(sculpture);
+
     return (
       <div className="mx-w">
         <div className="page-content-wrapper">
@@ -153,12 +155,12 @@ export default function SingleSculptureView() {
                       />
                     ))} */}
 
-                  {colorsUsed.length == 0 ? (
-                    <p>No parts added yet!</p>
-                  ) : (
+                  {colorsUsed.length > 0 && colorsUsed[0] != undefined ? (
                     colorsUsed.map((color) => (
                       <ColorLink key={color.id} color={color} />
                     ))
+                  ) : (
+                    <p>No parts added yet!</p>
                   )}
                 </fieldset>
               </div>

@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 
 import { IQPartDTOInclude } from "../../../interfaces/general";
 
-import QPartDetails from "../../../components/QPartDetails";
+import QPartDetails from "../../../components/Approval Componenents/QPartDetails";
 import { Link } from "react-router-dom";
 
 export default function ApproveQPartView() {

@@ -79,6 +79,7 @@ export interface INotApporvedCounts {
   similarColors: number;
   images: number;
   sculptures: number;
+  sculptureInventories: number;
   elementIDs: number;
 }
 
@@ -279,6 +280,7 @@ export interface ISimpleSculptureDTO {
   keywords: string;
   creator: user;
 }
+
 export interface ISculptureDTO {
   id: number;
   name: string;
@@ -288,10 +290,22 @@ export interface ISculptureDTO {
   yearRetired: number;
   keywords: string;
   creator: user;
-  inventory: IQPartDTOInclude[];
+  inventory: IQPartWSculptureInventory[];
   images: ImageDTO[];
   comments: ICommentDTO[];
   approvalDate: string;
+}
+
+export interface IRibbonOverride {
+  content: string;
+  bgColor: string;
+  fgColor: string;
+  fontSize: string;
+}
+
+export interface ISculptureInventory {
+  parts: IQPartDTOInclude[];
+  sculpture: ISculptureDTO;
 }
 export interface IQPartDTOInclude {
   id: number;
@@ -306,9 +320,15 @@ export interface IQPartDTOInclude {
   comments: ICommentDTO[];
   partStatuses: IPartStatusDTO[];
   images: ImageDTO[];
-
   approvalDate: string;
   createdAt: string;
+}
+interface IApprovalDateOnly {
+  approvalDate: string | null;
+}
+
+export interface IQPartWSculptureInventory extends IQPartDTOInclude {
+  SculptureInventory: IApprovalDateOnly;
 }
 export interface CustomStyles {
   [key: string]: string | number; // Allow any CSS property

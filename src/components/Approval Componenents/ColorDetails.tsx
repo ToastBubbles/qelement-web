@@ -1,9 +1,9 @@
-import { IColorWCreator, color } from "../interfaces/general";
+import { IColorWCreator, color } from "../../interfaces/general";
 import axios from "axios";
 import { useMutation } from "react-query";
-import showToast, { Mode } from "../utils/utils";
+import showToast, { Mode } from "../../utils/utils";
 import { useState } from "react";
-import ConfirmPopup from "./ConfirmPopup";
+import ConfirmPopup from "../ConfirmPopup";
 
 interface IProps {
   color: IColorWCreator;

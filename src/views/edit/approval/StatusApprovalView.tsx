@@ -1,15 +1,8 @@
 import axios from "axios";
 import { useQuery } from "react-query";
-
-import {
-  IPartStatusDTO,
-  IPartStatusWQPart,
-  IQPartDTOInclude,
-} from "../../../interfaces/general";
-
-import QPartDetails from "../../../components/QPartDetails";
+import { IPartStatusWQPart } from "../../../interfaces/general";
 import { Link } from "react-router-dom";
-import PartStatusDetails from "../../../components/PartStatusDetail";
+import PartStatusDetails from "../../../components/Approval Componenents/PartStatusDetail";
 
 export default function ApproveStatusView() {
   const {
@@ -27,7 +20,7 @@ export default function ApproveStatusView() {
     return (
       <>
         <div className="formcontainer">
-          <h1>approve qelements</h1>
+          <h1>approve statuses</h1>
           <Link to={"/approve"}>Back to Approval Overview</Link>
           <div className="mainform">
             {statuses.length > 0 ? (

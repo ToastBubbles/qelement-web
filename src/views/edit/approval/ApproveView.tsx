@@ -43,9 +43,10 @@ export default function ApproveView() {
               <Link to={"/approve/sculptures"}>
                 Sculptures {counts.sculptures > 0 && `(${counts.sculptures})`}
               </Link>
-              <Link to={"/approve/partStatus"}>
-                Part Status{" "}
-                {counts.partStatuses > 0 && `(${counts.partStatuses})`}
+              <Link to={"/approve/sculptureInventories"}>
+                Sculpture Inventory{" "}
+                {counts.sculptureInventories > 0 &&
+                  `(${counts.sculptureInventories})`}
               </Link>
               <Link to={"/approve/similarColors"}>
                 Similar Colors{" "}

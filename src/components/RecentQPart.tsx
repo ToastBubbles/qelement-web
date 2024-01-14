@@ -1,7 +1,11 @@
 import { Ribbon, RibbonContainer } from "react-ribbons";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { IQPartDTOInclude, IQPartDTOIncludeLess } from "../interfaces/general";
+import {
+  IQPartDTOInclude,
+  IQPartDTOIncludeLess,
+  IRibbonOverride,
+} from "../interfaces/general";
 import {
   filterImages,
   formatDate,
@@ -16,6 +20,7 @@ interface IProps {
   qpartl?: IQPartDTOIncludeLess;
   hideDate?: boolean;
   disableLinks?: boolean;
+  ribbonOverride?: IRibbonOverride;
 }
 
 export default function RecentQPart({
@@ -23,6 +28,7 @@ export default function RecentQPart({
   qpartl,
   hideDate = false,
   disableLinks = false,
+  ribbonOverride,
 }: IProps) {
   // console.log("here");
 
@@ -89,32 +95,7 @@ export default function RecentQPart({
 
     return (
       <RibbonContainer>
-        {age <= 24 && (
-          <Ribbon
-            side="right"
-            type="corner"
-            size="normal"
-            backgroundColor="var(--dk-grey)"
-            color="var(--lt-grey)"
-            withStripes={false}
-            fontFamily="lexend"
-          >
-            {makeHoursString(age)}
-          </Ribbon>
-        )}
-        {thisqpart.approvalDate == null && (
-          <Ribbon
-            side="right"
-            type="corner"
-            size="normal"
-            backgroundColor="red"
-            color="white"
-            withStripes={false}
-            fontFamily="lexend"
-          >
-            <div style={{ fontSize: "0.6em" }}>NOT APPROVED</div>
-          </Ribbon>
-        )}
+        {generateRibbon(age)}
         <Link
           to={`/part/${thisqpart.mold.parentPart.id}?color=${thisqpart.color.id}`}
           className={`listing new-listing ${
@@ -167,4 +148,52 @@ export default function RecentQPart({
       </RibbonContainer>
     );
   } else return <div className="listing new-listing">Loading...</div>;
+
+  function generateRibbon(age: number): React.ReactNode {
+    if (ribbonOverride) {
+      return (
+        <Ribbon
+          side="right"
+          type="corner"
+          size="normal"
+          backgroundColor={ribbonOverride.bgColor}
+          color={ribbonOverride.fgColor}
+          withStripes={false}
+          fontFamily="lexend"
+        >
+          <div style={{ fontSize: ribbonOverride.fontSize }}>
+            {ribbonOverride.content}
+          </div>
+        </Ribbon>
+      );
+    }
+    if (thisqpart.approvalDate == null) return;
+    <Ribbon
+      side="right"
+      type="corner"
+      size="normal"
+      backgroundColor="red"
+      color="white"
+      withStripes={false}
+      fontFamily="lexend"
+    >
+      <div style={{ fontSize: "0.6em" }}>NOT APPROVED</div>
+    </Ribbon>;
+
+    if (age <= 24)
+      return (
+        <Ribbon
+          side="right"
+          type="corner"
+          size="normal"
+          backgroundColor="var(--dk-grey)"
+          color="var(--lt-grey)"
+          withStripes={false}
+          fontFamily="lexend"
+        >
+          {makeHoursString(age)}
+        </Ribbon>
+      );
+    return <></>;
+  }
 }

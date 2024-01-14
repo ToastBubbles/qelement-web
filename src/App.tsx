@@ -55,6 +55,7 @@ import AddPartsToSculptureView from "./views/edit/sculptures/AddPartsToSculpture
 import ApproveSculptureView from "./views/edit/approval/SculptureApprovalView";
 import ElementIDApprovalView from "./views/edit/approval/ElementIDApprovalView";
 import ApproveStatusView from "./views/edit/approval/StatusApprovalView";
+import ApproveSculptureInventoryView from "./views/edit/approval/SculptureInventoryApprovalView";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -298,6 +299,14 @@ function App() {
                 element={
                   <ProtectedRoute level={"admin"}>
                     <ApproveSculptureView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/approve/sculptureInventories"
+                element={
+                  <ProtectedRoute level={"admin"}>
+                    <ApproveSculptureInventoryView />
                   </ProtectedRoute>
                 }
               />

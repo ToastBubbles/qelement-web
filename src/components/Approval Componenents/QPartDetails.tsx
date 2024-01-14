@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useMutation } from "react-query";
 import { Link } from "react-router-dom";
-import { IQPartDTOInclude } from "../interfaces/general";
-import showToast, { Mode } from "../utils/utils";
+import { IQPartDTOInclude } from "../../interfaces/general";
+import showToast, { Mode } from "../../utils/utils";
 import { useState } from "react";
-import ConfirmPopup from "./ConfirmPopup";
+import ConfirmPopup from "../ConfirmPopup";
 
 interface IProps {
   qpart: IQPartDTOInclude;
