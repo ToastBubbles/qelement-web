@@ -56,6 +56,7 @@ import ApproveSculptureView from "./views/edit/approval/SculptureApprovalView";
 import ElementIDApprovalView from "./views/edit/approval/ElementIDApprovalView";
 import ApproveStatusView from "./views/edit/approval/StatusApprovalView";
 import ApproveSculptureInventoryView from "./views/edit/approval/SculptureInventoryApprovalView";
+import SimilarColorApprovalView from "./views/edit/approval/SimilarColorApprovalView";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -235,6 +236,14 @@ function App() {
                 element={
                   <ProtectedRoute level={"admin"}>
                     <ApproveColorView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/approve/similarColors"
+                element={
+                  <ProtectedRoute level={"admin"}>
+                    <SimilarColorApprovalView />
                   </ProtectedRoute>
                 }
               />

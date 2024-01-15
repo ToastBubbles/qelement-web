@@ -41,8 +41,6 @@ export default function RecentSculpture({
   }
 
   if (sculpture) {
-    console.log(sculpture);
-
     const age = calculateHoursBetweenDates(sculpture.approvalDate);
     const images = filterImages(sculpture.images);
     let primaryImage = images[images.length - 1];

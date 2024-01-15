@@ -23,7 +23,6 @@ function NewAdditions({ type }: IProps) {
     const { data: sculptData } = useQuery("recentSculpts", () =>
       axios.get<ISculptureDTO[]>(`http://localhost:3000/sculpture/recent/${6}`)
     );
-    console.log(sculptData?.data);
 
     // if (qData) console.log(qData.data);
     return (

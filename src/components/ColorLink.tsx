@@ -12,9 +12,10 @@ import { AppContext } from "../context/context";
 
 interface IProps {
   color: color;
+  centerText?: boolean;
 }
 
-export default function ColorLink({ color }: IProps) {
+export default function ColorLink({ color, centerText = false }: IProps) {
   const {
     state: {
       userPreferences: { payload: prefPayload },
@@ -28,6 +29,7 @@ export default function ColorLink({ color }: IProps) {
       style={{
         backgroundColor: "#" + color.hex,
         color: getTextColor(color.hex),
+        textAlign: centerText ? "center" : "start",
       }}
     >
       {getPrefColorName(color, prefPayload.prefName)}

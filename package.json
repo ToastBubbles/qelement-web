@@ -11,6 +11,9 @@
     "preview": "vite preview --host 3001"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.15.4",
     "axios": "^1.4.0",
     "date-fns": "^2.30.0",
     "jose": "^4.14.4",

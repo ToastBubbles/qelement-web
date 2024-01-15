@@ -102,12 +102,16 @@ export interface similarColor {
   createdAt: string;
   updatedAt: string;
 }
-export interface similarColorDetailed {
+export interface ISimilarColorDetailed {
   id: number;
   color1: color;
   color2: color;
-  createdAt: string;
-  updatedAt: string;
+  creator: user;
+}
+
+export interface ISimilarColorDetailedWithInversionId
+  extends ISimilarColorDetailed {
+  inversionId: number;
 }
 export interface IUploadImageDetails {
   part: part;
@@ -326,6 +330,11 @@ export interface IQPartDTOInclude {
 interface IApprovalDateOnly {
   approvalDate: string | null;
 }
+
+// export interface ISculpturePartIdPair {
+//   sculptureId: number;
+//   qpartId: number;
+// }
 
 export interface IQPartWSculptureInventory extends IQPartDTOInclude {
   SculptureInventory: IApprovalDateOnly;

@@ -2,70 +2,51 @@ import axios from "axios";
 import { useMutation } from "react-query";
 import { ISculptureDTO, ISculptureInventory } from "../../interfaces/general";
 import showToast, { Mode } from "../../utils/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ConfirmPopup from "../ConfirmPopup";
 import RecentSculpture from "../RecentSculpture";
 import RecentQPart from "../RecentQPart";
+import { Checkbox } from "@mui/material";
+import SculptureInventoryRow from "./SculptureInventoryRow";
 
 interface IProps {
   sculpture: ISculptureDTO;
   refetchFn: () => void;
+  addFn: (sculptureId: number, qpartId: number, type: string) => void;
+  removeFn: (sculptureId: number, qpartId: number, type: string) => void;
 }
 
 export default function SculptureInventoryDetails({
   sculpture,
   refetchFn,
+  addFn,
+  removeFn,
 }: IProps) {
-  const [showPopup, setShowPopup] = useState<boolean>(false);
-  const sculptureMutation = useMutation({
-    mutationFn: (id: number) =>
-      axios
-        .post<number>(`http://localhost:3000/sculpture/approve`, { id })
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err)),
-    onSuccess: () => {
-      refetchFn();
-      showToast("Sculpture approved!", Mode.Success);
-    },
-  });
-  const sculptureDeleteMutation = useMutation({
-    mutationFn: (id: number) =>
-      axios
-        .post<number>(`http://localhost:3000/sculpture/deny`, { id })
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err)),
-    onSuccess: () => {
-      refetchFn();
-      showToast("Sculpture denied!", Mode.Info);
-    },
-  });
-
   if (sculpture) {
     return (
       <div className="coldeet">
-        {showPopup && (
-          <ConfirmPopup
-            content="Are you sure you want to delete this Status?"
-            fn={denyRequest}
-            closePopup={closePopUp}
-          />
-        )}
         <RecentSculpture sculpture={sculpture} />
+        <div style={{ justifyContent: "end", paddingRight: "2em" }}>
+          <div>Appr. Deny</div>
+        </div>
         <fieldset
           style={{
             marginBottom: "1em",
             maxHeight: "30em",
-            overflowY: "auto",
+            overflowY: "scroll",
             overflowX: "hidden",
           }}
         >
           <legend>Parts Requested</legend>
           {sculpture.inventory.length > 0 ? (
             sculpture.inventory.map((part) => (
-              <div className="rib-container fg-child d-flex">
-                <RecentQPart qpart={part} />
-                
-              </div>
+              <SculptureInventoryRow
+                key={part.id}
+                sculptureId={sculpture.id}
+                qpart={part}
+                addFn={addFn}
+                removeFn={removeFn}
+              />
             ))
           ) : (
             <div>No Parts...</div>
@@ -78,22 +59,14 @@ export default function SculptureInventoryDetails({
             {sculptureInv.creator.name} ({sculpture.creator.email})
           </div>
         </div> */}
-        <div style={{ justifyContent: "end" }}>
-          {/* <button onClick={() => sculptureMutation.mutate(sculpture.id)}>
+        {/* <div style={{ justifyContent: "end" }}> */}
+        {/* <button onClick={() => sculptureMutation.mutate(sculpture.id)}>
             Approve
           </button> */}
-          {/* <div style={{ width: "1em", textAlign: "center" }}>|</div>
+        {/* <div style={{ width: "1em", textAlign: "center" }}>|</div>
           <button onClick={() => setShowPopup(true)}>Deny</button> */}
-        </div>
+        {/* </div> */}
       </div>
     );
   } else return <p>Loading</p>;
-
-  function closePopUp() {
-    setShowPopup(false);
-  }
-  function denyRequest() {
-    // sculptureDeleteMutation.mutate(sculpture.id);
-    setShowPopup(false);
-  }
 }
