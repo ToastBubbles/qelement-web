@@ -53,6 +53,9 @@ function RatingCard({ rating, qpartId, refetchFn }: IProps) {
   return (
     <div className="rating-container">
       <div className="rating">
+        <div className={"rating-text-top " + getTier(rating) + "-bottom"}>
+          Rarity:
+        </div>
         <div className={"rating-score " + getTier(rating)}>
           {rating != -1 ? rating : "--"}
         </div>

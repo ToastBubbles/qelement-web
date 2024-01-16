@@ -2,7 +2,7 @@
   --lt-red: #ff7272;
   --sft-blue: #88bbe4;
   --lt-grey: #ccc;
-  --dk-grey: rgb(50, 54, 61);
+  --dk-grey: #32363d;
   /* --main-font-family: "Nunito Sans", sans-serif; */
 
   /* *** Toast Overrides *** */
@@ -410,7 +410,7 @@ body::-webkit-scrollbar {
   display: flex;
   flex-direction: column;
   aspect-ratio: 1 / 1;
-  height: 5em;
+  height: 6.5em;
 }
 .Not-Rated {
   border-bottom: solid 1px rgb(163, 163, 163);
@@ -528,9 +528,11 @@ body::-webkit-scrollbar {
 
   color: white;
   background-position: 0px 0px;
+  /* padding-left: 1em; */
 
   text-shadow: #2c2c2c 1px 1px 0;
-  border-radius: 0.25em 0.25em 0 0;
+  /* border-radius: 0.25em 0.25em 0 0; */
+
   /* background: #ffffff;
     background: linear-gradient(to bottom, #ffffff 0%, #ffb5b5 100%);
     -webkit-background-clip: text;
@@ -585,6 +587,14 @@ body::-webkit-scrollbar {
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+.rating-text-top {
+  font-weight: bold;
+  text-align: center;
+  background-color: azure;
+  border-radius: 0.5em 0.5em 0 0;
+  border-bottom: none;
 }
 
 .rating-text {
@@ -1160,7 +1170,6 @@ fieldset > legend {
 }
 
 .green-cb:checked {
- 
 }
 .topfive-container {
   display: flex;
@@ -1187,6 +1196,7 @@ fieldset > legend {
 .topfive-card {
   background-color: azure;
   filter: drop-shadow(0px 0px 3px #00000050);
+  margin: auto;
   /* display: inline-flex;
   flex-direction: column; */
   /* justify-content: center; */
@@ -1724,6 +1734,14 @@ textarea {
 }
 .jc-space-e {
   justify-content: space-evenly;
+}
+.hyperlink {
+  text-decoration: underline !important;
+  color: var(--lt-red) !important;
+}
+.hyperlink:visited {
+  text-decoration: underline !important;
+  color: var(--lt-red) !important;
 }
 .suggestion-list {
   list-style: none;
@@ -2537,7 +2555,7 @@ input:checked + .slider:before {
     flex-direction: column;
     align-items: center;
     width: 33.3%;
-    max-width: 35rem;
+    max-width: 30rem;
     aspect-ratio: 3 / 4;
     padding: 1em;
   }
@@ -2565,7 +2583,7 @@ input:checked + .slider:before {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 35rem;
+    max-width: 30rem;
     /* aspect-ratio: 3 / 4; */
     padding: 1em;
   }

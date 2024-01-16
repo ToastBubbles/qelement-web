@@ -14,7 +14,11 @@ import {
 import { useEffect } from "react";
 import MyToolTip from "../../components/MyToolTip";
 import { AppContext } from "../../context/context";
-import showToast, { Mode, getPrefColorName } from "../../utils/utils";
+import showToast, {
+  Mode,
+  getPrefColorName,
+  getTextColor,
+} from "../../utils/utils";
 import ColorTextField from "../../components/ColorTextField";
 
 export default function SingleColorView() {
@@ -99,41 +103,50 @@ export default function SingleColorView() {
             <div className="colorName">
               {getPrefColorName(color, prefPayload.prefName)}
             </div>
-            <div className="hexbar" style={{ backgroundColor: hex }}>
+            <div
+              className="hexbar"
+              style={{
+                backgroundColor: hex,
+                color: getTextColor(hex, false, true),
+                textShadow: `${getTextColor(hex, true)} 1px 1px 0`,
+              }}
+            >
               {hex}
             </div>
           </div>
           <div className="fake-hr"></div>
           <SimilarColorBanner similarColors={color.similar} />
+          <div className="jc-end">
+            <div className="d-flex jc-end" style={{ marginBottom: "1em" }}>
+              <ColorTextField setter={setSimilarColorToAdd} />
+              <button
+                onClick={() => {
+                  // console.log(Number(colorId), similarColorToAdd);
+
+                  if (
+                    Number(colorId) != similarColorToAdd &&
+                    payload.id &&
+                    payload.id != -1
+                  ) {
+                    similarColorMutation.mutate({
+                      color_one: Number(colorId),
+                      color_two: similarColorToAdd,
+                      creatorId: payload.id,
+                    });
+                  } else {
+                    showToast(`Error`, Mode.Info);
+                  }
+                }}
+              >
+                Add similarity
+              </button>{" "}
+            </div>
+          </div>
           <div className="color-container">
             <section>
               <AllColorParts colorId={color.id} />
             </section>
             <section>
-              <div className="d-flex jc-end" style={{ marginBottom: "1em" }}>
-                <ColorTextField setter={setSimilarColorToAdd} />
-                <button
-                  onClick={() => {
-                    // console.log(Number(colorId), similarColorToAdd);
-
-                    if (
-                      Number(colorId) != similarColorToAdd &&
-                      payload.id &&
-                      payload.id != -1
-                    ) {
-                      similarColorMutation.mutate({
-                        color_one: Number(colorId),
-                        color_two: similarColorToAdd,
-                        creatorId: payload.id,
-                      });
-                    } else {
-                      showToast(`Error`, Mode.Info);
-                    }
-                  }}
-                >
-                  Add similarity
-                </button>
-              </div>
               <div className="color-details-container">
                 <div className="color-details-banner">color details</div>
 

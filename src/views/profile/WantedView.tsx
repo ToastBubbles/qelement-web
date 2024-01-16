@@ -62,11 +62,14 @@ export default function WantedView() {
       <>
         <div className="mx-w">
           <h1>Your Wanted Items</h1>
-          <div className="grey-txt">
+          <div className="grey-txt" style={{ marginBottom: "1em" }}>
             {prefPayload.isWantedVisible
               ? "Your Wanted Lists are visible to others"
               : "Your Wanted Lists are hidden from others"}
           </div>
+          <h2>
+            Your Top {myTopFive.length > 0 ? myTopFive.length : "5"} Most Wanted
+          </h2>
           <div className="topfive-container">
             {myTopFive.length > 0 ? (
               myTopFive.map((myWantedPart) => (
@@ -80,6 +83,8 @@ export default function WantedView() {
               <p>You don't have anything in your Top Five!</p>
             )}
           </div>
+          <h2>Wanted List</h2>
+          <div className="grey-txt">TODO</div>
           {/* <div className="tab">
             <button
               className={"tablinks" + (detailsTabActive ? " active" : "")}

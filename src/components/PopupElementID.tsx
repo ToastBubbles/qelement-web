@@ -32,12 +32,14 @@ export default function PopupElementID({
     mutationFn: (eIdData: IElementIDCreationDTO) =>
       axios.post<IAPIResponse>(`http://localhost:3000/elementID/add`, eIdData),
     onSuccess: (resp) => {
-      if (resp.data.code == 201) {
+      console.log(resp.data);
+
+      if (resp.data.code == 201 || resp.data.code == 206) {
         showToast("Element ID added!", Mode.Success);
         setElementId(-1);
         refetchFn();
         closePopup();
-      } else if (resp.data.code == 200) {
+      } else if (resp.data.code == 200 || resp.data.code == 205) {
         showToast("Element ID submitted for approval!", Mode.Success);
         setElementId(-1);
         refetchFn();
@@ -75,7 +77,7 @@ export default function PopupElementID({
             style={{ width: "6em", marginBottom: "2em" }}
             type="number"
             placeholder="1234567"
-            value={elementId == -1 ? "" : elementId}
+            value={elementId <= 0 ? "" : elementId}
             onChange={(e) => setElementId(Number(e.target.value))}
           ></input>
         </div>

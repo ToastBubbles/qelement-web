@@ -16,7 +16,8 @@ export default function About() {
               LEGOLAND or something similar, but were never released to the
               public in this part/color combination, examples of this would be
               any non-DUPLO part in Warm Yellowish Orange. Also known as a
-              "q-part"
+              "q-part". Q-Element and Q-Part are both terms that existed way
+              before this website was created.
             </li>
             <li>
               <span>Prototype:</span> this typically refers to a part in the

@@ -102,67 +102,13 @@ export function getPrefColorIdString(
   return output.toString();
 }
 
-// export function getPrefColorIdString(
-//   col: color | colorWSimilar,
-//   pref: string,
-//   adjuster: boolean = false
-// ): string {
-//   let output = col.id;
-//   let isPreferred = false;
 
-//   if (pref == "bl") {
-//     if (col.bl_id) {
-//       isPreferred = true;
-//       output = col.bl_id;
-//     } else {
-//       if (col.tlg_id) {
-//         output = col.tlg_id;
-//       } else if (col.bo_id) {
-//         output = col.bo_id;
-//       }
-//     }
-//   } else if (pref == "tlg") {
-//     if (col.tlg_id) {
-//       output = col.tlg_id;
-//       isPreferred = true;
-//     } else {
-//       if (col.bl_id) {
-//         output = col.bl_id;
-//       } else if (col.bo_id) {
-//         output = col.bo_id;
-//       }
-//     }
-//   } else if (pref == "bo") {
-//     if (col.bo_id) {
-//       output = col.bo_id;
-//       isPreferred = true;
-//     } else {
-//       if (col.bl_id) {
-//         output = col.bl_id;
-//       } else if (col.tlg_id) {
-//         output = col.tlg_id;
-//       }
-//     }
-//   } else if (pref == "qe") {
-//     isPreferred = true;
-//   }
-//   if (isPreferred) {
-//     if (adjuster) return output.toString() + " ";
-//     return output.toString();
-//   } else {
-//     if (output == -1) {
-//       return "";
-//     }
-//     return output.toString() + "*";
-//   }
-// }
 
 export function filterString(inputString: string) {
   // Use a regular expression to replace characters other than a-z, A-Z, 0-9, and *
-  const filteredString = inputString.replace(/[^a-zA-Z0-9]/g, '');
+  const filteredString = inputString.replace(/[^a-zA-Z0-9]/g, "");
   return filteredString;
 }
-
 
 export function getPrefColorName(
   col: color | colorWSimilar | undefined,
@@ -251,12 +197,19 @@ export function getPrefColorName(
   }
 }
 
-export function getTextColor(hex: string): string {
+export function getTextColor(
+  hex: string,
+  invert: boolean = false,
+  softColors: boolean = false
+): string {
+  const light = softColors ? "#32363d" : "#000";
+  const dark = "#FFF";
   if (hex == "UNKNWN") {
-    return "#000";
+    return light;
   }
   const bgColor = tinycolor(hex);
-  return bgColor.isLight() ? "#000" : "#FFF";
+  if (invert) return !bgColor.isLight() ? light : dark;
+  return bgColor.isLight() ? light : dark;
 }
 export const imagePath = "http://localhost:9000/q-part-images/";
 export function filterImages(images: ImageDTO[]): ImageDTO[] {

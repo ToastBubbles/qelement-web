@@ -7,7 +7,7 @@ import axios from "axios";
 
 interface IProps {
   data: ICommentDTO;
-  isAdmin: boolean;
+  isAdmin?: boolean;
   userId: number;
   refetchFn: () => void;
 }

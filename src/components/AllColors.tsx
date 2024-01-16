@@ -52,13 +52,24 @@ function AllColors() {
     const cdata = data.data;
     return (
       <div className="color-table-container">
-        <input
-          id="searchbar"
-          name="searchbar"
-          type="text"
-          placeholder="Search..."
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+        <div className="d-flex jc-space-b">
+          <input
+            id="searchbar"
+            name="searchbar"
+            type="text"
+            placeholder="Search..."
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <div>
+            For more indepth color information, check out{" "}
+            <Link
+              className="hyperlink"
+              to={"https://ryliehowerter.net/colors.php"}
+            >
+              Rylie Howerter's amazing work.
+            </Link>
+          </div>
+        </div>
         {generateTable(cdata, "solid", tableOptions, search)}
         {generateTable(cdata, "transparent", tableOptions, search)}
         {generateTable(cdata, "chrome", tableOptions, search)}
@@ -190,7 +201,7 @@ function AllColors() {
                   ? sortDirection === "asc"
                     ? "▲"
                     : "▼"
-                  : "c"}
+                  : "▣"}
               </th>
               <th
                 style={{ width: "2em" }}
@@ -316,7 +327,7 @@ function AllColors() {
                     <td className="border-top border-bottom border-right text-center">
                       #{color.hex.toUpperCase()}
                     </td>
-                    <td className="table-notes border-top border-bottom">
+                    <td className="table-notes border-top border-bottom border-right">
                       {color.note}
                     </td>
                   </tr>

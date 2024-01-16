@@ -159,7 +159,7 @@ export default function SinglePartView() {
     }
     return "https://via.placeholder.com/1024x768/eee?text=4:3";
   }
-  if (qpartData && qpartData.data.length > 0 && adminData) {
+  if (qpartData && qpartData.data.length > 0) {
     const qparts = qpartData?.data;
     // const myDebugger = {
     //   selectedQPartid,
@@ -187,14 +187,14 @@ export default function SinglePartView() {
               <div className="top">
                 <ul className="breadcrumb">
                   <li>
-                    <Link to={"/part-categories"}>parts</Link>
+                    <Link to={"/part-categories"}>Parts</Link>
                   </li>
-                  <li>{">"}</li>
+                  <li>{"\u00A0>\u00A0"}</li>
                   <li>
                     <Link
                       to={`/part-categories/${mypart?.mold.parentPart.CatId}`}
                     >
-                      bricks
+                      Bricks
                     </Link>
                   </li>
                 </ul>
@@ -486,7 +486,7 @@ export default function SinglePartView() {
                               <Comment
                                 key={comment.id}
                                 data={comment}
-                                isAdmin={adminData.data.code == 200}
+                                isAdmin={adminData?.data.code == 200}
                                 userId={payload.id}
                                 refetchFn={qpartRefetch}
                               />
@@ -597,6 +597,10 @@ export default function SinglePartView() {
   } else {
     if (qpartData?.data && qpartData.data.length == 0) {
       return <p>No Q-Elements exist for this part yet!</p>;
-    } else return <LoadingPage />;
+    } else {
+      console.log(qpartData?.data);
+
+      return <LoadingPage />;
+    }
   }
 }

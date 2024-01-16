@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 
 function Footer() {
@@ -77,11 +76,10 @@ function Footer() {
             </li>
           </ul>
         </div>
-        By using this site you are agreeing to the TOS. qelement and the
-        qelement logo are a trademark of Jeffrey Neal. LEGO, Bricklink, and
-        BrickOwl are separeate trademarks that are not affiliated with qelement.
-        Any images hosted by this site are property of the uploader, not
-        qelement. This website is for informational purposes only.
+        By using this site you are agreeing to the TOS. LEGO, Bricklink, and
+        BrickOwl are separeate trademarks that are not affiliated with
+        theqelement.com. Any images hosted by this site are property of the
+        uploader, not qelement. This website is for informational purposes only.
       </div>
     </footer>
   );
