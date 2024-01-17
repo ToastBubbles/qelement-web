@@ -2178,6 +2178,13 @@ input:checked + .slider:before {
 
   flex-direction: column;
 }
+.popup-inner-body-top {
+  height: 90%;
+  display: flex;
+  padding-top: 2em;
+  /* justify-content: center; */
+  flex-direction: column;
+}
 .popup-body {
   position: absolute;
   left: 30%;

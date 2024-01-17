@@ -4,7 +4,6 @@ import {
   IAPIResponse,
   IElementIDWQPart,
   IQPartDTOInclude,
-
 } from "../../../interfaces/general";
 import showToast, { Mode } from "../../../utils/utils";
 import { Link } from "react-router-dom";
@@ -76,12 +75,24 @@ export default function ElementIDApprovalView() {
                 >
                   <div className="eid-row">
                     <div>
-                      <RecentQPart
-                        qpart={eID.qpart}
-                        hideDate={true}
-                        disableLinks={true}
-                      />
-                      <div><span className="lt-black">Existing eIDS:</span> {showExistingEIDs(eID.qpart)}</div>
+                      <div className="rib-container">
+                        <RecentQPart
+                          qpart={eID.qpart}
+                          hideDate={true}
+                          disableLinks={true}
+                        />
+                      </div>
+                      <div>
+                        <div>
+                          <span className="lt-black">
+                            Requestor: {eID.creator.name} ({eID.creator.email})
+                          </span>
+                        </div>
+                        <div>
+                          <span className="lt-black">Existing eIDS:</span>{" "}
+                          {showExistingEIDs(eID.qpart)}
+                        </div>
+                      </div>
                     </div>
                     <div className="center-item">{eID.number}</div>
                     <div>
