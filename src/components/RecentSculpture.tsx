@@ -21,6 +21,7 @@ export default function RecentSculpture({
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
+  console.log(sculpture);
 
   function calculateHoursBetweenDates(startDateStr: string): number {
     const endDate = new Date();

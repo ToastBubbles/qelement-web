@@ -91,7 +91,7 @@ export default function SingleSculptureView() {
     enabled: !!sculptId,
     // retry: false,
   });
-  if (sculptData && adminData) {
+  if (sculptData) {
     let sculpture = sculptData.data;
     let colorsUsed = getAllColorsUsed(sculpture.inventory);
     console.log(sculpture);
@@ -256,7 +256,7 @@ export default function SingleSculptureView() {
                               <Comment
                                 key={comment.id}
                                 data={comment}
-                                isAdmin={adminData.data.code == 200}
+                                isAdmin={adminData?.data.code == 200}
                                 userId={payload.id}
                                 refetchFn={sculptRefetch}
                               />

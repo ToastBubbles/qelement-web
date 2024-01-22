@@ -7,11 +7,14 @@ import LoadingPage from "../components/LoadingPage";
 import {
   IElementIDSearch,
   IPartDTO,
+  IPartDTOIncludes,
   IPartMoldDTO,
   ISculptureDTO,
 } from "../interfaces/general";
 import RecentQPart from "../components/RecentQPart";
 import RecentSculpture from "../components/RecentSculpture";
+import RecentPart from "../components/RecentPart";
+import RecentMold from "../components/RecentMold";
 
 export default function SearchView() {
   const [searchValue, setSearchValue] = useState<string>("");
@@ -52,11 +55,14 @@ export default function SearchView() {
   const { data: partSearchData } = useQuery({
     queryKey: `partSearch${searchValue}`,
     queryFn: () => {
-      return axios.get<IPartDTO[]>(`http://localhost:3000/parts/search`, {
-        params: {
-          search: searchValue,
-        },
-      });
+      return axios.get<IPartDTOIncludes[]>(
+        `http://localhost:3000/parts/search`,
+        {
+          params: {
+            search: searchValue,
+          },
+        }
+      );
     },
     staleTime: 0,
     enabled: !!searchValue && searchValue.length > 0,
@@ -107,21 +113,21 @@ export default function SearchView() {
           {partResults.length == 0 ? (
             <div className="grey-txt">No results</div>
           ) : (
-            partResults.map((part) => (
-              <Link key={part.id} to={`/part/${part.id}`}>
-                {part.name}
-              </Link>
-            ))
+            <div style={{ width: "30em" }} className="rib-container">
+              {partResults.map((part) => (
+                <RecentPart part={part} key={part.id} />
+              ))}
+            </div>
           )}
           <h3>Molds:</h3>
           {moldResults.length == 0 ? (
             <div className="grey-txt">No results</div>
           ) : (
-            moldResults.map((mold) => (
-              <Link key={mold.id} to={`/part/${mold.parentPart.id}`}>
-                {mold.number}
-              </Link>
-            ))
+            <div style={{ width: "30em" }} className="rib-container">
+              {moldResults.map((mold) => (
+                <RecentMold key={mold.id} mold={mold} />
+              ))}
+            </div>
           )}
           <h3>Q-Elements:</h3>
           {qpartResults.length == 0 ? (
@@ -129,17 +135,6 @@ export default function SearchView() {
           ) : (
             <div style={{ width: "30em" }}>
               {qpartResults.map((eID) => (
-                // <Link
-                //   key={eID.id}
-                //   to={`/part/${eID.qpart.mold.parentPart.id}?color=${eID.qpart.color.id}`}
-                // >
-                //   <div>
-                //     {" "}
-                //     {eID.qpart.color.bl_name} {eID.qpart.mold.parentPart.name} (
-                //     {eID.qpart.mold.number})
-                //   </div>
-
-                // </Link>
                 <RecentQPart key={eID.id} qpartl={eID.qpart} />
               ))}
             </div>
@@ -148,20 +143,8 @@ export default function SearchView() {
           {sculpResults.length == 0 ? (
             <div className="grey-txt">No results</div>
           ) : (
-            <div style={{ width: "30em" }}>
+            <div style={{ width: "30em" }} className="rib-container">
               {sculpResults.map((sculpture) => (
-                // <Link
-                //   key={eID.id}
-                //   to={`/part/${eID.qpart.mold.parentPart.id}?color=${eID.qpart.color.id}`}
-                // >
-                //   <div>
-                //     {" "}
-                //     {eID.qpart.color.bl_name} {eID.qpart.mold.parentPart.name} (
-                //     {eID.qpart.mold.number})
-                //   </div>
-
-                // </Link>
-                // <RecentQPart key={eID.id} qpartl={eID.qpart} />
                 <RecentSculpture key={sculpture.id} sculpture={sculpture} />
               ))}
             </div>

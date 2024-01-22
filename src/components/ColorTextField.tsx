@@ -1,3 +1,4 @@
+import React from "react";
 import axios from "axios";
 import { CustomStyles, color } from "../interfaces/general";
 import { getPrefColorIdString, getPrefColorName } from "../utils/utils";
@@ -9,29 +10,29 @@ interface IProps {
   setter: (colorId: number) => void;
   customStyles?: CSSProperties;
 }
+
 function ColorTextField({ setter, customStyles }: IProps) {
   const {
     state: {
-      //   jwt: { payload },
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
-  const { data: colorData, isFetched } = useQuery("allColors", () =>
+  const { data: colorData } = useQuery("allColors", () =>
     axios.get<color[]>("http://localhost:3000/color")
   );
   const [inputValue, setInputValue] = useState<string>("");
-  const [hex, setHex] = useState<string>("");
+  const [hex, setHex] = useState<string>("FFFFFF00");
   const [type, setType] = useState<string>("");
   const [suggestions, setSuggestions] = useState<color[] | undefined>([]);
 
-  const handleInputChange = (event: any) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setInputValue(value);
 
     // Filter suggestions based on input value
     const filteredSuggestions = colorData?.data.filter(
       (suggestion) =>
-        suggestion.type != "modulexFoil" &&
+        suggestion.type !== "modulexFoil" &&
         (suggestion.bl_name.toLowerCase().includes(value.toLowerCase()) ||
           suggestion.tlg_name.toLowerCase().includes(value.toLowerCase()) ||
           suggestion.bo_name.toLowerCase().includes(value.toLowerCase()))
@@ -46,6 +47,14 @@ function ColorTextField({ setter, customStyles }: IProps) {
       setSuggestions(sortedArray);
     }
   };
+
+  const handleClear = () => {
+    setInputValue("");
+    setter(-1);
+    setHex("FFFFFF00");
+    setType("");
+    setSuggestions([]);
+  };
   const handleSuggestionClick = (suggestion: color) => {
     setInputValue(getPrefColorName(suggestion, prefPayload.prefName));
 
@@ -56,12 +65,13 @@ function ColorTextField({ setter, customStyles }: IProps) {
   };
   const baseStyles: CSSProperties = {
     position: "relative",
-    // Add other base styles if needed
   };
+
   const mergedStyles: CSSProperties = {
-    ...baseStyles, // Spread the base styles
-    ...customStyles, // Spread the custom styles
+    ...baseStyles,
+    ...customStyles,
   };
+
   return (
     <div style={mergedStyles}>
       <div className="d-flex" style={{ height: "1.5em" }}>
@@ -78,6 +88,18 @@ function ColorTextField({ setter, customStyles }: IProps) {
           value={inputValue}
           onChange={handleInputChange}
         ></input>
+        {inputValue && (
+          <span
+            style={{
+              cursor: "pointer",
+              marginLeft: "5px",
+              color: "#888",
+            }}
+            onClick={handleClear}
+          >
+            X
+          </span>
+        )}
       </div>
       {suggestions && suggestions.length > 0 && (
         <ul className="suggestion-list">
@@ -93,7 +115,7 @@ function ColorTextField({ setter, customStyles }: IProps) {
 
               <div>
                 {getPrefColorName(suggestion, prefPayload.prefName)}
-                {prefPayload.prefName == "tlg" && suggestion.type == "modulex"
+                {prefPayload.prefName === "tlg" && suggestion.type === "modulex"
                   ? " (Mx)"
                   : ""}
               </div>

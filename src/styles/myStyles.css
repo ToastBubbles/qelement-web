@@ -1165,19 +1165,26 @@ fieldset > legend {
   min-height: unset;
   margin-bottom: -1px;
 }
+.rib-container2 > div {
+  min-height: unset;
+  min-width: 49%;
+  /* margin: 0 auto; */
+  margin-bottom: -1px;
+}
+
+.rib-container2 {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
 .fg-child > div {
   flex-grow: 1;
 }
 
-.green-cb:checked {
-}
 .topfive-container {
   display: flex;
-  /* justify-content: space-between; */
   justify-content: center;
-  /* align-items: flex-start; */
-  /* justify-content: flex-start; */
-  /* flex-direction: row; */
   width: 100%;
 }
 .bi-x {
@@ -1197,13 +1204,8 @@ fieldset > legend {
   background-color: azure;
   filter: drop-shadow(0px 0px 3px #00000050);
   margin: auto;
-  /* display: inline-flex;
-  flex-direction: column; */
-  /* justify-content: center; */
-  /* align-items: center; */
   width: 19%;
   aspect-ratio: 3 / 4;
-  /* border: solid 1px var(--lt-grey); */
   border: solid 4px;
   border-radius: 0.5em;
 }
@@ -1221,8 +1223,6 @@ fieldset > legend {
   border: solid 1px var(--lt-grey);
   width: 90%;
   max-height: 50%;
-  /* height: 0; */
-  /* padding-bottom: 90%; */
   aspect-ratio: 4 / 3;
 }
 .topfive-img-container > img {
@@ -1267,8 +1267,6 @@ fieldset > legend {
 .mytooltip {
   display: inline-block;
   text-align: center;
-  /* vertical-align: m; */
-  /* padding: 0.2em; */
   margin-left: 0.2em;
   color: var(--lt-grey);
   background-color: var(--dk-grey);
@@ -1358,27 +1356,7 @@ a:visited {
   text-decoration: none;
   /* color: inherit; */
 }
-/* <div>
-{colors.map((singleColor, i) => (
-  <div className="color-row-new">
-    <div className="table-id-new">{singleColor.Lid}</div>
-    <Link
-      href={"/color/" + singleColor.Lid}
-      className="flag-new"
-      style={{ backgroundColor: "#" + singleColor.color }}
-    >
-      {singleColor.BLName.length == 0
-        ? singleColor.LName
-        : singleColor.BLName}
-    </Link>
-    <div
-      className="tag-color-new"
-      style={{ backgroundColor: "#" + singleColor.color }}
-    ></div>
-    <div className="flag flag-status flag-unknown">
-      {statusLookup(partId, singleColor.Lid)}
-    </div>
-  </div> */
+
 .hexbar {
   display: inline-block;
   color: white;
