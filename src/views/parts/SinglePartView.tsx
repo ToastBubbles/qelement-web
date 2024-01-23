@@ -10,6 +10,7 @@ import {
   IPartMoldDTO,
   ICommentCreationDTO,
   IAPIResponse,
+  ImageDTO,
 } from "../../interfaces/general";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -178,7 +179,8 @@ export default function SinglePartView() {
         setSelectedQPartid(qparts[0].id);
       }
     }
-
+    let filteredImages: ImageDTO[] = [];
+    if (mypart) filteredImages = filterImages(mypart.images);
     return (
       <div className="mx-w">
         <div className="page-content-wrapper">
@@ -532,8 +534,8 @@ export default function SinglePartView() {
                         (imageTabActive ? "" : " tabhidden")
                       }
                     >
-                      {mypart?.images &&
-                        filterImages(mypart.images).map((image) => {
+                      {filteredImages.length > 0 ? (
+                        filteredImages.map((image) => {
                           return (
                             <div>
                               <img
@@ -553,7 +555,10 @@ export default function SinglePartView() {
                               </div>
                             </div>
                           );
-                        })}
+                        })
+                      ) : (
+                        <p>No Images</p>
+                      )}
                     </div>
                   </div>
                   <div className="lower-center-right">

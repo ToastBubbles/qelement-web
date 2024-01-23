@@ -7,11 +7,18 @@ import {
 } from "../../../interfaces/general";
 import showToast, { Mode } from "../../../utils/utils";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import ConfirmPopup from "../../../components/ConfirmPopup";
 import RecentQPart from "../../../components/RecentQPart";
+import { AppContext } from "../../../context/context";
 
 export default function ElementIDApprovalView() {
+  const {
+    state: {
+      jwt: { token },
+      // userPreferences: { payload: prefPayload },
+    },
+  } = useContext(AppContext);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [selectedElementId, setSelectedElementId] = useState<number | null>(
     null
@@ -25,10 +32,20 @@ export default function ElementIDApprovalView() {
   );
   const eIDMutation = useMutation({
     mutationFn: (id: number) =>
-      axios
-        .post<IAPIResponse>(`http://localhost:3000/elementID/approve`, { id })
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err)),
+      axios.post<IAPIResponse>(
+        `http://localhost:3000/elementID/approve`,
+        {
+          id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onError: () => {
+      showToast("401 Permissions Error", Mode.Error);
+    },
     onSuccess: () => {
       refetch();
       showToast("Element ID approved!", Mode.Success);
@@ -37,9 +54,20 @@ export default function ElementIDApprovalView() {
 
   const eIDDeleteMutation = useMutation({
     mutationFn: (id: number) =>
-      axios.post<IAPIResponse>(`http://localhost:3000/elementID/deny`, {
-        id,
-      }),
+      axios.post<IAPIResponse>(
+        `http://localhost:3000/elementID/deny`,
+        {
+          id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onError: () => {
+      showToast("401 Permissions Error", Mode.Error);
+    },
     onSuccess: (e) => {
       if (e.data.code == 200) {
         refetch();

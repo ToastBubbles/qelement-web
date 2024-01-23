@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 
 import { IPartDTO } from "../../../interfaces/general";
 
-import PartDetails from "../../../components/PartDetails";
+import PartDetails from "../../../components/Approval Componenents/PartDetails";
 import { Link } from "react-router-dom";
 
 export default function ApprovePartView() {
@@ -14,7 +14,7 @@ export default function ApprovePartView() {
   } = useQuery("notApprovedParts", () =>
     axios.get<IPartDTO[]>("http://localhost:3000/parts/notApproved")
   );
- 
+
   if (partData) {
     const parts = partData.data;
     console.log(parts);

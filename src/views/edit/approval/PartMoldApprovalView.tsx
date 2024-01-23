@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 
 import { IPartMoldDTO } from "../../../interfaces/general";
 
-import PartMoldDetails from "../../../components/PartMoldDetails";
+import PartMoldDetails from "../../../components/Approval Componenents/PartMoldDetails";
 import { Link } from "react-router-dom";
 
 export default function ApprovePartMoldView() {
@@ -26,8 +26,11 @@ export default function ApprovePartMoldView() {
             {molds.length > 0 ? (
               molds.map((mold) => {
                 return (
-
-                    <PartMoldDetails key={mold.id} mold={mold} refetchFn={refetch} />
+                  <PartMoldDetails
+                    key={mold.id}
+                    mold={mold}
+                    refetchFn={refetch}
+                  />
                 );
               })
             ) : (

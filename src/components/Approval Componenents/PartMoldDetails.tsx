@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useMutation } from "react-query";
-import { IPartMoldDTO } from "../interfaces/general";
-import showToast, { Mode } from "../utils/utils";
-import { useState } from "react";
-import ConfirmPopup from "./ConfirmPopup";
+import { IPartMoldDTO } from "../../interfaces/general";
+import showToast, { Mode } from "../../utils/utils";
+import { useContext, useState } from "react";
+import ConfirmPopup from "../ConfirmPopup";
+import { AppContext } from "../../context/context";
 
 interface IProps {
   mold: IPartMoldDTO;
@@ -11,13 +12,27 @@ interface IProps {
 }
 
 export default function PartMoldDetails({ mold, refetchFn }: IProps) {
+  const {
+    state: {
+      jwt: { token },
+      // userPreferences: { payload: prefPayload },
+    },
+  } = useContext(AppContext);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const partMutation = useMutation({
     mutationFn: (id: number) =>
-      axios
-        .post<number>(`http://localhost:3000/partMold/approve`, { id })
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err)),
+      axios.post<number>(
+        `http://localhost:3000/partMold/approve`,
+        { id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onError: () => {
+      showToast("401 Permissions Error", Mode.Error);
+    },
     onSuccess: () => {
       refetchFn();
       showToast("Part Mold approved!", Mode.Success);
@@ -25,10 +40,18 @@ export default function PartMoldDetails({ mold, refetchFn }: IProps) {
   });
   const partDeleteMutation = useMutation({
     mutationFn: (id: number) =>
-      axios
-        .post<number>(`http://localhost:3000/partMold/deny`, { id })
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err)),
+      axios.post<number>(
+        `http://localhost:3000/partMold/deny`,
+        { id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onError: () => {
+      showToast("401 Permissions Error", Mode.Error);
+    },
     onSuccess: () => {
       refetchFn();
       showToast("Part Mold deleted!", Mode.Info);

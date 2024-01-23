@@ -3,9 +3,10 @@ import { useMutation } from "react-query";
 import { Link } from "react-router-dom";
 import { IPartStatusWQPart, IQPartDTOInclude } from "../../interfaces/general";
 import showToast, { Mode } from "../../utils/utils";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import ConfirmPopup from "../ConfirmPopup";
 import RecentQPart from "../RecentQPart";
+import { AppContext } from "../../context/context";
 
 interface IProps {
   status: IPartStatusWQPart;
@@ -13,14 +14,28 @@ interface IProps {
 }
 
 export default function PartStatusDetails({ status, refetchFn }: IProps) {
+  const {
+    state: {
+      jwt: { token },
+      // userPreferences: { payload: prefPayload },
+    },
+  } = useContext(AppContext);
   const [showPopup, setShowPopup] = useState<boolean>(false);
 
   const statusMutation = useMutation({
     mutationFn: (id: number) =>
-      axios
-        .post<number>(`http://localhost:3000/partStatus/approve`, { id })
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err)),
+      axios.post<number>(
+        `http://localhost:3000/partStatus/approve`,
+        { id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onError: () => {
+      showToast("401 Permissions Error", Mode.Error);
+    },
     onSuccess: () => {
       refetchFn();
       showToast("Status approved!", Mode.Success);
@@ -28,10 +43,18 @@ export default function PartStatusDetails({ status, refetchFn }: IProps) {
   });
   const statusDeletionMutation = useMutation({
     mutationFn: (id: number) =>
-      axios
-        .post<number>(`http://localhost:3000/partStatus/deny`, { id })
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err)),
+      axios.post<number>(
+        `http://localhost:3000/partStatus/deny`,
+        { id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onError: () => {
+      showToast("401 Permissions Error", Mode.Error);
+    },
     onSuccess: () => {
       refetchFn();
       showToast("Status denied!", Mode.Info);

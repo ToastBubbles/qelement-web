@@ -2,9 +2,10 @@ import { ISimilarColorDetailedWithInversionId } from "../../interfaces/general";
 import axios from "axios";
 import { useMutation } from "react-query";
 import showToast, { Mode } from "../../utils/utils";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import ConfirmPopup from "../ConfirmPopup";
 import ColorLink from "../ColorLink";
+import { AppContext } from "../../context/context";
 
 interface IProps {
   data: ISimilarColorDetailedWithInversionId;
@@ -15,14 +16,24 @@ interface ISimColorIdWithInversionId {
   inversionId: number;
 }
 export default function SimilarColorDetails({ data, refetchFn }: IProps) {
+  const {
+    state: {
+      jwt: { token },
+      // userPreferences: { payload: prefPayload },
+    },
+  } = useContext(AppContext);
   const [showPopup, setShowPopup] = useState<boolean>(false);
 
   const simColMutation = useMutation({
     mutationFn: (ids: ISimColorIdWithInversionId) =>
-      axios
-        .post<number>(`http://localhost:3000/similarColor/approve`, ids)
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err)),
+      axios.post<number>(`http://localhost:3000/similarColor/approve`, ids, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    onError: () => {
+      showToast("401 Permissions Error", Mode.Error);
+    },
     onSuccess: () => {
       refetchFn();
       showToast("Similar Color approved!", Mode.Success);
@@ -31,10 +42,14 @@ export default function SimilarColorDetails({ data, refetchFn }: IProps) {
 
   const simColDeletionMutation = useMutation({
     mutationFn: (ids: ISimColorIdWithInversionId) =>
-      axios
-        .post<number>(`http://localhost:3000/similarColor/deny`, ids)
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err)),
+      axios.post<number>(`http://localhost:3000/similarColor/deny`, ids, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    onError: () => {
+      showToast("401 Permissions Error", Mode.Error);
+    },
     onSuccess: () => {
       refetchFn();
       showToast("Similar Color denied.", Mode.Info);

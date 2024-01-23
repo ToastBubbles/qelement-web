@@ -3,8 +3,9 @@ import { useMutation } from "react-query";
 import { Link } from "react-router-dom";
 import { IQPartDTOInclude } from "../../interfaces/general";
 import showToast, { Mode } from "../../utils/utils";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import ConfirmPopup from "../ConfirmPopup";
+import { AppContext } from "../../context/context";
 
 interface IProps {
   qpart: IQPartDTOInclude;
@@ -12,14 +13,28 @@ interface IProps {
 }
 
 export default function QPartDetails({ qpart, refetchFn }: IProps) {
+  const {
+    state: {
+      jwt: { token },
+      // userPreferences: { payload: prefPayload },
+    },
+  } = useContext(AppContext);
   const [showPopup, setShowPopup] = useState<boolean>(false);
 
   const qpartMutation = useMutation({
     mutationFn: (id: number) =>
-      axios
-        .post<number>(`http://localhost:3000/qpart/approve`, { id })
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err)),
+      axios.post<number>(
+        `http://localhost:3000/qpart/approve`,
+        { id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onError: () => {
+      showToast("401 Permissions Error", Mode.Error);
+    },
     onSuccess: () => {
       refetchFn();
       showToast("Qelement approved!", Mode.Success);
@@ -27,10 +42,18 @@ export default function QPartDetails({ qpart, refetchFn }: IProps) {
   });
   const qpartDeletionMutation = useMutation({
     mutationFn: (id: number) =>
-      axios
-        .post<number>(`http://localhost:3000/qpart/deny`, { id })
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err)),
+      axios.post<number>(
+        `http://localhost:3000/qpart/deny`,
+        { id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onError: () => {
+      showToast("401 Permissions Error", Mode.Error);
+    },
     onSuccess: () => {
       refetchFn();
       showToast("Qelement denied!", Mode.Info);

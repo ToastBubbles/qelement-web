@@ -85,6 +85,7 @@ export default function AddPartsToSculptureView() {
       if (data.data?.code == 200) {
         showToast("Sculpture parts submitted for approval!", Mode.Success);
         setQparts([]);
+        sculptRefetch();
       } else if (data.data?.code == 201) {
         showToast("Sculpture parts added!", Mode.Success);
         setQparts([]);

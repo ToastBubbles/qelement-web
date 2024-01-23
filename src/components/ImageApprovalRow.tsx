@@ -1,11 +1,12 @@
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useMutation } from "react-query";
 import { Link } from "react-router-dom";
 import { IAPIResponse, ImageDTOExtended } from "../interfaces/general";
 import showToast, { Mode } from "../utils/utils";
 import PopupImage from "./PopupImage";
 import ConfirmPopup from "./ConfirmPopup";
+import { AppContext } from "../context/context";
 
 interface IProps {
   img: ImageDTOExtended;
@@ -13,6 +14,12 @@ interface IProps {
 }
 
 export default function ImageApprovalRow({ img, refetchFn }: IProps) {
+  const {
+    state: {
+      jwt: { token },
+      // userPreferences: { payload: prefPayload },
+    },
+  } = useContext(AppContext);
   const [showDeletePopup, setShowDeletePopup] = useState<boolean>(false);
   const [imageOpen, setImageOpen] = useState<boolean>(false);
   const [imageName, setImageName] = useState<string>("");
@@ -24,13 +31,21 @@ export default function ImageApprovalRow({ img, refetchFn }: IProps) {
 
   const imgMutation = useMutation({
     mutationFn: (id: number) =>
-      axios
-        .post<IAPIResponse>(`http://localhost:3000/image/approve`, {
+      axios.post<IAPIResponse>(
+        `http://localhost:3000/image/approve`,
+        {
           id,
           isPrimary,
-        })
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err)),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onError: (e) => {
+      showToast("401 Permissions Error", Mode.Error);
+    },
     onSuccess: () => {
       refetchFn();
       showToast("Image approved!", Mode.Success);
@@ -39,9 +54,20 @@ export default function ImageApprovalRow({ img, refetchFn }: IProps) {
 
   const imgDeleteMutation = useMutation({
     mutationFn: (id: number) =>
-      axios.post<IAPIResponse>(`http://localhost:3000/image/delete`, {
-        id,
-      }),
+      axios.post<IAPIResponse>(
+        `http://localhost:3000/image/delete`,
+        {
+          id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onError: (e) => {
+      showToast("401 Permissions Error", Mode.Error);
+    },
     onSuccess: (e) => {
       if (e.data.code == 200) {
         refetchFn();

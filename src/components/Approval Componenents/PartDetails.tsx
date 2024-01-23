@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useMutation, useQuery } from "react-query";
-import { IAPIResponse, IPartDTO } from "../interfaces/general";
-import showToast, { Mode } from "../utils/utils";
-import { useState } from "react";
-import ConfirmPopup from "./ConfirmPopup";
+import { IAPIResponse, IPartDTO } from "../../interfaces/general";
+import showToast, { Mode } from "../../utils/utils";
+import { useContext, useState } from "react";
+import ConfirmPopup from "../ConfirmPopup";
+import { AppContext } from "../../context/context";
 
 interface IProps {
   part: IPartDTO;
@@ -11,13 +12,27 @@ interface IProps {
 }
 
 export default function PartDetails({ part, refetchFn }: IProps) {
+  const {
+    state: {
+      jwt: { token },
+      // userPreferences: { payload: prefPayload },
+    },
+  } = useContext(AppContext);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const partMutation = useMutation({
     mutationFn: (id: number) =>
-      axios
-        .post<IAPIResponse>(`http://localhost:3000/parts/approve`, { id })
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err)),
+      axios.post<IAPIResponse>(
+        `http://localhost:3000/parts/approve`,
+        { id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onError: () => {
+      showToast("401 Permissions Error", Mode.Error);
+    },
     onSuccess: () => {
       refetchFn();
       showToast("Part approved!", Mode.Success);
@@ -26,10 +41,18 @@ export default function PartDetails({ part, refetchFn }: IProps) {
 
   const partDeleteMutation = useMutation({
     mutationFn: (id: number) =>
-      axios
-        .post<IAPIResponse>(`http://localhost:3000/parts/deny`, { id })
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err)),
+      axios.post<IAPIResponse>(
+        `http://localhost:3000/parts/deny`,
+        { id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onError: () => {
+      showToast("401 Permissions Error", Mode.Error);
+    },
     onSuccess: () => {
       refetchFn();
       showToast("Part deleted!", Mode.Info);

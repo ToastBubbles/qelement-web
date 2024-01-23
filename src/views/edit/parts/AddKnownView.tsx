@@ -50,6 +50,9 @@ export default function AddKnownView() {
         `http://localhost:3000/qpart/mass`,
         parts
       ),
+    onError: (e) => {
+      console.log("error!");
+    },
     onSuccess: (data) => {
       console.log("finished adding parts ", data);
 
@@ -257,6 +260,8 @@ export default function AddKnownView() {
                 onClick={() => {
                   console.log(rows);
                   if (partData?.data.id) {
+                    console.log("mutating...");
+
                     const arrayOfKnownRows: IKnownRow[] = rows.map(
                       (item) => item.values
                     );

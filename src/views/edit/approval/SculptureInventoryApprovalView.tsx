@@ -24,7 +24,7 @@ interface IArrayOfSculptureInvIds {
 export default function ApproveSculptureInventoryView() {
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
     },
   } = useContext(AppContext);
   const { data: sculpData, refetch } = useQuery("notApprovedSculpInv", () =>
@@ -40,13 +40,18 @@ export default function ApproveSculptureInventoryView() {
 
   const sculptureMutation = useMutation({
     mutationFn: (data: IArrayOfSculptureInvIds) =>
-      axios
-        .post<IAPIResponse>(
-          `http://localhost:3000/sculptureInventory/approveInventory`,
-          data
-        )
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err)),
+      axios.post<IAPIResponse>(
+        `http://localhost:3000/sculptureInventory/approveInventory`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onError: () => {
+      showToast("401 Permissions Error", Mode.Error);
+    },
     onSuccess: () => {
       refetch();
       showToast("Sculpture parts approved!", Mode.Success);
@@ -54,14 +59,19 @@ export default function ApproveSculptureInventoryView() {
   });
   const sculptureDeleteMutation = useMutation({
     mutationFn: (data: IArrayOfSculptureInvIds) =>
-      axios
-        .post<IAPIResponse>(
-          `http://localhost:3000/sculptureInventory/denyInventory`,
+      axios.post<IAPIResponse>(
+        `http://localhost:3000/sculptureInventory/denyInventory`,
 
-          data
-        )
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err)),
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onError: () => {
+      showToast("401 Permissions Error", Mode.Error);
+    },
     onSuccess: () => {
       refetch();
       showToast("Sculpture parts denied!", Mode.Info);

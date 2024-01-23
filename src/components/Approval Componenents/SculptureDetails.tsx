@@ -3,8 +3,9 @@ import { useMutation } from "react-query";
 import { Link } from "react-router-dom";
 import { IQPartDTOInclude, ISculptureDTO } from "../../interfaces/general";
 import showToast, { Mode } from "../../utils/utils";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import ConfirmPopup from "../ConfirmPopup";
+import { AppContext } from "../../context/context";
 
 interface IProps {
   sculpture: ISculptureDTO;
@@ -12,13 +13,27 @@ interface IProps {
 }
 
 export default function SculptureDetails({ sculpture, refetchFn }: IProps) {
+  const {
+    state: {
+      jwt: { token },
+      // userPreferences: { payload: prefPayload },
+    },
+  } = useContext(AppContext);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const sculptureMutation = useMutation({
     mutationFn: (id: number) =>
-      axios
-        .post<number>(`http://localhost:3000/sculpture/approve`, { id })
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err)),
+      axios.post<number>(
+        `http://localhost:3000/sculpture/approve`,
+        { id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onError: () => {
+      showToast("401 Permissions Error", Mode.Error);
+    },
     onSuccess: () => {
       refetchFn();
       showToast("Sculpture approved!", Mode.Success);
@@ -26,10 +41,18 @@ export default function SculptureDetails({ sculpture, refetchFn }: IProps) {
   });
   const sculptureDeleteMutation = useMutation({
     mutationFn: (id: number) =>
-      axios
-        .post<number>(`http://localhost:3000/sculpture/deny`, { id })
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err)),
+      axios.post<number>(
+        `http://localhost:3000/sculpture/deny`,
+        { id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onError: () => {
+      showToast("401 Permissions Error", Mode.Error);
+    },
     onSuccess: () => {
       refetchFn();
       showToast("Sculpture denied!", Mode.Info);

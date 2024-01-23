@@ -2,8 +2,9 @@ import { IColorWCreator, color } from "../../interfaces/general";
 import axios from "axios";
 import { useMutation } from "react-query";
 import showToast, { Mode } from "../../utils/utils";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import ConfirmPopup from "../ConfirmPopup";
+import { AppContext } from "../../context/context";
 
 interface IProps {
   color: IColorWCreator;
@@ -11,13 +12,28 @@ interface IProps {
 }
 
 export default function ColorDetails({ color, refetchFn }: IProps) {
+  const {
+    state: {
+      jwt: { token },
+      // userPreferences: { payload: prefPayload },
+    },
+  } = useContext(AppContext);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const colMutation = useMutation({
     mutationFn: (id: number) =>
-      axios
-        .post<number>(`http://localhost:3000/color/approve`, { id })
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err)),
+      axios.post<number>(
+        `http://localhost:3000/color/approve`,
+        { id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onError: () => {
+      showToast("401 Permissions Error", Mode.Error);
+    },
+
     onSuccess: () => {
       refetchFn();
       showToast("Color approved!", Mode.Success);
@@ -26,10 +42,18 @@ export default function ColorDetails({ color, refetchFn }: IProps) {
 
   const colDeletionMutation = useMutation({
     mutationFn: (id: number) =>
-      axios
-        .post<number>(`http://localhost:3000/color/deny`, { id })
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err)),
+      axios.post<number>(
+        `http://localhost:3000/color/deny`,
+        { id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onError: () => {
+      showToast("401 Permissions Error", Mode.Error);
+    },
     onSuccess: () => {
       refetchFn();
       showToast("Color soft deleted", Mode.Info);
