@@ -506,6 +506,12 @@ export interface ISuspendUser {
   adminId: number;
 }
 
+export interface IChangeUserRole {
+  userId: number;
+  newRole: string;
+  adminId: number;
+}
+
 export interface ILoginDTO {
   username: string;
   password: string;

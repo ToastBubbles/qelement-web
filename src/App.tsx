@@ -45,7 +45,6 @@ import ProfileSettingsView from "./views/profile/ProfileSettingsView";
 import WantedView from "./views/profile/WantedView";
 import ForgotPassword from "./views/generic/ForgotPassword";
 import ImageComparisonTool from "./views/generic/ImageComparisonTool";
-import SuspendUser from "./views/SuspendUser";
 import DeleteView from "./views/edit/approval/DeleteView";
 import AddKnownView from "./views/edit/parts/AddKnownView";
 import SingleSculptureView from "./views/sculptures/SingleSculptureView";
@@ -57,6 +56,7 @@ import ElementIDApprovalView from "./views/edit/approval/ElementIDApprovalView";
 import ApproveStatusView from "./views/edit/approval/StatusApprovalView";
 import ApproveSculptureInventoryView from "./views/edit/approval/SculptureInventoryApprovalView";
 import SimilarColorApprovalView from "./views/edit/approval/SimilarColorApprovalView";
+import UserManagementView from "./views/UserManagementView";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -328,10 +328,10 @@ function App() {
                 }
               />
               <Route
-                path="/suspend"
+                path="/userManagement"
                 element={
                   <ProtectedRoute level={"admin"}>
-                    <SuspendUser />
+                    <UserManagementView />
                   </ProtectedRoute>
                 }
               />

@@ -73,7 +73,7 @@ export default function NavbarPopdown() {
           <>
             <Link to={"/approve"}>Approve Content</Link>
             <Link to={"/delete"}>Delete Content</Link>
-            <Link to={"/suspend"}>Suspend User</Link>
+            <Link to={"/userManagement"}>User Management</Link>
           </>
         )}
       </div>
