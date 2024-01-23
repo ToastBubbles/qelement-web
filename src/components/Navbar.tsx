@@ -31,6 +31,7 @@ function Navbar() {
     refetchInterval: 30000,
     enabled: !!payload.id,
   });
+  console.log(token);
 
   useEffect(() => {
     if (msgData?.data != undefined && msgData.data > 0) {

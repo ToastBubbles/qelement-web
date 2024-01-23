@@ -802,6 +802,9 @@ input:checked + .slider:before {
 .colors-used > a {
   margin-bottom: 0.5em;
 }
+.fs-border {
+  border: solid 1px var(--lt-grey);
+}
 .status {
   border: solid 1px var(--lt-grey);
   width: 25%;

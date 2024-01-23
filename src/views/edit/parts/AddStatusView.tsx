@@ -48,7 +48,10 @@ export default function AddStatusView() {
   });
   const partStatusMutation = useMutation({
     mutationFn: (status: IPartStatusDTO) =>
-      axios.post<IPartStatusDTO>(`http://localhost:3000/partStatus`, status),
+      axios.post<IPartStatusDTO>(
+        `http://localhost:3000/partStatus/add`,
+        status
+      ),
     onSuccess: () => {
       showToast("Status Succesfully added!", Mode.Success);
       setNewStatus((prevVals) => ({

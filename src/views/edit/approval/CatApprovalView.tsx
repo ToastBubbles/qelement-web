@@ -3,10 +3,17 @@ import { useMutation, useQuery } from "react-query";
 import { IAPIResponse, ICategory } from "../../../interfaces/general";
 import showToast, { Mode } from "../../../utils/utils";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import ConfirmPopup from "../../../components/ConfirmPopup";
+import { AppContext } from "../../../context/context";
 
 export default function ApproveCatView() {
+  const {
+    state: {
+      jwt: { token },
+      // userPreferences: { payload: prefPayload },
+    },
+  } = useContext(AppContext);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
     null
@@ -20,21 +27,47 @@ export default function ApproveCatView() {
   );
   const catMutation = useMutation({
     mutationFn: (id: number) =>
-      axios
-        .post<IAPIResponse>(`http://localhost:3000/categories/approve`, { id })
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err)),
-    onSuccess: () => {
-      refetch();
-      showToast("Category approved!", Mode.Success);
+      axios.post<IAPIResponse>(
+        `http://localhost:3000/categories/approve`,
+        {
+          id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onError: (e) => {
+      showToast("401 Permissions Error", Mode.Error);
+    },
+
+    onSuccess: (e) => {
+      if (e.data.code == 200) {
+        refetch();
+        showToast("Category approved!", Mode.Success);
+      } else {
+        showToast("Error adding category", Mode.Error);
+      }
     },
   });
 
   const catDeleteMutation = useMutation({
     mutationFn: (id: number) =>
-      axios.post<IAPIResponse>(`http://localhost:3000/categories/delete`, {
-        id,
-      }),
+      axios.post<IAPIResponse>(
+        `http://localhost:3000/categories/delete`,
+        {
+          id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onError: (e) => {
+      showToast("401 Permissions Error", Mode.Error);
+    },
     onSuccess: (e) => {
       if (e.data.code == 200) {
         refetch();

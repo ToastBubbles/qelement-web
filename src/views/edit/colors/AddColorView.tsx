@@ -34,7 +34,7 @@ export default function AddColorView() {
   const [newColor, setNewColor] = useState<IColorDTO>(baseValues);
   const colorMutation = useMutation({
     mutationFn: (colorInfo: IColorDTO) =>
-      axios.post<IColorDTO>(`http://localhost:3000/color`, colorInfo),
+      axios.post<IColorDTO>(`http://localhost:3000/color/add`, colorInfo),
     onSuccess: () => {
       showToast("Color successfully submitted for approval!", Mode.Success);
     },

@@ -129,7 +129,7 @@ export default function AddQPartView() {
 
   const partMutation = useMutation({
     mutationFn: (qpart: iQPartDTO) =>
-      axios.post<IAPIResponse>(`http://localhost:3000/qpart`, qpart),
+      axios.post<IAPIResponse>(`http://localhost:3000/qpart/add`, qpart),
     onSuccess: (data) => {
       console.log(data);
 
@@ -157,7 +157,10 @@ export default function AddQPartView() {
 
   const partStatusMutation = useMutation({
     mutationFn: (status: IPartStatusDTO) =>
-      axios.post<IPartStatusDTO>(`http://localhost:3000/partStatus`, status),
+      axios.post<IPartStatusDTO>(
+        `http://localhost:3000/partStatus/add`,
+        status
+      ),
     onSuccess: () => {
       console.log("listen", partMutation.isSuccess, partMutation.data);
       if (partMutation.data?.data.code == 201) {

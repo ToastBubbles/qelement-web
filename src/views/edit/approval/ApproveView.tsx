@@ -2,11 +2,24 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { INotApporvedCounts } from "../../../interfaces/general";
+import { AppContext } from "../../../context/context";
+import { useContext } from "react";
 
 export default function ApproveView() {
+  const {
+    state: {
+      jwt: { token },
+      // userPreferences: { payload: prefPayload },
+    },
+  } = useContext(AppContext);
   const { data } = useQuery("notApprovedCounts", () =>
     axios.get<INotApporvedCounts>(
-      "http://localhost:3000/extra/getNotApprovedCounts"
+      "http://localhost:3000/extra/getNotApprovedCounts",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     )
   );
   if (data) {

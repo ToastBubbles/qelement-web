@@ -13,9 +13,19 @@ enum sortOptions {
   lowHigh = "lowHigh",
   highLow = "highLow",
 }
+enum filterOptions {
+  all = "all",
+  system = "system",
+  duplo = "duplo",
+  hybrid = "hybrid",
+  technic = "technic",
+  other = "other",
+}
 
 export default function AllSculptureView() {
   const [sortKey, setSortKey] = useState<sortOptions>(sortOptions.az);
+
+  const [filterKey, setFilterKey] = useState<filterOptions>(filterOptions.all);
   const [filterColor, setFilterColor] = useState<number>(-1);
   const [filterEmptyInventory, setFilterEmptyInventory] =
     useState<boolean>(false);
@@ -25,20 +35,20 @@ export default function AllSculptureView() {
 
   // useEffect(() => {}, [filterColor]);
   if (sculptData) {
-    let sculptures = sculptData.data;
+    let sculptures = filterSculpts(sculptData.data);
 
-    if (filterColor > -1) {
-      sculptures = sculptures.filter((x) => {
-        let out = false;
-        x.inventory.forEach((qpart) => {
-          if (qpart.color.id == filterColor) out = true;
-        });
-        return out;
-      });
-    }
-    if (filterEmptyInventory) {
-      sculptures = sculptures.filter((x) => x.inventory.length > 0);
-    }
+    // if (filterColor > -1) {
+    //   sculptures = sculptures.filter((x) => {
+    //     let out = false;
+    //     x.inventory.forEach((qpart) => {
+    //       if (qpart.color.id == filterColor) out = true;
+    //     });
+    //     return out;
+    //   });
+    // }
+    // if (filterEmptyInventory) {
+    //   sculptures = sculptures.filter((x) => x.inventory.length > 0);
+    // }
     // if (sculptures.length > 0) {
     //   console.log(sculptures);
 
@@ -46,35 +56,69 @@ export default function AllSculptureView() {
       <>
         <div className="mx-w">
           <h1>All Sculptures</h1>
-          <div>
-            Sort:
-            <select
-              className="formInput w-50"
-              onChange={(e) => setSortKey(e.target.value as sortOptions)}
-              value={sortKey}
-            >
-              <option value={sortOptions.az}>Name: A-Z</option>
-              <option value={sortOptions.za}>Name: Z-A</option>
-              <option value={sortOptions.lowHigh}>
-                Part Count: Low to High
-              </option>
-              <option value={sortOptions.highLow}>
-                Part Count: High to Low
-              </option>
-            </select>
-          </div>
-          <div>Filter:</div>
-          <div>
-            Must include color: <ColorTextField setter={setFilterColor} />
-          </div>
-          <div>
-            Must have at least one part: <Checkbox
-            checked={filterEmptyInventory}
-            // disabled={checkedForDeletion}
-            onChange={(e) => setFilterEmptyInventory(e.target.checked)}
-            disableRipple
-            color="info"  />
-          </div>
+          <fieldset
+            className="d-flex fs-border"
+            style={{ marginBottom: "1em" }}
+          >
+            <legend>Sort & Filter</legend>
+            <div className="w-50">
+              <div className="d-flex">
+                <div style={{ marginRight: "auto" }}>Direction:</div>
+                <select
+                  className="formInput w-33"
+                  style={{ marginRight: "35%" }}
+                  onChange={(e) => setSortKey(e.target.value as sortOptions)}
+                  value={sortKey}
+                >
+                  <option value={sortOptions.az}>Name: A-Z</option>
+                  <option value={sortOptions.za}>Name: Z-A</option>
+                  <option value={sortOptions.lowHigh}>
+                    Part Count: Low to High
+                  </option>
+                  <option value={sortOptions.highLow}>
+                    Part Count: High to Low
+                  </option>
+                </select>
+              </div>
+              <div className="d-flex">
+                <div style={{ marginRight: "auto" }}>Type of bricks:</div>
+                <select
+                  className="formInput w-33"
+                  style={{ marginRight: "35%" }}
+                  onChange={(e) =>
+                    setFilterKey(e.target.value as filterOptions)
+                  }
+                  value={filterKey}
+                >
+                  <option value={filterOptions.all}>All</option>
+                  <option value={filterOptions.system}>System</option>
+                  <option value={filterOptions.duplo}>DULPO</option>
+                  <option value={filterOptions.hybrid}>Hybrid</option>
+                  <option value={filterOptions.technic}>Technic</option>
+                  <option value={filterOptions.other}>Other</option>
+                </select>
+              </div>
+            </div>
+            <div className="w-50">
+              <div className="d-flex">
+                <div style={{ marginRight: "1em" }}>Must include color: </div>
+                <div className="fg-1">
+                  <ColorTextField setter={setFilterColor} />
+                </div>
+              </div>
+              <div>
+                Must have at least one part:{" "}
+                <Checkbox
+                  checked={filterEmptyInventory}
+                  // disabled={checkedForDeletion}
+                  onChange={(e) => setFilterEmptyInventory(e.target.checked)}
+                  disableRipple
+                  color="info"
+                />
+              </div>
+            </div>
+          </fieldset>
+
           <div className="rib-container2">
             {sculptures.length > 0 ? (
               sortSculpts(sculptures).map((sculpt) => (
@@ -127,5 +171,26 @@ export default function AllSculptureView() {
         }
         return 0;
       });
+  }
+
+  function filterSculpts(arr: ISculptureDTO[]): ISculptureDTO[] {
+    let output = arr;
+
+    if (filterKey != filterOptions.all) {
+      output = output.filter((x) => x.brickSystem == filterKey);
+    }
+    if (filterColor > -1) {
+      output = output.filter((x) => {
+        let out = false;
+        x.inventory.forEach((qpart) => {
+          if (qpart.color.id == filterColor) out = true;
+        });
+        return out;
+      });
+    }
+    if (filterEmptyInventory) {
+      output = output.filter((x) => x.inventory.length > 0);
+    }
+    return output;
   }
 }

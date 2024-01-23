@@ -57,7 +57,7 @@ export default function SingleColorView() {
 
   const similarColorMutation = useMutation({
     mutationFn: ({ color_one, color_two, creatorId }: ISimilarColorDTO) =>
-      axios.post<IAPIResponse>(`http://localhost:3000/similarColor`, {
+      axios.post<IAPIResponse>(`http://localhost:3000/similarColor/add`, {
         color_one,
         color_two,
         creatorId,

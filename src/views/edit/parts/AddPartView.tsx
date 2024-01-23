@@ -51,7 +51,7 @@ export default function AddPartView() {
 
   const partMutation = useMutation({
     mutationFn: (part: IPartWithMoldDTO) =>
-      axios.post<part>(`http://localhost:3000/parts`, part),
+      axios.post<part>(`http://localhost:3000/parts/add`, part),
     onSuccess: () => {
       showToast("Part submitted for approval!", Mode.Success);
       setNewPart((prevPart) => ({
@@ -63,7 +63,7 @@ export default function AddPartView() {
 
   const catMutation = useMutation({
     mutationFn: (data: ICatDTO) =>
-      axios.post<IAPIResponse>(`http://localhost:3000/categories`, data),
+      axios.post<IAPIResponse>(`http://localhost:3000/categories/add`, data),
 
     onSuccess: (e) => {
       console.log("e", e.data);

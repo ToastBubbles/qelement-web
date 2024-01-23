@@ -14,8 +14,6 @@ import {
 import showToast, { Mode } from "../../utils/utils";
 import LoadingPage from "../../components/LoadingPage";
 
-
-
 export default function Register() {
   const defaultQuestion: ISecurityQuestionDTO = {
     questionId: -1,
@@ -118,7 +116,7 @@ export default function Register() {
 
   const userMutation = useMutation({
     mutationFn: (userDTO: IUserWSecQDTO) =>
-      axios.post<IUserWSecQDTO>(`http://localhost:3000/user`, userDTO),
+      axios.post<IUserWSecQDTO>(`http://localhost:3000/user/register`, userDTO),
     onSuccess: () => {
       showToast("Account successfully created!", Mode.Success);
     },
