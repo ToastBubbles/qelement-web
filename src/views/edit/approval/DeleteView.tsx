@@ -9,6 +9,7 @@ export default function DeleteView() {
   const [colorToDeleteID, setColorToDeleteID] = useState<number>(-1);
   const colMutation = useMutation({
     mutationFn: (id: number) =>
+      //will need to be redone
       axios
         .post<number>(`http://localhost:3000/color/delete`, { id })
         .then((res) => console.log(res.data))

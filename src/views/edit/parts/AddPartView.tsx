@@ -18,7 +18,7 @@ interface ICatDTO {
 export default function AddPartView() {
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
     },
   } = useContext(AppContext);
   const defaultValue: IPartWithMoldDTO = {
@@ -51,7 +51,11 @@ export default function AddPartView() {
 
   const partMutation = useMutation({
     mutationFn: (part: IPartWithMoldDTO) =>
-      axios.post<part>(`http://localhost:3000/parts/add`, part),
+      axios.post<part>(`http://localhost:3000/parts/add`, part, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
     onSuccess: () => {
       showToast("Part submitted for approval!", Mode.Success);
       setNewPart((prevPart) => ({
@@ -63,7 +67,11 @@ export default function AddPartView() {
 
   const catMutation = useMutation({
     mutationFn: (data: ICatDTO) =>
-      axios.post<IAPIResponse>(`http://localhost:3000/categories/add`, data),
+      axios.post<IAPIResponse>(`http://localhost:3000/categories/add`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
 
     onSuccess: (e) => {
       console.log("e", e.data);

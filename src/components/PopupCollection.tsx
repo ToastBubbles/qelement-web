@@ -16,7 +16,7 @@ interface IProps {
 export default function PopupCollection({ qpart, closePopup }: IProps) {
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
@@ -38,7 +38,11 @@ export default function PopupCollection({ qpart, closePopup }: IProps) {
     useState<ICollectionDTO>(initialValues);
   const collectionMutation = useMutation({
     mutationFn: (collectionDTO: ICollectionDTO) =>
-      axios.post(`http://localhost:3000/userInventory/add`, collectionDTO),
+      axios.post(`http://localhost:3000/userInventory/add`, collectionDTO, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
     onSuccess: (e) => {
       if (e.data.code == 200) {
         showToast("Added to your collection!", Mode.Success);

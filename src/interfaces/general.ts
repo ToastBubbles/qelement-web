@@ -323,10 +323,12 @@ export interface IQPartDTOInclude {
   ratings: rating[];
   comments: ICommentDTO[];
   partStatuses: IPartStatusDTO[];
+  sculptureInventories: ISculptureDTO[];
   images: ImageDTO[];
   approvalDate: string;
   createdAt: string;
 }
+
 interface IApprovalDateOnly {
   approvalDate: string | null;
 }

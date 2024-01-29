@@ -8,16 +8,22 @@ import showToast, {
   sortStatus,
 } from "../utils/utils";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useMutation } from "react-query";
 import axios from "axios";
 import OnHoverX from "./OnHoverX";
+import { AppContext } from "../context/context";
 
 interface iProps {
   myWantedPart: IWantedDTOGET;
   refetchFn: () => void;
 }
 export default function TopFiveCard({ myWantedPart, refetchFn }: iProps) {
+  const {
+    state: {
+      jwt: { token },
+    },
+  } = useContext(AppContext);
   const [isHovered, setHovered] = useState(false);
   const images = filterImages(myWantedPart.qpart.images);
   let primaryImage = images[images.length - 1];
@@ -33,7 +39,11 @@ export default function TopFiveCard({ myWantedPart, refetchFn }: iProps) {
 
   const wantedMutation = useMutation({
     mutationFn: (removalDTO: IDeletionDTO) =>
-      axios.post(`http://localhost:3000/userFavorite/remove`, removalDTO),
+      axios.post(`http://localhost:3000/userFavorite/remove`, removalDTO, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
     onSuccess: (e) => {
       if (e.data.code == 200) {
         showToast(`Successfully removed part from list!`, Mode.Success);

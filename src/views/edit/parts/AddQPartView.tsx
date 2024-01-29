@@ -23,7 +23,7 @@ import ColorTextField from "../../../components/ColorTextField";
 export default function AddQPartView() {
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
       // userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
@@ -129,7 +129,12 @@ export default function AddQPartView() {
 
   const partMutation = useMutation({
     mutationFn: (qpart: iQPartDTO) =>
-      axios.post<IAPIResponse>(`http://localhost:3000/qpart/add`, qpart),
+      axios.post<IAPIResponse>(`http://localhost:3000/qpart/add`, qpart,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
     onSuccess: (data) => {
       console.log(data);
 
@@ -159,7 +164,12 @@ export default function AddQPartView() {
     mutationFn: (status: IPartStatusDTO) =>
       axios.post<IPartStatusDTO>(
         `http://localhost:3000/partStatus/add`,
-        status
+        status,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       ),
     onSuccess: () => {
       console.log("listen", partMutation.isSuccess, partMutation.data);
@@ -176,7 +186,11 @@ export default function AddQPartView() {
 
   const elementIDMutation = useMutation({
     mutationFn: (eIdData: IElementIDCreationDTO) =>
-      axios.post<IAPIResponse>(`http://localhost:3000/elementID/add`, eIdData),
+      axios.post<IAPIResponse>(`http://localhost:3000/elementID/add`, eIdData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
     onSuccess: () => {
       // showToast("Element ID submitted for approval!", Mode.Success);
       setElementId(-1);

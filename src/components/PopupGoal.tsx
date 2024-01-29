@@ -1,9 +1,10 @@
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { ICategoryWParts, IGoalDTO } from "../interfaces/general";
 import showToast, { Mode } from "../utils/utils";
 import MyToolTip from "./MyToolTip";
+import { AppContext } from "../context/context";
 
 interface IProps {
   userId: number;
@@ -12,6 +13,11 @@ interface IProps {
 }
 
 export default function PopupGoal({ userId, closePopup, refetchFn }: IProps) {
+  const {
+    state: {
+      jwt: { token },
+    },
+  } = useContext(AppContext);
   const initialValues: IGoalDTO = {
     userId,
     partId: -1,
@@ -26,7 +32,11 @@ export default function PopupGoal({ userId, closePopup, refetchFn }: IProps) {
   const [goal, setGoal] = useState<IGoalDTO>(initialValues);
   const goalMutation = useMutation({
     mutationFn: (goalDTO: IGoalDTO) =>
-      axios.post(`http://localhost:3000/userGoal/add`, goalDTO),
+      axios.post(`http://localhost:3000/userGoal/add`, goalDTO, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
     onSuccess: (e) => {
       if (e.data.code == 200) {
         showToast(`Added new Goal!`, Mode.Success);

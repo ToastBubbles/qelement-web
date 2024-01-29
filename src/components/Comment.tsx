@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ICommentDTO, IDeletionDTO } from "../interfaces/general";
 import showToast, { Mode, formatDate } from "../utils/utils";
 import OnHoverX from "./OnHoverX";
 import { useMutation } from "react-query";
 import axios from "axios";
+import { AppContext } from "../context/context";
 
 interface IProps {
   data: ICommentDTO;
@@ -13,6 +14,11 @@ interface IProps {
 }
 
 export default function Comment({ data, isAdmin, userId, refetchFn }: IProps) {
+  const {
+    state: {
+      jwt: { token },
+    },
+  } = useContext(AppContext);
   const [isHovered, setHovered] = useState(false);
   const handleMouseEnter = () => {
     setHovered(true);
@@ -24,7 +30,11 @@ export default function Comment({ data, isAdmin, userId, refetchFn }: IProps) {
 
   const commentDeletionMutation = useMutation({
     mutationFn: (removalDTO: IDeletionDTO) =>
-      axios.post(`http://localhost:3000/comment/remove`, removalDTO),
+      axios.post(`http://localhost:3000/comment/remove`, removalDTO, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
     onSuccess: (e) => {
       if (e.data.code == 200) {
         showToast(`Successfully removed comment!`, Mode.Success);

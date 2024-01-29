@@ -26,7 +26,7 @@ interface ImageSubmission {
 const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
@@ -84,6 +84,7 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
               formData,
               {
                 headers: {
+                  Authorization: `Bearer ${token}`,
                   "Content-Type": "multipart/form-data",
                 },
               }

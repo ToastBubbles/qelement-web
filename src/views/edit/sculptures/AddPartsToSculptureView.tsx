@@ -18,7 +18,7 @@ import RecentQPart from "../../../components/RecentQPart";
 export default function AddPartsToSculptureView() {
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
@@ -34,7 +34,12 @@ export default function AddPartsToSculptureView() {
     queryKey: `sculpt${sculptId}`,
     queryFn: () => {
       return axios.get<ISculptureDTO>(
-        `http://localhost:3000/sculpture/byIdWithPendingParts/${sculptId}`
+        `http://localhost:3000/sculpture/byIdWithPendingParts/${sculptId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
     },
     staleTime: 0,
@@ -77,7 +82,12 @@ export default function AddPartsToSculptureView() {
     mutationFn: (qpartIds: IArrayOfIDs) =>
       axios.post<IAPIResponse>(
         `http://localhost:3000/sculptureInventory/addParts/${sculptId}`,
-        qpartIds
+        qpartIds,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       ),
     onSuccess: (data) => {
       console.log(data);

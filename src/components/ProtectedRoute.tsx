@@ -14,7 +14,7 @@ interface iProps {
 export const ProtectedRoute = ({ level = "user", children }: iProps) => {
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
     },
   } = useContext(AppContext);
 
@@ -22,7 +22,12 @@ export const ProtectedRoute = ({ level = "user", children }: iProps) => {
     queryKey: "isAdmin",
     queryFn: () =>
       axios.get<IAPIResponse>(
-        `http://localhost:3000/user/checkIfAdmin/${payload.id}`
+        `http://localhost:3000/user/checkIfAdmin/${payload.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       ),
     retry: false,
     // refetchInterval: 30000,

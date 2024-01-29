@@ -3,11 +3,17 @@ import { useMutation, useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router";
 import { IAPIResponse, IExtendedMessageDTO } from "../../../interfaces/general";
 import { formatDate } from "../../../utils/utils";
+import { useContext } from "react";
+import { AppContext } from "../../../context/context";
 
 export default function SingleMessageView() {
+  const {
+    state: {
+      jwt: { token },
+    },
+  } = useContext(AppContext);
   const navigate = useNavigate();
   const { messageId } = useParams();
-
 
   const {
     data: msgData,
@@ -18,30 +24,31 @@ export default function SingleMessageView() {
     queryFn: () => {
       console.log("sending message with id of", messageId);
       return axios.get<IExtendedMessageDTO>(
-        `http://localhost:3000/message/${messageId}`
+        `http://localhost:3000/message/getOneById/${messageId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
     },
     enabled: true,
     retry: true,
   });
 
-  // const msgMutation = useMutation({
-  //   mutationFn: () =>
-  //     axios.post<null>(`http://localhost:3000/message/${message?.id}`),
-  //   onSuccess: () => {},
-  // });
-
   if (msgError) {
     navigate("/404");
   }
-  // if (!msgIsLoading) {
-  //   setMessage(msgData?.data);
-  // }
 
   const messageReadMutation = useMutation({
     mutationFn: () =>
       axios.post<IAPIResponse>(
-        `http://localhost:3000/message/read/${messageId}`
+        `http://localhost:3000/message/read/${messageId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       ),
     // onSuccess: () => {},
   });

@@ -19,7 +19,7 @@ import KnownPartRow from "../../../components/KnownPartRow";
 export default function AddKnownView() {
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
@@ -48,7 +48,12 @@ export default function AddKnownView() {
     mutationFn: (parts: IMassKnown) =>
       axios.post<IAPIResponseWithIds>(
         `http://localhost:3000/qpart/mass`,
-        parts
+        parts,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       ),
     onError: (e) => {
       console.log("error!");
@@ -83,7 +88,15 @@ export default function AddKnownView() {
 
   const partStatusMutation = useMutation({
     mutationFn: (status: IArrayOfIDs) =>
-      axios.post<IAPIResponse>(`http://localhost:3000/partStatus/mass`, status),
+      axios.post<IAPIResponse>(
+        `http://localhost:3000/partStatus/mass`,
+        status,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
     onSuccess: (data) => {
       console.log("listen", data);
       if (data?.data.code == 201) {

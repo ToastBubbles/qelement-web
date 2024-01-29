@@ -29,49 +29,49 @@ export default function AllMessagesView() {
   const [mySentMessages, setMySentMessages] = useState<IExtendedMessageDTO[]>();
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
     },
   } = useContext(AppContext);
 
-  const {
-    data: recipID,
-    isLoading,
-    error,
-    isFetched,
-    refetch,
-  } = useQuery(
-    "getID",
-    () => {
-      try {
-        if (recipientName.length > 1) {
-          console.log("calling api with", recipientName);
-          axios
-            .get<user | IAPIResponse>(
-              `http://localhost:3000/user/username/${recipientName.trim()}`
-            )
-            .then((res) => {
-              if ("code" in res.data && res.data?.code == 404) {
-                showToast("Recipient does not exist", Mode.Error);
-                setIsBadRecipient(true);
-              } else if ("id" in res.data) {
-                let data = res.data as user;
-                console.log(res.data);
-                setNewMessage((newMessage) => ({
-                  ...newMessage,
-                  ...{ recipientId: data.id },
-                }));
-                setIsBadRecipient(false);
-              }
-            });
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    {
-      enabled: recipientIDGetter,
-    }
-  );
+  // const {
+  //   data: recipID,
+  //   isLoading,
+  //   error,
+  //   isFetched,
+  //   refetch,
+  // } = useQuery(
+  //   "getID",
+  //   () => {
+  //     try {
+  //       if (recipientName.length > 1) {
+  //         console.log("calling api with", recipientName);
+  //         axios
+  //           .get<user | IAPIResponse>(
+  //             `http://localhost:3000/user/username/${recipientName.trim()}`
+  //           )
+  //           .then((res) => {
+  //             if ("code" in res.data && res.data?.code == 404) {
+  //               showToast("Recipient does not exist", Mode.Error);
+  //               setIsBadRecipient(true);
+  //             } else if ("id" in res.data) {
+  //               let data = res.data as user;
+  //               console.log(res.data);
+  //               setNewMessage((newMessage) => ({
+  //                 ...newMessage,
+  //                 ...{ recipientId: data.id },
+  //               }));
+  //               setIsBadRecipient(false);
+  //             }
+  //           });
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   },
+  //   {
+  //     enabled: recipientIDGetter,
+  //   }
+  // );
 
   useQuery(
     "getMsgs",
@@ -80,7 +80,12 @@ export default function AllMessagesView() {
         console.log("getting messages");
         axios
           .get<IMailbox>(
-            `http://localhost:3000/message/getAllById/${newMessage.senderId}`
+            `http://localhost:3000/message/getAllByUserId/${newMessage.senderId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
           )
           .then((res) => {
             console.log("data:", res.data);
@@ -115,7 +120,11 @@ export default function AllMessagesView() {
 
   const messageMutation = useMutation({
     mutationFn: (message: IMessageDTO) =>
-      axios.post<IMessageDTO>(`http://localhost:3000/message`, message),
+      axios.post<IMessageDTO>(`http://localhost:3000/message/send`, message, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
     // onSuccess: () => {},
   });
   function sendMessage() {

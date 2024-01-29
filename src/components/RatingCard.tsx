@@ -14,7 +14,7 @@ interface IProps {
 function RatingCard({ rating, qpartId, refetchFn }: IProps) {
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
     },
   } = useContext(AppContext);
 
@@ -26,7 +26,12 @@ function RatingCard({ rating, qpartId, refetchFn }: IProps) {
     queryKey: "myRating",
     queryFn: () =>
       axios.get<number>(
-        `http://localhost:3000/rating/${payload.id}/${qpartId}`
+        `http://localhost:3000/rating/getMyRating/${payload.id}/${qpartId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       ),
     enabled: !!payload.id,
     retry: false,
@@ -39,11 +44,19 @@ function RatingCard({ rating, qpartId, refetchFn }: IProps) {
 
   const ratingMutation = useMutation({
     mutationFn: ({ rating, creatorId, qpartId }: IRatingDTO) =>
-      axios.post<rating>(`http://localhost:3000/rating`, {
-        rating,
-        creatorId,
-        qpartId,
-      }),
+      axios.post<rating>(
+        `http://localhost:3000/rating/addRating`,
+        {
+          rating,
+          creatorId,
+          qpartId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
     onSuccess: () => {
       showToast("Rating saved!", Mode.Success);
       refetchFn();
@@ -63,36 +76,46 @@ function RatingCard({ rating, qpartId, refetchFn }: IProps) {
           {getTier(rating).replace("-", " ")}
         </div>
       </div>
-      <div className="my-rating">my rating:</div>
-      <div className="my-rating-number">
-        {ratingData?.data ? ratingData.data : "not rated"}
-      </div>
-      <input
-        className="ratingInput"
-        type="number"
-        placeholder="Rating"
-        onChange={(e) => setMyRating(e.target.valueAsNumber)}
-        value={myRating == -1 ? "" : myRating}
-      />
-      <button
-        onClick={() => {
-          if (myRating != -1) {
-            if (myRating >= 0 && myRating <= 100) {
-              ratingMutation.mutate({
-                rating: myRating,
-                creatorId: payload.id || 1,
-                qpartId: qpartId as number,
-              });
-              setMyRating(-1);
-              ratingRefetch();
-            } else {
-              showToast("Invalid input", Mode.Error);
-            }
-          }
-        }}
-      >
-        Update
-      </button>
+      {payload.id ? (
+        <div>
+          <div className="my-rating">my rating:</div>
+          <div className="my-rating-number">
+            {ratingData?.data && ratingData?.data >= 0
+              ? ratingData.data
+              : "not rated"}
+          </div>
+          <input
+            className="ratingInput"
+            type="number"
+            placeholder="Rating"
+            onChange={(e) => setMyRating(e.target.valueAsNumber)}
+            value={myRating == -1 ? "" : myRating}
+          />
+          <button
+            onClick={() => {
+              if (myRating != -1) {
+                if (myRating >= 0 && myRating <= 100 && payload.id) {
+                  ratingMutation.mutate({
+                    rating: myRating,
+                    creatorId: payload.id,
+                    qpartId: qpartId as number,
+                  });
+                  setMyRating(-1);
+                  ratingRefetch();
+                } else {
+                  if (!payload.id)
+                    showToast("You must log in to do this", Mode.Error);
+                  else showToast("Invalid input", Mode.Error);
+                }
+              }
+            }}
+          >
+            Update
+          </button>
+        </div>
+      ) : (
+        <div className="my-rating">Login to rate this part</div>
+      )}
     </div>
   );
 }

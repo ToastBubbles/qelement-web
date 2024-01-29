@@ -21,7 +21,7 @@ export default function SingleSculptureView() {
   const imagePath = "http://localhost:9000/q-part-images/";
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
@@ -30,7 +30,12 @@ export default function SingleSculptureView() {
     queryKey: "isAdmin",
     queryFn: () =>
       axios.get<IAPIResponse>(
-        `http://localhost:3000/user/checkIfAdmin/${payload.id}`
+        `http://localhost:3000/user/checkIfAdmin/${payload.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       ),
     retry: false,
     // refetchInterval: 30000,
@@ -64,11 +69,19 @@ export default function SingleSculptureView() {
 
   const commentMutation = useMutation({
     mutationFn: ({ content, userId, sculptureId }: ICommentCreationDTO) =>
-      axios.post(`http://localhost:3000/comment/add`, {
-        content,
-        userId,
-        sculptureId,
-      }),
+      axios.post(
+        `http://localhost:3000/comment/add`,
+        {
+          content,
+          userId,
+          sculptureId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
     onSuccess: () => {
       showToast("Comment Added", Mode.Success);
       sculptRefetch();

@@ -25,7 +25,7 @@ enum ColId {
 export default function ProfileSettingsView() {
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
     },
     dispatch,
   } = useContext(AppContext);
@@ -62,7 +62,12 @@ export default function ProfileSettingsView() {
     mutationFn: (userPrefs: IUserPrefDTO) =>
       axios.post<IAPIResponse>(
         `http://localhost:3000/userPreference/userId/${payload.id}`,
-        userPrefs
+        userPrefs,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       ),
     onSuccess: (e) => {
       if (e.data.code == 200) {

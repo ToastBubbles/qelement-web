@@ -14,7 +14,7 @@ interface IProps {
 export default function PopupFavorites({ qpart, closePopup }: IProps) {
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
@@ -28,7 +28,11 @@ export default function PopupFavorites({ qpart, closePopup }: IProps) {
 
   const wantedMutation = useMutation({
     mutationFn: (wantedDTO: IWantedDTO) =>
-      axios.post(`http://localhost:3000/userFavorite/add`, wantedDTO),
+      axios.post(`http://localhost:3000/userFavorite/add`, wantedDTO, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
     onSuccess: (e) => {
       if (e.data.code == 200) {
         showToast(`Added to your ${wantedObj.type} list!`, Mode.Success);

@@ -10,7 +10,7 @@ import EditCategoryPopup from "../../components/EditCategoryPopup";
 export default function AllPartCategoriesView() {
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
@@ -19,7 +19,12 @@ export default function AllPartCategoriesView() {
     queryKey: "isAdmin",
     queryFn: () =>
       axios.get<IAPIResponse>(
-        `http://localhost:3000/user/checkIfAdmin/${payload.id}`
+        `http://localhost:3000/user/checkIfAdmin/${payload.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       ),
     retry: false,
     // refetchInterval: 30000,

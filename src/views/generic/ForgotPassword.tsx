@@ -16,7 +16,11 @@ import axios from "axios";
 import showToast, { Mode } from "../../utils/utils";
 
 export default function ForgotPassword() {
-  const { dispatch } = useContext(AppContext);
+  const {
+    state: {
+      jwt: { token },
+    },
+  } = useContext(AppContext);
   const [validated, setValidation] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [answer1, setAnswer1] = useState<string>("");
@@ -64,7 +68,12 @@ export default function ForgotPassword() {
           email.includes("@")
         ) {
           const response = await axios.get<IUserRecoveryDTO | IAPIResponse>(
-            `http://localhost:3000/user/getQuestions/${email.trim()}`
+            `http://localhost:3000/user/getQuestions/${email.trim()}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
           );
 
           if ("code" in response.data) {

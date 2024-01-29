@@ -16,7 +16,7 @@ import { AppContext } from "../../../context/context";
 export default function AddStatusView() {
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
     },
   } = useContext(AppContext);
   const [startDate, setStartDate] = useState<Date>(new Date());
@@ -50,7 +50,12 @@ export default function AddStatusView() {
     mutationFn: (status: IPartStatusDTO) =>
       axios.post<IPartStatusDTO>(
         `http://localhost:3000/partStatus/add`,
-        status
+        status,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       ),
     onSuccess: () => {
       showToast("Status Succesfully added!", Mode.Success);

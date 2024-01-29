@@ -3,23 +3,32 @@ import { IExtendedMessageDTO, IMessageDTO } from "../interfaces/general";
 import axios from "axios";
 import { useMutation } from "react-query";
 import showToast, { Mode, formatDate } from "../utils/utils";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AppContext } from "../context/context";
 
 interface IMessageProps {
   msg: IExtendedMessageDTO;
   sent: boolean;
 }
 
-
-
 function Message({ msg, sent }: IMessageProps) {
+  const {
+    state: {
+      jwt: { token },
+    },
+  } = useContext(AppContext);
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
   let displayname: string;
   sent ? (displayname = msg.recipientName) : (displayname = msg.senderName);
   const messageDeletionMutation = useMutation({
     mutationFn: (messageId: number) =>
       axios.post<IMessageDTO>(
-        `http://localhost:3000/message/delete/${messageId}`
+        `http://localhost:3000/message/delete/${messageId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       ),
     onSuccess: () => {
       showToast("Message deleted", Mode.Info);

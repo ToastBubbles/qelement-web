@@ -24,7 +24,7 @@ import ColorTextField from "../../components/ColorTextField";
 export default function SingleColorView() {
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
     },
   } = useContext(AppContext);
   // let color = colors.find((x) => x.Lid == ColorId());
@@ -57,11 +57,19 @@ export default function SingleColorView() {
 
   const similarColorMutation = useMutation({
     mutationFn: ({ color_one, color_two, creatorId }: ISimilarColorDTO) =>
-      axios.post<IAPIResponse>(`http://localhost:3000/similarColor/add`, {
-        color_one,
-        color_two,
-        creatorId,
-      }),
+      axios.post<IAPIResponse>(
+        `http://localhost:3000/similarColor/add`,
+        {
+          color_one,
+          color_two,
+          creatorId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
     onSuccess: (e) => {
       console.log(e.data);
 

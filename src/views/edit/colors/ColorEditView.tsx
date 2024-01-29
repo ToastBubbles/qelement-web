@@ -17,7 +17,7 @@ import ColorTextField from "../../../components/ColorTextField";
 export default function ColorEditView() {
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
     },
   } = useContext(AppContext);
   const { colorId } = useParams();
@@ -37,12 +37,6 @@ export default function ColorEditView() {
     enabled: true,
     retry: false,
   });
-  // useEffect(() => {
-  //   setNewColor((newColor) => ({
-  //     ...newColor,
-  //     ...{ creatorId: payload.id },
-  //   }));
-  // }, [payload]);
 
   const colorMutation = useMutation({
     mutationFn: ({
@@ -57,18 +51,26 @@ export default function ColorEditView() {
       type,
       note,
     }: IColorDTO) =>
-      axios.post<IAPIResponse>(`http://localhost:3000/color/id/${color?.id}`, {
-        bl_name,
-        tlg_name,
-        bo_name,
-        hex,
-        swatchId,
-        bl_id,
-        bo_id,
-        tlg_id,
-        type,
-        note,
-      }),
+      axios.post<IAPIResponse>(
+        `http://localhost:3000/color/edit/${color?.id}`,
+        {
+          bl_name,
+          tlg_name,
+          bo_name,
+          hex,
+          swatchId,
+          bl_id,
+          bo_id,
+          tlg_id,
+          type,
+          note,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
     onSuccess: (e) => {
       if (e.data.code == 200) showToast("Changes saved!", Mode.Success);
       else showToast("Changes were not saved, please check fields", Mode.Error);
@@ -77,11 +79,19 @@ export default function ColorEditView() {
 
   const similarColorMutation = useMutation({
     mutationFn: ({ color_one, color_two, creatorId }: ISimilarColorDTO) =>
-      axios.post<IAPIResponse>(`http://localhost:3000/similarColor/add`, {
-        color_one,
-        color_two,
-        creatorId,
-      }),
+      axios.post<IAPIResponse>(
+        `http://localhost:3000/similarColor/add`,
+        {
+          color_one,
+          color_two,
+          creatorId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
     onSuccess: (e) => {
       console.log(e.data);
 

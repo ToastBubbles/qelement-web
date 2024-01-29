@@ -55,7 +55,7 @@ export default function ApproveCatView() {
   const catDeleteMutation = useMutation({
     mutationFn: (id: number) =>
       axios.post<IAPIResponse>(
-        `http://localhost:3000/categories/delete`,
+        `http://localhost:3000/categories/deny`,
         {
           id,
         },

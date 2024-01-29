@@ -10,7 +10,7 @@ import { IWantedDTOGET } from "../../interfaces/general";
 export default function WantedView() {
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
@@ -21,7 +21,12 @@ export default function WantedView() {
     queryKey: "mywanted",
     queryFn: () => {
       return axios.get<IWantedDTOGET[]>(
-        `http://localhost:3000/userFavorite/id/${payload.id}`
+        `http://localhost:3000/userFavorite/id/${payload.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
     },
     staleTime: 100,

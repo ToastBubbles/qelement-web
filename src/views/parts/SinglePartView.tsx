@@ -29,13 +29,14 @@ import PopupCollection from "../../components/PopupCollection";
 import PopupFavorites from "../../components/PopupFavorites";
 import QPartDropdown from "../../components/QPartDropdown";
 import PopupElementID from "../../components/PopupElementID";
+import RecentSculpture from "../../components/RecentSculpture";
 
 export default function SinglePartView() {
   const imagePath = "http://localhost:9000/q-part-images/";
 
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
@@ -43,7 +44,12 @@ export default function SinglePartView() {
     queryKey: "isAdmin",
     queryFn: () =>
       axios.get<IAPIResponse>(
-        `http://localhost:3000/user/checkIfAdmin/${payload.id}`
+        `http://localhost:3000/user/checkIfAdmin/${payload.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       ),
     retry: false,
     // refetchInterval: 30000,
@@ -64,6 +70,7 @@ export default function SinglePartView() {
   const [detailsTabActive, setDetailsTabActive] = useState<boolean>(true);
   const [imageTabActive, setImageTabActive] = useState<boolean>(false);
   const [commentTabActive, setCommentTabActive] = useState<boolean>(false);
+  const [sculptureTabActive, setSculptureTabActive] = useState<boolean>(false);
 
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
   const [commentContent, setCommentContent] = useState<string>("");
@@ -118,11 +125,19 @@ export default function SinglePartView() {
 
   const commentMutation = useMutation({
     mutationFn: ({ content, userId, qpartId }: ICommentCreationDTO) =>
-      axios.post(`http://localhost:3000/comment/add`, {
-        content,
-        userId,
-        qpartId,
-      }),
+      axios.post(
+        `http://localhost:3000/comment/add`,
+        {
+          content,
+          userId,
+          qpartId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
     onSuccess: () => {
       showToast("Comment Added", Mode.Success);
       qpartRefetch();
@@ -181,6 +196,8 @@ export default function SinglePartView() {
     }
     let filteredImages: ImageDTO[] = [];
     if (mypart) filteredImages = filterImages(mypart.images);
+    console.log(mypart);
+
     return (
       <div className="mx-w">
         <div className="page-content-wrapper">
@@ -411,6 +428,7 @@ export default function SinglePartView() {
                           setDetailsTabActive(true);
                           setImageTabActive(false);
                           setCommentTabActive(false);
+                          setSculptureTabActive(false);
                         }}
                       >
                         Details
@@ -423,6 +441,7 @@ export default function SinglePartView() {
                           setDetailsTabActive(false);
                           setImageTabActive(false);
                           setCommentTabActive(true);
+                          setSculptureTabActive(false);
                         }}
                       >
                         Comments{" "}
@@ -437,6 +456,7 @@ export default function SinglePartView() {
                         onClick={() => {
                           setDetailsTabActive(false);
                           setCommentTabActive(false);
+                          setSculptureTabActive(false);
                           setImageTabActive(true);
                         }}
                         disabled={mypart?.images.length == 0}
@@ -445,6 +465,23 @@ export default function SinglePartView() {
                         {mypart?.images &&
                           filterImages(mypart?.images).length > 0 &&
                           `(${filterImages(mypart?.images).length})`}
+                      </button>
+                      <button
+                        className={
+                          "tablinks" + (sculptureTabActive ? " active" : "")
+                        }
+                        onClick={() => {
+                          setDetailsTabActive(false);
+                          setCommentTabActive(false);
+                          setSculptureTabActive(true);
+                          setImageTabActive(false);
+                        }}
+                        disabled={mypart?.sculptureInventories.length == 0}
+                      >
+                        Sculptures{" "}
+                        {mypart?.sculptureInventories &&
+                          mypart.sculptureInventories.length > 0 &&
+                          `(${mypart.sculptureInventories.length})`}
                       </button>
                     </div>
                     <div
@@ -554,6 +591,23 @@ export default function SinglePartView() {
                                 <div>Uploader: {image.uploader.name}</div>
                               </div>
                             </div>
+                          );
+                        })
+                      ) : (
+                        <p>No Images</p>
+                      )}
+                    </div>
+                    <div
+                      className={
+                        "tabcontent tab-sculp" +
+                        (sculptureTabActive ? "" : " tabhidden")
+                      }
+                    >
+                      {mypart?.sculptureInventories &&
+                      mypart?.sculptureInventories.length > 0 ? (
+                        mypart.sculptureInventories.map((sculp) => {
+                          return (
+                            <RecentSculpture sculpture={sculp} key={sculp.id} />
                           );
                         })
                       ) : (

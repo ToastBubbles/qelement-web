@@ -10,12 +10,12 @@ export default function Terms() {
             <ol id="terms">
               <li>ACCEPTANCE OF TERMS</li>
               <div>
-                qelement L.L.C. (qelement or theqelement) provides the qelement
-                catelog of parts, colors, images, and some additional content to
-                you, subject to the following Terms of Service ("TOS"), which
-                may be updated by us from time to time without notice to you.
-                You can review the most current version of the TOS at any time
-                at: www.theqelement.com/terms.
+                qelement L.L.C. (qelement, theqelement, or theqelement.com)
+                provides the qelement catelog of parts, colors, images, and some
+                additional content to you, subject to the following Terms of
+                Service ("TOS"), which may be updated by us from time to time
+                without notice to you. You can review the most current version
+                of the TOS at any time at: www.theqelement.com/terms.
               </div>
               <li>DESCRIPTION OF SERVICE</li>
               <div>
@@ -87,6 +87,19 @@ export default function Terms() {
                 applicable laws regarding the transmission of technical data
                 exported from the United States or the country in which you
                 reside.
+              </div>
+              <li>CONTENT ON THEQELEMENT.COM</li>
+              <div>
+                The content featured on theqelement.com primarily consists of
+                submissions from users worldwide. It is important to note that
+                while efforts are made to ensure accuracy, some information may
+                be inaccurate, conflicting, or fabricated. The rarity of parts
+                listed on theqelement.com may not accurately reflect their true
+                rarity but rather the perceptions of its users. Therefore, all
+                information presented on this site is provided solely for
+                informational purposes and should be regarded with caution.
+                theqelement.com explicitly disclaims any endorsement or
+                encouragement of the use of this information for financial gain.
               </div>
               <li>CONTENT SUBMITTED TO THEQELEMENT.COM</li>
               <div>

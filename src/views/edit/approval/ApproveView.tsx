@@ -9,7 +9,6 @@ export default function ApproveView() {
   const {
     state: {
       jwt: { token },
-      // userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
   const { data } = useQuery("notApprovedCounts", () =>

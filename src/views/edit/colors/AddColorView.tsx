@@ -11,7 +11,7 @@ import ColorSwatchOrder from "../../../components/ColorSwatchOrder";
 export default function AddColorView() {
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
     },
   } = useContext(AppContext);
   const baseValues: IColorDTO = {
@@ -34,7 +34,11 @@ export default function AddColorView() {
   const [newColor, setNewColor] = useState<IColorDTO>(baseValues);
   const colorMutation = useMutation({
     mutationFn: (colorInfo: IColorDTO) =>
-      axios.post<IColorDTO>(`http://localhost:3000/color/add`, colorInfo),
+      axios.post<IColorDTO>(`http://localhost:3000/color/add`, colorInfo, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
     onSuccess: () => {
       showToast("Color successfully submitted for approval!", Mode.Success);
     },

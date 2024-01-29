@@ -11,7 +11,7 @@ import CollectionPart from "../../components/CollectionPart";
 export default function CollectionView() {
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
@@ -21,7 +21,12 @@ export default function CollectionView() {
     queryKey: "mycollection",
     queryFn: () => {
       return axios.get<ICollectionDTOGET[]>(
-        `http://localhost:3000/userInventory/id/${payload.id}`
+        `http://localhost:3000/userInventory/id/${payload.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
     },
     staleTime: 100,
@@ -32,7 +37,12 @@ export default function CollectionView() {
     queryKey: "mygoals",
     queryFn: () => {
       return axios.get<IGoalDTOExtended[]>(
-        `http://localhost:3000/userGoal/id/${payload.id}`
+        `http://localhost:3000/userGoal/id/${payload.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
     },
     staleTime: 100,

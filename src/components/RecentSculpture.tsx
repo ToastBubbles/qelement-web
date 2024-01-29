@@ -22,7 +22,6 @@ export default function RecentSculpture({
     },
   } = useContext(AppContext);
 
-
   function calculateHoursBetweenDates(startDateStr: string): number {
     const endDate = new Date();
     const startDate = new Date(startDateStr);
@@ -98,7 +97,7 @@ export default function RecentSculpture({
               {sculpture.name} ({sculpture.brickSystem})
             </div>
             <div className="listing-color">
-              <div>{getUniquePartCount()} parts listed</div>
+              <div>{getUniquePartCount()}</div>
             </div>
             {!hideDate && (
               <div style={{ fontSize: "0.8em" }}>
@@ -111,11 +110,13 @@ export default function RecentSculpture({
     );
   } else return <div className="listing new-listing">Loading...</div>;
 
-  function getUniquePartCount(): number {
+  function getUniquePartCount(): string {
+    if (sculpture.inventory == undefined || sculpture.inventory == null)
+      return "";
     let output = 0;
     sculpture.inventory.forEach((item) => {
       if (item.SculptureInventory.approvalDate != null) output++;
     });
-    return output;
+    return output + "  parts listed";
   }
 }

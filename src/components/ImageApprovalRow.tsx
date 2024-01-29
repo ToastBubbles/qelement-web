@@ -55,7 +55,7 @@ export default function ImageApprovalRow({ img, refetchFn }: IProps) {
   const imgDeleteMutation = useMutation({
     mutationFn: (id: number) =>
       axios.post<IAPIResponse>(
-        `http://localhost:3000/image/delete`,
+        `http://localhost:3000/image/deny`,
         {
           id,
         },

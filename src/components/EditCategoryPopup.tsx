@@ -24,7 +24,7 @@ interface ICatEditDTO {
 export default function EditCategoryPopup({ closePopup }: IProps) {
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
@@ -35,7 +35,11 @@ export default function EditCategoryPopup({ closePopup }: IProps) {
   );
   const catMutation = useMutation({
     mutationFn: (data: ICatEditDTO) =>
-      axios.post<IAPIResponse>(`http://localhost:3000/categories/edit`, data),
+      axios.post<IAPIResponse>(`http://localhost:3000/categories/edit`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
 
     onSuccess: (e) => {
       console.log("e", e.data);

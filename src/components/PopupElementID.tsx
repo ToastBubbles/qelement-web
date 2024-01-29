@@ -22,7 +22,7 @@ export default function PopupElementID({
 }: IProps) {
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
     },
   } = useContext(AppContext);
 
@@ -30,7 +30,11 @@ export default function PopupElementID({
 
   const elementIDMutation = useMutation({
     mutationFn: (eIdData: IElementIDCreationDTO) =>
-      axios.post<IAPIResponse>(`http://localhost:3000/elementID/add`, eIdData),
+      axios.post<IAPIResponse>(`http://localhost:3000/elementID/add`, eIdData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
     onSuccess: (resp) => {
       console.log(resp.data);
 

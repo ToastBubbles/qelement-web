@@ -25,7 +25,12 @@ function Navbar() {
     queryKey: "individualMessage",
     queryFn: () =>
       axios.get<number>(
-        `http://localhost:3000/message/getUnreadCountById/${payload.id}`
+        `http://localhost:3000/message/getUnreadCountById/${payload.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       ),
     retry: false,
     refetchInterval: 30000,
@@ -48,6 +53,7 @@ function Navbar() {
       }
     };
   }, [timerId]);
+  // console.log(token);
 
   return (
     <nav className="navbar">

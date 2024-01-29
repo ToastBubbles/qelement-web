@@ -12,7 +12,7 @@ import { IAPIResponse, ICreateSculptureDTO } from "../../../interfaces/general";
 export default function AddSculptureView() {
   const {
     state: {
-      jwt: { payload },
+      jwt: { token, payload },
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
@@ -40,7 +40,12 @@ export default function AddSculptureView() {
     mutationFn: (sculptureDTO: ICreateSculptureDTO) =>
       axios.post<IAPIResponse>(
         `http://localhost:3000/sculpture/add`,
-        sculptureDTO
+        sculptureDTO,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       ),
     onSuccess: (data) => {
       console.log(data);
