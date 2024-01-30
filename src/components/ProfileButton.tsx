@@ -7,7 +7,7 @@ interface iProps {
 }
 export default function ProfileButton({ link, content, imgPath }: iProps) {
   return (
-    <Link to={link} className="profile-button clickable">
+    <Link to={link} className="profile-button link clickable">
       <div className="profile-btn-img-container">
         <img src={imgPath}></img>
       </div>

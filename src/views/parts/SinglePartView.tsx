@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useMutation, useQuery } from "react-query";
-import { useParams, useNavigate } from "react-router";
+import { useParams, useNavigate, useLocation } from "react-router";
 import AllColorStatus from "../../components/AllColorStatus";
 
 import RatingCard from "../../components/RatingCard";
@@ -40,6 +40,7 @@ export default function SinglePartView() {
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
+
   const { data: adminData } = useQuery({
     queryKey: "isAdmin",
     queryFn: () =>
@@ -52,13 +53,17 @@ export default function SinglePartView() {
         }
       ),
     retry: false,
-    // refetchInterval: 30000,
     enabled: !!payload.id,
   });
 
   const queryParameters = new URLSearchParams(window.location.search);
-  const urlColorId = queryParameters.get("color");
-  const urlMoldId = queryParameters.get("mold");
+  // const urlColorId = queryParameters.get("color");
+  // const urlMoldId = queryParameters.get("mold");
+  const [urlColorId, setUrlColorId] = useState<number | undefined>(undefined);
+  const [urlMoldId, setUrlMoldId] = useState<number | undefined>(undefined);
+  const [urlHasChanged, setUrlHasChanged] = useState<boolean>(false);
+  // const { color } = useParams();
+  // const { mold } = useParams();
 
   const [selectedQPartid, setSelectedQPartid] = useState<number>(-1);
   const [multiMoldPart, setMultiMoldPart] = useState<boolean>(false);
@@ -78,6 +83,21 @@ export default function SinglePartView() {
 
   const { partId } = useParams();
   const navigate = useNavigate();
+
+  const location = useLocation();
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const mold = searchParams.get("mold");
+    const color = searchParams.get("color");
+
+    // Use id and color here as needed
+    console.log(mold);
+    console.log(color);
+    setUrlHasChanged(true);
+    setUrlColorId(Number(color));
+    setUrlMoldId(Number(mold));
+  }, [location]);
 
   const {
     data: qpartData,
@@ -175,6 +195,7 @@ export default function SinglePartView() {
     }
     return "https://via.placeholder.com/1024x768/eee?text=4:3";
   }
+
   if (qpartData && qpartData.data.length > 0) {
     const qparts = qpartData?.data;
     // const myDebugger = {
@@ -183,11 +204,25 @@ export default function SinglePartView() {
     //   mypart,
     // };
 
-    if (selectedQPartid == -1) {
+    if (selectedQPartid == -1 || urlHasChanged) {
+      console.log("Checking URL");
+      setUrlHasChanged(false);
       if (urlColorId) {
-        const targetQPartId = qparts.find(
-          (x) => x.color.id == Number(urlColorId)
-        )?.id;
+        console.log(`Got URL Color: ${urlColorId}`);
+
+        let targetQPartId: number | undefined = undefined;
+        if (urlMoldId) {
+          console.log(`Got URL Mold: ${urlMoldId}`);
+
+          targetQPartId = qparts.find(
+            (x) =>
+              x.color.id == Number(urlColorId) && x.mold.id == Number(urlMoldId)
+          )?.id;
+        } else {
+          targetQPartId = qparts.find(
+            (x) => x.color.id == Number(urlColorId)
+          )?.id;
+        }
         if (targetQPartId) setSelectedQPartid(targetQPartId);
         else setSelectedQPartid(qparts[0].id);
       } else {
@@ -196,7 +231,7 @@ export default function SinglePartView() {
     }
     let filteredImages: ImageDTO[] = [];
     if (mypart) filteredImages = filterImages(mypart.images);
-    console.log(mypart);
+    // console.log(mypart);
 
     return (
       <div className="mx-w">
@@ -351,12 +386,18 @@ export default function SinglePartView() {
                       </a>
                     </li>
                     <li>
-                      <Link to={`/add/image/?qpartId=${mypart?.id}`}>
+                      <Link
+                        to={`/add/image/?qpartId=${mypart?.id}`}
+                        className="link"
+                      >
                         Add Photo
                       </Link>
                     </li>
                     <li>
-                      <Link to={`/add/qpart/status/${selectedQPartid}`}>
+                      <Link
+                        to={`/add/qpart/status/${selectedQPartid}`}
+                        className="link"
+                      >
                         Add New Status
                       </Link>
                     </li>
@@ -384,15 +425,20 @@ export default function SinglePartView() {
                     <li>
                       <a
                         href={`https://www.bricklink.com/v2/catalog/catalogitem.page?P=${mypart?.mold.parentPart.blURL}&C=${mypart?.color.bl_id}`}
+                        className="link"
                       >
                         bricklink
                       </a>
                     </li>
                     <li>
-                      <a href="#">brickowl</a>
+                      <a href="#" className="link">
+                        brickowl
+                      </a>
                     </li>
                     <li>
-                      <a href="#">rebrickable</a>
+                      <a href="#" className="link">
+                        rebrickable
+                      </a>
                     </li>
                   </ul>
                 </div>
@@ -657,8 +703,6 @@ export default function SinglePartView() {
     if (qpartData?.data && qpartData.data.length == 0) {
       return <p>No Q-Elements exist for this part yet!</p>;
     } else {
-      console.log(qpartData?.data);
-
       return <LoadingPage />;
     }
   }

@@ -260,6 +260,7 @@ export interface IMoldStatus {
   status: string;
 }
 export interface IMoldStatusWUNK {
+  partId: number;
   moldId: number;
   status: string;
   unknown: boolean;

@@ -35,10 +35,18 @@ export default function NavbarPopdown() {
   return (
     <div className={"nav-pop-down"}>
       <div>
-        <Link to={"/profile"}>My Profile</Link>
-        <Link to={"/profile/wanted"}>My Wanted List</Link>
-        <Link to={"/profile/collection"}>My Collection</Link>
-        <Link to={"/profile/settings"}>Settings</Link>
+        <Link className="link" to={"/profile"}>
+          My Profile
+        </Link>
+        <Link className="link" to={"/profile/wanted"}>
+          My Wanted List
+        </Link>
+        <Link className="link" to={"/profile/collection"}>
+          My Collection
+        </Link>
+        <Link className="link" to={"/profile/settings"}>
+          Settings
+        </Link>
         <div
           className="clickable"
           onClick={() => {
@@ -58,27 +66,43 @@ export default function NavbarPopdown() {
           Add:
           <ul className="nav-pop-down-ul">
             <li>
-              <Link to={"/add/qpart"}>New QElement</Link>
+              <Link className="link" to={"/add/qpart"}>
+                New QElement
+              </Link>
             </li>
             <li>
-              <Link to={"/add/part"}>New Part</Link>
+              <Link className="link" to={"/add/part"}>
+                New Part
+              </Link>
             </li>
             <li>
-              <Link to={"/add/color"}>New Color</Link>
+              <Link className="link" to={"/add/color"}>
+                New Color
+              </Link>
             </li>
             <li>
-              <Link to={"/add/sculpture"}>New Sculpture</Link>
+              <Link className="link" to={"/add/sculpture"}>
+                New Sculpture
+              </Link>
             </li>
             <li>
-              <Link to={"/add/known"}>Known Elements</Link>
+              <Link className="link" to={"/add/known"}>
+                Known Elements
+              </Link>
             </li>
           </ul>
         </div>
         {adminData && adminData.data.code == 200 && (
           <>
-            <Link to={"/approve"}>Approve Content</Link>
-            <Link to={"/delete"}>Delete Content</Link>
-            <Link to={"/userManagement"}>User Management</Link>
+            <Link className="link" to={"/approve"}>
+              Approve Content
+            </Link>
+            <Link className="link" to={"/delete"}>
+              Delete Content
+            </Link>
+            <Link className="link" to={"/userManagement"}>
+              User Management
+            </Link>
           </>
         )}
       </div>

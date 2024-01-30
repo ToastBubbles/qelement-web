@@ -71,7 +71,7 @@ export default function RecentSculpture({
         )}
         <Link
           to={`/sculpture/${sculpture.id}`}
-          className={`listing new-listing ${
+          className={`listing link new-listing ${
             disableLinks ? " disabled-link" : ""
           }`}
         >

@@ -25,15 +25,12 @@ function RatingCard({ rating, qpartId, refetchFn }: IProps) {
   const { data: ratingData, refetch: ratingRefetch } = useQuery({
     queryKey: "myRating",
     queryFn: () =>
-      axios.get<number>(
-        `http://localhost:3000/rating/getMyRating/${payload.id}/${qpartId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      ),
-    enabled: !!payload.id,
+      axios.get<number>(`http://localhost:3000/rating/getMyRating/${qpartId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    enabled: !!token,
     retry: false,
     staleTime: 0,
   });

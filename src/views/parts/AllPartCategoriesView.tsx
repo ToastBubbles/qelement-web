@@ -49,7 +49,7 @@ export default function AllPartCategoriesView() {
           <div className="parts-view">
             {catData.data.map((cat) => {
               return (
-                <Link key={cat.id} to={"/part-categories/" + cat.id}>
+                <Link key={cat.id} className="link" to={"/part-categories/" + cat.id}>
                   {cat.name}
                 </Link>
               );

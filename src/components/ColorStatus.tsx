@@ -29,17 +29,21 @@ export default function ColorStatus({ color, statuses }: iProps) {
           i++;
           if (i <= 4)
             return (
-              <div
+              <Link
+                to={`/part/${statusObj.partId}?color=${color.id}&mold=${statusObj.moldId}`}
+                onClick={(event) => {
+                  if (statusObj.status == "no status") event.preventDefault();
+                }}
                 key={i}
                 className={`flag-status tag-${
                   statusObj.status == "no status"
-                    ? "nostatus"
+                    ? "nostatus notclickable"
                     : statusObj.status
                 } flag-sizebyqty-${statuses.length > 4 ? 4 : statuses.length}`}
               >
                 {statusObj.status.toUpperCase()[0]}
                 {statusObj.unknown ? "*" : ""}
-              </div>
+              </Link>
             );
         })
 
@@ -49,14 +53,21 @@ export default function ColorStatus({ color, statuses }: iProps) {
       return (
         //   <div key={color.id} className="color-row">
         statuses.map((statusObj) => (
-          <div
+          <Link
+            to={`/part/${statusObj.partId}?color=${color.id}&mold=${statusObj.moldId}`}
+            key={statusObj.moldId}
+            onClick={(event) => {
+              if (statusObj.status == "no status") event.preventDefault();
+            }}
             className={
               "flag-status tag-" +
-              (statusObj.status == "no status" ? "nostatus" : statusObj.status)
+              (statusObj.status == "no status"
+                ? "nostatus notclickable"
+                : statusObj.status)
             }
           >
             {statusObj.status.toUpperCase()}
-          </div>
+          </Link>
         ))
 
         //   </div>
@@ -70,7 +81,7 @@ export default function ColorStatus({ color, statuses }: iProps) {
         {getPrefColorIdString(color, prefPayload.prefId)}
       </div>
       <Link
-        to={`/part/${1}?color=${color.id}`}
+        to={`/color/${color.id}`}
         className="flag flag-fill"
         style={{
           backgroundColor: "#" + color.hex,

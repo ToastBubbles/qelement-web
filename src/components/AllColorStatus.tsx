@@ -59,8 +59,6 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
   }
 
   function sortByStatus(colors: color[]): IColorWUnk[] {
-    console.log(arrayOrder);
-
     // const sortKey = moldId === -1 ? arrayOrder[0].id : moldId;
     let sortBySwatch = false;
     if (moldId == -1) sortBySwatch = true;
@@ -166,12 +164,18 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
       );
       if (checker) {
         output.push({
+          partId: qparts[0].mold.parentPart.id,
           moldId: obj.id,
           status: checker.partStatuses[0].status,
           unknown: checker.isMoldUnknown,
         });
       } else {
-        output.push({ moldId: obj.id, status: "no status", unknown: false });
+        output.push({
+          partId: qparts[0].mold.parentPart.id,
+          moldId: obj.id,
+          status: "no status",
+          unknown: false,
+        });
       }
     });
 
@@ -180,8 +184,6 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
 
   if (colorData && qparts) {
     if (arrayOrder.length == 0 && qparts.length > 0) {
-      console.log("ordering array");
-
       orderArray();
     }
     let colors = colorData.data;

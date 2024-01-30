@@ -97,8 +97,8 @@ export default function RecentQPart({
       <RibbonContainer>
         {generateRibbon(age)}
         <Link
-          to={`/part/${thisqpart.mold.parentPart.id}?color=${thisqpart.color.id}`}
-          className={`listing new-listing ${
+          to={`/part/${thisqpart.mold.parentPart.id}?color=${thisqpart.color.id}&mold=${thisqpart.mold.id}`}
+          className={`listing link new-listing ${
             disableLinks ? " disabled-link" : ""
           }`}
         >

@@ -139,19 +139,29 @@ export default function SingleSculptureView() {
                       <span>Keywords:</span>
 
                       <li>
-                        <a href="#">test</a>
+                        <a href="#" className="link">
+                          test
+                        </a>
                       </li>
                       <li>
-                        <a href="#">test</a>
+                        <a href="#" className="link">
+                          test
+                        </a>
                       </li>
                     </ul>
                   </div>
 
                   <div className="d-flex flex-col   action-container">
-                    <Link to={`/add/sculpture/parts/${sculpture.id}`}>
+                    <Link
+                      className="link"
+                      to={`/add/sculpture/parts/${sculpture.id}`}
+                    >
                       Add Parts
                     </Link>
-                    <Link to={`/add/image/?sculptureId=${sculpture.id}`}>
+                    <Link
+                      className="link"
+                      to={`/add/image/?sculptureId=${sculpture.id}`}
+                    >
                       Add Photo
                     </Link>
                   </div>
