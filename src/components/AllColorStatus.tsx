@@ -3,6 +3,7 @@ import axios from "axios";
 import {
   IColorWUnk,
   IMoldStatusWUNK,
+  IPartStatusDTO,
   IQPartDTOInclude,
   color,
 } from "../interfaces/general";
@@ -115,7 +116,8 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
 
           sameColorQParts.forEach((scQPart) => {
             if (!alreadyAdded && scQPart.partStatuses.length > 0) {
-              const statusObj = scQPart.partStatuses[0].status;
+              // const statusObj = scQPart.partStatuses[0].status;
+              const statusObj = findHighestStatus(scQPart.partStatuses).status;
               const category =
                 scQPart.mold.id === sortKey ? "primary" : "secondary";
               // console.log(scQPart.mold.number, scQPart.color.bl_name, category);
@@ -156,13 +158,44 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
     output = [...output, ...colorsWithoutStatus];
     return output;
   }
-  function getStatuses(colorId: number): IMoldStatusWUNK[] {
+
+  function findHighestStatus(statuses: IPartStatusDTO[]): IPartStatusDTO {
+    const sortedStatuses = statuses.sort((a, b) => {
+      // Parse date strings into Date objects for comparison
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return dateB.getTime() - dateA.getTime();
+    });
+    const statusOrder = [
+      "known",
+      "found",
+      "seen",
+      "idOnly",
+      "other",
+      "unknown",
+    ];
+
+    for (const status of statusOrder) {
+      const highestStatus = sortedStatuses.find((x) => x.status === status);
+      if (highestStatus) {
+        return highestStatus;
+      }
+    }
+    console.log("Fallback, returning first entry");
+
+    return sortedStatuses[0];
+  }
+  function getStatuses(color: color): IMoldStatusWUNK[] {
     let output: IMoldStatusWUNK[] = [];
+
     arrayOrder.forEach((obj) => {
       let checker = qparts.find(
-        (x) => x.mold.id == obj.id && x.color.id == colorId
+        (x) => x.mold.id == obj.id && x.color.id == color.id
       );
       if (checker) {
+        console.log(`Checker ${checker.mold.number} ${color.bl_name}`);
+        console.log(checker.partStatuses);
+
         output.push({
           partId: qparts[0].mold.parentPart.id,
           moldId: obj.id,
@@ -212,7 +245,7 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
           <ColorStatus
             key={colorWUNK.color.id}
             color={colorWUNK.color}
-            statuses={getStatuses(colorWUNK.color.id)}
+            statuses={getStatuses(colorWUNK.color)}
           />
         ))}
       </>
