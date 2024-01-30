@@ -2336,9 +2336,6 @@ input:checked + .slider:before {
   z-index: 1;
   position: absolute;
   display: flex;
-  /* flex-direction: column; */
-  /* justify-content: space-around; */
-  /* justify-content: space-between; */
   background-color: #eeeeee;
   width: 22em;
   height: 14em;

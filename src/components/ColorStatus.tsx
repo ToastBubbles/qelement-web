@@ -24,7 +24,7 @@ export default function ColorStatus({ color, statuses }: iProps) {
     if (statuses.length > 2) {
       let i = 0;
       return (
-        //   <div key={color.id} className="color-row">
+
         statuses.map((statusObj) => {
           i++;
           if (i <= 4)
@@ -46,12 +46,10 @@ export default function ColorStatus({ color, statuses }: iProps) {
               </Link>
             );
         })
-
-        //   </div>
       );
     } else {
       return (
-        //   <div key={color.id} className="color-row">
+   
         statuses.map((statusObj) => (
           <Link
             to={`/part/${statusObj.partId}?color=${color.id}&mold=${statusObj.moldId}`}
@@ -69,8 +67,6 @@ export default function ColorStatus({ color, statuses }: iProps) {
             {statusObj.status.toUpperCase()}
           </Link>
         ))
-
-        //   </div>
       );
     }
   }

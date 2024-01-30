@@ -55,15 +55,10 @@ export default function SinglePartView() {
     retry: false,
     enabled: !!payload.id,
   });
-
-  const queryParameters = new URLSearchParams(window.location.search);
-  // const urlColorId = queryParameters.get("color");
-  // const urlMoldId = queryParameters.get("mold");
   const [urlColorId, setUrlColorId] = useState<number | undefined>(undefined);
   const [urlMoldId, setUrlMoldId] = useState<number | undefined>(undefined);
   const [urlHasChanged, setUrlHasChanged] = useState<boolean>(false);
-  // const { color } = useParams();
-  // const { mold } = useParams();
+
 
   const [selectedQPartid, setSelectedQPartid] = useState<number>(-1);
   const [multiMoldPart, setMultiMoldPart] = useState<boolean>(false);
@@ -198,11 +193,6 @@ export default function SinglePartView() {
 
   if (qpartData && qpartData.data.length > 0) {
     const qparts = qpartData?.data;
-    // const myDebugger = {
-    //   selectedQPartid,
-    //   urlColorId,
-    //   mypart,
-    // };
 
     if (selectedQPartid == -1 || urlHasChanged) {
       console.log("Checking URL");

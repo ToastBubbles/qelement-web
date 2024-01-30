@@ -24,14 +24,13 @@ interface IMoldCounter {
 }
 
 export default function AllColorStatus({ qparts, moldId, search }: IProps) {
-  const { data: colorData, isLoading } = useQuery("allColors", () =>
+  const { data: colorData } = useQuery("allColors", () =>
     axios.get<color[]>("http://localhost:3000/color")
   );
 
   const [arrayOrder, setArrayOrder] = useState<IMoldCounter[]>([]);
 
   function orderArray() {
-    let rows = 1;
     let counterObj: IMoldCounter[] = [];
     qparts.forEach((qpart) => {
       let exists = false;
@@ -48,7 +47,7 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
           number: qpart.mold.number,
         });
     });
-    rows = counterObj.length;
+
     const sortedCounterObj = counterObj
       .slice()
       .sort((a, b) => b.count - a.count);
@@ -120,8 +119,6 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
               const statusObj = findHighestStatus(scQPart.partStatuses).status;
               const category =
                 scQPart.mold.id === sortKey ? "primary" : "secondary";
-              // console.log(scQPart.mold.number, scQPart.color.bl_name, category);
-              // console.log(statusMapping[category][statusObj]);
 
               if (statusMapping[category][statusObj]) {
                 statusMapping[category][statusObj].push({
@@ -199,7 +196,7 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
         output.push({
           partId: qparts[0].mold.parentPart.id,
           moldId: obj.id,
-          status: checker.partStatuses[0].status,
+          status: findHighestStatus(checker.partStatuses).status,
           unknown: checker.isMoldUnknown,
         });
       } else {
