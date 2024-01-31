@@ -3,6 +3,7 @@
   --sft-blue: #88bbe4;
   --lt-grey: #ccc;
   --dk-grey: #32363d;
+  --md-grey: #838282;
   /* --main-font-family: "Nunito Sans", sans-serif; */
 
   /* *** Toast Overrides *** */
@@ -301,6 +302,10 @@ body::-webkit-scrollbar {
   width: 3em;
   margin: 0 1em 0 0.5em;
   border-radius: 50%;
+}
+small {
+  color: var(--md-grey);
+  margin-bottom: 1em;
 }
 .tab-images,
 .tab-sculp {
@@ -2356,7 +2361,7 @@ input:checked + .slider:before {
 .hidden {
   display: none;
 }
-.notclickable{
+.notclickable {
   cursor: default;
 }
 .clickable {

@@ -7,6 +7,7 @@ import {
   IAPIResponse,
   IPredefinedSecQuestionDTO,
   ISecurityQuestionDTO,
+  IUserCreationDTO,
   IUserDTO,
   IUserWSecQDTO,
   passwordValidation,
@@ -20,13 +21,13 @@ export default function Register() {
     answer: "",
   };
   const navigate = useNavigate();
-  const [newUser, setNewUser] = useState<IUserDTO>({
-    id: -1,
+  const [newUser, setNewUser] = useState<IUserCreationDTO>({
+    // id: -1,
     name: "",
     email: "",
     password: "",
-    role: "user",
-    createdAt: "",
+    // role: "user",
+    // createdAt: "",
   });
   const [question1, setQuestion1] =
     useState<ISecurityQuestionDTO>(defaultQuestion);
@@ -89,7 +90,6 @@ export default function Register() {
                     name: newUser.name,
                     email: newUser.email,
                     password: newUser.password,
-                    role: newUser.role,
                     q1: question1,
                     q2: question2,
                     q3: question3,
@@ -154,6 +154,9 @@ export default function Register() {
 
       return output;
     }
+    const isValidUsername = (input: string): boolean => {
+      return /^[a-zA-Z0-9.-_]+$/.test(input);
+    };
     return (
       <>
         <div className="formcontainer">
@@ -162,6 +165,7 @@ export default function Register() {
             <input
               maxLength={20}
               placeholder="Username"
+              style={{marginBottom: '0.5em'}}
               onChange={(e) =>
                 setNewUser((newUser) => ({
                   ...newUser,
@@ -169,6 +173,7 @@ export default function Register() {
                 }))
               }
             />
+            <small>Username can only contain letters, numbers, periods (.), or underscores (_)</small>
             <input
               maxLength={255}
               placeholder="Email"
@@ -340,14 +345,21 @@ export default function Register() {
 
             <button
               onClick={() => {
-                refecthUsernameAvailability();
+                if (isValidUsername(newUser.name.trim())) {
+                  refecthUsernameAvailability();
+                } else {
+                  showToast(
+                    "Username can only contain letters, numbers, periods (.), or underscores (_)!",
+                    Mode.Error
+                  );
+                }
               }}
             >
               Register
             </button>
             <div>
               By registering for an account, you agree to the{" "}
-              <Link to={"/terms"}>Terms of Service</Link>
+              <Link className="link" to={"/terms"}>Terms of Service</Link>
             </div>
           </div>
         </div>

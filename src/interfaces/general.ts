@@ -436,11 +436,13 @@ export interface rating {
   createdAt: string;
   updatedAt: string;
 }
-export interface IUserDTO {
-  id: number;
+export interface IUserCreationDTO {
   name: string;
   email: string;
   password: string;
+}
+export interface IUserDTO extends IUserCreationDTO {
+  id: number;
   role: string;
   preferences: IUserPrefDTO;
   createdAt: string;
@@ -480,7 +482,7 @@ export interface IUserWSecQDTO {
   name: string;
   email: string;
   password: string;
-  role: string;
+  // role: string;
   q1: ISecurityQuestionDTO;
   q2: ISecurityQuestionDTO;
   q3: ISecurityQuestionDTO;

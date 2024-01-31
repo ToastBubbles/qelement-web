@@ -3,11 +3,8 @@ import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import {
   IAPIResponse,
-  ILoginDTO,
   ISecurityQuestionDTO,
-  IUserForgotPwd,
   IUserRecoveryDTO,
-  IUserWSecQDTO,
   passwordValidation,
 } from "../../interfaces/general";
 import { AppContext } from "../../context/context";
@@ -319,7 +316,9 @@ export default function ForgotPassword() {
             </>
           )}
 
-          <a href="/login">Back to login</a>
+          <Link className="link" to="/login">
+            Back to login
+          </Link>
         </div>
       </div>
     </>

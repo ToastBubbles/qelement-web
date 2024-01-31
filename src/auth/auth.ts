@@ -58,6 +58,10 @@ i9MgVWxJARlC+RCtzTTg7/UE9fm7fQVSsvbwz7XR8bBWYZZrFD8duejIfNLCHbft
   }
 }
 
+export const getToken = () => {
+  return Cookies.get("userJWT");
+};
+
 export async function login(
   loginDTO: ILoginDTO
 ): Promise<{ token: string; jwtPayload: JWTPayload }> {

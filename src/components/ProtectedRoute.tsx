@@ -8,10 +8,15 @@ import showToast, { Mode } from "../utils/utils";
 
 interface iProps {
   level?: string;
+  isAuth: boolean;
   children: JSX.Element;
 }
 
-export const ProtectedRoute = ({ level = "user", children }: iProps) => {
+export const ProtectedRoute = ({
+  level = "user",
+  isAuth,
+  children,
+}: iProps) => {
   const {
     state: {
       jwt: { token, payload },
@@ -34,7 +39,12 @@ export const ProtectedRoute = ({ level = "user", children }: iProps) => {
     enabled: !!payload.id && level == "admin",
   });
 
-  if (!payload || payload.id == 0 || payload.id == undefined) {
+  // if (!payload || payload.id == 0 || payload.id == undefined) {
+  //   showToast("You must be logged in to visit this page!", Mode.Warning);
+  //   return <Navigate to="/" replace />;
+  // }
+
+  if (!isAuth) {
     showToast("You must be logged in to visit this page!", Mode.Warning);
     return <Navigate to="/" replace />;
   }

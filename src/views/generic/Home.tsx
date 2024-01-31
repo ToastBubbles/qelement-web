@@ -16,7 +16,7 @@ export default function Home() {
             </div>
           </div>
 
-          <Link to="/about" className="jumbo-btn clickable">
+          <Link to="/about" className="jumbo-btn link clickable">
             <div>
               What is qelement? <span>{">>"}</span>
             </div>

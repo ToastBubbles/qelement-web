@@ -6,7 +6,7 @@ import AppWrapper from "./components/AppWrapper";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import { ProtectedRoute } from "./components/ProtectedRoute";
-import { AppProvider } from "./context/context";
+import { AppContext, AppProvider } from "./context/context";
 import {
   AddPartView,
   AllColorsView,
@@ -44,7 +44,7 @@ import CollectionView from "./views/profile/CollectionView";
 import ProfileSettingsView from "./views/profile/ProfileSettingsView";
 import WantedView from "./views/profile/WantedView";
 import ForgotPassword from "./views/generic/ForgotPassword";
-import ImageComparisonTool from "./views/generic/ImageComparisonTool";
+import ImageComparisonTool from "./views/generic/Tools/ImageComparisonTool";
 import DeleteView from "./views/edit/approval/DeleteView";
 import AddKnownView from "./views/edit/parts/AddKnownView";
 import SingleSculptureView from "./views/sculptures/SingleSculptureView";
@@ -57,6 +57,11 @@ import ApproveStatusView from "./views/edit/approval/StatusApprovalView";
 import ApproveSculptureInventoryView from "./views/edit/approval/SculptureInventoryApprovalView";
 import SimilarColorApprovalView from "./views/edit/approval/SimilarColorApprovalView";
 import UserManagementView from "./views/UserManagementView";
+import UserLookupView from "./views/generic/Tools/UserLookupView";
+import AllToolsView from "./views/generic/Tools/AllToolsView";
+import OtherUserProfileView from "./views/generic/Tools/OtherUserProfileView";
+import { useContext, useEffect, useState } from "react";
+import { getToken } from "./auth/auth";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -69,6 +74,20 @@ const queryClient = new QueryClient({
 // }
 
 function App() {
+  const {
+    state: {
+      jwt: { payload },
+    },
+  } = useContext(AppContext);
+
+  const [auth, setAuth] = useState(false);
+
+  useEffect(() => {
+    const token = getToken();
+    if (token && payload) {
+      setAuth(true);
+    }
+  }, [payload]);
   return (
     <AppProvider>
       <QueryClientProvider client={queryClient}>
@@ -107,12 +126,20 @@ function App() {
               />
               <Route path="/sculpture/all" element={<AllSculptureView />} />
               <Route path="/search" element={<SearchView />} />
-              <Route path="/compare" element={<ImageComparisonTool />} />
+              <Route
+                path="/profile/:username"
+                element={
+                  <ProtectedRoute isAuth>
+                    <OtherUserProfileView />
+                  </ProtectedRoute>
+                }
+              />
+
               {/* ********************** Add data forms (User) *********************** */}
               <Route
                 path="/add/qpart/status/:qpartId"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute isAuth>
                     <AddStatusView />
                   </ProtectedRoute>
                 }
@@ -120,7 +147,7 @@ function App() {
               <Route
                 path="/add/color"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute isAuth>
                     <AddColorView />
                   </ProtectedRoute>
                 }
@@ -128,7 +155,7 @@ function App() {
               <Route
                 path="/add/part"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute isAuth>
                     <AddPartView />
                   </ProtectedRoute>
                 }
@@ -136,7 +163,7 @@ function App() {
               <Route
                 path="/add/sculpture"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute isAuth>
                     <AddSculptureView />
                   </ProtectedRoute>
                 }
@@ -144,7 +171,7 @@ function App() {
               <Route
                 path="/add/sculpture/parts/:sculptId"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute isAuth>
                     <AddPartsToSculptureView />
                   </ProtectedRoute>
                 }
@@ -152,7 +179,7 @@ function App() {
               <Route
                 path="/add/qpart"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute isAuth>
                     <AddQPartView />
                   </ProtectedRoute>
                 }
@@ -160,7 +187,7 @@ function App() {
               <Route
                 path="/add/known"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute isAuth>
                     <AddKnownView />
                   </ProtectedRoute>
                 }
@@ -168,7 +195,7 @@ function App() {
               <Route
                 path="/add/image"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute isAuth>
                     <UploadImageView />
                   </ProtectedRoute>
                 }
@@ -177,7 +204,7 @@ function App() {
               <Route
                 path="/profile"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute isAuth>
                     <ProfileView />
                   </ProtectedRoute>
                 }
@@ -185,7 +212,7 @@ function App() {
               <Route
                 path="/profile/settings"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute isAuth>
                     <ProfileSettingsView />
                   </ProtectedRoute>
                 }
@@ -193,7 +220,7 @@ function App() {
               <Route
                 path="/profile/collection"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute isAuth>
                     <CollectionView />
                   </ProtectedRoute>
                 }
@@ -201,7 +228,7 @@ function App() {
               <Route
                 path="/profile/wanted"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute isAuth>
                     <WantedView />
                   </ProtectedRoute>
                 }
@@ -209,7 +236,7 @@ function App() {
               <Route
                 path="/profile/messages"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute isAuth>
                     <AllMessagesView />
                   </ProtectedRoute>
                 }
@@ -217,16 +244,42 @@ function App() {
               <Route
                 path="/profile/messages/:messageId"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute isAuth>
                     <SingleMessageView />
                   </ProtectedRoute>
                 }
               />
+              {/* ********************** Tools (User) *********************** */}
+              <Route
+                path="/tools"
+                element={
+                  <ProtectedRoute isAuth>
+                    <AllToolsView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/tools/compare"
+                element={
+                  <ProtectedRoute isAuth>
+                    <ImageComparisonTool />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/tools/userLookup"
+                element={
+                  <ProtectedRoute isAuth>
+                    <UserLookupView />
+                  </ProtectedRoute>
+                }
+              />
+
               {/* ********************** Approval Pages (Admin) *********************** */}
               <Route
                 path="/approve"
                 element={
-                  <ProtectedRoute level={"admin"}>
+                  <ProtectedRoute level={"admin"} isAuth>
                     <ApproveView />
                   </ProtectedRoute>
                 }
@@ -234,7 +287,7 @@ function App() {
               <Route
                 path="/approve/colors"
                 element={
-                  <ProtectedRoute level={"admin"}>
+                  <ProtectedRoute level={"admin"} isAuth>
                     <ApproveColorView />
                   </ProtectedRoute>
                 }
@@ -242,7 +295,7 @@ function App() {
               <Route
                 path="/approve/similarColors"
                 element={
-                  <ProtectedRoute level={"admin"}>
+                  <ProtectedRoute level={"admin"} isAuth>
                     <SimilarColorApprovalView />
                   </ProtectedRoute>
                 }
@@ -250,7 +303,7 @@ function App() {
               <Route
                 path="/approve/categories"
                 element={
-                  <ProtectedRoute level={"admin"}>
+                  <ProtectedRoute level={"admin"} isAuth>
                     <ApproveCatView />
                   </ProtectedRoute>
                 }
@@ -258,7 +311,7 @@ function App() {
               <Route
                 path="/approve/images"
                 element={
-                  <ProtectedRoute level={"admin"}>
+                  <ProtectedRoute level={"admin"} isAuth>
                     <ApproveImageView />
                   </ProtectedRoute>
                 }
@@ -266,7 +319,7 @@ function App() {
               <Route
                 path="/approve/parts"
                 element={
-                  <ProtectedRoute level={"admin"}>
+                  <ProtectedRoute level={"admin"} isAuth>
                     <ApprovePartView />
                   </ProtectedRoute>
                 }
@@ -274,7 +327,7 @@ function App() {
               <Route
                 path="/approve/qparts"
                 element={
-                  <ProtectedRoute level={"admin"}>
+                  <ProtectedRoute level={"admin"} isAuth>
                     <ApproveQPartView />
                   </ProtectedRoute>
                 }
@@ -282,7 +335,7 @@ function App() {
               <Route
                 path="/approve/status"
                 element={
-                  <ProtectedRoute level={"admin"}>
+                  <ProtectedRoute level={"admin"} isAuth>
                     <ApproveStatusView />
                   </ProtectedRoute>
                 }
@@ -290,7 +343,7 @@ function App() {
               <Route
                 path="/approve/elementIDs"
                 element={
-                  <ProtectedRoute level={"admin"}>
+                  <ProtectedRoute level={"admin"} isAuth>
                     <ElementIDApprovalView />
                   </ProtectedRoute>
                 }
@@ -298,7 +351,7 @@ function App() {
               <Route
                 path="/approve/molds"
                 element={
-                  <ProtectedRoute level={"admin"}>
+                  <ProtectedRoute level={"admin"} isAuth>
                     <ApprovePartMoldView />
                   </ProtectedRoute>
                 }
@@ -306,7 +359,7 @@ function App() {
               <Route
                 path="/approve/sculptures"
                 element={
-                  <ProtectedRoute level={"admin"}>
+                  <ProtectedRoute level={"admin"} isAuth>
                     <ApproveSculptureView />
                   </ProtectedRoute>
                 }
@@ -314,7 +367,7 @@ function App() {
               <Route
                 path="/approve/sculptureInventories"
                 element={
-                  <ProtectedRoute level={"admin"}>
+                  <ProtectedRoute level={"admin"} isAuth>
                     <ApproveSculptureInventoryView />
                   </ProtectedRoute>
                 }
@@ -322,7 +375,7 @@ function App() {
               <Route
                 path="/edit/color/:colorId"
                 element={
-                  <ProtectedRoute level={"admin"}>
+                  <ProtectedRoute level={"admin"} isAuth>
                     <ColorEditView />
                   </ProtectedRoute>
                 }
@@ -330,7 +383,7 @@ function App() {
               <Route
                 path="/userManagement"
                 element={
-                  <ProtectedRoute level={"admin"}>
+                  <ProtectedRoute level={"admin"} isAuth>
                     <UserManagementView />
                   </ProtectedRoute>
                 }
@@ -338,7 +391,7 @@ function App() {
               <Route
                 path="/delete"
                 element={
-                  <ProtectedRoute level={"admin"}>
+                  <ProtectedRoute level={"admin"} isAuth>
                     <DeleteView />
                   </ProtectedRoute>
                 }

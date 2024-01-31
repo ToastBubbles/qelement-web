@@ -1,6 +1,6 @@
-import ImageAdjuster from "../../components/ImageAdjuster";
-import ImageUploader from "../../components/ImageUploader";
-import MyToolTip from "../../components/MyToolTip";
+import ImageAdjuster from "../../../components/ImageAdjuster";
+import ImageUploader from "../../../components/ImageUploader";
+import MyToolTip from "../../../components/MyToolTip";
 import { FormEvent, useContext, useState } from "react";
 export default function ImageComparisonTool() {
   return (

@@ -44,6 +44,9 @@ export default function NavbarPopdown() {
         <Link className="link" to={"/profile/collection"}>
           My Collection
         </Link>
+        <Link className="link" to={"/tools"}>
+          Tools
+        </Link>
         <Link className="link" to={"/profile/settings"}>
           Settings
         </Link>
