@@ -23,7 +23,10 @@ export default function OtherUserProfileView() {
   } = useContext(AppContext);
 
   const [isUsernameBad, setIsUsernameBad] = useState<boolean>(false);
-
+  const [overviewTabActive, setOverviewTabActive] = useState<boolean>(true);
+  const [wantedTabActive, setWantedTabActive] = useState<boolean>(false);
+  const [collectionTabActive, setCollectionTabActive] =
+    useState<boolean>(false);
   const { username } = useParams();
 
   const { data: userData } = useQuery({
@@ -55,7 +58,11 @@ export default function OtherUserProfileView() {
     user: IUserDTO
   ): ReactNode {
     if (!user.preferences.isWantedVisible)
-      return <p>{user.name} has their favorite parts set to private.</p>;
+      return (
+        <p className="grey-txt" style={{ marginLeft: "1em" }}>
+          {user.name} has their favorite parts set to private.
+        </p>
+      );
     const noPartsNode = (
       <p>{user.name} does not have any Top Five parts listed!</p>
     );
@@ -90,7 +97,11 @@ export default function OtherUserProfileView() {
     user: IUserDTO
   ): ReactNode {
     if (!user.preferences.isCollectionVisible)
-      return <p>{user.name} has their collection set to private.</p>;
+      return (
+        <p className="grey-txt" style={{ marginLeft: "1em" }}>
+          {user.name} has their collection set to private.
+        </p>
+      );
     const noPartsNode = (
       <p>{user.name} does not have any parts listed in their collection!</p>
     );
@@ -126,30 +137,114 @@ export default function OtherUserProfileView() {
   if (username && userData && !isUsernameBad) {
     let user = userData.data as IUserDTO;
     return (
-      <>
-        <div className="mx-w">
-          <h1>profile for {username}</h1>
-          <div className="topfive-container">
-            {getTopFive(user.favoriteQParts, user)}
+      <div className="formcontainer">
+        <div className="profile-container" style={{ marginTop: "3em" }}>
+          <div className=" profile-header">
+            <img className="pfp" src="/img/blank_profile.webp" />
+            <div
+              style={{ marginLeft: "0.5em" }}
+              className="d-flex flex-col jc-center"
+            >
+              <div className="profile-name">{username}</div>
+              <div className="profile-title" style={{ color: "#00BB00" }}>
+                Bricked up!
+              </div>
+            </div>
           </div>
-          {getCollection(user.inventory, user)}
+          <div className="profile-lower-container">
+            <div className="tab">
+              <button
+                className={"tablinks" + (overviewTabActive ? " active" : "")}
+                onClick={() => {
+                  setOverviewTabActive(true);
+                  setWantedTabActive(false);
+                  setCollectionTabActive(false);
+                }}
+              >
+                Overview
+              </button>
+              <button
+                className={"tablinks" + (collectionTabActive ? " active" : "")}
+                onClick={() => {
+                  setOverviewTabActive(false);
+                  setWantedTabActive(false);
+                  setCollectionTabActive(true);
+                }}
+              >
+                Collection{" "}
+                {/* {sculpture.comments &&
+                          sculpture.comments.length > 0 &&
+                          `(${sculpture.comments.length})`} */}
+              </button>
+              <button
+                className={"tablinks" + (wantedTabActive ? " active" : "")}
+                onClick={() => {
+                  setOverviewTabActive(false);
+                  setCollectionTabActive(false);
+                  setWantedTabActive(true);
+                }}
+                // disabled={mypart?.images.length == 0}
+              >
+                Wanted{" "}
+                {/* {sculpture.images &&
+                          filterImages(sculpture.images).length > 0 &&
+                          `(${filterImages(sculpture.images).length})`} */}
+              </button>
+            </div>
+            <div
+              className={
+                "tabcontent profile-tab-content" +
+                (overviewTabActive ? "" : " tabhidden")
+              }
+              style={{
+                overflowY: "auto",
+                height: "30em",
+                margin: "0",
+                borderRight: "none",
+                borderLeft: "none",
+              }}
+            ></div>
+            <div
+              className={
+                "tabcontent profile-tab-content" +
+                (collectionTabActive ? "" : " tabhidden")
+              }
+              style={{ margin: "0", borderRight: "none", borderLeft: "none" }}
+            >
+              <div className="d-flex col-guide-profile jc-end">
+                <div>Sale</div>
+                <div>Trade</div>
+                <div>Qty</div>
+              </div>
+              {getCollection(user.inventory, user)}
+              <div className="comment-tab-content"></div>
+              <div className="w-100 d-flex"></div>
+            </div>
+
+            <div
+              className={
+                "tabcontent profile-tab-content" +
+                (wantedTabActive ? "" : " tabhidden")
+              }
+              style={{ margin: "0", borderRight: "none", borderLeft: "none" }}
+            >
+              {getTopFive(user.favoriteQParts, user)}
+            </div>
+          </div>
+          <div className="topfive-container"></div>
         </div>
-      </>
+      </div>
     );
   } else if (isUsernameBad)
     return (
-      <>
-        <div className="mx-w">
-          <p>User does not exist!</p>
-        </div>
-      </>
+      <div className="mx-w">
+        <p>User does not exist!</p>
+      </div>
     );
   else
     return (
-      <>
-        <div className="mx-w">
-          <p>Loading user...</p>
-        </div>
-      </>
+      <div className="mx-w">
+        <p>Loading user...</p>
+      </div>
     );
 }
