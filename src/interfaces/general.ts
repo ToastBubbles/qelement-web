@@ -326,6 +326,7 @@ export interface IQPartDTOInclude {
   partStatuses: IPartStatusDTO[];
   sculptureInventories: ISculptureDTO[];
   images: ImageDTO[];
+  UserFavorite?: IFavorite;
   approvalDate: string;
   createdAt: string;
 }
@@ -436,17 +437,35 @@ export interface rating {
   createdAt: string;
   updatedAt: string;
 }
+export interface user {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+}
 export interface IUserCreationDTO {
   name: string;
   email: string;
   password: string;
+}
+export interface IFavorite extends IQPartDTOInclude {
+  id: number;
+  userId: number;
+  type: string;
 }
 export interface IUserDTO extends IUserCreationDTO {
   id: number;
   role: string;
   preferences: IUserPrefDTO;
   createdAt: string;
+  favoriteQParts?: IQPartDTOInclude[];
+  inventory?: IQPartDTOInclude[];
 }
+
+// export interface IUserWithPrefAndProfile extends IUserDTO {
+
+// }
 export interface IUserForgotPwd {
   name: string;
   email: string;
@@ -495,13 +514,14 @@ export interface IPredefinedSecQuestionDTO {
   id: number;
   question: string;
 }
-export interface user {
-  id: number;
-  name: string;
-  email: string;
-  password: string;
-  role: string;
-}
+
+// export interface IUserW {
+//   id: number;
+//   name: string;
+//   email: string;
+//   password: string;
+//   role: string;
+// }
 
 export interface ISuspendUser {
   type: string;

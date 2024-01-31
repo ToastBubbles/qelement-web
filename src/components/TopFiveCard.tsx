@@ -1,5 +1,9 @@
 import { Ribbon, RibbonContainer } from "react-ribbons";
-import { IDeletionDTO, IWantedDTOGET } from "../interfaces/general";
+import {
+  IDeletionDTO,
+  IQPartDTOInclude,
+  IWantedDTOGET,
+} from "../interfaces/general";
 import showToast, {
   Mode,
   filterImages,
@@ -16,9 +20,15 @@ import { AppContext } from "../context/context";
 
 interface iProps {
   myWantedPart: IWantedDTOGET;
-  refetchFn: () => void;
+  refetchFn?: () => void;
+  isMine?: boolean;
 }
-export default function TopFiveCard({ myWantedPart, refetchFn }: iProps) {
+export default function TopFiveCard({
+  myWantedPart,
+  refetchFn,
+  isMine = true,
+}: iProps) {
+  console.log(myWantedPart);
   const {
     state: {
       jwt: { token },
@@ -47,7 +57,7 @@ export default function TopFiveCard({ myWantedPart, refetchFn }: iProps) {
     onSuccess: (e) => {
       if (e.data.code == 200) {
         showToast(`Successfully removed part from list!`, Mode.Success);
-        refetchFn();
+        if (refetchFn) refetchFn();
       } else {
         showToast(`Error removing part!`, Mode.Warning);
         console.log(e.data);
@@ -127,13 +137,18 @@ export default function TopFiveCard({ myWantedPart, refetchFn }: iProps) {
   }
   const rating = getRating();
   const tier = getTier(rating);
+
   return (
     <Link
       to={`/part/${myWantedPart.qpart.mold.parentPart.id}?color=${myWantedPart.qpart.color.id}`}
-      className="topfive-card clickable"
+      className="topfive-card clickable link"
       style={{ borderColor: "#" + myWantedPart.qpart.color.hex }}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseEnter={() => {
+        if (isMine) handleMouseEnter;
+      }}
+      onMouseLeave={() => {
+        if (isMine) handleMouseLeave;
+      }}
     >
       <RibbonContainer>
         <Ribbon
@@ -147,7 +162,7 @@ export default function TopFiveCard({ myWantedPart, refetchFn }: iProps) {
         >
           {status}
         </Ribbon>
-        {isHovered && <OnHoverX onClickFn={removeFromWanted} />}
+        {isHovered && isMine && <OnHoverX onClickFn={removeFromWanted} />}
         <div className="topfive-img-container">
           <img
             src={
