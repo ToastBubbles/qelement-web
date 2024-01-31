@@ -312,24 +312,6 @@ export interface ISculptureInventory {
   parts: IQPartDTOInclude[];
   sculpture: ISculptureDTO;
 }
-export interface IQPartDTOInclude {
-  id: number;
-  type: string;
-  mold: IPartMoldDTO;
-  color: color;
-  creator: user;
-  note: string;
-  isMoldUnknown: boolean;
-  elementIDs: IElementID[];
-  ratings: rating[];
-  comments: ICommentDTO[];
-  partStatuses: IPartStatusDTO[];
-  sculptureInventories: ISculptureDTO[];
-  images: ImageDTO[];
-  UserFavorite?: IFavorite;
-  approvalDate: string;
-  createdAt: string;
-}
 
 interface IApprovalDateOnly {
   approvalDate: string | null;
@@ -368,6 +350,16 @@ export interface IAPIResponseWithIds {
   message: string;
   ids: number[] | null;
 }
+export interface IQPartDTO {
+  id: number;
+  partId: number;
+  colorId: number;
+  creatorId: number;
+  isMoldUnknown: boolean;
+  note: string;
+  elementIDs: IElementID[];
+  rarety: number;
+}
 export interface IQPartDTOIncludeLess {
   id: number;
   type: string;
@@ -382,17 +374,14 @@ export interface IQPartDTOIncludeLess {
   createdAt: string;
   approvalDate: string;
 }
-export interface IQPartDTO {
-  id: number;
-  partId: number;
-  colorId: number;
-  creatorId: number;
-  isMoldUnknown: boolean;
-  note: string;
-  elementIDs: IElementID[];
-  rarety: number;
-}
 
+export interface IQPartDTOInclude extends IQPartDTOIncludeLess {
+  ratings: rating[];
+  comments: ICommentDTO[];
+  sculptureInventories: ISculptureDTO[];
+  UserFavorite?: IWantedDTOGET;
+  UserInventory?: ICollectionDTOGET;
+}
 export interface IElementIDCreationDTO {
   number: number;
   creatorId: number;

@@ -5,6 +5,7 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import {
   IAPIResponse,
+  ICollectionDTOGET,
   IQPartDTOInclude,
   IUserDTO,
   IWantedDTOGET,
@@ -12,6 +13,7 @@ import {
 } from "../../../interfaces/general";
 import showToast, { Mode } from "../../../utils/utils";
 import TopFiveCard from "../../../components/TopFiveCard";
+import CollectionPart from "../../../components/CollectionPart";
 
 export default function OtherUserProfileView() {
   const {
@@ -36,7 +38,7 @@ export default function OtherUserProfileView() {
         setIsUsernameBad(true);
       } else if ("id" in resp.data) {
         // let data = res.data as user;
-        console.log(resp.data);
+        // console.log(resp.data);
 
         setIsUsernameBad(false);
       }
@@ -53,7 +55,7 @@ export default function OtherUserProfileView() {
     user: IUserDTO
   ): ReactNode {
     if (!user.preferences.isWantedVisible)
-      return <p>{user.name} has their favorite parts privated.</p>;
+      return <p>{user.name} has their favorite parts set to private.</p>;
     const noPartsNode = (
       <p>{user.name} does not have any Top Five parts listed!</p>
     );
@@ -83,6 +85,44 @@ export default function OtherUserProfileView() {
     });
   }
 
+  function getCollection(
+    collectionParts: IQPartDTOInclude[] | undefined,
+    user: IUserDTO
+  ): ReactNode {
+    if (!user.preferences.isCollectionVisible)
+      return <p>{user.name} has their collection set to private.</p>;
+    const noPartsNode = (
+      <p>{user.name} does not have any parts listed in their collection!</p>
+    );
+    if (collectionParts == undefined || collectionParts.length == 0)
+      return noPartsNode;
+    // id: number;
+    // forTrade: boolean;
+    // forSale: boolean;
+    // availDuplicates: boolean;
+    // qpart: IQPartDTOIncludeLess;
+    // userId: number;
+    // quantity: number;
+    // condition: string;
+    // note: string;
+
+    return (
+      <div>
+        {collectionParts.map((qpart) => {
+          if (qpart.UserInventory) {
+            let conversion: ICollectionDTOGET = {
+              ...qpart.UserInventory,
+              qpart,
+            };
+            console.log(conversion);
+
+            return <CollectionPart key={qpart.id} data={conversion} />;
+          }
+        })}
+      </div>
+    );
+  }
+
   if (username && userData && !isUsernameBad) {
     let user = userData.data as IUserDTO;
     return (
@@ -91,21 +131,8 @@ export default function OtherUserProfileView() {
           <h1>profile for {username}</h1>
           <div className="topfive-container">
             {getTopFive(user.favoriteQParts, user)}
-            {/* {user.favoriteQParts && user.favoriteQParts.length > 0 ? (
-              user.favoriteQParts.map((qpart) => {
-                if(qpart.UserFavorite && qpart.){
-                let conversion: IWantedDTOGET = {
-                  userId: user.id,
-                  id: qpart.UserFavorite.id,
-                  type: qpart.UserFavorite.type,
-                  qpart: qpart,
-                };
-                return <TopFiveCard key={qpart.id} myWantedPart={conversion} />;}
-              })
-            ) : (
-              <p>You don't have anything in your Top Five!</p>
-            )} */}
           </div>
+          {getCollection(user.inventory, user)}
         </div>
       </>
     );
