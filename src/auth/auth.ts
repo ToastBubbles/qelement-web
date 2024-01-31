@@ -1,38 +1,8 @@
-// Short duration JWT token (5-10 min)
-// export function getJwtToken() {
-//   return sessionStorage.getItem("jwt");
-// }
-
 import axios from "axios";
 import { JWTPayload, importSPKI, jwtVerify } from "jose";
 import Cookies from "js-cookie";
 import { ILoginDTO } from "../interfaces/general";
 import showToast, { Mode } from "../utils/utils";
-
-// export function setJwtToken(token: any) {
-//   sessionStorage.setItem("jwt", token);
-// }
-
-// // Longer duration refresh token (30-60 min)
-// export function getRefreshToken() {
-//   return sessionStorage.getItem("refreshToken");
-// }
-
-// export function setRefreshToken(token: any) {
-//   sessionStorage.setItem("refreshToken", token);
-// }
-
-// export async function handleLogin({ username, password }: ILoginDTO) {
-//   // Call login method in API
-//   // The server handler is responsible for setting user fingerprint cookie during this as well
-//   //   const { jwtToken, refreshToken } =
-//   await login({ username, password });
-//   //   setJwtToken(jwtToken);
-//   //   setRefreshToken(refreshToken);
-
-//   // If you like, you may redirect the user now
-//   //   navigate("/some-url");
-// }
 
 export async function getJWT(token: string): Promise<JWTPayload> {
   const algorithm = "RS256";
@@ -47,11 +17,8 @@ i9MgVWxJARlC+RCtzTTg7/UE9fm7fQVSsvbwz7XR8bBWYZZrFD8duejIfNLCHbft
 -----END PUBLIC KEY-----`;
   const publicKey = await importSPKI(spki, algorithm);
 
-  // let result = null;
   if (token !== null && token != "null") {
     const result = await jwtVerify(token as string, publicKey);
-    // console.log("setting");
-
     return result.payload;
   } else {
     return {};
@@ -72,12 +39,7 @@ export async function login(
         loginDTO
       )
       .then((resp) => {
-        // console.log("in auth:", resp);
-
         const { access_token } = resp.data;
-
-        // console.log("got this far", access_token);
-
         if (access_token != null) {
           Cookies.set("userJWT", access_token);
           getJWT(access_token).then((jwtPayload) => {

@@ -58,7 +58,6 @@ export default function NavbarPopdown() {
             });
             Cookies.remove("userJWT");
             showToast("Successfully Logged Out.", Mode.Info);
-            // redirect("/colors");
           }}
         >
           Logout
