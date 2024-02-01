@@ -64,8 +64,8 @@ export default function NavbarPopdown() {
         </div>
       </div>
       <div>
-        <div>
-          Add:
+        <div className="h-100">
+          <div style={{ height: "1.5em" }}>Add:</div>
           <ul className="nav-pop-down-ul">
             <li>
               <Link className="link" to={"/add/qpart"}>
@@ -94,7 +94,7 @@ export default function NavbarPopdown() {
             </li>
           </ul>
         </div>
-        {adminData && adminData.data.code == 200 && (
+        {/* {adminData && adminData.data.code == 200 && (
           <>
             <Link className="link" to={"/approve"}>
               Approve Content
@@ -106,8 +106,38 @@ export default function NavbarPopdown() {
               User Management
             </Link>
           </>
-        )}
+        )} */}
       </div>
+
+      {adminData && adminData.data.code == 200 && (
+        <div>
+          <div className="h-100">
+            <div style={{ height: "1.5em" }}>Admin:</div>
+            <ul className="nav-pop-down-ul">
+              <li>
+                <Link className="link" to={"/approve"}>
+                  Approve Content
+                </Link>
+              </li>
+              <li>
+                <Link className="link" to={"/delete"}>
+                  Delete Content
+                </Link>
+              </li>
+              <li>
+                <Link className="link" to={"/userManagement"}>
+                  User Management
+                </Link>
+              </li>
+              <li>
+                <Link className="link" to={"/titleManagement"}>
+                  Title Management
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

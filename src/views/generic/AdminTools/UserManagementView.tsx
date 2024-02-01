@@ -2,17 +2,17 @@ import axios from "axios";
 import { useContext, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { Link } from "react-router-dom";
-import showToast, { Mode } from "../utils/utils";
+import showToast, { Mode } from "../../../utils/utils";
 import {
   IAPIResponse,
   IChangeUserRole,
   ISuspendUser,
   user,
-} from "../interfaces/general";
+} from "../../../interfaces/general";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { formatDistance } from "date-fns";
-import { AppContext } from "../context/context";
+import { AppContext } from "../../../context/context";
 export default function UserManagementView() {
   const {
     state: {

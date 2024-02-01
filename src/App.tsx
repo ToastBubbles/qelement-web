@@ -56,7 +56,7 @@ import ElementIDApprovalView from "./views/edit/approval/ElementIDApprovalView";
 import ApproveStatusView from "./views/edit/approval/StatusApprovalView";
 import ApproveSculptureInventoryView from "./views/edit/approval/SculptureInventoryApprovalView";
 import SimilarColorApprovalView from "./views/edit/approval/SimilarColorApprovalView";
-import UserManagementView from "./views/UserManagementView";
+import UserManagementView from "./views/generic/AdminTools/UserManagementView";
 import UserLookupView from "./views/generic/Tools/UserLookupView";
 import AllToolsView from "./views/generic/Tools/AllToolsView";
 import OtherUserProfileView from "./views/generic/Tools/OtherUserProfileView";
@@ -66,6 +66,7 @@ import { getJWT } from "./auth/auth";
 import LoadingPage from "./components/LoadingPage";
 import { user } from "./interfaces/general";
 import { JWTPayload } from "jose";
+import TitleManagementView from "./views/generic/AdminTools/TitleManagementView";
 const queryClient = new QueryClient({
   defaultOptions: {
     // queries: { staleTime: 10000 }
@@ -77,7 +78,6 @@ const queryClient = new QueryClient({
 // }
 
 function App() {
-
   return (
     <AppProvider>
       <QueryClientProvider client={queryClient}>
@@ -375,6 +375,14 @@ function App() {
                 element={
                   <ProtectedRoute level={"admin"}>
                     <UserManagementView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/titleManagement"
+                element={
+                  <ProtectedRoute level={"admin"}>
+                    <TitleManagementView />
                   </ProtectedRoute>
                 }
               />

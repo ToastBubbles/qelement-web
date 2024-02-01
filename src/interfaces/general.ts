@@ -134,6 +134,15 @@ export interface IPartStatusDTO {
   qpartId: number;
   creatorId: number;
 }
+
+export interface ITitle {
+  title: string;
+  cssClasses: string;
+}
+
+export interface ITitleDTO extends ITitle {
+  id: number;
+}
 export interface IPartStatusWQPart extends IPartStatusDTO {
   qpart: IQPartDTOInclude;
 }

@@ -3,6 +3,8 @@ import { JWTPayload, importSPKI, jwtVerify } from "jose";
 import Cookies from "js-cookie";
 import { ILoginDTO } from "../interfaces/general";
 import showToast, { Mode } from "../utils/utils";
+import { jwtDecode } from "jwt-decode";
+
 
 export async function getJWT(token: string): Promise<JWTPayload> {
   const algorithm = "RS256";
@@ -26,7 +28,18 @@ i9MgVWxJARlC+RCtzTTg7/UE9fm7fQVSsvbwz7XR8bBWYZZrFD8duejIfNLCHbft
 }
 
 export const getToken = () => {
-  return Cookies.get("userJWT");
+  const token = Cookies.get("userJWT");
+  if (token) {
+    const decodedToken: { exp: number } = jwtDecode(token);
+    const currentTime = Date.now() / 1000; // Convert milliseconds to seconds
+    if (decodedToken.exp < currentTime) {
+      // Token has expired
+      Cookies.remove("userJWT"); // Remove the expired token from cookies
+      return null;
+    }
+    return token; // Token is valid
+  }
+  return null; // No token found
 };
 
 export async function login(

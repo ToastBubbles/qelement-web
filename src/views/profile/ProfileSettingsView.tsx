@@ -118,7 +118,6 @@ export default function ProfileSettingsView() {
 
   if (data) {
     const me = data.data;
-  
 
     function checkForChanges(): boolean {
       let hasChanges = false;
@@ -270,10 +269,26 @@ export default function ProfileSettingsView() {
                 </select>
               </div>
             </div>
+            <div className="w-100 d-flex jc-space-b">
+              <div>Title</div>
+              <div>
+                <select
+                  name="title"
+                  id="title-select"
+                  // onChange={(e) => setPrefColorId(e.target.value as ColId)}
+                  // value={prefColorId}
+                >
+                  <option value={"none"}>--</option>
+                </select>
+              </div>
+            </div>
             {showColorUpdater && (
               <GenericPopup
                 content={
                   <div className="d-flex flex-col ai-center">
+                    <div style={{ marginBottom: "2em" }}>
+                      Please select your favorite LEGO color
+                    </div>
                     <ColorTextField setter={setNewFaveColorId} />
                     <button
                       style={{ marginTop: "1em" }}
@@ -302,7 +317,6 @@ export default function ProfileSettingsView() {
                 </div>
                 <small
                   className="clickable"
-                  
                   onClick={() => setShowColorUpdater(true)}
                 >
                   update

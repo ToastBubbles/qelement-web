@@ -2388,6 +2388,10 @@ input:checked + .slider:before {
   border: none;
 }
 .nav-pop-down-ul {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: calc(100% - 1.5em);
   margin-left: 0.25em;
   padding-left: 0.5em;
   border-left: solid 1px var(--lt-grey);
@@ -2401,7 +2405,6 @@ input:checked + .slider:before {
   position: absolute;
   display: flex;
   background-color: #eeeeee;
-  width: 22em;
   height: 14em;
   top: 4rem;
   right: 0;
@@ -2410,11 +2413,12 @@ input:checked + .slider:before {
 }
 .nav-pop-down > div {
   display: flex;
+  height: 100%;
   flex-direction: column;
   justify-content: space-around;
   padding: 0 1em;
 }
-.nav-pop-down > div:first-child {
+.nav-pop-down > div {
   border-right: solid 1px var(--lt-grey);
 }
 .hidden {
