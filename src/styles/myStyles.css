@@ -1092,12 +1092,12 @@ fieldset > legend {
   /* margin-left: 0.5em; */
 }
 
-.profile-overview{
+.profile-overview {
   display: flex;
   flex-direction: column;
   padding: 1em 2em;
 }
-.profile-overview>span{
+.profile-overview > span {
   margin-bottom: 0.75em;
 }
 .commenttab {
@@ -1372,7 +1372,8 @@ fieldset > legend {
   color: #aaa;
   font-weight: 200;
 }
-.col-guide > div, .col-guide-profile > div{
+.col-guide > div,
+.col-guide-profile > div {
   width: 3em;
   display: flex;
   justify-content: center;
@@ -1720,6 +1721,9 @@ td {
 textarea {
   resize: none;
 }
+.no-margin-children > * {
+  margin: 0;
+}
 .w-10 {
   width: 10%;
 }
@@ -1770,6 +1774,12 @@ textarea {
 }
 .ai-center {
   align-items: center;
+}
+.ai-start {
+  align-items: start;
+}
+.ai-end {
+  align-items: end;
 }
 .jc-center {
   justify-content: center;

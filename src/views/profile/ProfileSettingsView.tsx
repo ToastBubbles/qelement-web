@@ -2,7 +2,13 @@ import { useContext, useState } from "react";
 import { AppContext } from "../../context/context";
 import axios from "axios";
 import { useMutation, useQuery } from "react-query";
-import { IAPIResponse, IUserDTO, IUserPrefDTO } from "../../interfaces/general";
+import {
+  IAPIResponse,
+  IUserDTO,
+  IUserPrefDTO,
+  color,
+  iIdOnly,
+} from "../../interfaces/general";
 import LoadingPage from "../../components/LoadingPage";
 import showToast, { Mode, formatDate } from "../../utils/utils";
 import SliderToggle from "../../components/SliderToggle";
@@ -10,6 +16,9 @@ import MyToolTip from "../../components/MyToolTip";
 import SliderToggle2 from "../../components/SliderToggle2";
 import { Types } from "../../context/userPrefs/reducer";
 import { UserPrefPayload } from "../../context/userPrefs/context";
+import ColorLink from "../../components/ColorLink";
+import GenericPopup from "../../components/GenericPopup";
+import ColorTextField from "../../components/ColorTextField";
 enum ColName {
   TLG = "tlg",
   BL = "bl",
@@ -34,6 +43,8 @@ export default function ProfileSettingsView() {
   const [collectionVisible, setCollectionVisible] = useState<boolean>(true);
   const [lang, setLang] = useState<string>("en");
   const [allowMessages, setAllowMessages] = useState<boolean>(true);
+  const [showColorUpdater, setShowColorUpdater] = useState<boolean>(false);
+  const [newFaveColorId, setNewFaveColorId] = useState<number>(-1);
   const [prefColorName, setPrefColorName] = useState<ColName>(ColName.BL);
   const [prefColorId, setPrefColorId] = useState<ColId>(ColId.TLG);
   const { data } = useQuery({
@@ -47,14 +58,6 @@ export default function ProfileSettingsView() {
       setLang(res.data.preferences.lang);
       setPrefColorName(res.data.preferences.prefName as ColName);
       setPrefColorId(res.data.preferences.prefId as ColId);
-      // setPrefDTO({
-      //   lang: res.data.preferences.lang,
-      //   isCollectionVisible: res.data.preferences.isCollectionVisible,
-      //   isWantedVisible: res.data.preferences.isWantedVisible,
-      //   allowMessages: res.data.preferences.allowMessages,
-      //   prefName: res.data.preferences.prefName,
-      //   prefId: res.data.preferences.prefId,
-      // });
     },
     enabled: !!payload.id,
   });
@@ -90,8 +93,32 @@ export default function ProfileSettingsView() {
     },
   });
 
+  const faveColorMutation = useMutation({
+    mutationFn: (colorId: iIdOnly) =>
+      axios.post<IAPIResponse>(
+        `http://localhost:3000/user/favoriteColor`,
+        colorId,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onSuccess: (e) => {
+      if (e.data.code == 200) {
+        showToast(
+          "Color saved! Changes will reflect on page refresh, don't forget to save any other changes you may have made first!",
+          Mode.Success
+        );
+        closePopUp();
+        console.log(e.data.message);
+      }
+    },
+  });
+
   if (data) {
     const me = data.data;
+  
 
     function checkForChanges(): boolean {
       let hasChanges = false;
@@ -243,6 +270,45 @@ export default function ProfileSettingsView() {
                 </select>
               </div>
             </div>
+            {showColorUpdater && (
+              <GenericPopup
+                content={
+                  <div className="d-flex flex-col ai-center">
+                    <ColorTextField setter={setNewFaveColorId} />
+                    <button
+                      style={{ marginTop: "1em" }}
+                      onClick={() => {
+                        if (newFaveColorId != -1) {
+                          faveColorMutation.mutate({ id: newFaveColorId });
+                        }
+                      }}
+                    >
+                      Save
+                    </button>
+                  </div>
+                }
+                closePopup={closePopUp}
+              />
+            )}
+            <div className="w-100 d-flex jc-space-b">
+              <div>Favorite LEGO Color</div>
+              <div className="d-flex flex-col ai-end">
+                <div className="no-margin-children">
+                  {me.favoriteColor ? (
+                    <ColorLink color={me.favoriteColor} />
+                  ) : (
+                    <span>none</span>
+                  )}
+                </div>
+                <small
+                  className="clickable"
+                  
+                  onClick={() => setShowColorUpdater(true)}
+                >
+                  update
+                </small>
+              </div>
+            </div>
             <div className="w-100 d-flex jc-center">
               <button
                 onClick={(e) => {
@@ -272,5 +338,9 @@ export default function ProfileSettingsView() {
     );
   } else {
     return <LoadingPage />;
+  }
+
+  function closePopUp() {
+    setShowColorUpdater(false);
   }
 }
