@@ -8,10 +8,11 @@ import { AppContext } from "../context/context";
 
 interface IProps {
   setter: (colorId: number) => void;
+  placeholder?: string;
   customStyles?: CSSProperties;
 }
 
-function ColorTextField({ setter, customStyles }: IProps) {
+function ColorTextField({ setter, placeholder = "", customStyles }: IProps) {
   const {
     state: {
       userPreferences: { payload: prefPayload },
@@ -86,6 +87,7 @@ function ColorTextField({ setter, customStyles }: IProps) {
         <input
           className="w-100 color-text-field"
           value={inputValue}
+          placeholder={placeholder}
           onChange={handleInputChange}
         ></input>
         {inputValue && (

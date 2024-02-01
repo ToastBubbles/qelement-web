@@ -102,8 +102,6 @@ export function getPrefColorIdString(
   return output.toString();
 }
 
-
-
 export function filterString(inputString: string) {
   // Use a regular expression to replace characters other than a-z, A-Z, 0-9, and *
   const filteredString = inputString.replace(/[^a-zA-Z0-9]/g, "");
@@ -313,7 +311,7 @@ export function sortStatus(statuses: IPartStatusDTO[]): IPartStatusDTO[] {
   return output;
 }
 
-export function formatDate(dateStr: string) {
+export function formatDate(dateStr: string, mode: string = "short") {
   const date = new Date(dateStr);
 
   const now_utc = Date.UTC(
@@ -325,9 +323,31 @@ export function formatDate(dateStr: string) {
   );
 
   const thisdate = new Date(now_utc);
-  return (
-    thisdate.toDateString() +
-    " @ " +
-    thisdate.toLocaleTimeString().replace(":00 ", " ")
-  );
+
+  if (mode === "long")
+    return (
+      thisdate.toDateString() +
+      " @ " +
+      thisdate.toLocaleTimeString().replace(":00 ", " ")
+    );
+  if (mode === "short") {
+    const day = ("0" + date.getDate()).slice(-2); // Add leading zero if needed
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const month = monthNames[date.getMonth()];
+    const year = date.getFullYear();
+    return `${day} ${month} ${year}`;
+  }
 }

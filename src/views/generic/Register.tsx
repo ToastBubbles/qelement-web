@@ -14,6 +14,7 @@ import {
 } from "../../interfaces/general";
 import showToast, { Mode } from "../../utils/utils";
 import LoadingPage from "../../components/LoadingPage";
+import ColorTextField from "../../components/ColorTextField";
 
 export default function Register() {
   const defaultQuestion: ISecurityQuestionDTO = {
@@ -22,13 +23,11 @@ export default function Register() {
   };
   const navigate = useNavigate();
   const [newUser, setNewUser] = useState<IUserCreationDTO>({
-    // id: -1,
     name: "",
     email: "",
     password: "",
-    // role: "user",
-    // createdAt: "",
   });
+  const [faveColorId, setFaveColorId] = useState<number | null>(null);
   const [question1, setQuestion1] =
     useState<ISecurityQuestionDTO>(defaultQuestion);
   const [question2, setQuestion2] =
@@ -90,6 +89,7 @@ export default function Register() {
                     name: newUser.name,
                     email: newUser.email,
                     password: newUser.password,
+                    favoriteColorId: faveColorId,
                     q1: question1,
                     q2: question2,
                     q3: question3,
@@ -165,7 +165,7 @@ export default function Register() {
             <input
               maxLength={20}
               placeholder="Username"
-              style={{marginBottom: '0.5em'}}
+              style={{ marginBottom: "0.5em" }}
               onChange={(e) =>
                 setNewUser((newUser) => ({
                   ...newUser,
@@ -173,7 +173,10 @@ export default function Register() {
                 }))
               }
             />
-            <small>Username can only contain letters, numbers, periods (.), or underscores (_)</small>
+            <small>
+              Username can only contain letters, numbers, periods (.), or
+              underscores (_)
+            </small>
             <input
               maxLength={255}
               placeholder="Email"
@@ -232,6 +235,9 @@ export default function Register() {
               - re-entered password matches
               {passMatch == newUser.password ? "✔️" : "❌"}
             </p>
+            <h3>Favorite LEGO Color</h3>
+            <ColorTextField setter={setFaveColorId} placeholder="Optional" />
+
             <h3>Security Questions</h3>
 
             <select
@@ -359,7 +365,9 @@ export default function Register() {
             </button>
             <div>
               By registering for an account, you agree to the{" "}
-              <Link className="link" to={"/terms"}>Terms of Service</Link>
+              <Link className="link" to={"/terms"}>
+                Terms of Service
+              </Link>
             </div>
           </div>
         </div>

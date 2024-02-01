@@ -1091,6 +1091,15 @@ fieldset > legend {
 .profile-title {
   /* margin-left: 0.5em; */
 }
+
+.profile-overview{
+  display: flex;
+  flex-direction: column;
+  padding: 1em 2em;
+}
+.profile-overview>span{
+  margin-bottom: 0.75em;
+}
 .commenttab {
   padding: 1em;
 }

@@ -450,6 +450,7 @@ export interface IUserDTO extends IUserCreationDTO {
   createdAt: string;
   favoriteQParts?: IQPartDTOInclude[];
   inventory?: IQPartDTOInclude[];
+  favoriteColor?: color;
 }
 
 // export interface IUserWithPrefAndProfile extends IUserDTO {
@@ -490,7 +491,7 @@ export interface IUserWSecQDTO {
   name: string;
   email: string;
   password: string;
-  // role: string;
+  favoriteColorId: number | null;
   q1: ISecurityQuestionDTO;
   q2: ISecurityQuestionDTO;
   q3: ISecurityQuestionDTO;

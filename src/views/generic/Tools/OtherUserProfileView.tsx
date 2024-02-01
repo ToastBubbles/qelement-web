@@ -11,9 +11,10 @@ import {
   IWantedDTOGET,
   user,
 } from "../../../interfaces/general";
-import showToast, { Mode } from "../../../utils/utils";
+import showToast, { Mode, formatDate } from "../../../utils/utils";
 import TopFiveCard from "../../../components/TopFiveCard";
 import CollectionPart from "../../../components/CollectionPart";
+import ColorLink from "../../../components/ColorLink";
 
 export default function OtherUserProfileView() {
   const {
@@ -107,15 +108,6 @@ export default function OtherUserProfileView() {
     );
     if (collectionParts == undefined || collectionParts.length == 0)
       return noPartsNode;
-    // id: number;
-    // forTrade: boolean;
-    // forSale: boolean;
-    // availDuplicates: boolean;
-    // qpart: IQPartDTOIncludeLess;
-    // userId: number;
-    // quantity: number;
-    // condition: string;
-    // note: string;
 
     return (
       <div>
@@ -125,7 +117,6 @@ export default function OtherUserProfileView() {
               ...qpart.UserInventory,
               qpart,
             };
-            console.log(conversion);
 
             return <CollectionPart key={qpart.id} data={conversion} />;
           }
@@ -171,10 +162,7 @@ export default function OtherUserProfileView() {
                   setCollectionTabActive(true);
                 }}
               >
-                Collection{" "}
-                {/* {sculpture.comments &&
-                          sculpture.comments.length > 0 &&
-                          `(${sculpture.comments.length})`} */}
+                Collection
               </button>
               <button
                 className={"tablinks" + (wantedTabActive ? " active" : "")}
@@ -183,12 +171,8 @@ export default function OtherUserProfileView() {
                   setCollectionTabActive(false);
                   setWantedTabActive(true);
                 }}
-                // disabled={mypart?.images.length == 0}
               >
-                Wanted{" "}
-                {/* {sculpture.images &&
-                          filterImages(sculpture.images).length > 0 &&
-                          `(${filterImages(sculpture.images).length})`} */}
+                Wanted
               </button>
             </div>
             <div
@@ -203,7 +187,21 @@ export default function OtherUserProfileView() {
                 borderRight: "none",
                 borderLeft: "none",
               }}
-            ></div>
+            >
+              <div className="profile-overview">
+                <span>Date joined: {formatDate(user.createdAt, "short")}</span>
+                <span>Contributions: </span>
+                <span>Role: {user.role}</span>
+                <span className="d-flex ai-center">
+                  <span style={{ marginRight: "0.5em" }}>Favorite Color:</span>
+                  {user.favoriteColor ? (
+                    <ColorLink color={user.favoriteColor} />
+                  ) : (
+                    <>none</>
+                  )}
+                </span>
+              </div>
+            </div>
             <div
               className={
                 "tabcontent profile-tab-content" +
