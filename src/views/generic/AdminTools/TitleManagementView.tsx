@@ -15,10 +15,16 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { AppContext } from "../../../context/context";
 import LoadingPage from "../../../components/LoadingPage";
+import X from "../../../components/X";
 
 interface IUserCreds {
   creds: string;
   type: string; //email or username
+}
+
+interface ITitlesToAddToUsers {
+  user: IUserDTO;
+  title: ITitleDTO;
 }
 
 export default function TitleManagementView() {
@@ -43,9 +49,9 @@ export default function TitleManagementView() {
 
   const [tempUser, setTempUser] = useState<IUserDTO | null>(null);
 
-  const [usersToGiveTitle, setUsersToGiveTitle] = useState<IUserDTO[] | null>(
-    null
-  );
+  const [usersToGiveTitle, setUsersToGiveTitle] = useState<
+    ITitlesToAddToUsers[]
+  >([]);
 
   const { data: allTitleData, refetch: titleRefetch } = useQuery({
     queryKey: "allTitles",
@@ -76,17 +82,24 @@ export default function TitleManagementView() {
     },
     enabled: false,
   });
-  useEffect(() => {
-    if (
-      (tempUserCreds.type == "email" || tempUserCreds.type == "username") &&
-      tempUserCreds.creds.length > 0
-    ) {
-      console.log("useEffect is triggering refecth with the following values");
-      console.log(tempUserCreds);
 
-      userRefetch();
-    }
-  }, [tempUserCreds, userRefetch]);
+  const clearUserTextField = () => {
+    setTempUserCreds((values) => ({
+      ...values,
+      ...{ creds: "", type: "" },
+    }));
+  };
+  // useEffect(() => {
+  //   if (
+  //     (tempUserCreds.type == "email" || tempUserCreds.type == "username") &&
+  //     tempUserCreds.creds.length > 0
+  //   ) {
+  //     console.log("useEffect is triggering refecth with the following values");
+  //     console.log(tempUserCreds);
+
+  //     userRefetch();
+  //   }
+  // }, [tempUserCreds, userRefetch]);
   const titleCrationMutation = useMutation({
     mutationFn: (data: ITitle) =>
       axios.post<IAPIResponse>(`http://localhost:3000/title/add`, data, {
@@ -94,15 +107,6 @@ export default function TitleManagementView() {
           Authorization: `Bearer ${token}`,
         },
       }),
-    // .then((res) => {
-    //   console.log(res.data);
-    //   if (res.data.code == 200) {
-    //     showToast("Title successfully", Mode.Success);
-    //   } else {
-    //     showToast(`Request failed with code ${res.data.code}`, Mode.Error);
-    //   }
-    // })
-    // .catch((err) => console.log(err)),
     onSuccess: (res) => {
       if (res.data.code == 200) {
         showToast("Title successfully", Mode.Success);
@@ -174,31 +178,48 @@ export default function TitleManagementView() {
               <input
                 className="formInput w-50"
                 placeholder="username"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                  }
-                }}
-                onBlur={(e) => {
-                  // getRecipientId(e.target.value)
-                  if (e.target.value.length > 1) {
-                    let mode = e.target.value.includes("@")
-                      ? "email"
-                      : "username";
+                onChange={(e) => {
+                  let mode = e.target.value.includes("@")
+                    ? "email"
+                    : "username";
 
-                    setTempUserCreds((values) => ({
-                      ...values,
-                      ...{ creds: e.target.value.trim(), type: mode },
-                    }));
+                  setTempUserCreds((values) => ({
+                    ...values,
+                    ...{ creds: e.target.value.trim(), type: mode },
+                  }));
+                }}
+                value={tempUserCreds.creds}
+                onBlur={(e) => {
+                  // // getRecipientId(e.target.value)
+                  // if (e.target.value.length > 1) {
+                  //   let mode = e.target.value.includes("@")
+                  //     ? "email"
+                  //     : "username";
+
+                  //   setTempUserCreds((values) => ({
+                  //     ...values,
+                  //     ...{ creds: e.target.value.trim(), type: mode },
+                  //   }));
+                  // }
+                  if (
+                    (tempUserCreds.type == "email" ||
+                      tempUserCreds.type == "username") &&
+                    tempUserCreds.creds.length > 0
+                  ) {
+                    console.log(
+                      "useEffect is triggering refecth with the following values"
+                    );
+                    console.log(tempUserCreds);
+
+                    userRefetch();
                   }
-                  //    &&
-                  //     getUser(
-                  //       e.target.value.trim(),
-                  //       e.target.value.includes("@") ? "email" : "username"
-                  //     );
                 }}
               ></input>
               <select
-                className="formInput w-50"
+                className={
+                  "formInput w-50 " +
+                  allTitles.find((x) => x.id == selectedTitleId)?.cssClasses
+                }
                 name="title"
                 id="title-select"
                 onChange={(e) => setSelectedTitleId(Number(e.target.value))}
@@ -215,16 +236,81 @@ export default function TitleManagementView() {
                   </option>
                 ))}
               </select>
+              <button
+                onClick={() => {
+                  let selectedTitle = allTitles.find(
+                    (x) => x.id == selectedTitleId
+                  );
+                  if (
+                    selectedTitle &&
+                    tempUser &&
+                    canAddEntry(tempUser.id, selectedTitleId)
+                  ) {
+                    usersToGiveTitle.push({
+                      user: tempUser,
+                      title: selectedTitle,
+                    });
+                    setTempUser(null);
+                    clearUserTextField();
+                  }
+                }}
+                className="formInput"
+                disabled={tempUser == null || selectedTitleId == -1}
+              >
+                Add
+              </button>
             </div>
-            <button
-              //   onClick={() => refetchUser()}
-              disabled={tempUser == null}
-            >
-              Add
-            </button>
+            <div className="w-100">
+              {usersToGiveTitle.length > 0 && (
+                <div
+                  className="d-flex jc-space-b"
+                  style={{ alignItems: "baseline" }}
+                >
+                  <span>User</span>
+                  <span>Title</span>
+                  <span style={{ fontSize: "0.6em", width: "1.5em" }}>
+                    Remove
+                  </span>
+                </div>
+              )}
+              {usersToGiveTitle.map((userTitleObj) => {
+                const handleRemoveUser = () => {
+                  const updatedUsers = usersToGiveTitle.filter(
+                    (obj) => obj !== userTitleObj
+                  );
+                  setUsersToGiveTitle(updatedUsers);
+                };
+                return (
+                  <div className="d-flex jc-space-b">
+                    <div>
+                      <div>{userTitleObj.user.name}</div>
+                      <div>{userTitleObj.user.email}</div>
+                    </div>
+                    <div className={userTitleObj.title.cssClasses}>
+                      {userTitleObj.title.title}
+                    </div>
+                    <div style={{ width: "1.5em" }}>
+                      <X fn={handleRemoveUser} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </>
     );
   } else return <LoadingPage />;
+
+  function canAddEntry(userId: number, titleId: number): boolean {
+    if (usersToGiveTitle.length == 0) return true;
+
+    const existingEntry = usersToGiveTitle.find(
+      (x) => x.user.id == userId && x.title.id == titleId
+    );
+
+    if (existingEntry)
+      showToast("This user/title combination already exists!", Mode.Error);
+    return !existingEntry;
+  }
 }

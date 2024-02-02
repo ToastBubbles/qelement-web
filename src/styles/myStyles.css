@@ -1092,6 +1092,11 @@ fieldset > legend {
   /* margin-left: 0.5em; */
 }
 
+.title-green {
+  color: #00ff73;
+  font-weight: 600
+}
+
 .profile-overview {
   display: flex;
   flex-direction: column;
