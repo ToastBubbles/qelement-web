@@ -1088,15 +1088,42 @@ fieldset > legend {
   font-size: 3em;
   font-weight: 200;
 }
-.profile-title {
-  /* margin-left: 0.5em; */
+.p-rel {
+  position: relative;
 }
-
+.custom-select {
+  border: solid 1px var(--dk-grey);
+  border-radius: 0.25em;
+  padding-left: 0.25em;
+  padding-right: 1.5em;
+}
+.custom-select-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 100%;
+  z-index: 1;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
 .title-green {
   color: #00ff73;
-  font-weight: 600
+  font-weight: 600;
 }
 
+.title-red {
+  color: #ff0000;
+  font-weight: 600;
+}
+
+.title-cyan-fade {
+  background-image: linear-gradient(to top, black, cyan);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 600;
+}
 .profile-overview {
   display: flex;
   flex-direction: column;

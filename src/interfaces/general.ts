@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface ISimilarColorDTO {
   color_one: number;
   color_two: number;
@@ -469,6 +471,15 @@ export interface IUserDTO extends IUserCreationDTO {
   favoriteQParts?: IQPartDTOInclude[];
   inventory?: IQPartDTOInclude[];
   favoriteColor?: color;
+}
+
+export interface INodeWithID {
+  node: ReactNode;
+  id: number;
+}
+
+export interface INodeWithIDAndCSS extends INodeWithID {
+  cssClasses: string;
 }
 
 // export interface IUserWithPrefAndProfile extends IUserDTO {

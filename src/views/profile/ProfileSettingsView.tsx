@@ -4,15 +4,15 @@ import axios from "axios";
 import { useMutation, useQuery } from "react-query";
 import {
   IAPIResponse,
+  INodeWithID,
   ITitleDTO,
   IUserDTO,
   IUserPrefDTO,
-  color,
   iIdOnly,
 } from "../../interfaces/general";
 import LoadingPage from "../../components/LoadingPage";
 import showToast, { Mode, formatDate } from "../../utils/utils";
-import SliderToggle from "../../components/SliderToggle";
+
 import MyToolTip from "../../components/MyToolTip";
 import SliderToggle2 from "../../components/SliderToggle2";
 import { Types } from "../../context/userPrefs/reducer";
@@ -20,6 +20,7 @@ import { UserPrefPayload } from "../../context/userPrefs/context";
 import ColorLink from "../../components/ColorLink";
 import GenericPopup from "../../components/GenericPopup";
 import ColorTextField from "../../components/ColorTextField";
+import CustomSelect from "../../components/CustomSelect";
 enum ColName {
   TLG = "tlg",
   BL = "bl",
@@ -60,6 +61,7 @@ export default function ProfileSettingsView() {
       setLang(res.data.preferences.lang);
       setPrefColorName(res.data.preferences.prefName as ColName);
       setPrefColorId(res.data.preferences.prefId as ColId);
+      setSelectedTitleId(res.data.selectedTitleId);
     },
     enabled: !!payload.id,
   });
@@ -294,15 +296,17 @@ export default function ProfileSettingsView() {
             <div className="w-100 d-flex jc-space-b">
               <div>Title</div>
               <div>
-                <select
+                {/* <select
                   name="title"
                   id="title-select"
-                  defaultValue={setDefaultValue(me.titles, me.selectedTitleId)}
-                  className={getCSS(me.titles, me.selectedTitleId)}
+                  defaultValue={setDefaultValue(me.titles)}
+                  className={getCSS(me.titles)}
                   onChange={(e) => setSelectedTitleId(Number(e.target.value))}
                   // value={prefColorId}
                 >
-                  <option value={-1}>--</option>
+                  <option value={-1} style={{ color: "unset" }}>
+                    --
+                  </option>
                   {me.titles.length > 0 &&
                     me.titles.map((title) => (
                       <option
@@ -313,7 +317,12 @@ export default function ProfileSettingsView() {
                         {title.title}
                       </option>
                     ))}
-                </select>
+                </select> */}
+                <CustomSelect
+                  setter={setSelectedTitleId}
+                  options={getOptions(me.titles)}
+                  customStyles={{width: "10em"}}
+                />
               </div>
             </div>
             {showColorUpdater && (
@@ -398,29 +407,37 @@ export default function ProfileSettingsView() {
     setShowColorUpdater(false);
   }
 
-  function setDefaultValue(
-    usersTitles: ITitleDTO[],
-    preselectedId: number | null
-  ): number {
+  function setDefaultValue(usersTitles: ITitleDTO[]): number {
     console.log("setting value");
 
-    if (preselectedId == null) return -1;
-    let selectedTitle = usersTitles.find((x) => x.id == preselectedId);
+    if (selectedTitleId == null) return -1;
+    let selectedTitle = usersTitles.find((x) => x.id == selectedTitleId);
     console.log(selectedTitle);
 
     if (selectedTitle) return selectedTitle.id;
     return -1;
   }
 
-  function getCSS(
-    usersTitles: ITitleDTO[],
-    preselectedId: number | null
-  ): string {
+  function getCSS(usersTitles: ITitleDTO[]): string {
     // let thisTitle = usersTitles.find(x=>x.id == value)
 
-    if (preselectedId == null) return "";
-    let selectedTitle = usersTitles.find((x) => x.id == preselectedId);
+    if (selectedTitleId == null || selectedTitleId < 0) return "";
+    let selectedTitle = usersTitles.find((x) => x.id == selectedTitleId);
     if (selectedTitle) return selectedTitle.cssClasses;
     return "";
+  }
+
+  function getOptions(usersTitles: ITitleDTO[]): INodeWithID[] {
+    if (usersTitles.length == 0) return [];
+
+    let output: INodeWithID[] = [];
+
+    usersTitles.forEach((title) =>
+      output.push({
+        node: <span className={title.cssClasses}>{title.title}</span>,
+        id: title.id,
+      })
+    );
+    return output;
   }
 }
