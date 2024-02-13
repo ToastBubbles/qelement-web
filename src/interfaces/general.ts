@@ -143,6 +143,13 @@ export interface ITitle {
 export interface ITitleDTO extends ITitle {
   id: number;
 }
+export interface ITitlesToAddToUsers {
+  user: IUserDTO;
+  title: ITitleDTO;
+}
+export interface IUserTitlePackedDTO {
+  array: ITitlesToAddToUsers[];
+}
 export interface IPartStatusWQPart extends IPartStatusDTO {
   qpart: IQPartDTOInclude;
 }
@@ -457,6 +464,8 @@ export interface IUserDTO extends IUserCreationDTO {
   role: string;
   preferences: IUserPrefDTO;
   createdAt: string;
+  titles: ITitleDTO[];
+  selectedTitleId: number | null;
   favoriteQParts?: IQPartDTOInclude[];
   inventory?: IQPartDTOInclude[];
   favoriteColor?: color;

@@ -4,6 +4,7 @@ import axios from "axios";
 import { useMutation, useQuery } from "react-query";
 import {
   IAPIResponse,
+  ITitleDTO,
   IUserDTO,
   IUserPrefDTO,
   color,
@@ -45,6 +46,7 @@ export default function ProfileSettingsView() {
   const [allowMessages, setAllowMessages] = useState<boolean>(true);
   const [showColorUpdater, setShowColorUpdater] = useState<boolean>(false);
   const [newFaveColorId, setNewFaveColorId] = useState<number>(-1);
+  const [selectedTitleId, setSelectedTitleId] = useState<number | null>(null);
   const [prefColorName, setPrefColorName] = useState<ColName>(ColName.BL);
   const [prefColorId, setPrefColorId] = useState<ColId>(ColId.TLG);
   const { data } = useQuery({
@@ -116,8 +118,28 @@ export default function ProfileSettingsView() {
     },
   });
 
+  const userSetTitleMutation = useMutation({
+    mutationFn: (titleId: iIdOnly) =>
+      axios.post<IAPIResponse>(
+        `http://localhost:3000/user/changeTitle`,
+        titleId,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onSuccess: (e) => {
+      if (e.data.code == 200) {
+        showToast("Title Updated!", Mode.Success);
+        console.log(e.data.message);
+      }
+    },
+  });
+
   if (data) {
     const me = data.data;
+    console.log(me);
 
     function checkForChanges(): boolean {
       let hasChanges = false;
@@ -275,10 +297,22 @@ export default function ProfileSettingsView() {
                 <select
                   name="title"
                   id="title-select"
-                  // onChange={(e) => setPrefColorId(e.target.value as ColId)}
+                  defaultValue={setDefaultValue(me.titles, me.selectedTitleId)}
+                  className={getCSS(me.titles, me.selectedTitleId)}
+                  onChange={(e) => setSelectedTitleId(Number(e.target.value))}
                   // value={prefColorId}
                 >
-                  <option value={"none"}>--</option>
+                  <option value={-1}>--</option>
+                  {me.titles.length > 0 &&
+                    me.titles.map((title) => (
+                      <option
+                        value={title.id}
+                        key={title.id}
+                        className={title.cssClasses}
+                      >
+                        {title.title}
+                      </option>
+                    ))}
                 </select>
               </div>
             </div>
@@ -338,6 +372,12 @@ export default function ProfileSettingsView() {
 
                   if (checkForChanges()) {
                     userPrefMutation.mutate(dto);
+                  } else if (
+                    selectedTitleId &&
+                    selectedTitleId != me.selectedTitleId &&
+                    selectedTitleId > 0
+                  ) {
+                    userSetTitleMutation.mutate({ id: selectedTitleId });
                   } else {
                     showToast("No changes to save", Mode.Error);
                   }
@@ -356,5 +396,31 @@ export default function ProfileSettingsView() {
 
   function closePopUp() {
     setShowColorUpdater(false);
+  }
+
+  function setDefaultValue(
+    usersTitles: ITitleDTO[],
+    preselectedId: number | null
+  ): number {
+    console.log("setting value");
+
+    if (preselectedId == null) return -1;
+    let selectedTitle = usersTitles.find((x) => x.id == preselectedId);
+    console.log(selectedTitle);
+
+    if (selectedTitle) return selectedTitle.id;
+    return -1;
+  }
+
+  function getCSS(
+    usersTitles: ITitleDTO[],
+    preselectedId: number | null
+  ): string {
+    // let thisTitle = usersTitles.find(x=>x.id == value)
+
+    if (preselectedId == null) return "";
+    let selectedTitle = usersTitles.find((x) => x.id == preselectedId);
+    if (selectedTitle) return selectedTitle.cssClasses;
+    return "";
   }
 }

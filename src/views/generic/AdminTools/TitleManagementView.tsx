@@ -8,7 +8,9 @@ import {
   ISuspendUser,
   ITitle,
   ITitleDTO,
+  ITitlesToAddToUsers,
   IUserDTO,
+  IUserTitlePackedDTO,
   user,
 } from "../../../interfaces/general";
 import DatePicker from "react-datepicker";
@@ -20,11 +22,6 @@ import X from "../../../components/X";
 interface IUserCreds {
   creds: string;
   type: string; //email or username
-}
-
-interface ITitlesToAddToUsers {
-  user: IUserDTO;
-  title: ITitleDTO;
 }
 
 export default function TitleManagementView() {
@@ -39,7 +36,7 @@ export default function TitleManagementView() {
   });
   const [selectedTitleId, setSelectedTitleId] = useState<number>(-1);
 
-  const [isUserFound, setIsUserFound] = useState<boolean>(false);
+  // const [isUserFound, setIsUserFound] = useState<boolean>(false);
   //   const [usernameOf, setIsUserFound] = useState<boolean>(false);
 
   const [tempUserCreds, setTempUserCreds] = useState<IUserCreds>({
@@ -100,7 +97,7 @@ export default function TitleManagementView() {
   //     userRefetch();
   //   }
   // }, [tempUserCreds, userRefetch]);
-  const titleCrationMutation = useMutation({
+  const titleCreationMutation = useMutation({
     mutationFn: (data: ITitle) =>
       axios.post<IAPIResponse>(`http://localhost:3000/title/add`, data, {
         headers: {
@@ -115,6 +112,26 @@ export default function TitleManagementView() {
           cssClasses: "",
         });
         titleRefetch();
+      } else {
+        showToast(`Request failed with code ${res.data.code}`, Mode.Error);
+      }
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+
+  const userTitleCreationMutation = useMutation({
+    mutationFn: (data: IUserTitlePackedDTO) =>
+      axios.post<IAPIResponse>(`http://localhost:3000/userTitle/add`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    onSuccess: (res) => {
+      if (res.data.code == 201) {
+        showToast("user titles successfully added", Mode.Success);
+        setUsersToGiveTitle([]);
       } else {
         showToast(`Request failed with code ${res.data.code}`, Mode.Error);
       }
@@ -166,7 +183,7 @@ export default function TitleManagementView() {
             <button
               onClick={() => {
                 if (newTitle.title.length > 1) {
-                  titleCrationMutation.mutate(newTitle);
+                  titleCreationMutation.mutate(newTitle);
                 }
               }}
             >
@@ -266,9 +283,9 @@ export default function TitleManagementView() {
                   className="d-flex jc-space-b"
                   style={{ alignItems: "baseline" }}
                 >
-                  <span>User</span>
-                  <span>Title</span>
-                  <span style={{ fontSize: "0.6em", width: "1.5em" }}>
+                  <span style={{ width: "50%" }}>User</span>
+                  <span style={{ width: "45%" }}>Title</span>
+                  <span style={{ fontSize: "0.55em", width: "5%" }}>
                     Remove
                   </span>
                 </div>
@@ -281,20 +298,40 @@ export default function TitleManagementView() {
                   setUsersToGiveTitle(updatedUsers);
                 };
                 return (
-                  <div className="d-flex jc-space-b">
-                    <div>
+                  <div
+                    className="d-flex jc-space-b"
+                    key={`${userTitleObj.user.id}-${userTitleObj.title.id}`}
+                  >
+                    <div style={{ width: "50%" }}>
                       <div>{userTitleObj.user.name}</div>
                       <div>{userTitleObj.user.email}</div>
                     </div>
-                    <div className={userTitleObj.title.cssClasses}>
+                    <div
+                      className={userTitleObj.title.cssClasses}
+                      style={{ width: "45%" }}
+                    >
                       {userTitleObj.title.title}
                     </div>
-                    <div style={{ width: "1.5em" }}>
+                    <div style={{ width: "5%" }}>
                       <X fn={handleRemoveUser} />
                     </div>
                   </div>
                 );
               })}
+
+              {usersToGiveTitle.length > 0 && (
+                <div className="d-flex jc-end" style={{ paddingTop: "1em" }}>
+                  <button
+                    onClick={() => {
+                      userTitleCreationMutation.mutate({
+                        array: usersToGiveTitle,
+                      });
+                    }}
+                  >
+                    Submit
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
