@@ -1,30 +1,37 @@
-import React, { ReactNode } from "react";
-import axios from "axios";
-import {
-  CustomStyles,
-  INodeWithID,
-  INodeWithIDAndCSS,
-  color,
-} from "../interfaces/general";
-import { getPrefColorIdString, getPrefColorName } from "../utils/utils";
-import { useQuery } from "react-query";
-import { useState, useContext, CSSProperties } from "react";
-import { AppContext } from "../context/context";
+import React, { ReactNode, useEffect } from "react";
+import { INodeWithID, INodeWithIDAndCSS } from "../interfaces/general";
+import { useState, CSSProperties } from "react";
 
 interface IProps {
   setter: (value: number | null) => void;
   options: (INodeWithID | INodeWithIDAndCSS)[];
+  selectedId?: number | null;
   customStyles?: CSSProperties;
 }
 
 export default function CustomSelect({
   setter,
   options,
+  selectedId = -1,
   customStyles,
 }: IProps) {
   const [selectedOption, setSelectedOption] = useState<ReactNode | null>(null);
   const [dropdownEnabled, setDropdownEnabled] = useState<boolean>(false);
   const [selectedCSSClasses, setSelectedCSSClasses] = useState<string>("");
+
+  useEffect(() => {
+    if (selectedId && selectedId > 0) {
+      let selectedOption = options.find((x) => x.id == selectedId);
+      if (selectedOption) {
+        setSelectedOption(selectedOption.node);
+        const classNames =
+          "cssClasses" in selectedOption ? selectedOption.cssClasses : "";
+
+        setSelectedCSSClasses(classNames);
+      }
+    }
+  }, [selectedId]);
+
   return (
     <div className="p-rel" style={{ ...customStyles }}>
       <div
@@ -53,8 +60,8 @@ export default function CustomSelect({
             onClick={() => {
               setSelectedOption(<>--</>);
               setter(-1);
-              setDropdownEnabled(false);
               setSelectedCSSClasses("");
+              setDropdownEnabled(false);
             }}
           >
             --

@@ -1,11 +1,6 @@
 import { color } from "../interfaces/general";
-import axios from "axios";
-import { useMutation } from "react-query";
-import showToast, {
-  Mode,
-  getPrefColorName,
-  getTextColor,
-} from "../utils/utils";
+
+import { getPrefColorName, getTextColor } from "../utils/utils";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AppContext } from "../context/context";

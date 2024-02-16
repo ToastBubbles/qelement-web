@@ -5,6 +5,7 @@ import showToast, { Mode } from "../../../utils/utils";
 import {
   IAPIResponse,
   IChangeUserRole,
+  INodeWithID,
   ISuspendUser,
   ITitle,
   ITitleDTO,
@@ -18,6 +19,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { AppContext } from "../../../context/context";
 import LoadingPage from "../../../components/LoadingPage";
 import X from "../../../components/X";
+import CustomSelect from "../../../components/CustomSelect";
 
 interface IUserCreds {
   creds: string;
@@ -34,7 +36,7 @@ export default function TitleManagementView() {
     title: "",
     cssClasses: "",
   });
-  const [selectedTitleId, setSelectedTitleId] = useState<number>(-1);
+  const [selectedTitleId, setSelectedTitleId] = useState<number | null>(-1);
 
   // const [isUserFound, setIsUserFound] = useState<boolean>(false);
   //   const [usernameOf, setIsUserFound] = useState<boolean>(false);
@@ -191,7 +193,7 @@ export default function TitleManagementView() {
             </button>
             <div className="fake-hr"></div>
             <h3>Grant Title to User</h3>
-            <div className="w-100 d-flex jc-space-b">
+            <div className="w-100 d-flex">
               <input
                 className="formInput w-50"
                 placeholder="username"
@@ -232,27 +234,12 @@ export default function TitleManagementView() {
                   }
                 }}
               ></input>
-              <select
-                className={
-                  "formInput w-50 " +
-                  allTitles.find((x) => x.id == selectedTitleId)?.cssClasses
-                }
-                name="title"
-                id="title-select"
-                onChange={(e) => setSelectedTitleId(Number(e.target.value))}
-                value={selectedTitleId}
-              >
-                <option value={-1}>--</option>
-                {allTitles.map((titleObj) => (
-                  <option
-                    key={titleObj.id}
-                    value={titleObj.id}
-                    className={titleObj.cssClasses}
-                  >
-                    {titleObj.title}
-                  </option>
-                ))}
-              </select>
+              <div style={{ width: "40%" }}>
+                <CustomSelect
+                  setter={setSelectedTitleId}
+                  options={getOptions(allTitles)}
+                />
+              </div>
               <button
                 onClick={() => {
                   let selectedTitle = allTitles.find(
@@ -339,7 +326,22 @@ export default function TitleManagementView() {
     );
   } else return <LoadingPage />;
 
-  function canAddEntry(userId: number, titleId: number): boolean {
+  function getOptions(usersTitles: ITitleDTO[]): INodeWithID[] {
+    if (usersTitles.length == 0) return [];
+
+    let output: INodeWithID[] = [];
+
+    usersTitles.forEach((title) =>
+      output.push({
+        node: <span className={title.cssClasses}>{title.title}</span>,
+        id: title.id,
+      })
+    );
+    return output;
+  }
+
+  function canAddEntry(userId: number, titleId: number | null): boolean {
+    if (titleId == null) return false;
     if (usersToGiveTitle.length == 0) return true;
 
     const existingEntry = usersToGiveTitle.find(

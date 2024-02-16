@@ -321,7 +321,8 @@ export default function ProfileSettingsView() {
                 <CustomSelect
                   setter={setSelectedTitleId}
                   options={getOptions(me.titles)}
-                  customStyles={{width: "10em"}}
+                  selectedId={me.selectedTitleId}
+                  customStyles={{ width: "10em" }}
                 />
               </div>
             </div>
@@ -348,6 +349,7 @@ export default function ProfileSettingsView() {
                 closePopup={closePopUp}
               />
             )}
+
             <div className="w-100 d-flex jc-space-b">
               <div>Favorite LEGO Color</div>
               <div className="d-flex flex-col ai-end">
