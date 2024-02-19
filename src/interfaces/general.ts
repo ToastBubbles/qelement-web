@@ -127,6 +127,14 @@ export interface IAPIResponse {
 export interface iIdOnly {
   id: number;
 }
+
+export interface IIdAndString extends iIdOnly {
+  string: string;
+}
+
+export interface IIdAndNumber extends iIdOnly {
+  number: number;
+}
 export interface IPartStatusDTO {
   id: number;
   status: string;

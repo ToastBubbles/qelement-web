@@ -30,6 +30,7 @@ import PopupFavorites from "../../components/PopupFavorites";
 import QPartDropdown from "../../components/QPartDropdown";
 import PopupElementID from "../../components/PopupElementID";
 import RecentSculpture from "../../components/RecentSculpture";
+import AdminTabPart from "../../components/AdminTabPart";
 
 export default function SinglePartView() {
   const imagePath = "http://localhost:9000/q-part-images/";
@@ -59,7 +60,6 @@ export default function SinglePartView() {
   const [urlMoldId, setUrlMoldId] = useState<number | undefined>(undefined);
   const [urlHasChanged, setUrlHasChanged] = useState<boolean>(false);
 
-
   const [selectedQPartid, setSelectedQPartid] = useState<number>(-1);
   const [multiMoldPart, setMultiMoldPart] = useState<boolean>(false);
   const [selectedQPartMold, setSelectedQPartMold] = useState<number>(-1);
@@ -71,6 +71,7 @@ export default function SinglePartView() {
   const [imageTabActive, setImageTabActive] = useState<boolean>(false);
   const [commentTabActive, setCommentTabActive] = useState<boolean>(false);
   const [sculptureTabActive, setSculptureTabActive] = useState<boolean>(false);
+  const [adminTabActive, setAdminTabActive] = useState<boolean>(false);
 
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
   const [commentContent, setCommentContent] = useState<string>("");
@@ -192,6 +193,7 @@ export default function SinglePartView() {
   }
 
   if (qpartData && qpartData.data.length > 0) {
+    let isAdmin = adminData?.data.code == 200;
     const qparts = qpartData?.data;
 
     if (selectedQPartid == -1 || urlHasChanged) {
@@ -465,6 +467,7 @@ export default function SinglePartView() {
                           setImageTabActive(false);
                           setCommentTabActive(false);
                           setSculptureTabActive(false);
+                          setAdminTabActive(false);
                         }}
                       >
                         Details
@@ -478,6 +481,7 @@ export default function SinglePartView() {
                           setImageTabActive(false);
                           setCommentTabActive(true);
                           setSculptureTabActive(false);
+                          setAdminTabActive(false);
                         }}
                       >
                         Comments{" "}
@@ -494,6 +498,7 @@ export default function SinglePartView() {
                           setCommentTabActive(false);
                           setSculptureTabActive(false);
                           setImageTabActive(true);
+                          setAdminTabActive(false);
                         }}
                         disabled={mypart?.images.length == 0}
                       >
@@ -511,6 +516,7 @@ export default function SinglePartView() {
                           setCommentTabActive(false);
                           setSculptureTabActive(true);
                           setImageTabActive(false);
+                          setAdminTabActive(false);
                         }}
                         disabled={mypart?.sculptureInventories.length == 0}
                       >
@@ -518,6 +524,22 @@ export default function SinglePartView() {
                         {mypart?.sculptureInventories &&
                           mypart.sculptureInventories.length > 0 &&
                           `(${mypart.sculptureInventories.length})`}
+                      </button>
+                      <button
+                        className={
+                          "tablinks" +
+                          (adminTabActive ? " active" : "") +
+                          (isAdmin ? "" : " tabhidden")
+                        }
+                        onClick={() => {
+                          setDetailsTabActive(false);
+                          setCommentTabActive(false);
+                          setSculptureTabActive(false);
+                          setImageTabActive(false);
+                          setAdminTabActive(true);
+                        }}
+                      >
+                        Admin
                       </button>
                     </div>
                     <div
@@ -529,7 +551,7 @@ export default function SinglePartView() {
                       <div>
                         <div>Element IDs:</div>
                         <div>
-                          {mypart?.elementIDs
+                          {mypart?.elementIDs && mypart?.elementIDs.length > 0 
                             ? mypart.elementIDs
                                 .map((eId) => eId.number)
                                 .join(", ")
@@ -561,7 +583,7 @@ export default function SinglePartView() {
                               <Comment
                                 key={comment.id}
                                 data={comment}
-                                isAdmin={adminData?.data.code == 200}
+                                isAdmin={isAdmin}
                                 userId={payload.id}
                                 refetchFn={qpartRefetch}
                               />
@@ -648,6 +670,16 @@ export default function SinglePartView() {
                         })
                       ) : (
                         <p>No Images</p>
+                      )}
+                    </div>
+                    <div
+                      className={
+                        "tabcontent tab-details pricehistory" +
+                        (isAdmin && adminTabActive ? "" : " tabhidden")
+                      }
+                    >
+                      {mypart && (
+                        <AdminTabPart part={mypart} refetchFn={qpartRefetch} />
                       )}
                     </div>
                   </div>
