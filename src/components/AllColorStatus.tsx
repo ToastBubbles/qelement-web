@@ -190,8 +190,8 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
         (x) => x.mold.id == obj.id && x.color.id == color.id
       );
       if (checker) {
-        console.log(`Checker ${checker.mold.number} ${color.bl_name}`);
-        console.log(checker.partStatuses);
+        // console.log(`Checker ${checker.mold.number} ${color.bl_name}`);
+        // console.log(checker.partStatuses);
 
         output.push({
           partId: qparts[0].mold.parentPart.id,

@@ -451,10 +451,7 @@ small {
   height: 30em;
   overflow-y: auto;
 }
-.smalldate {
-  color: #808080;
-  font-size: small;
-}
+
 .qpotd {
   background-color: var(--dk-grey);
   color: var(--lt-grey);
@@ -1142,7 +1139,8 @@ fieldset > legend {
 .comment {
   position: relative;
   display: flex;
-  width: 97.75%;
+  /* width: 97.75%; */
+  width: 100%;
   padding: 0.5em;
   border-bottom: solid 1px var(--lt-grey);
 }
@@ -1160,7 +1158,22 @@ fieldset > legend {
   flex-direction: column;
   padding-left: 0.5em;
 }
+.comment-icon {
+  padding-left: 1em;
+}
+.comment-edit {
+  width: 100%;
 
+  margin-bottom: 2em;
+}
+.smalldate {
+  color: #808080;
+  font-size: small;
+  margin-left: 1em;
+}
+.italic {
+  font-style: italic;
+}
 .jumbotron {
   position: relative;
   display: flex;
@@ -1812,6 +1825,9 @@ textarea {
 }
 .ai-end {
   align-items: end;
+}
+.ai-base {
+  align-items: baseline;
 }
 .jc-center {
   justify-content: center;

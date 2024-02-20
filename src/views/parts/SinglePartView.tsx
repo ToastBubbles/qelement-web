@@ -551,7 +551,7 @@ export default function SinglePartView() {
                       <div>
                         <div>Element IDs:</div>
                         <div>
-                          {mypart?.elementIDs && mypart?.elementIDs.length > 0 
+                          {mypart?.elementIDs && mypart?.elementIDs.length > 0
                             ? mypart.elementIDs
                                 .map((eId) => eId.number)
                                 .join(", ")
@@ -584,7 +584,9 @@ export default function SinglePartView() {
                                 key={comment.id}
                                 data={comment}
                                 isAdmin={isAdmin}
-                                userId={payload.id}
+                                viewerId={payload.id}
+                                getter={commentContent}
+                                setter={setCommentContent}
                                 refetchFn={qpartRefetch}
                               />
                             );
@@ -632,7 +634,7 @@ export default function SinglePartView() {
                       {filteredImages.length > 0 ? (
                         filteredImages.map((image) => {
                           return (
-                            <div>
+                            <div key={image.id}>
                               <img
                                 src={imagePath + image.fileName}
                                 alt="brick"

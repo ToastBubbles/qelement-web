@@ -221,6 +221,7 @@ export interface ICommentDTO {
   creator: user;
   content: string;
   qpartId: number;
+  edited: boolean;
   createdAt: string;
 }
 export interface ICollectionDTOGET {

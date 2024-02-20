@@ -311,6 +311,46 @@ export function sortStatus(statuses: IPartStatusDTO[]): IPartStatusDTO[] {
   return output;
 }
 
+export function howLongAgo(dateStr: string) {
+  const date = new Date(dateStr);
+  const now = new Date();
+  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  let interval = Math.floor(seconds / 31536000);
+
+  if (interval >= 1) {
+    let s = interval == 1 ? "" : "s";
+    return interval + ` year${s} ago`;
+  }
+  interval = Math.floor(seconds / 2592000);
+  if (interval >= 1) {
+    let s = interval == 1 ? "" : "s";
+    return interval + ` month${s} ago`;
+  }
+  interval = Math.floor(seconds / 604800);
+  if (interval >= 1) {
+    let s = interval == 1 ? "" : "s";
+    return interval + ` week${s} ago`;
+  }
+  interval = Math.floor(seconds / 86400);
+  if (interval >= 1) {
+    let s = interval == 1 ? "" : "s";
+    return interval + ` day${s} ago`;
+  }
+  interval = Math.floor(seconds / 3600);
+
+  if (interval >= 1) {
+    let s = interval == 1 ? "" : "s";
+    return interval + ` hour${s} ago`;
+  }
+  interval = Math.floor(seconds / 60);
+  if (interval >= 1) {
+    let s = interval == 1 ? "" : "s";
+    return interval + ` minute${s} ago`;
+  }
+  return "Just now";
+}
+
 export function formatDate(dateStr: string, mode: string = "short") {
   const date = new Date(dateStr);
 

@@ -1,14 +1,8 @@
-import { ReactNode, useContext, useState } from "react";
+import { ReactNode, useState } from "react";
 import {
-  IElementID,
-  IIdAndNumber,
   IQPartDTOInclude,
 } from "../interfaces/general";
 import GenericPopup from "./GenericPopup";
-import { useMutation } from "react-query";
-import axios from "axios";
-import showToast, { Mode } from "../utils/utils";
-import { AppContext } from "../context/context";
 import ElementIDEdit from "./Edit Components/ElementIDEdit";
 
 interface IProps {
