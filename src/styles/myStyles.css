@@ -307,6 +307,18 @@ small {
   color: var(--md-grey);
   margin-bottom: 1em;
 }
+.image-edit-image-container {
+  margin-top: 3em;
+  max-height: 20em;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.image-edit-image-container img {
+  width: auto;
+  height: 100%;
+}
 .tab-images,
 .tab-sculp {
   overflow-y: auto;
@@ -1199,25 +1211,49 @@ fieldset > legend {
   color: var(--md-grey);
 }
 
-.caret {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  width: 2px;
-  height: 20px;
-  background-color: black;
-  animation: blink-caret 0.8s infinite;
+.not-approved {
+  background-color: var(--lt-red);
+}
+.admin-image-container {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
 }
 
-@keyframes blink-caret {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
+.admin-image-card {
+  /* overflow-y: auto; */
+  max-height: 12em;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5em;
+  padding-bottom: 0;
+  width: 10em;
+  flex-basis: 33.33%;
+}
+.admin-image-card > div {
+  border: solid 1px var(--lt-grey);
+  border-radius: 0.5em;
+  margin: 0.5em;
+  /* margin-bottom: ; */
+  padding: 0.25em;
+}
+.admin-image-div {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 0.25em;
+  height: 6em;
+  width: 100%;
+  border: solid 1px var(--lt-grey);
+  border-radius: 0.5em;
+}
+.admin-image-div img {
+  height: 100%;
+  width: auto;
+}
+.primary-image-tag {
+  background-color: #00ff73;
 }
 .italic {
   font-style: italic;
@@ -2156,7 +2192,7 @@ textarea {
 .img-sculpture {
   background-color: #e9cf5e;
 }
-.img-suplemental {
+.img-supplemental {
   background-color: #888888;
 }
 .img-other {
@@ -2323,10 +2359,14 @@ input:checked + .slider:before {
   background-color: rgba(0, 0, 0, 0.5);
 }
 .popup-close {
+  position: absolute;
+  right: 1em;
+  z-index: 10;
+  width: 1.5em;
   background: none;
   border: none;
   color: var(--dk-grey);
-  width: 100%;
+  /* width: 100%; */
   cursor: pointer;
   text-align: end;
   font-size: larger;
@@ -2349,8 +2389,8 @@ input:checked + .slider:before {
   position: absolute;
   left: 30%;
   right: 30%;
-  bottom: 30%;
-  top: 30%;
+  bottom: 15%;
+  top: 15%;
   min-height: 32em;
   padding: 1em;
   text-align: center;

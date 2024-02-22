@@ -266,11 +266,18 @@ export interface ICommentCreationDTO {
 export interface ImageDTO {
   id: number;
   fileName: string;
-  isPrimary: boolean;
   type: string;
+  isPrimary: boolean;
   uploader: user;
   qpartId: number;
+  sculptureId?: number;
   approvalDate: string;
+}
+
+export interface IImageEdits {
+  id: number;
+  type: string;
+  isPrimary: boolean;
 }
 
 export interface ImageDTOExtended {

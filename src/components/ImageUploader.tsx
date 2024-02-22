@@ -148,8 +148,8 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
                             background and clear focus.
                           </li>
                           <li>
-                            <span>Suplemental:</span> Use this if the image is
-                            suplemental, this could be a comparison photo
+                            <span>Supplemental:</span> Use this if the image is
+                            supplemental, this could be a comparison photo
                             including multiple parts, or it could be a photo of
                             the underside of a part to show additional details.
                           </li>
@@ -177,7 +177,7 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
                 >
                   <option value={""}>--</option>
                   <option value={"part"}>Part</option>
-                  <option value={"suplemental"}>Suplemental</option>
+                  <option value={"supplemental"}>supplemental</option>
                   {/* <option value={"sculpture"}>Sculpture</option> */}
                   <option value={"damaged"}>Damaged</option>
                   <option value={"other"}>Other</option>
