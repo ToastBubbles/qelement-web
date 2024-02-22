@@ -494,6 +494,7 @@ export default function SinglePartView() {
                       >
                         Details
                       </button>
+                      
                       <button
                         className={
                           "tablinks" + (commentTabActive ? " active" : "")

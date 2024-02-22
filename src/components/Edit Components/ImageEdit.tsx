@@ -8,11 +8,17 @@ import showToast, { Mode, imagePath } from "../../utils/utils";
 
 interface IProps {
   image: ImageDTO;
+  disableTypeMutation?: boolean;
   closePopup: () => void;
   refetchFn: () => void;
 }
 
-export default function ImageEdit({ image, closePopup, refetchFn }: IProps) {
+export default function ImageEdit({
+  image,
+  disableTypeMutation = false,
+  closePopup,
+  refetchFn,
+}: IProps) {
   const {
     state: {
       jwt: { token, payload },
@@ -121,38 +127,47 @@ export default function ImageEdit({ image, closePopup, refetchFn }: IProps) {
         <img src={imagePath + image.fileName} alt="brick" />
       </div>
 
-      <div
-        className="d-flex jc-space-b"
-        style={{ marginTop: "2em", width: "50%" }}
-      >
-        <label htmlFor="type">Type:</label>
-        <select
-          name="type"
-          onChange={(e) =>
-            setNewImageValues((newImageValues) => ({
-              ...newImageValues,
-              string: e.target.value.toLowerCase(),
-            }))
-          }
-          value={newImageValues.string}
+      {!disableTypeMutation && (
+        <div
+          className="d-flex jc-space-b"
+          style={{ marginTop: "2em", width: "50%" }}
         >
-          <option value={""}>--</option>
-          <option value={"part"}>Part</option>
-          <option value={"supplemental"}>Supplemental</option>
-          <option value={"sculpture"}>Sculpture</option>
-          <option value={"damaged"}>Damaged</option>
-          <option value={"other"}>Other</option>
-        </select>
-      </div>
+          <label htmlFor="type">Type:</label>
+          <select
+            name="type"
+            onChange={(e) =>
+              setNewImageValues((newImageValues) => ({
+                ...newImageValues,
+                string: e.target.value.toLowerCase(),
+              }))
+            }
+            value={newImageValues.string}
+          >
+            <option value={""}>--</option>
+            <option value={"part"}>Part</option>
+            <option value={"supplemental"}>Supplemental</option>
+            <option value={"sculpture"}>Sculpture</option>
+            <option value={"damaged"}>Damaged</option>
+            <option value={"other"}>Other</option>
+          </select>
+        </div>
+      )}
 
-      <div className="d-flex jc-space-b w-50" style={{ marginTop: "2em" }}>
+      <div
+        className={
+          "d-flex w-50" + (disableTypeMutation ? " jc-center" : " jc-space-b")
+        }
+        style={{ marginTop: "2em" }}
+      >
         <button
           disabled={image.isPrimary || image.approvalDate == null}
           onClick={() => markPrimary()}
         >
           Make Primary
         </button>
-        <button onClick={() => submitImageChanges()}>Submit</button>
+        {!disableTypeMutation && (
+          <button onClick={() => submitImageChanges()}>Submit</button>
+        )}
       </div>
 
       <div className="fake-hr"></div>

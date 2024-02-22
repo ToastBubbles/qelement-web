@@ -20,6 +20,7 @@ import showToast, {
   sortCommentsByDate,
 } from "../../utils/utils";
 import Comment from "../../components/Comment";
+import AdminTabSculpture from "../../components/AdminTabSculpture";
 
 export default function SingleSculptureView() {
   const imagePath = "http://localhost:9000/q-part-images/";
@@ -50,6 +51,7 @@ export default function SingleSculptureView() {
   const [partsTabActive, setPartsTabActive] = useState<boolean>(true);
   const [imageTabActive, setImageTabActive] = useState<boolean>(false);
   const [commentTabActive, setCommentTabActive] = useState<boolean>(false);
+  const [adminTabActive, setAdminTabActive] = useState<boolean>(false);
   const [commentContent, setCommentContent] = useState<string>("");
   function formatURL(imagesIn: ImageDTO[]): string {
     if (imagesIn.length > 0) {
@@ -111,6 +113,7 @@ export default function SingleSculptureView() {
   if (sculptData) {
     let sculpture = sculptData.data;
     let colorsUsed = getAllColorsUsed(sculpture.inventory);
+    let isAdmin = adminData?.data.code == 200;
     console.log(sculpture);
 
     return (
@@ -204,6 +207,7 @@ export default function SingleSculptureView() {
                           setPartsTabActive(true);
                           setImageTabActive(false);
                           setCommentTabActive(false);
+                          setAdminTabActive(false);
                         }}
                       >
                         Parts
@@ -216,6 +220,7 @@ export default function SingleSculptureView() {
                           setPartsTabActive(false);
                           setImageTabActive(false);
                           setCommentTabActive(true);
+                          setAdminTabActive(false);
                         }}
                       >
                         Comments{" "}
@@ -231,6 +236,7 @@ export default function SingleSculptureView() {
                           setPartsTabActive(false);
                           setCommentTabActive(false);
                           setImageTabActive(true);
+                          setAdminTabActive(false);
                         }}
                         // disabled={mypart?.images.length == 0}
                       >
@@ -238,6 +244,21 @@ export default function SingleSculptureView() {
                         {sculpture.images &&
                           filterImages(sculpture.images).length > 0 &&
                           `(${filterImages(sculpture.images).length})`}
+                      </button>
+                      <button
+                        className={
+                          "tablinks" +
+                          (adminTabActive ? " active" : "") +
+                          (isAdmin ? "" : " tabhidden")
+                        }
+                        onClick={() => {
+                          setPartsTabActive(false);
+                          setCommentTabActive(false);
+                          setImageTabActive(false);
+                          setAdminTabActive(true);
+                        }}
+                      >
+                        Admin
                       </button>
                     </div>
                     <div
@@ -369,6 +390,21 @@ export default function SingleSculptureView() {
                         >
                           No Images yet
                         </p>
+                      )}
+                    </div>
+
+                    <div
+                      className={
+                        "tabcontent tab-details pricehistory" +
+                        (isAdmin && adminTabActive ? "" : " tabhidden")
+                      }
+                    >
+                      {sculpture && (
+                        <AdminTabSculpture
+                          sculpture={sculpture}
+                          
+                          refetchFn={sculptRefetch}
+                        />
                       )}
                     </div>
                   </div>
