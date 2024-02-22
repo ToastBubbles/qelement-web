@@ -296,6 +296,46 @@ body::-webkit-scrollbar {
   border-radius: 1em;
   text-shadow: #2c2c2c 1px 1px 0;
 }
+.pfp-big-container {
+  position: relative;
+  border-radius: 50%;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.yellow-border {
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  border: solid 5px rgb(255, 208, 0);
+  width: 100%;
+  border-radius: 50%;
+  height: 100%;
+  animation: blink 2s infinite; /* Adjust the duration as needed */
+}
+.pfp-warning {
+  background-color: orange;
+  font-size: 0.9em;
+  border-radius: 6px;
+  padding: 0.25em;
+}
+.profile-img-big {
+  display: block;
+  aspect-ratio: 1 / 1;
+  width: 6em;
+  border: solid 1px var(--md-grey);
+  border-radius: 50%;
+}
 .profile-img {
   display: block;
   aspect-ratio: 1 / 1;
@@ -303,10 +343,26 @@ body::-webkit-scrollbar {
   margin: 0 1em 0 0.5em;
   border-radius: 50%;
 }
+
+.pfp-camera {
+  aspect-ratio: 1 / 1;
+  position: absolute;
+  z-index: 3;
+  right: 0;
+  bottom: 0;
+  height: 2em;
+  width: 2em;
+  padding: 5px;
+  background-color: azure;
+  border-radius: 50%;
+  border: solid 1px var(--md-grey);
+}
+
 small {
   color: var(--md-grey);
   margin-bottom: 1em;
 }
+
 .image-edit-image-container {
   margin-top: 3em;
   max-height: 20em;

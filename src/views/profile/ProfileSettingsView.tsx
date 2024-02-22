@@ -11,7 +11,11 @@ import {
   iIdOnly,
 } from "../../interfaces/general";
 import LoadingPage from "../../components/LoadingPage";
-import showToast, { Mode, formatDate } from "../../utils/utils";
+import showToast, {
+  Mode,
+  formatDate,
+  getProfilePicture,
+} from "../../utils/utils";
 
 import MyToolTip from "../../components/MyToolTip";
 import SliderToggle2 from "../../components/SliderToggle2";
@@ -21,6 +25,7 @@ import ColorLink from "../../components/ColorLink";
 import GenericPopup from "../../components/GenericPopup";
 import ColorTextField from "../../components/ColorTextField";
 import CustomSelect from "../../components/CustomSelect";
+import ProfilePictureUploader from "../../components/ProfilePictureUploader";
 enum ColName {
   TLG = "tlg",
   BL = "bl",
@@ -45,6 +50,8 @@ export default function ProfileSettingsView() {
   const [collectionVisible, setCollectionVisible] = useState<boolean>(true);
   const [lang, setLang] = useState<string>("en");
   const [allowMessages, setAllowMessages] = useState<boolean>(true);
+  const [showProfilePicPopup, setShowProfilePicPopup] =
+    useState<boolean>(false);
   const [showColorUpdater, setShowColorUpdater] = useState<boolean>(false);
   const [newFaveColorId, setNewFaveColorId] = useState<number>(-1);
   const [selectedTitleId, setSelectedTitleId] = useState<number | null>(null);
@@ -114,7 +121,7 @@ export default function ProfileSettingsView() {
           "Color saved! Changes will reflect on page refresh, don't forget to save any other changes you may have made first!",
           Mode.Success
         );
-        closePopUp();
+        closeColorPopUp();
         console.log(e.data.message);
       }
     },
@@ -168,9 +175,43 @@ export default function ProfileSettingsView() {
     }
     return (
       <>
+        {showProfilePicPopup && (
+          <GenericPopup
+            content={
+              <div>
+                <h3>Upload Profile Picture</h3>
+                <ProfilePictureUploader userId={me.id} />
+              </div>
+            }
+            closePopup={closePFPPopUp}
+          />
+        )}
         <div className="formcontainer">
           <h1>Settings</h1>
-          <div className="mainform jc-space-b" style={{ height: "30em" }}>
+          <div className="mainform jc-space-b" style={{ height: "38em" }}>
+            <div
+              className={"clickable pfp-big-container"}
+              onClick={() => setShowProfilePicPopup(true)}
+            >
+              <img
+                className="profile-img-big"
+                src={getProfilePicture(me.profilePicture, true)}
+              />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+                className="pfp-camera"
+                viewBox="0 0 16 18"
+              >
+                <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+                <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1m9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0" />
+              </svg>
+              <div className={(me.profilePicture.approvalDate == null ? " yellow-border":"")}></div>
+              
+            </div>
+            {me.profilePicture.approvalDate == null && <div className="pfp-warning">Your profile picture is pending approval, until it is approved, only you can see it!</div>}
             <div className="w-100 d-flex jc-space-b">
               <div>Username:</div>
               <div>{payload.username}</div>
@@ -346,7 +387,7 @@ export default function ProfileSettingsView() {
                     </button>
                   </div>
                 }
-                closePopup={closePopUp}
+                closePopup={closeColorPopUp}
               />
             )}
 
@@ -405,8 +446,12 @@ export default function ProfileSettingsView() {
     return <LoadingPage />;
   }
 
-  function closePopUp() {
+  function closeColorPopUp() {
     setShowColorUpdater(false);
+  }
+
+  function closePFPPopUp() {
+    setShowProfilePicPopup(false);
   }
 
   function setDefaultValue(usersTitles: ITitleDTO[]): number {
@@ -442,4 +487,6 @@ export default function ProfileSettingsView() {
     );
     return output;
   }
+
+  
 }

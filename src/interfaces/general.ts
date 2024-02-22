@@ -10,6 +10,7 @@ export interface IUserPrefDTO {
   isCollectionVisible: boolean;
   isWantedVisible: boolean;
   allowMessages: boolean;
+
   prefName: string;
   prefId: string;
 }
@@ -481,6 +482,7 @@ export interface IUserDTO extends IUserCreationDTO {
   id: number;
   role: string;
   preferences: IUserPrefDTO;
+  profilePicture: ImageDTO;
   createdAt: string;
   titles: ITitleDTO[];
   selectedTitleId: number | null;

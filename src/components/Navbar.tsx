@@ -3,11 +3,12 @@ import { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { AppContext } from "../context/context";
-import showToast, { Mode } from "../utils/utils";
+import showToast, { Mode, getProfilePicture } from "../utils/utils";
 import LoginBtn from "./LoginBtn";
 import NavbarPopdown from "./NavbarPopdown";
 import SearchBarMain from "./SearchBarMain";
 import ColorWheelButton from "./ColorWheelButton";
+import { IUserDTO } from "../interfaces/general";
 
 function Navbar() {
   // const { dropdownRef, isComponentVisible } = useComponentVisible(true);
@@ -34,6 +35,16 @@ function Navbar() {
       ),
     retry: false,
     refetchInterval: 30000,
+    enabled: !!payload.id,
+  });
+
+  const { data } = useQuery({
+    queryKey: `user${payload.id}`,
+    queryFn: () =>
+      axios.get<IUserDTO>(`http://localhost:3000/user/id/${payload.id}`),
+    // onSuccess(res) {
+
+    // },
     enabled: !!payload.id,
   });
 
@@ -120,7 +131,7 @@ function Navbar() {
               >
                 <img
                   className="profile-img clickable"
-                  src="/img/blank_profile.webp"
+                  src={getProfilePicture(data?.data.profilePicture, true)}
                 />
               </button>
               <div

@@ -216,6 +216,19 @@ export function filterImages(images: ImageDTO[]): ImageDTO[] {
   return images;
 }
 
+export function getProfilePicture(
+  img: ImageDTO | null | undefined,
+  showIfNotApproved = false
+): string {
+  let defaultPath = "/img/blank_profile.webp";
+  if (img == null) return defaultPath;
+  if (img.approvalDate == null) {
+    if (showIfNotApproved) return imagePath + img.fileName;
+    return defaultPath;
+  }
+  return imagePath + img.fileName;
+}
+
 export function validateSearch(col: color, query: string): boolean {
   let isNumber = false;
   // let numericValue: number;
@@ -311,7 +324,9 @@ export function sortStatus(statuses: IPartStatusDTO[]): IPartStatusDTO[] {
   });
   return output;
 }
-export function sortCommentsByDate(comments: ICommentDTO[] | undefined): ICommentDTO[] {
+export function sortCommentsByDate(
+  comments: ICommentDTO[] | undefined
+): ICommentDTO[] {
   if (comments) {
     return comments.sort((a, b) => {
       const dateA = new Date(a.createdAt);
