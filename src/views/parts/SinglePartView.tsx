@@ -1,8 +1,8 @@
 import axios from "axios";
-import { useMutation, useQuery } from "react-query";
+
 import { useParams, useNavigate, useLocation } from "react-router";
 import AllColorStatus from "../../components/AllColorStatus";
-
+import { MentionsInput, Mention } from "react-mentions";
 import RatingCard from "../../components/RatingCard";
 import {
   IQPartDTOInclude,
@@ -11,6 +11,8 @@ import {
   ICommentCreationDTO,
   IAPIResponse,
   ImageDTO,
+  user,
+  ICommentDTO,
 } from "../../interfaces/general";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -19,6 +21,7 @@ import showToast, {
   Mode,
   filterImages,
   getPrefColorName,
+  sortCommentsByDate,
   sortStatus,
 } from "../../utils/utils";
 import LoadingPage from "../../components/LoadingPage";
@@ -31,6 +34,8 @@ import QPartDropdown from "../../components/QPartDropdown";
 import PopupElementID from "../../components/PopupElementID";
 import RecentSculpture from "../../components/RecentSculpture";
 import AdminTabPart from "../../components/AdminTabPart";
+import PseudoInput from "../../components/PseudoInput";
+import { useMutation, useQuery } from "react-query";
 
 export default function SinglePartView() {
   const imagePath = "http://localhost:9000/q-part-images/";
@@ -111,6 +116,18 @@ export default function SinglePartView() {
     enabled: !!partId,
     // retry: false,
   });
+
+  const { data: usersData, refetch: usersRefetch } = useQuery({
+    queryKey: `allUsers`,
+    queryFn: () => {
+      return axios.get<user[]>(`http://localhost:3000/user`);
+    },
+
+    staleTime: 10000,
+
+    // retry: false,
+  });
+
   const mypart = qpartData?.data.find((x) => x.id == selectedQPartid);
 
   function getRatings(ratings: rating[] | undefined): number {
@@ -192,8 +209,9 @@ export default function SinglePartView() {
     return "https://via.placeholder.com/1024x768/eee?text=4:3";
   }
 
-  if (qpartData && qpartData.data.length > 0) {
+  if (qpartData && qpartData.data.length > 0 && usersData) {
     let isAdmin = adminData?.data.code == 200;
+    const allUsers = usersData.data;
     const qparts = qpartData?.data;
 
     if (selectedQPartid == -1 || urlHasChanged) {
@@ -224,6 +242,10 @@ export default function SinglePartView() {
     let filteredImages: ImageDTO[] = [];
     if (mypart) filteredImages = filterImages(mypart.images);
     // console.log(mypart);
+
+    const handleCommentTextFieldChange = (e: any) => {
+      setCommentContent(e);
+    };
 
     return (
       <div className="mx-w">
@@ -578,7 +600,7 @@ export default function SinglePartView() {
                             No comments yet
                           </div>
                         ) : (
-                          mypart?.comments.map((comment) => {
+                          sortCommentsByDate(mypart?.comments).map((comment) => {
                             return (
                               <Comment
                                 key={comment.id}
@@ -594,6 +616,8 @@ export default function SinglePartView() {
                         )}
                       </div>
                       <div className="w-100 d-flex">
+                        {/* <PseudoInput /> */}
+
                         <ExpandingTextbox
                           getter={commentContent}
                           setter={setCommentContent}
@@ -730,4 +754,6 @@ export default function SinglePartView() {
       return <LoadingPage />;
     }
   }
+
+ 
 }

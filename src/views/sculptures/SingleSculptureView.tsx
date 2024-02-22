@@ -14,7 +14,11 @@ import ExpandingTextbox from "../../components/ExpandingTextbox";
 import { AppContext } from "../../context/context";
 import ColorLink from "../../components/ColorLink";
 import RecentQPart from "../../components/RecentQPart";
-import showToast, { Mode, filterImages } from "../../utils/utils";
+import showToast, {
+  Mode,
+  filterImages,
+  sortCommentsByDate,
+} from "../../utils/utils";
 import Comment from "../../components/Comment";
 
 export default function SingleSculptureView() {
@@ -274,17 +278,21 @@ export default function SingleSculptureView() {
                             No comments yet
                           </div>
                         ) : (
-                          sculpture.comments.map((comment) => {
-                            return (
-                              <Comment
-                                key={comment.id}
-                                data={comment}
-                                isAdmin={adminData?.data.code == 200}
-                                userId={payload.id}
-                                refetchFn={sculptRefetch}
-                              />
-                            );
-                          })
+                          sortCommentsByDate(sculpture.comments).map(
+                            (comment) => {
+                              return (
+                                <Comment
+                                  key={comment.id}
+                                  data={comment}
+                                  isAdmin={adminData?.data.code == 200}
+                                  viewerId={payload.id}
+                                  getter={commentContent}
+                                  setter={setCommentContent}
+                                  refetchFn={sculptRefetch}
+                                />
+                              );
+                            }
+                          )
                         )}
                       </div>
                       <div className="w-100 d-flex">

@@ -1161,6 +1161,10 @@ fieldset > legend {
 .comment-icon {
   padding-left: 1em;
 }
+.comment-link {
+  font-weight: 600;
+  color: black;
+}
 .comment-edit {
   width: 100%;
 
@@ -1170,6 +1174,50 @@ fieldset > legend {
   color: #808080;
   font-size: small;
   margin-left: 1em;
+}
+.pseudo-input-container {
+  position: relative;
+  display: flex;
+  /* align-items: start;
+  justify-content: start; */
+
+  width: 100%;
+}
+.pseudo-input {
+  flex-grow: 1;
+  background-color: white;
+  border: solid 1px var(--dk-grey);
+  border-radius: 3px;
+  padding: 4px;
+  margin: 0;
+}
+.pseudo-placeholder {
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  padding: 4px;
+  color: var(--md-grey);
+}
+
+.caret {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 20px;
+  background-color: black;
+  animation: blink-caret 0.8s infinite;
+}
+
+@keyframes blink-caret {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 .italic {
   font-style: italic;

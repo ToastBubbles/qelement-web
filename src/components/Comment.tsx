@@ -166,13 +166,10 @@ export default function Comment({
     </div>
   );
   function formatComment(content: string) {
-    console.log(content);
-
+    let key = 0;
     const individualWords = content
       .split(/\s+/)
       .filter((word) => word.length > 0);
-
-    console.log(individualWords);
 
     let output: JSX.Element[] = [];
     let possibleMentions: string[] = [];
@@ -227,13 +224,18 @@ export default function Comment({
     for (let obj of condensedObjs) {
       if (obj.link) {
         output.push(
-          <Link to={`/profile/${obj.content.substring(1)}`}>
+          <Link
+            key={key}
+            className="comment-link"
+            to={`/profile/${obj.content.substring(1)}`}
+          >
             {obj.content.substring(1)}
           </Link>
         );
       } else {
-        output.push(<span>{obj.content}</span>);
+        output.push(<span key={key}>{obj.content}</span>);
       }
+      key++;
     }
     // }
 

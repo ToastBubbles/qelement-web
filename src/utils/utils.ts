@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import {
+  ICommentDTO,
   IPartStatusDTO,
   ImageDTO,
   color,
@@ -310,7 +311,16 @@ export function sortStatus(statuses: IPartStatusDTO[]): IPartStatusDTO[] {
   });
   return output;
 }
-
+export function sortCommentsByDate(comments: ICommentDTO[] | undefined): ICommentDTO[] {
+  if (comments) {
+    return comments.sort((a, b) => {
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
+      return dateA.getTime() - dateB.getTime();
+    });
+  }
+  return [];
+}
 export function howLongAgo(dateStr: string) {
   const date = new Date(dateStr);
   const now = new Date();
