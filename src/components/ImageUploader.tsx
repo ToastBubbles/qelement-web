@@ -36,7 +36,9 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
   } = useContext(AppContext);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imageType, setImageType] = useState<string>("");
-
+  const [resizedImage, setResizedImage] = useState<Blob | null>(null);
+  const [resizeButtonDisabled, setResizeButtonDisabled] =
+    useState<boolean>(true);
   const minWidth = 150;
   const maxWidth = 1000;
 
@@ -118,12 +120,71 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
     //     showToast("Please select a type for this image.", Mode.Warning);
     //   }
     // };
+
+    const handleResize = () => {
+      if (!selectedImage) return;
+      const reader = new FileReader();
+      reader.readAsDataURL(selectedImage);
+      reader.onload = () => {
+        const image = new Image();
+        image.src = reader.result as string;
+        image.onload = () => {
+          const canvas = document.createElement("canvas");
+          const context = canvas.getContext("2d");
+          if (!context) return;
+          let { width, height } = image;
+          const aspectRatio = width / height;
+          if (width > height) {
+            if (width > maxWidth) {
+              width = maxWidth;
+              height = width / aspectRatio;
+            } else if (width < minWidth) {
+              width = minWidth;
+              height = width / aspectRatio;
+            }
+          } else {
+            if (height > maxWidth) {
+              height = maxWidth;
+              width = height * aspectRatio;
+            } else if (height < maxWidth) {
+              height = minWidth;
+              width = height * aspectRatio;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          context.drawImage(image, 0, 0, width, height);
+          canvas.toBlob((blob) => {
+            if (!blob) return;
+            setResizedImage(blob);
+            showToast(
+              `Image successfully resized to ${Math.floor(height)}x${Math.floor(
+                width
+              )}`,
+              Mode.Success
+            );
+          }, selectedImage.type);
+        };
+      };
+    };
+
     const handleSubmit = (event: FormEvent) => {
       event.preventDefault();
+      let convertedFile = null;
+      if (resizedImage)
+        convertedFile = new File([resizedImage], "resized_image.jpg", {
+          type: "image/jpeg",
+        });
+      const imageToUpload = convertedFile || selectedImage;
+      if (!imageToUpload) {
+        showToast("Please select an image.", Mode.Warning);
+        return;
+      }
+      console.log(imageToUpload);
 
-      if (selectedImage) {
+      if (imageToUpload) {
         const image = new Image();
-        image.src = URL.createObjectURL(selectedImage);
+        image.src = URL.createObjectURL(imageToUpload);
 
         image.onload = () => {
           const width = image.width;
@@ -135,7 +196,7 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
             width >= minWidth &&
             width <= maxWidth &&
             isValidRatio(width, height) &&
-            ["image/jpeg", "image/png"].includes(selectedImage.type)
+            ["image/jpeg", "image/png"].includes(imageToUpload.type)
           ) {
             // All validation conditions met, proceed with uploading
             const imageData: ImageSubmission = {
@@ -146,7 +207,7 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
             };
 
             const formData = new FormData();
-            formData.append("image", selectedImage);
+            formData.append("image", imageToUpload);
             formData.append("imageData", JSON.stringify(imageData));
 
             try {
@@ -167,6 +228,8 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
                   if (resp.data.code == 201 || resp.data.code == 202) {
                     setImageType("");
                     setSelectedImage(null);
+                    setResizedImage(null);
+                    setResizeButtonDisabled(true);
                     if (resp.data.code == 201)
                       showToast("Image submitted for approval!", Mode.Success);
                     else showToast("Image added!", Mode.Success);
@@ -182,26 +245,34 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
           } else {
             // Validation failed, show error message
 
-            if (height < minWidth)
+            if (height < minWidth) {
               showToast(
                 `Image must be at least ${minWidth}px high. Your image is ${height}px high`,
                 Mode.Error
               );
-            if (height > maxWidth)
+              setResizeButtonDisabled(false);
+            }
+            if (height > maxWidth) {
               showToast(
                 `Image must be less than ${maxWidth}px high. Your image is ${height}px high`,
                 Mode.Error
               );
-            if (width < minWidth)
+              setResizeButtonDisabled(false);
+            }
+            if (width < minWidth) {
               showToast(
                 `Image must be at least ${minWidth}px wide. Your image is ${width}px wide`,
                 Mode.Error
               );
-            if (width > maxWidth)
+              setResizeButtonDisabled(false);
+            }
+            if (width > maxWidth) {
               showToast(
                 `Image must be less than ${maxWidth}px wide. Your image is ${width}px wide`,
                 Mode.Error
               );
+              setResizeButtonDisabled(false);
+            }
             if (!isValidRatio(width, height))
               showToast(
                 `Image must be be at least a 1 / 2 aspect ratio. Your image is ${
@@ -209,7 +280,7 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
                 } (${reduceFraction(width, height)})`,
                 Mode.Error
               );
-            if (!["image/jpeg", "image/png"].includes(selectedImage.type))
+            if (!["image/jpeg", "image/png"].includes(imageToUpload.type))
               showToast(
                 "Image must be in JPG, JPEG, or PNG format.",
                 Mode.Error
@@ -334,6 +405,9 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
             }
           }}
         />
+        <button disabled={resizeButtonDisabled} onClick={handleResize}>
+          Resize
+        </button>
       </div>
     );
   } else {
