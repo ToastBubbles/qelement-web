@@ -323,6 +323,9 @@ body::-webkit-scrollbar {
   height: 100%;
   animation: blink 2s infinite; /* Adjust the duration as needed */
 }
+.black-txt {
+  color: black;
+}
 .pfp-warning {
   background-color: orange;
   font-size: 0.9em;

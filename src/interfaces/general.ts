@@ -482,7 +482,7 @@ export interface IUserDTO extends IUserCreationDTO {
   id: number;
   role: string;
   preferences: IUserPrefDTO;
-  profilePicture: ImageDTO;
+  profilePicture: ImageDTO | null;
   createdAt: string;
   titles: ITitleDTO[];
   selectedTitleId: number | null;

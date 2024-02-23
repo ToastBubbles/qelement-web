@@ -26,6 +26,25 @@ function ColorTextField({ setter, placeholder = "", customStyles }: IProps) {
   const [type, setType] = useState<string>("");
   const [suggestions, setSuggestions] = useState<color[] | undefined>([]);
 
+  function isIDMatch(color: color, str: string): boolean {
+    if (str.length > 0 && !isNaN(parseInt(str)) && isFinite(parseInt(str))) {
+      let bl = color.bl_id ? color.bl_id.toString() : "";
+      let bo = color.bo_id ? color.bo_id.toString() : "";
+      let tlg = color.tlg_id ? color.tlg_id.toString() : "";
+      if (
+        bl.includes(str) ||
+        bo.includes(str) ||
+        tlg.includes(str) ||
+        color.id.toString().includes(str)
+      ) {
+        console.log("match");
+
+        return true;
+      }
+    }
+    return false;
+  }
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setInputValue(value);
@@ -36,7 +55,8 @@ function ColorTextField({ setter, placeholder = "", customStyles }: IProps) {
         suggestion.type !== "modulexFoil" &&
         (suggestion.bl_name.toLowerCase().includes(value.toLowerCase()) ||
           suggestion.tlg_name.toLowerCase().includes(value.toLowerCase()) ||
-          suggestion.bo_name.toLowerCase().includes(value.toLowerCase()))
+          suggestion.bo_name.toLowerCase().includes(value.toLowerCase()) ||
+          isIDMatch(suggestion, value.trim()))
     );
     if (filteredSuggestions) {
       const sortedArray = filteredSuggestions.sort(
