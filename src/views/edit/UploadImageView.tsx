@@ -18,6 +18,14 @@ export default function UploadImageView() {
         <div className="formcontainer">
           <h1>upload image</h1>
           <div className="mainform">
+            <div>
+              Image must follow the below requirements:
+              <ul>
+                <li className="grey-txt">width/height must be 150px to 1000px</li>
+                <li className="grey-txt">must be at least a 1 / 2 aspect ratio, 1 / 1 preferred</li>
+                <li className="grey-txt">must be JPG/JPEG/PNG</li>
+              </ul>
+            </div>
             <ImageUploader qpartId={Number(urlQPartId)} sculptureId={null} />
           </div>
         </div>

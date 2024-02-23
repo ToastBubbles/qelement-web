@@ -115,7 +115,7 @@ const ProfilePictureUploader = ({ userId }: iProps) => {
       <div>
         Image must follow the below requirements:
         <ul>
-          <li className="grey-txt">must be 100x100px to 250-250px</li>
+          <li className="grey-txt">must be 100x100 px to 250x250 px</li>
           <li className="grey-txt">must be a perfect square</li>
           <li className="grey-txt">must be JPG/JPEG/PNG</li>
         </ul>

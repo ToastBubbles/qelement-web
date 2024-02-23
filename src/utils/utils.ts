@@ -216,6 +216,22 @@ export function filterImages(images: ImageDTO[]): ImageDTO[] {
   return images;
 }
 
+export function reduceFraction(numerator: number, denominator: number): string {
+  // Find the greatest common divisor (GCD) using Euclid's algorithm
+  const gcd = (a: number, b: number): number => {
+    if (b === 0) return a;
+    return gcd(b, a % b);
+  };
+
+  // Reduce the fraction by dividing both numerator and denominator by their GCD
+  const divisor = gcd(numerator, denominator);
+  const reducedNumerator = numerator / divisor;
+  const reducedDenominator = denominator / divisor;
+
+  // Return the reduced fraction as a string
+  return `${reducedNumerator}/${reducedDenominator}`;
+}
+
 export function getProfilePicture(
   img: ImageDTO | null | undefined,
   showIfNotApproved = false

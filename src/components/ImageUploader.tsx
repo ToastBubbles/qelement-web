@@ -7,7 +7,11 @@ import {
   IQPartDTOInclude,
   ISculptureDTO,
 } from "../interfaces/general";
-import showToast, { Mode, getPrefColorName } from "../utils/utils";
+import showToast, {
+  Mode,
+  getPrefColorName,
+  reduceFraction,
+} from "../utils/utils";
 import LoadingPage from "./LoadingPage";
 import MyToolTip from "./MyToolTip";
 
@@ -32,6 +36,9 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
   } = useContext(AppContext);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imageType, setImageType] = useState<string>("");
+
+  const minWidth = 150;
+  const maxWidth = 1000;
 
   const { data: myqpartData } = useQuery({
     queryKey: "qpartimage" + qpartId,
@@ -61,54 +68,159 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
     const myqpart = myqpartData?.data || null;
     const mysculpture = sculptureData?.data || null;
 
+    // const handleSubmit = (event: FormEvent) => {
+    //   event.preventDefault();
+
+    //   if (selectedImage) {
+    //     const imageData: ImageSubmission = {
+    //       userId: payload.id,
+    //       qpartId: myqpart ? myqpart.id : null,
+    //       sculptureId: mysculpture ? mysculpture.id : null,
+    //       type: myqpart ? imageType : "sculpture",
+    //     };
+    //     console.log(imageData);
+
+    //     const formData = new FormData();
+    //     formData.append("image", selectedImage);
+    //     formData.append("imageData", JSON.stringify(imageData));
+
+    //     try {
+    //       axios
+    //         .post<IAPIResponse>(
+    //           "http://localhost:3000/image/upload",
+    //           formData,
+    //           {
+    //             headers: {
+    //               Authorization: `Bearer ${token}`,
+    //               "Content-Type": "multipart/form-data",
+    //             },
+    //           }
+    //         )
+    //         .then((resp) => {
+    //           console.log(resp.data);
+
+    //           if (resp.data.code == 201 || resp.data.code == 202) {
+    //             setImageType("");
+    //             setSelectedImage(null);
+    //             if (resp.data.code == 201)
+    //               showToast("Image submitted for approval!", Mode.Success);
+    //             else showToast("Image added!", Mode.Success);
+    //           } else {
+    //             showToast("Error uploading image.", Mode.Error);
+    //           }
+    //         });
+
+    //       // console.log("Image uploaded successfully");
+    //     } catch (error) {
+    //       console.error("Error uploading image:", error);
+    //     }
+    //   } else if (imageType == "") {
+    //     showToast("Please select a type for this image.", Mode.Warning);
+    //   }
+    // };
     const handleSubmit = (event: FormEvent) => {
       event.preventDefault();
 
       if (selectedImage) {
-        const imageData: ImageSubmission = {
-          userId: payload.id,
-          qpartId: myqpart ? myqpart.id : null,
-          sculptureId: mysculpture ? mysculpture.id : null,
-          type: myqpart ? imageType : "sculpture",
+        const image = new Image();
+        image.src = URL.createObjectURL(selectedImage);
+
+        image.onload = () => {
+          const width = image.width;
+          const height = image.height;
+          //   setDimensions({ width, height });
+          if (
+            height >= minWidth &&
+            height <= maxWidth &&
+            width >= minWidth &&
+            width <= maxWidth &&
+            isValidRatio(width, height) &&
+            ["image/jpeg", "image/png"].includes(selectedImage.type)
+          ) {
+            // All validation conditions met, proceed with uploading
+            const imageData: ImageSubmission = {
+              userId: payload.id,
+              qpartId: myqpart ? myqpart.id : null,
+              sculptureId: mysculpture ? mysculpture.id : null,
+              type: myqpart ? imageType : "sculpture",
+            };
+
+            const formData = new FormData();
+            formData.append("image", selectedImage);
+            formData.append("imageData", JSON.stringify(imageData));
+
+            try {
+              axios
+                .post<IAPIResponse>(
+                  "http://localhost:3000/image/upload",
+                  formData,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                      "Content-Type": "multipart/form-data",
+                    },
+                  }
+                )
+                .then((resp) => {
+                  console.log(resp.data);
+
+                  if (resp.data.code == 201 || resp.data.code == 202) {
+                    setImageType("");
+                    setSelectedImage(null);
+                    if (resp.data.code == 201)
+                      showToast("Image submitted for approval!", Mode.Success);
+                    else showToast("Image added!", Mode.Success);
+                  } else {
+                    showToast("Error uploading image.", Mode.Error);
+                  }
+                });
+
+              // console.log("Image uploaded successfully");
+            } catch (error) {
+              console.error("Error uploading image:", error);
+            }
+          } else {
+            // Validation failed, show error message
+
+            if (height < minWidth)
+              showToast(
+                `Image must be at least ${minWidth}px high. Your image is ${height}px high`,
+                Mode.Error
+              );
+            if (height > maxWidth)
+              showToast(
+                `Image must be less than ${maxWidth}px high. Your image is ${height}px high`,
+                Mode.Error
+              );
+            if (width < minWidth)
+              showToast(
+                `Image must be at least ${minWidth}px wide. Your image is ${width}px wide`,
+                Mode.Error
+              );
+            if (width > maxWidth)
+              showToast(
+                `Image must be less than ${maxWidth}px wide. Your image is ${width}px wide`,
+                Mode.Error
+              );
+            if (!isValidRatio(width, height))
+              showToast(
+                `Image must be be at least a 1 / 2 aspect ratio. Your image is ${
+                  width < height ? "too narrow/tall." : "too wide/short."
+                } (${reduceFraction(width, height)})`,
+                Mode.Error
+              );
+            if (!["image/jpeg", "image/png"].includes(selectedImage.type))
+              showToast(
+                "Image must be in JPG, JPEG, or PNG format.",
+                Mode.Error
+              );
+          }
         };
-        console.log(imageData);
 
-        const formData = new FormData();
-        formData.append("image", selectedImage);
-        formData.append("imageData", JSON.stringify(imageData));
-
-        try {
-          axios
-            .post<IAPIResponse>(
-              "http://localhost:3000/image/upload",
-              formData,
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                  "Content-Type": "multipart/form-data",
-                },
-              }
-            )
-            .then((resp) => {
-              console.log(resp.data);
-
-              if (resp.data.code == 201 || resp.data.code == 202) {
-                setImageType("");
-                setSelectedImage(null);
-                if (resp.data.code == 201)
-                  showToast("Image submitted for approval!", Mode.Success);
-                else showToast("Image added!", Mode.Success);
-              } else {
-                showToast("Error uploading image.", Mode.Error);
-              }
-            });
-
-          // console.log("Image uploaded successfully");
-        } catch (error) {
-          console.error("Error uploading image:", error);
-        }
-      } else if (imageType == "") {
-        showToast("Please select a type for this image.", Mode.Warning);
+        image.onerror = () => {
+          // Error loading image
+          showToast("Error loading image. Please try again.", Mode.Error);
+        };
       }
     };
     return (
@@ -226,6 +338,17 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
     );
   } else {
     return <LoadingPage />;
+  }
+
+  function isValidRatio(width: number, height: number): boolean {
+    const aspectRatio = 1 / 2;
+
+    let biggerNumber = width > height ? width : height;
+    let smallerNumber = width < height ? width : height;
+
+    const myAspectRatio = smallerNumber / biggerNumber;
+
+    return myAspectRatio >= aspectRatio;
   }
 };
 
