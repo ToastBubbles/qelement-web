@@ -326,6 +326,13 @@ body::-webkit-scrollbar {
 .black-txt {
   color: black;
 }
+
+.info-box{
+  border: solid 1px var(--dk-grey);
+  border-radius: 0.5em;
+  padding: 0.5em;
+  width: 90%;
+}
 .pfp-warning {
   background-color: orange;
   font-size: 0.9em;

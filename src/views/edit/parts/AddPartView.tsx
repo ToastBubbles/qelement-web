@@ -25,7 +25,7 @@ export default function AddPartView() {
     id: -1,
     name: "",
     number: "",
-    CatId: -1,
+    catId: -1,
     partNote: "",
     moldNote: "",
     blURL: "",
@@ -95,7 +95,7 @@ export default function AddPartView() {
     setIsNewPart(!isNewPart);
   };
   if (isFetched && catData) {
-    const selcat = catData.data.find((x) => x.id == newPart.CatId);
+    const selcat = catData.data.find((x) => x.id == newPart.catId);
     return (
       <>
         <div className="formcontainer">
@@ -136,10 +136,10 @@ export default function AddPartView() {
                 onChange={(e) =>
                   setNewPart((newPart) => ({
                     ...newPart,
-                    ...{ CatId: Number(e.target.value) },
+                    ...{ catId: Number(e.target.value) },
                   }))
                 }
-                value={newPart.CatId}
+                value={newPart.catId}
               >
                 <option value="-1">--</option>
                 {catData.data.map((cat) => (
@@ -189,7 +189,7 @@ export default function AddPartView() {
                     }))
                   }
                   value={newPart.id}
-                  disabled={newPart.CatId == -1}
+                  disabled={newPart.catId == -1}
                 >
                   <option value="-1">--Select a Category First--</option>
                   {selcat &&
@@ -345,7 +345,7 @@ export default function AddPartView() {
               <button
                 className="formInputNM"
                 onClick={() => {
-                  if (newPart.CatId != -1) {
+                  if (newPart.catId != -1) {
                     // if (isNewPart && partNo != -1) {
                     //   console.log("adding new partno");
                     // } else if (!isNewPart) {

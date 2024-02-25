@@ -4,6 +4,7 @@ import GenericPopup from "./GenericPopup";
 import ElementIDEdit from "./Edit Components/ElementIDEdit";
 import { imagePath } from "../utils/utils";
 import ImageEdit from "./Edit Components/ImageEdit";
+import { Link } from "react-router-dom";
 
 interface IProps {
   part: IQPartDTOInclude;
@@ -33,6 +34,7 @@ export default function AdminTabPart({ part, refetchFn }: IProps) {
           {part.elementIDs
             ? part.elementIDs.map((eId) => (
                 <div
+                  key={eId.id}
                   className="clickable"
                   onClick={() => {
                     setPopupContent(
@@ -54,6 +56,13 @@ export default function AdminTabPart({ part, refetchFn }: IProps) {
       </div>
       <div>Note:</div>
       <div>{part.note ? part.note : "No note"}</div>
+
+      <div>
+        <div>Part:</div>
+        <Link to={`/edit/part/${part.mold.parentPart.id}`}>
+          {part.mold.parentPart.name}
+        </Link>
+      </div>
       <div>Images</div>
       <div className="admin-image-container">
         {part.images.map((image) => {

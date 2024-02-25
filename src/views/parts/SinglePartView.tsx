@@ -246,6 +246,7 @@ export default function SinglePartView() {
     const handleCommentTextFieldChange = (e: any) => {
       setCommentContent(e);
     };
+    console.log(mypart);
 
     return (
       <div className="mx-w">
@@ -260,7 +261,7 @@ export default function SinglePartView() {
                   <li>{"\u00A0>\u00A0"}</li>
                   <li>
                     <Link
-                      to={`/part-categories/${mypart?.mold.parentPart.CatId}`}
+                      to={`/part-categories/${mypart?.mold.parentPart.category.id}`}
                     >
                       Bricks
                     </Link>
@@ -494,7 +495,7 @@ export default function SinglePartView() {
                       >
                         Details
                       </button>
-                      
+
                       <button
                         className={
                           "tablinks" + (commentTabActive ? " active" : "")
@@ -601,19 +602,21 @@ export default function SinglePartView() {
                             No comments yet
                           </div>
                         ) : (
-                          sortCommentsByDate(mypart?.comments).map((comment) => {
-                            return (
-                              <Comment
-                                key={comment.id}
-                                data={comment}
-                                isAdmin={isAdmin}
-                                viewerId={payload.id}
-                                getter={commentContent}
-                                setter={setCommentContent}
-                                refetchFn={qpartRefetch}
-                              />
-                            );
-                          })
+                          sortCommentsByDate(mypart?.comments).map(
+                            (comment) => {
+                              return (
+                                <Comment
+                                  key={comment.id}
+                                  data={comment}
+                                  isAdmin={isAdmin}
+                                  viewerId={payload.id}
+                                  getter={commentContent}
+                                  setter={setCommentContent}
+                                  refetchFn={qpartRefetch}
+                                />
+                              );
+                            }
+                          )
                         )}
                       </div>
                       <div className="w-100 d-flex">
@@ -755,6 +758,4 @@ export default function SinglePartView() {
       return <LoadingPage />;
     }
   }
-
- 
 }

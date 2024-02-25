@@ -211,7 +211,7 @@ export interface IPartDTOIncludes {
   id: number;
   name: string;
   number: string;
-  CatId: number;
+  catId: number;
   createdAt: string;
   updatedAt: string;
   approvalDate: string;
@@ -434,8 +434,9 @@ export interface iQPartDTO {
 export interface part {
   id: number;
   name: string;
-  number: string;
-  CatId: number;
+  // number: string;
+  // catId: number;
+  category: ICategory;
   createdAt: string;
   updatedAt: string;
   approvalDate: string;
@@ -581,14 +582,14 @@ export interface ILoginDTO {
 export interface iPartDTO {
   name: string;
   number: string;
-  CatId: number;
+  catId: number;
   note: string;
 }
 export interface IPartWithMoldDTO {
   id: number;
   name: string;
   number: string;
-  CatId: number;
+  catId: number;
   partNote: string;
   moldNote: string;
   blURL: string;

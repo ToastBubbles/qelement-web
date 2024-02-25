@@ -1,7 +1,7 @@
 import { RibbonContainer } from "react-ribbons";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { IPartDTO, IPartDTOIncludes, IPartMoldDTO, part } from "../interfaces/general";
+import { IPartDTO, IPartDTOIncludes, IPartMoldDTO,} from "../interfaces/general";
 
 import { AppContext } from "../context/context";
 

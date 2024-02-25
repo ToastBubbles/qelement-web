@@ -67,6 +67,7 @@ import LoadingPage from "./components/LoadingPage";
 import { user } from "./interfaces/general";
 import { JWTPayload } from "jose";
 import TitleManagementView from "./views/generic/AdminTools/TitleManagementView";
+import PartEditView from "./views/edit/parts/PartEditView";
 const queryClient = new QueryClient({
   defaultOptions: {
     // queries: { staleTime: 10000 }
@@ -367,6 +368,14 @@ function App() {
                 element={
                   <ProtectedRoute level={"admin"}>
                     <ColorEditView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/edit/part/:partId"
+                element={
+                  <ProtectedRoute level={"admin"}>
+                    <PartEditView />
                   </ProtectedRoute>
                 }
               />
