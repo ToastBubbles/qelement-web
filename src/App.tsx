@@ -68,6 +68,7 @@ import { user } from "./interfaces/general";
 import { JWTPayload } from "jose";
 import TitleManagementView from "./views/generic/AdminTools/TitleManagementView";
 import PartEditView from "./views/edit/parts/PartEditView";
+import MoldEditView from "./views/edit/parts/MoldEditView";
 const queryClient = new QueryClient({
   defaultOptions: {
     // queries: { staleTime: 10000 }
@@ -376,6 +377,14 @@ function App() {
                 element={
                   <ProtectedRoute level={"admin"}>
                     <PartEditView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/edit/mold/:moldId"
+                element={
+                  <ProtectedRoute level={"admin"}>
+                    <MoldEditView/>
                   </ProtectedRoute>
                 }
               />

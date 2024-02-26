@@ -60,7 +60,7 @@ export default function AddQPartView() {
   );
 
   const { data: partsData, refetch: partsRefetch } = useQuery({
-    queryKey: "singleCatPartsAdd",
+    queryKey: `partsWithCat${category}`,
     queryFn: () =>
       axios.get<part[]>(`http://localhost:3000/parts/byCatId/${category}`),
     enabled: category != -1,
@@ -129,8 +129,7 @@ export default function AddQPartView() {
 
   const partMutation = useMutation({
     mutationFn: (qpart: iQPartDTO) =>
-      axios.post<IAPIResponse>(`http://localhost:3000/qpart/add`, qpart,
-      {
+      axios.post<IAPIResponse>(`http://localhost:3000/qpart/add`, qpart, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

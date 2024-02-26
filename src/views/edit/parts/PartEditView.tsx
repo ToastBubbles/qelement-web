@@ -43,6 +43,7 @@ export default function PartEditView() {
   const [readyToDelete, setReadyToDelete] = useState<boolean>(false);
   const [deleteButtonDisabled, setDeleteButtonDisabled] =
     useState<boolean>(false);
+  const [associatedMoldIDs, setAssociatedMoldIDs] = useState<number[]>([]);
   const { partId } = useParams();
   const [newPartValues, setNewPartValues] =
     useState<IPartEdits>(defaultPartValues);
@@ -92,14 +93,15 @@ export default function PartEditView() {
       if (e.data.code == 200) {
         showToast("Part Deleted!", Mode.Success);
         setNewPartValues(defaultPartValues);
-      } else if (e.data.code == 509) {
-        showToast(
-          "Part has children that need to be deleted first!",
-          Mode.Error
-        );
+      } else if (e.data.code == 400) {
+        setAssociatedMoldIDs(e.data.ids);
+        let idsString = e.data.ids.map((id: number) => `${id}`).join(", ");
+        showToast(`${e.data.message} IDs: ${idsString}`, Mode.Error);
       } else {
         showToast("error", Mode.Error);
       }
+      setReadyToDelete(false);
+      setDeleteButtonDisabled(true);
     },
   });
   const { data: catData } = useQuery("allCats", () =>
@@ -248,6 +250,14 @@ export default function PartEditView() {
             >
               Delete
             </button>
+          </div>
+          <div style={{ marginTop: "2em" }} className="d-flex flex-col">
+            {associatedMoldIDs.length > 0 &&
+              associatedMoldIDs.map((moldID) => (
+                <Link className="black-txt" to={`/edit/mold/${moldID}`}>
+                  Mold with ID {moldID}
+                </Link>
+              ))}
           </div>
         </div>
       </div>

@@ -29,6 +29,14 @@ export default function AdminTabPart({ part, refetchFn }: IProps) {
         <GenericPopup content={popupContent} closePopup={closePopUp} />
       )}
       <div>
+        <div>QPart:</div>
+        <div>
+          <Link className="black-txt" to={`/edit/qpart/${part.id}`}>
+            Edit this QPart
+          </Link>
+        </div>
+      </div>
+      <div>
         <div>Element IDs:</div>
         <div className="d-flex flex-col">
           {part.elementIDs
@@ -59,9 +67,22 @@ export default function AdminTabPart({ part, refetchFn }: IProps) {
 
       <div>
         <div>Part:</div>
-        <Link to={`/edit/part/${part.mold.parentPart.id}`}>
+        <Link
+          className="black-txt"
+          to={`/edit/part/${part.mold.parentPart.id}`}
+        >
           {part.mold.parentPart.name}
         </Link>
+      </div>
+      <div>
+        <div>Mold:</div>
+        {part.isMoldUnknown ? (
+          <div>Mold marked as Unknown</div>
+        ) : (
+          <Link className="black-txt" to={`/edit/mold/${part.mold.id}`}>
+            {part.mold.number}
+          </Link>
+        )}
       </div>
       <div>Images</div>
       <div className="admin-image-container">
