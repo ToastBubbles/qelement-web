@@ -80,15 +80,16 @@ export default function QPartEditView() {
         }));
         handleResetComponent();
         refetch();
+      } else if (e.data.code == 507) {
+        showToast(
+          "QPart already exists with this color/mold combo!",
+          Mode.Error
+        );
       } else {
         showToast("error", Mode.Error);
       }
     },
   });
-
-  const { data: colData } = useQuery("allColors", () =>
-    axios.get<color[]>("http://localhost:3000/color")
-  );
 
   const { data: qpartData, refetch } = useQuery({
     queryKey: `qpart${qpartId}`,
@@ -163,13 +164,11 @@ export default function QPartEditView() {
   }, [categoryID]);
 
   if (
-    colData &&
     qpartData &&
     catData &&
     qpartData.data != null &&
     typeof qpartData.data != "string"
   ) {
-    let colors = colData.data;
     let myQPart = qpartData.data;
     let categories = catData.data;
     let myParts = partsData?.data;
