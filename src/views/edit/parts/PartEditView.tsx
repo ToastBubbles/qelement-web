@@ -155,7 +155,7 @@ export default function PartEditView() {
 
           <div className="w-100" style={{ marginTop: "2em" }}>
             <div className="d-flex jc-space-b">
-              <label htmlFor="name">New Part Name</label>
+              <label htmlFor="name">Change Part Name</label>
               <input
                 name="name"
                 className="formInput w-33"
@@ -171,7 +171,7 @@ export default function PartEditView() {
               />
             </div>
             <div className="d-flex jc-space-b">
-              <div>New Category:</div>
+              <div>Change Category:</div>
               <select
                 value={newPartValues.catId}
                 className={"formInput w-33"}
@@ -193,7 +193,7 @@ export default function PartEditView() {
               </select>
             </div>
             <div className="d-flex jc-space-b">
-              <label htmlFor="blurl">New Bricklink URL Parameter</label>
+              <label htmlFor="blurl">Change Bricklink URL Parameter</label>
               <input
                 name="blurl"
                 className="formInput w-33"

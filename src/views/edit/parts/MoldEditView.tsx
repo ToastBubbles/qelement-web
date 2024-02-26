@@ -131,6 +131,9 @@ export default function MoldEditView() {
         ...{ id: Number(moldId) },
       }));
   }, [moldId]);
+
+
+  
   useEffect(() => {
     if (categoryID > 0) partsRefetch();
     else
@@ -171,7 +174,7 @@ export default function MoldEditView() {
 
           <div className="w-100" style={{ marginTop: "2em" }}>
             <div className="d-flex jc-space-b">
-              <label htmlFor="number">New Part Number:</label>
+              <label htmlFor="number">Change Part Number:</label>
               <input
                 name="number"
                 className="formInput w-33"
@@ -187,7 +190,7 @@ export default function MoldEditView() {
               />
             </div>
             <div className="d-flex jc-space-b">
-              <label htmlFor="parentPart">New Parent Part:</label>
+              <label htmlFor="parentPart">Change Parent Part:</label>
               <select
                 value={categoryID}
                 className={"formInput w-33"}
@@ -246,7 +249,7 @@ export default function MoldEditView() {
             </div>
             <div className="d-flex jc-space-b">
               <label htmlFor="note" className="fg-1">
-                New Note:
+                Change Note:
               </label>
             </div>
             <div className="w-100">

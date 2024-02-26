@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { CustomStyles, color } from "../interfaces/general";
 import { getPrefColorIdString, getPrefColorName } from "../utils/utils";
@@ -10,9 +10,15 @@ interface IProps {
   setter: (colorId: number) => void;
   placeholder?: string;
   customStyles?: CSSProperties;
+  reset?: boolean;
 }
 
-function ColorTextField({ setter, placeholder = "", customStyles }: IProps) {
+function ColorTextField({
+  setter,
+  placeholder = "",
+  customStyles,
+  reset = false,
+}: IProps) {
   const {
     state: {
       userPreferences: { payload: prefPayload },
@@ -44,6 +50,15 @@ function ColorTextField({ setter, placeholder = "", customStyles }: IProps) {
     }
     return false;
   }
+
+  useEffect(() => {
+    if (reset) {
+      setInputValue("");
+      setHex("FFFFFF00");
+      setType("");
+      setSuggestions([]);
+    }
+  }, [reset]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
