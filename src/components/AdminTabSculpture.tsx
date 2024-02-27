@@ -4,6 +4,8 @@ import GenericPopup from "./GenericPopup";
 import ElementIDEdit from "./Edit Components/ElementIDEdit";
 import { imagePath } from "../utils/utils";
 import ImageEdit from "./Edit Components/ImageEdit";
+import RecentQPart from "./RecentQPart";
+import SculptureInventoryAdmin from "./Edit Components/SculptureInventoryAdmin";
 
 interface IProps {
   sculpture: ISculptureDTO;
@@ -77,6 +79,19 @@ export default function AdminTabSculpture({ sculpture, refetchFn }: IProps) {
             </div>
           );
         })}
+      </div>
+      <div className="d-flex w-100 flex-col">
+        <div>Parts</div>
+        <div className="rib-container">
+          {sculpture.inventory.map((qpart) => (
+            <SculptureInventoryAdmin
+              qpart={qpart}
+              sculptureId={sculpture.id}
+              key={qpart.id}
+              refetchFn={refetchFn}
+            />
+          ))}
+        </div>
       </div>
     </>
   );

@@ -20,6 +20,7 @@ interface IProps {
   qpartl?: IQPartDTOIncludeLess;
   hideDate?: boolean;
   disableLinks?: boolean;
+  hideRibbon?: boolean;
   ribbonOverride?: IRibbonOverride;
 }
 
@@ -28,6 +29,7 @@ export default function RecentQPart({
   qpartl,
   hideDate = false,
   disableLinks = false,
+  hideRibbon = false,
   ribbonOverride,
 }: IProps) {
   // console.log("here");
@@ -95,7 +97,7 @@ export default function RecentQPart({
 
     return (
       <RibbonContainer>
-        {generateRibbon(age)}
+        {!hideRibbon && generateRibbon(age)}
         <Link
           to={`/part/${thisqpart.mold.parentPart.id}?color=${thisqpart.color.id}&mold=${thisqpart.mold.id}`}
           className={`listing link new-listing ${

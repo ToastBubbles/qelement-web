@@ -270,11 +270,13 @@ export default function SingleSculptureView() {
                     >
                       {sculpture.inventory.length > 0 ? (
                         sculpture.inventory.map((qpart) => (
-                          <RecentQPart
-                            key={qpart.id}
-                            qpart={qpart}
-                            hideDate={true}
-                          />
+                          
+                            <RecentQPart
+                              key={qpart.id}
+                              qpart={qpart}
+                              hideDate={true}
+                            />
+                         
                         ))
                       ) : (
                         <div style={{ paddingLeft: "1em", paddingTop: "2em" }}>
@@ -402,7 +404,6 @@ export default function SingleSculptureView() {
                       {sculpture && (
                         <AdminTabSculpture
                           sculpture={sculpture}
-                          
                           refetchFn={sculptRefetch}
                         />
                       )}

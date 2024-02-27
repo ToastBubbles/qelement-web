@@ -352,10 +352,10 @@ interface IApprovalDateOnly {
   approvalDate: string | null;
 }
 
-// export interface ISculpturePartIdPair {
-//   sculptureId: number;
-//   qpartId: number;
-// }
+export interface ISculpturePartIdPair {
+  sculptureId: number;
+  qpartId: number;
+}
 
 export interface IQPartWSculptureInventory extends IQPartDTOInclude {
   SculptureInventory: IApprovalDateOnly;

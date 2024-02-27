@@ -327,7 +327,7 @@ body::-webkit-scrollbar {
   color: black;
 }
 
-.info-box{
+.info-box {
   border: solid 1px var(--dk-grey);
   border-radius: 0.5em;
   padding: 0.5em;
@@ -1421,9 +1421,26 @@ fieldset > legend {
   margin-bottom: -1px;
 } */
 
+.trash-icon {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 0.5em;
+  z-index: 3;
+}
+
 .rib-container > div {
   min-height: unset;
   margin-bottom: -1px;
+}
+
+.rib-container3 {
+  position: relative;
+}
+
+.rib-container3 > div {
+  min-height: unset;
+  margin-bottom: -0.5px;
 }
 .rib-container2 > div {
   min-height: unset;
