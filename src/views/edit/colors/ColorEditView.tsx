@@ -22,7 +22,7 @@ export default function ColorEditView() {
   } = useContext(AppContext);
   const { colorId } = useParams();
   const [similarColorToAdd, setSimilarColorToAdd] = useState<number>(0);
-
+  const [resetColorComponent, setResetColorComponent] = useState(false);
   const navigate = useNavigate();
 
   const {
@@ -78,13 +78,12 @@ export default function ColorEditView() {
   });
 
   const similarColorMutation = useMutation({
-    mutationFn: ({ color_one, color_two, creatorId }: ISimilarColorDTO) =>
+    mutationFn: ({ color_one, color_two }: ISimilarColorDTO) =>
       axios.post<IAPIResponse>(
         `http://localhost:3000/similarColor/add`,
         {
           color_one,
           color_two,
-          creatorId,
         },
         {
           headers: {
@@ -96,8 +95,16 @@ export default function ColorEditView() {
       console.log(e.data);
 
       if (e.data.code == 200) {
-        showToast("Similar Color Pair submitted!", Mode.Success);
+        showToast("Similar Color Pair added!", Mode.Success);
         refetch();
+        handleResetComponent();
+      } else if (e.data.code == 201) {
+        showToast("Similar Color Pair restored!", Mode.Success);
+        refetch();
+        handleResetComponent();
+      } else if (e.data.code == 202) {
+        showToast("Similar Color Pair submitted!", Mode.Success);
+        handleResetComponent();
       } else if (e.data.code == 501) {
         showToast(
           "Similar Color Relationship already exist between these colors, it may be pending approval",
@@ -116,7 +123,12 @@ export default function ColorEditView() {
       }
     },
   });
-
+  const handleResetComponent = () => {
+    setResetColorComponent(true);
+    setTimeout(() => {
+      setResetColorComponent(false);
+    }, 0);
+  };
   if (colError) {
     navigate("/404");
   }
@@ -275,7 +287,7 @@ export default function ColorEditView() {
                 placeholder="color QID"
               /> */}
 
-              <ColorTextField setter={setSimilarColorToAdd} />
+              <ColorTextField setter={setSimilarColorToAdd} reset={resetColorComponent} />
               <button
                 onClick={() => {
                   console.log(Number(colorId), similarColorToAdd);
@@ -288,7 +300,6 @@ export default function ColorEditView() {
                     similarColorMutation.mutate({
                       color_one: Number(colorId),
                       color_two: similarColorToAdd,
-                      creatorId: payload.id,
                     });
                   } else {
                     showToast(

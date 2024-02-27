@@ -31,7 +31,7 @@ export default function SingleColorView() {
   const { colorId } = useParams();
   const navigate = useNavigate();
   const [similarColorToAdd, setSimilarColorToAdd] = useState<number>(0);
-  // const [similarColorToAdd, setSimilarColorToAdd] = useState<number>(0);
+  const [resetColorComponent, setResetColorComponent] = useState(false);
   const {
     state: {
       // jwt: { token, payload },
@@ -56,13 +56,12 @@ export default function SingleColorView() {
   }, [colorId, colRefetch]);
 
   const similarColorMutation = useMutation({
-    mutationFn: ({ color_one, color_two, creatorId }: ISimilarColorDTO) =>
+    mutationFn: ({ color_one, color_two }: ISimilarColorDTO) =>
       axios.post<IAPIResponse>(
         `http://localhost:3000/similarColor/add`,
         {
           color_one,
           color_two,
-          creatorId,
         },
         {
           headers: {
@@ -73,9 +72,17 @@ export default function SingleColorView() {
     onSuccess: (e) => {
       console.log(e.data);
 
-      if (e.data.code == 200 || e.data.code == 205) {
-        showToast("Similar Color Pair submitted!", Mode.Success);
+      if (e.data.code == 200) {
+        showToast("Similar Color Pair added!", Mode.Success);
         colRefetch();
+        handleResetComponent();
+      } else if (e.data.code == 201) {
+        showToast("Similar Color Pair restored!", Mode.Success);
+        colRefetch();
+        handleResetComponent();
+      } else if (e.data.code == 202) {
+        showToast("Similar Color Pair submitted!", Mode.Success);
+        handleResetComponent();
       } else if (e.data.code == 501) {
         showToast(
           "Similar Color Relationship already exist between these colors, it may be pending approval",
@@ -94,7 +101,12 @@ export default function SingleColorView() {
       }
     },
   });
-
+  const handleResetComponent = () => {
+    setResetColorComponent(true);
+    setTimeout(() => {
+      setResetColorComponent(false);
+    }, 0);
+  };
   if (colError) {
     navigate("/404");
   }
@@ -126,7 +138,10 @@ export default function SingleColorView() {
           <SimilarColorBanner similarColors={color.similar} />
           <div className="jc-end">
             <div className="d-flex jc-end" style={{ marginBottom: "1em" }}>
-              <ColorTextField setter={setSimilarColorToAdd} />
+              <ColorTextField
+                setter={setSimilarColorToAdd}
+                reset={resetColorComponent}
+              />
               <button
                 onClick={() => {
                   // console.log(Number(colorId), similarColorToAdd);
@@ -139,7 +154,6 @@ export default function SingleColorView() {
                     similarColorMutation.mutate({
                       color_one: Number(colorId),
                       color_two: similarColorToAdd,
-                      creatorId: payload.id,
                     });
                   } else {
                     showToast(`Error`, Mode.Info);

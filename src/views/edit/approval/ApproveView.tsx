@@ -62,7 +62,8 @@ export default function ApproveView() {
               </Link>
               <Link className="black-txt" to={"/approve/similarColors"}>
                 Similar Colors{" "}
-                {counts.similarColors > 0 && `(${counts.similarColors})`}
+                {counts.similarColors > 0 &&
+                  `(${Math.ceil(counts.similarColors / 2)})`}
               </Link>
               <Link className="black-txt" to={"/approve/images"}>
                 Images {counts.images > 0 && `(${counts.images})`}

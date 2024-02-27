@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 export interface ISimilarColorDTO {
   color_one: number;
   color_two: number;
-  creatorId: number;
+  // creatorId: number;
 }
 export interface IUserPrefDTO {
   lang: string;

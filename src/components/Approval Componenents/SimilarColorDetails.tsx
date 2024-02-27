@@ -1,4 +1,7 @@
-import { ISimilarColorDetailedWithInversionId } from "../../interfaces/general";
+import {
+  ISimilarColorDetailedWithInversionId,
+  iIdOnly,
+} from "../../interfaces/general";
 import axios from "axios";
 import { useMutation } from "react-query";
 import showToast, { Mode } from "../../utils/utils";
@@ -25,8 +28,8 @@ export default function SimilarColorDetails({ data, refetchFn }: IProps) {
   const [showPopup, setShowPopup] = useState<boolean>(false);
 
   const simColMutation = useMutation({
-    mutationFn: (ids: ISimColorIdWithInversionId) =>
-      axios.post<number>(`http://localhost:3000/similarColor/approve`, ids, {
+    mutationFn: (id: iIdOnly) =>
+      axios.post<number>(`http://localhost:3000/similarColor/approve`, id, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -41,8 +44,8 @@ export default function SimilarColorDetails({ data, refetchFn }: IProps) {
   });
 
   const simColDeletionMutation = useMutation({
-    mutationFn: (ids: ISimColorIdWithInversionId) =>
-      axios.post<number>(`http://localhost:3000/similarColor/deny`, ids, {
+    mutationFn: (id: iIdOnly) =>
+      axios.post<number>(`http://localhost:3000/similarColor/deny`, id, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -98,7 +101,6 @@ export default function SimilarColorDetails({ data, refetchFn }: IProps) {
           onClick={() =>
             simColMutation.mutate({
               id: data.id,
-              inversionId: data.inversionId,
             })
           }
         >
@@ -116,7 +118,6 @@ export default function SimilarColorDetails({ data, refetchFn }: IProps) {
   function denyRequest() {
     simColDeletionMutation.mutate({
       id: data.id,
-      inversionId: data.inversionId,
     });
   }
 }
