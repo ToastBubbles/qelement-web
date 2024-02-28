@@ -121,52 +121,52 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
     //   }
     // };
 
-    const handleResize = () => {
-      if (!selectedImage) return;
-      const reader = new FileReader();
-      reader.readAsDataURL(selectedImage);
-      reader.onload = () => {
-        const image = new Image();
-        image.src = reader.result as string;
-        image.onload = () => {
-          const canvas = document.createElement("canvas");
-          const context = canvas.getContext("2d");
-          if (!context) return;
-          let { width, height } = image;
-          const aspectRatio = width / height;
-          if (width > height) {
-            if (width > maxWidth) {
-              width = maxWidth;
-              height = width / aspectRatio;
-            } else if (width < minWidth) {
-              width = minWidth;
-              height = width / aspectRatio;
-            }
-          } else {
-            if (height > maxWidth) {
-              height = maxWidth;
-              width = height * aspectRatio;
-            } else if (height < maxWidth) {
-              height = minWidth;
-              width = height * aspectRatio;
-            }
-          }
-          canvas.width = width;
-          canvas.height = height;
-          context.drawImage(image, 0, 0, width, height);
-          canvas.toBlob((blob) => {
-            if (!blob) return;
-            setResizedImage(blob);
-            showToast(
-              `Image successfully resized to ${Math.floor(height)}x${Math.floor(
-                width
-              )}`,
-              Mode.Success
-            );
-          }, selectedImage.type);
-        };
-      };
-    };
+    // const handleResizeImage = () => {
+    //   if (!selectedImage) return;
+    //   const reader = new FileReader();
+    //   reader.readAsDataURL(selectedImage);
+    //   reader.onload = () => {
+    //     const image = new Image();
+    //     image.src = reader.result as string;
+    //     image.onload = () => {
+    //       const canvas = document.createElement("canvas");
+    //       const context = canvas.getContext("2d");
+    //       if (!context) return;
+    //       let { width, height } = image;
+    //       const aspectRatio = width / height;
+    //       if (width > height) {
+    //         if (width > maxWidth) {
+    //           width = maxWidth;
+    //           height = width / aspectRatio;
+    //         } else if (width < minWidth) {
+    //           width = minWidth;
+    //           height = width / aspectRatio;
+    //         }
+    //       } else {
+    //         if (height > maxWidth) {
+    //           height = maxWidth;
+    //           width = height * aspectRatio;
+    //         } else if (height < maxWidth) {
+    //           height = minWidth;
+    //           width = height * aspectRatio;
+    //         }
+    //       }
+    //       canvas.width = width;
+    //       canvas.height = height;
+    //       context.drawImage(image, 0, 0, width, height);
+    //       canvas.toBlob((blob) => {
+    //         if (!blob) return;
+    //         setResizedImage(blob);
+    //         showToast(
+    //           `Image successfully resized to ${Math.floor(height)}x${Math.floor(
+    //             width
+    //           )}`,
+    //           Mode.Success
+    //         );
+    //       }, selectedImage.type);
+    //     };
+    //   };
+    // };
 
     const handleSubmit = (event: FormEvent) => {
       event.preventDefault();
@@ -180,6 +180,11 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
         showToast("Please select an image.", Mode.Warning);
         return;
       }
+
+      console.log("Converted: ", convertedFile);
+
+      console.log("selected: ", selectedImage);
+
       console.log(imageToUpload);
 
       if (imageToUpload) {
@@ -199,6 +204,9 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
             ["image/jpeg", "image/png"].includes(imageToUpload.type)
           ) {
             // All validation conditions met, proceed with uploading
+
+            console.log(image);
+
             const imageData: ImageSubmission = {
               userId: payload.id,
               qpartId: myqpart ? myqpart.id : null,
@@ -209,6 +217,8 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
             const formData = new FormData();
             formData.append("image", imageToUpload);
             formData.append("imageData", JSON.stringify(imageData));
+
+            console.log(formData);
 
             try {
               axios
@@ -293,6 +303,74 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
           showToast("Error loading image. Please try again.", Mode.Error);
         };
       }
+    };
+
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files !== null) {
+        const file = event.target.files[0];
+        setSelectedImage(file);
+        setResizedImage(null);
+        resizeImage(file);
+      }
+    };
+    const resizeImage = (file: File) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const image = new Image();
+        image.src = reader.result as string;
+        image.onload = () => {
+          const canvas = document.createElement("canvas");
+          const context = canvas.getContext("2d");
+          if (!context) return;
+          let { width, height } = image;
+          const aspectRatio = width / height;
+          if (!isValidRatio(width, height)) {
+            showToast(
+              `Image must be be at least a 1 / 2 aspect ratio. Your image is ${
+                width < height ? "too narrow/tall." : "too wide/short."
+              } (${reduceFraction(width, height)})`,
+              Mode.Error
+            );
+          } else if (
+            width > maxWidth ||
+            width < minWidth ||
+            height > maxWidth ||
+            height < minWidth
+          ) {
+            if (width > height) {
+              if (width > maxWidth) {
+                width = maxWidth;
+                height = width / aspectRatio;
+              } else if (width < minWidth) {
+                width = minWidth;
+                height = width / aspectRatio;
+              }
+            } else {
+              if (height > maxWidth) {
+                height = maxWidth;
+                width = height * aspectRatio;
+              } else if (height < minWidth) {
+                height = minWidth;
+                width = height * aspectRatio;
+              }
+            }
+            canvas.width = width;
+            canvas.height = height;
+            context.drawImage(image, 0, 0, width, height);
+            canvas.toBlob((blob) => {
+              if (!blob) return;
+              setResizedImage(blob);
+              showToast(
+                `Image successfully resized to ${Math.floor(
+                  height
+                )}x${Math.floor(width)}`,
+                Mode.Success
+              );
+            }, file.type);
+          }
+        };
+      };
     };
     return (
       <div>
@@ -387,7 +465,17 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
             />
             <br />
             <button onClick={() => setSelectedImage(null)}>Remove</button>
-            <button onClick={handleSubmit}>Submit</button>
+            <button
+              onClick={(e) => {
+                if (imageType != "") {
+                  handleSubmit(e);
+                } else {
+                  showToast("Please select an Image Type first!", Mode.Warning);
+                }
+              }}
+            >
+              Submit
+            </button>
           </div>
         )}
 
@@ -401,13 +489,14 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
             if (event.target.files !== null) {
               console.log(event.target.files[0]);
 
-              setSelectedImage(event.target.files[0]);
+              // setSelectedImage(event.target.files[0]);
+              handleImageChange(event);
             }
           }}
         />
-        <button disabled={resizeButtonDisabled} onClick={handleResize}>
+        {/* <button disabled={resizeButtonDisabled} onClick={handleResize}>
           Resize
-        </button>
+        </button> */}
       </div>
     );
   } else {

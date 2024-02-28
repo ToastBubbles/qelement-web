@@ -29,9 +29,57 @@ const ProfilePictureUploader = ({ userId }: iProps) => {
   } = useContext(AppContext);
   const defaultValue: IDimensions = { width: 0, height: 0 };
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [dimensions, setDimensions] = useState<IDimensions>(defaultValue);
+  const [resizedImage, setResizedImage] = useState<Blob | null>(null);
+  const minWidth = 150;
+  const maxWidth = 250;
 
   if (userId > 0) {
+    const handleResize = () => {
+      if (!selectedImage) return;
+      const reader = new FileReader();
+      reader.readAsDataURL(selectedImage);
+      reader.onload = () => {
+        const image = new Image();
+        image.src = reader.result as string;
+        image.onload = () => {
+          const canvas = document.createElement("canvas");
+          const context = canvas.getContext("2d");
+          if (!context) return;
+          let { width, height } = image;
+          const aspectRatio = width / height;
+          if (width > height) {
+            if (width > maxWidth) {
+              width = maxWidth;
+              height = width / aspectRatio;
+            } else if (width < minWidth) {
+              width = minWidth;
+              height = width / aspectRatio;
+            }
+          } else {
+            if (height > maxWidth) {
+              height = maxWidth;
+              width = height * aspectRatio;
+            } else if (height < maxWidth) {
+              height = minWidth;
+              width = height * aspectRatio;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          context.drawImage(image, 0, 0, width, height);
+          canvas.toBlob((blob) => {
+            if (!blob) return;
+            setResizedImage(blob);
+            showToast(
+              `Image successfully resized to ${Math.floor(height)}x${Math.floor(
+                width
+              )}`,
+              Mode.Success
+            );
+          }, selectedImage.type);
+        };
+      };
+    };
     const handleSubmit = (event: FormEvent) => {
       event.preventDefault();
 
@@ -75,7 +123,7 @@ const ProfilePictureUploader = ({ userId }: iProps) => {
 
                   if (resp.data.code == 201 || resp.data.code == 202) {
                     setSelectedImage(null);
-                    setDimensions(defaultValue);
+
                     if (resp.data.code == 201)
                       showToast("Image submitted for approval!", Mode.Success);
                     else showToast("Image added!", Mode.Success);
