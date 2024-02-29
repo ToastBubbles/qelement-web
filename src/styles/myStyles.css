@@ -21,6 +21,10 @@
   box-sizing: border-box;
 }
 
+.Toastify__toast-container {
+  white-space : pre-line !important;
+}
+
 .disabled-link {
   pointer-events: none;
 }

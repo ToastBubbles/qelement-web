@@ -1,6 +1,8 @@
 import axios from "axios";
 import { FormEvent, useContext, useState } from "react";
 import { useQuery } from "react-query";
+import ReactCrop, { Crop } from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
 import { AppContext } from "../context/context";
 import {
   IAPIResponse,
@@ -15,10 +17,6 @@ import MyToolTip from "./MyToolTip";
 interface iProps {
   userId: number;
 }
-interface IDimensions {
-  width: number;
-  height: number;
-}
 
 const ProfilePictureUploader = ({ userId }: iProps) => {
   const {
@@ -27,58 +25,200 @@ const ProfilePictureUploader = ({ userId }: iProps) => {
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
-  const defaultValue: IDimensions = { width: 0, height: 0 };
+
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [resizedImage, setResizedImage] = useState<Blob | null>(null);
+  const [crop, setCrop] = useState<Crop>();
+  const [isCropping, setIsCropping] = useState<boolean>(false);
+  const [cropDataPercent, setCropDataPercent] = useState<Crop>();
   const minWidth = 150;
   const maxWidth = 250;
 
+  const allowedTypes = ["image/jpeg", "image/png"];
+
   if (userId > 0) {
-    const handleResize = () => {
-      if (!selectedImage) return;
-      const reader = new FileReader();
-      reader.readAsDataURL(selectedImage);
-      reader.onload = () => {
-        const image = new Image();
-        image.src = reader.result as string;
-        image.onload = () => {
-          const canvas = document.createElement("canvas");
-          const context = canvas.getContext("2d");
-          if (!context) return;
-          let { width, height } = image;
-          const aspectRatio = width / height;
-          if (width > height) {
-            if (width > maxWidth) {
-              width = maxWidth;
-              height = width / aspectRatio;
-            } else if (width < minWidth) {
-              width = minWidth;
-              height = width / aspectRatio;
-            }
-          } else {
-            if (height > maxWidth) {
-              height = maxWidth;
-              width = height * aspectRatio;
-            } else if (height < maxWidth) {
-              height = minWidth;
-              width = height * aspectRatio;
-            }
-          }
-          canvas.width = width;
-          canvas.height = height;
-          context.drawImage(image, 0, 0, width, height);
+    const handleCropComplete = (croppedArea: Crop, croppedAreaPixels: Crop) => {
+      // Handle the cropped area
+      console.log("Cropped Area:", croppedArea);
+      console.log("Cropped Area Pixels:", croppedAreaPixels);
+      setCropDataPercent(croppedAreaPixels);
+    };
+
+    const handleCropImage = () => {
+      if (!selectedImage || !crop) return;
+
+      const image = new Image();
+      image.src = URL.createObjectURL(selectedImage);
+
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      if (!context) return;
+
+      image.onload = () => {
+        if (cropDataPercent) {
+          let cropWidth = Math.floor(
+            (image.width * cropDataPercent.width) / 100
+          );
+          let cropHeight = Math.floor(
+            (image.height * cropDataPercent.height) / 100
+          );
+
+          let cropX = Math.floor((image.width * cropDataPercent.x) / 100);
+          let cropY = Math.floor((image.height * cropDataPercent.y) / 100);
+
+          canvas.width = cropWidth;
+          canvas.height = cropHeight;
+
+          context.drawImage(
+            image,
+            cropX,
+            cropY,
+            cropWidth,
+            cropHeight,
+            0,
+            0,
+            cropWidth,
+            cropHeight
+          );
+
           canvas.toBlob((blob) => {
             if (!blob) return;
-            setResizedImage(blob);
-            showToast(
-              `Image successfully resized to ${Math.floor(height)}x${Math.floor(
-                width
-              )}`,
-              Mode.Success
+
+            // Set the cropped image as the selected image
+            setSelectedImage(
+              new File([blob], "cropped_image.jpg", { type: "image/jpeg" })
             );
-          }, selectedImage.type);
-        };
+            setIsCropping(false);
+
+            // You can optionally display the cropped image
+            // setCroppedImageUrl(URL.createObjectURL(blob));
+          }, "image/jpeg");
+        } else {
+          showToast("Error getting crop data!", Mode.Error);
+        }
       };
+    };
+
+    // const handleResize = () => {
+    //   if (!selectedImage) return;
+    //   const reader = new FileReader();
+    //   reader.readAsDataURL(selectedImage);
+    //   reader.onload = () => {
+    //     const image = new Image();
+    //     image.src = reader.result as string;
+    //     image.onload = () => {
+    //       const canvas = document.createElement("canvas");
+    //       const context = canvas.getContext("2d");
+    //       if (!context) return;
+    //       let { width, height } = image;
+    //       const aspectRatio = width / height;
+    //       if (width > height) {
+    //         if (width > maxWidth) {
+    //           width = maxWidth;
+    //           height = width / aspectRatio;
+    //         } else if (width < minWidth) {
+    //           width = minWidth;
+    //           height = width / aspectRatio;
+    //         }
+    //       } else {
+    //         if (height > maxWidth) {
+    //           height = maxWidth;
+    //           width = height * aspectRatio;
+    //         } else if (height < maxWidth) {
+    //           height = minWidth;
+    //           width = height * aspectRatio;
+    //         }
+    //       }
+    //       canvas.width = width;
+    //       canvas.height = height;
+    //       context.drawImage(image, 0, 0, width, height);
+    //       canvas.toBlob((blob) => {
+    //         if (!blob) return;
+    //         setResizedImage(blob);
+    //         showToast(
+    //           `Image successfully resized to ${Math.floor(height)}x${Math.floor(
+    //             width
+    //           )}`,
+    //           Mode.Success
+    //         );
+    //       }, selectedImage.type);
+    //     };
+    //   };
+    // };
+
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files !== null) {
+        const file = event.target.files[0];
+        if (allowedTypes.includes(file.type)) {
+          setSelectedImage(file);
+          setResizedImage(null);
+          // resizeImage(file);
+        } else {
+          showToast("Image must be in JPG, JPEG, or PNG format.", Mode.Error);
+        }
+      }
+    };
+    const resizeImage = () => {
+      if (selectedImage) {
+        const reader = new FileReader();
+        reader.readAsDataURL(selectedImage);
+        reader.onload = () => {
+          const image = new Image();
+          image.src = reader.result as string;
+          image.onload = () => {
+            const canvas = document.createElement("canvas");
+            const context = canvas.getContext("2d");
+            if (!context) return;
+            let { width, height } = image;
+            const aspectRatio = width / height;
+            // if (width != height) {
+            //   showToast(
+            //     "Image must have 1 / 1 aspect ratio. (square)",
+            //     Mode.Error
+            //   );
+            // }
+            if (
+              width > maxWidth ||
+              width < minWidth ||
+              height > maxWidth ||
+              height < minWidth
+            ) {
+              if (width > height) {
+                if (width > maxWidth) {
+                  width = maxWidth;
+                  height = width / aspectRatio;
+                } else if (width < minWidth) {
+                  width = minWidth;
+                  height = width / aspectRatio;
+                }
+              } else {
+                if (height > maxWidth) {
+                  height = maxWidth;
+                  width = height * aspectRatio;
+                } else if (height < minWidth) {
+                  height = minWidth;
+                  width = height * aspectRatio;
+                }
+              }
+              canvas.width = width;
+              canvas.height = height;
+              context.drawImage(image, 0, 0, width, height);
+              canvas.toBlob((blob) => {
+                if (!blob) return;
+                setSelectedImage(
+                  new File([blob], "resized_image.jpg", { type: "image/jpeg" })
+                );
+                showToast(
+                  `Image successfully resized to ${Math.floor(
+                    height
+                  )}x${Math.floor(width)}`,
+                  Mode.Success
+                );
+              }, selectedImage.type);
+            }
+          };
+        };
+      }
     };
     const handleSubmit = (event: FormEvent) => {
       event.preventDefault();
@@ -95,7 +235,7 @@ const ProfilePictureUploader = ({ userId }: iProps) => {
             width === height &&
             width >= 100 &&
             width <= 250 &&
-            ["image/jpeg", "image/png"].includes(selectedImage.type)
+            allowedTypes.includes(selectedImage.type)
           ) {
             // All validation conditions met, proceed with uploading
             const imageData: iIdOnly = {
@@ -145,7 +285,7 @@ const ProfilePictureUploader = ({ userId }: iProps) => {
               showToast("Image must be at least 100px wide.", Mode.Error);
             if (width > 250)
               showToast("Image must be less than 250px wide.", Mode.Error);
-            if (!["image/jpeg", "image/png"].includes(selectedImage.type))
+            if (!allowedTypes.includes(selectedImage.type))
               showToast(
                 "Image must be in JPG, JPEG, or PNG format.",
                 Mode.Error
@@ -169,17 +309,32 @@ const ProfilePictureUploader = ({ userId }: iProps) => {
         </ul>
         {selectedImage && (
           <div className="max-size">
-            <img
-              alt="not found"
-              width={"250px"}
-              src={URL.createObjectURL(selectedImage)}
-            />
-            {/* <div>
-              width: {dimensions.width} height: {dimensions.height}
-            </div> */}
+            {isCropping ? (
+              <ReactCrop
+                aspect={1}
+                crop={crop}
+                onChange={(c) => setCrop(c)}
+                onComplete={handleCropComplete}
+              >
+                <img src={URL.createObjectURL(selectedImage)} />
+              </ReactCrop>
+            ) : (
+              <img
+                alt="not found"
+                width={"250px"}
+                src={URL.createObjectURL(selectedImage)}
+              />
+            )}
             <br />
-            <button onClick={() => setSelectedImage(null)}>Remove</button>
-            <button onClick={handleSubmit}>Submit</button>
+            <button
+              disabled={isCropping}
+              onClick={() => setSelectedImage(null)}
+            >
+              Remove
+            </button>
+            <button disabled={isCropping} onClick={handleSubmit}>
+              Submit
+            </button>
           </div>
         )}
         <br />
@@ -187,14 +342,35 @@ const ProfilePictureUploader = ({ userId }: iProps) => {
         <input
           type="file"
           name="myImage"
+          disabled={isCropping}
           onChange={(event) => {
             if (event.target.files !== null) {
               console.log(event.target.files[0]);
 
-              setSelectedImage(event.target.files[0]);
+              handleImageChange(event);
             }
           }}
         />
+        {selectedImage && (
+          <>
+            {isCropping ? (
+              <button onClick={handleCropImage}>Confirm Crop</button>
+            ) : (
+              <button
+                onClick={() => {
+                  if (selectedImage) {
+                    setIsCropping(true);
+                  }
+                }}
+              >
+                Crop
+              </button>
+            )}
+            <button disabled={isCropping} onClick={resizeImage}>
+              Auto Resize
+            </button>
+          </>
+        )}
       </div>
     );
   } else {

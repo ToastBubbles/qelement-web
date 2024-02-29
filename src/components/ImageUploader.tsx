@@ -40,7 +40,7 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
   const [resizedImage, setResizedImage] = useState<Blob | null>(null);
   const [crop, setCrop] = useState<Crop>();
   const [isCropping, setIsCropping] = useState<boolean>(false);
-  const [croppedImageUrl, setCroppedImageUrl] = useState("");
+  // const [croppedImageUrl, setCroppedImageUrl] = useState("");
   const [cropDataPercent, setCropDataPercent] = useState<Crop>();
   const minWidth = 150;
   const maxWidth = 1000;
@@ -72,7 +72,7 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
     const myqpart = myqpartData?.data || null;
     const mysculpture = sculptureData?.data || null;
 
-    // Ron on crop change
+    // on crop change
     const handleCropComplete = (croppedArea: Crop, croppedAreaPixels: Crop) => {
       // Handle the cropped area
       console.log("Cropped Area:", croppedArea);
@@ -92,7 +92,6 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
 
       image.onload = () => {
         if (cropDataPercent) {
-
           let cropWidth = Math.floor(
             (image.width * cropDataPercent.width) / 100
           );
@@ -128,7 +127,7 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
             setIsCropping(false);
 
             // You can optionally display the cropped image
-            setCroppedImageUrl(URL.createObjectURL(blob));
+            // setCroppedImageUrl(URL.createObjectURL(blob));
           }, "image/jpeg");
         } else {
           showToast("Error getting crop data!", Mode.Error);
@@ -149,11 +148,11 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
         return;
       }
 
-      console.log("Converted: ", convertedFile);
+      // console.log("Converted: ", convertedFile);
 
-      console.log("selected: ", selectedImage);
+      // console.log("selected: ", selectedImage);
 
-      console.log(imageToUpload);
+      // console.log(imageToUpload);
 
       if (imageToUpload) {
         const image = new Image();
@@ -172,7 +171,7 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
           ) {
             // All validation conditions met, proceed with uploading
 
-            console.log(image);
+            // console.log(image);
 
             const imageData: ImageSubmission = {
               userId: payload.id,
@@ -220,19 +219,43 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
             }
           } else {
             // Validation failed, show error message
+            if (!allowedTypes.includes(imageToUpload.type)) {
+              showToast(
+                "-Image must be in JPG, JPEG, or PNG format.",
+                Mode.Error
+              );
+            } else {
+              let errorMessage = "";
+              let isBadAspect = false;
+              if (width > maxWidth) {
+                errorMessage += "-Image is too wide.";
+              }
+              if (width < minWidth) {
+                errorMessage += "-Image isn't wide enough.";
+              }
+              if (height > maxWidth) {
+                errorMessage += "\n-Image is too tall.";
+              }
 
-            if (!isValidRatio(width, height))
-              showToast(
-                `Image must be be at least a 1 / 2 aspect ratio. Your image is ${
-                  width < height ? "too narrow/tall." : "too wide/short."
-                } (${reduceFraction(width, height)})`,
-                Mode.Error
-              );
-            if (!allowedTypes.includes(imageToUpload.type))
-              showToast(
-                "Image must be in JPG, JPEG, or PNG format.",
-                Mode.Error
-              );
+              if (height < minWidth) {
+                errorMessage += "\n-Image is too short.";
+              }
+
+              if (!isValidRatio(width, height)) {
+                errorMessage += `\n-Bad aspect ratio, please crop image. ${
+                  width < height ? "(too narrow/tall.)" : "(too wide/short.)"
+                }`;
+                isBadAspect = true;
+              }
+
+              if (!allowedTypes.includes(imageToUpload.type)) {
+                errorMessage += "\n-Image must be in JPG, JPEG, or PNG format.";
+              }
+              errorMessage += `\nDimensions: ${width} x ${height}`;
+              if (isBadAspect)
+                errorMessage += `\nAspect: ${reduceFraction(width, height)}`;
+              showToast(errorMessage, Mode.Error);
+            }
           }
         };
 
@@ -249,70 +272,75 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
         if (allowedTypes.includes(file.type)) {
           setSelectedImage(file);
           setResizedImage(null);
-          resizeImage(file);
+          // resizeImage(file);
         } else {
           showToast("Image must be in JPG, JPEG, or PNG format.", Mode.Error);
         }
       }
     };
-    const resizeImage = (file: File) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        const image = new Image();
-        image.src = reader.result as string;
-        image.onload = () => {
-          const canvas = document.createElement("canvas");
-          const context = canvas.getContext("2d");
-          if (!context) return;
-          let { width, height } = image;
-          const aspectRatio = width / height;
-          if (!isValidRatio(width, height)) {
-            showToast(
-              `Image must be be at least a 1 / 2 aspect ratio. Your image is ${
-                width < height ? "too narrow/tall." : "too wide/short."
-              } (${reduceFraction(width, height)})`,
-              Mode.Error
-            );
-          } else if (
-            width > maxWidth ||
-            width < minWidth ||
-            height > maxWidth ||
-            height < minWidth
-          ) {
-            if (width > height) {
-              if (width > maxWidth) {
-                width = maxWidth;
-                height = width / aspectRatio;
-              } else if (width < minWidth) {
-                width = minWidth;
-                height = width / aspectRatio;
+    const resizeImage = () => {
+      if (selectedImage) {
+        const reader = new FileReader();
+        reader.readAsDataURL(selectedImage);
+        reader.onload = () => {
+          const image = new Image();
+          image.src = reader.result as string;
+          image.onload = () => {
+            const canvas = document.createElement("canvas");
+            const context = canvas.getContext("2d");
+            if (!context) return;
+            let { width, height } = image;
+            const aspectRatio = width / height;
+            // if (!isValidRatio(width, height)) {
+            //   showToast(
+            //     `Image must be be at least a 1 / 2 aspect ratio. Your image is ${
+            //       width < height ? "too narrow/tall." : "too wide/short."
+            //     } (${reduceFraction(width, height)})`,
+            //     Mode.Error
+            //   );
+            // } else
+            if (
+              width > maxWidth ||
+              width < minWidth ||
+              height > maxWidth ||
+              height < minWidth
+            ) {
+              if (width > height) {
+                if (width > maxWidth) {
+                  width = maxWidth;
+                  height = width / aspectRatio;
+                } else if (width < minWidth) {
+                  width = minWidth;
+                  height = width / aspectRatio;
+                }
+              } else {
+                if (height > maxWidth) {
+                  height = maxWidth;
+                  width = height * aspectRatio;
+                } else if (height < minWidth) {
+                  height = minWidth;
+                  width = height * aspectRatio;
+                }
               }
-            } else {
-              if (height > maxWidth) {
-                height = maxWidth;
-                width = height * aspectRatio;
-              } else if (height < minWidth) {
-                height = minWidth;
-                width = height * aspectRatio;
-              }
+              canvas.width = width;
+              canvas.height = height;
+              context.drawImage(image, 0, 0, width, height);
+              canvas.toBlob((blob) => {
+                if (!blob) return;
+                setSelectedImage(
+                  new File([blob], "resized_image.jpg", { type: "image/jpeg" })
+                );
+                showToast(
+                  `Image successfully resized to ${Math.floor(
+                    height
+                  )}x${Math.floor(width)}`,
+                  Mode.Success
+                );
+              }, selectedImage.type);
             }
-            canvas.width = width;
-            canvas.height = height;
-            context.drawImage(image, 0, 0, width, height);
-            canvas.toBlob((blob) => {
-              if (!blob) return;
-              setResizedImage(blob);
-              showToast(
-                `Image successfully resized to ${Math.floor(
-                  height
-                )}x${Math.floor(width)}`,
-                Mode.Success
-              );
-            }, file.type);
-          }
+          };
         };
-      };
+      }
     };
     return (
       <div>
@@ -463,6 +491,9 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
                 Crop
               </button>
             )}
+            <button disabled={isCropping} onClick={resizeImage}>
+              Auto Resize
+            </button>
           </>
         )}
       </div>
