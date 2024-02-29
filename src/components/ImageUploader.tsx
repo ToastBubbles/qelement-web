@@ -2,6 +2,8 @@ import axios from "axios";
 import { FormEvent, useContext, useState } from "react";
 import { useQuery } from "react-query";
 import { AppContext } from "../context/context";
+import ReactCrop, { Crop } from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
 import {
   IAPIResponse,
   IQPartDTOInclude,
@@ -20,7 +22,6 @@ interface iProps {
   sculptureId: number | null;
 }
 interface ImageSubmission {
-  // formData: FormData;
   qpartId: number | null;
   userId: number;
   sculptureId: number | null;
@@ -37,7 +38,10 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imageType, setImageType] = useState<string>("");
   const [resizedImage, setResizedImage] = useState<Blob | null>(null);
-
+  const [crop, setCrop] = useState<Crop>();
+  const [isCropping, setIsCropping] = useState<boolean>(false);
+  const [croppedImageUrl, setCroppedImageUrl] = useState("");
+  const [cropDataPercent, setCropDataPercent] = useState<Crop>();
   const minWidth = 150;
   const maxWidth = 1000;
 
@@ -68,6 +72,70 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
     const myqpart = myqpartData?.data || null;
     const mysculpture = sculptureData?.data || null;
 
+    // Ron on crop change
+    const handleCropComplete = (croppedArea: Crop, croppedAreaPixels: Crop) => {
+      // Handle the cropped area
+      console.log("Cropped Area:", croppedArea);
+      console.log("Cropped Area Pixels:", croppedAreaPixels);
+      setCropDataPercent(croppedAreaPixels);
+    };
+
+    const handleCropImage = () => {
+      if (!selectedImage || !crop) return;
+
+      const image = new Image();
+      image.src = URL.createObjectURL(selectedImage);
+
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      if (!context) return;
+
+      image.onload = () => {
+        if (cropDataPercent) {
+
+          let cropWidth = Math.floor(
+            (image.width * cropDataPercent.width) / 100
+          );
+          let cropHeight = Math.floor(
+            (image.height * cropDataPercent.height) / 100
+          );
+
+          let cropX = Math.floor((image.width * cropDataPercent.x) / 100);
+          let cropY = Math.floor((image.height * cropDataPercent.y) / 100);
+
+          canvas.width = cropWidth;
+          canvas.height = cropHeight;
+
+          context.drawImage(
+            image,
+            cropX,
+            cropY,
+            cropWidth,
+            cropHeight,
+            0,
+            0,
+            cropWidth,
+            cropHeight
+          );
+
+          canvas.toBlob((blob) => {
+            if (!blob) return;
+
+            // Set the cropped image as the selected image
+            setSelectedImage(
+              new File([blob], "cropped_image.jpg", { type: "image/jpeg" })
+            );
+            setIsCropping(false);
+
+            // You can optionally display the cropped image
+            setCroppedImageUrl(URL.createObjectURL(blob));
+          }, "image/jpeg");
+        } else {
+          showToast("Error getting crop data!", Mode.Error);
+        }
+      };
+    };
+
     const handleSubmit = (event: FormEvent) => {
       event.preventDefault();
       let convertedFile = null;
@@ -94,7 +162,6 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
         image.onload = () => {
           const width = image.width;
           const height = image.height;
-          //   setDimensions({ width, height });
           if (
             height >= minWidth &&
             height <= maxWidth &&
@@ -289,10 +356,6 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
                             including multiple parts, or it could be a photo of
                             the underside of a part to show additional details.
                           </li>
-                          {/* <li>
-                        <span>Sculpture:</span> Use this if the image is of the
-                        part used in a build/model/sculpture.
-                      </li> */}
                           <li>
                             <span>Damaged:</span> Use this if the part is
                             visually and significantly damaged.
@@ -314,7 +377,6 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
                   <option value={""}>--</option>
                   <option value={"part"}>Part</option>
                   <option value={"supplemental"}>supplemental</option>
-                  {/* <option value={"sculpture"}>Sculpture</option> */}
                   <option value={"damaged"}>Damaged</option>
                   <option value={"other"}>Other</option>
                 </select>
@@ -333,14 +395,30 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
 
         {selectedImage && (
           <div className="max-size">
-            <img
-              alt="not found"
-              width={"250px"}
-              src={URL.createObjectURL(selectedImage)}
-            />
+            {isCropping ? (
+              <ReactCrop
+                crop={crop}
+                onChange={(c) => setCrop(c)}
+                onComplete={handleCropComplete}
+              >
+                <img src={URL.createObjectURL(selectedImage)} />
+              </ReactCrop>
+            ) : (
+              <img
+                alt="not found"
+                width={"250px"}
+                src={URL.createObjectURL(selectedImage)}
+              />
+            )}
             <br />
-            <button onClick={() => setSelectedImage(null)}>Remove</button>
             <button
+              disabled={isCropping}
+              onClick={() => setSelectedImage(null)}
+            >
+              Remove
+            </button>
+            <button
+              disabled={isCropping}
               onClick={(e) => {
                 if (imageType != "") {
                   handleSubmit(e);
@@ -360,6 +438,7 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
         <input
           type="file"
           name="myImage"
+          disabled={isCropping}
           onChange={(event) => {
             if (event.target.files !== null) {
               console.log(event.target.files[0]);
@@ -369,9 +448,23 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
             }
           }}
         />
-        {/* <button disabled={resizeButtonDisabled} onClick={handleResize}>
-          Resize
-        </button> */}
+        {selectedImage && (
+          <>
+            {isCropping ? (
+              <button onClick={handleCropImage}>Confirm Crop</button>
+            ) : (
+              <button
+                onClick={() => {
+                  if (selectedImage) {
+                    setIsCropping(true);
+                  }
+                }}
+              >
+                Crop
+              </button>
+            )}
+          </>
+        )}
       </div>
     );
   } else {
