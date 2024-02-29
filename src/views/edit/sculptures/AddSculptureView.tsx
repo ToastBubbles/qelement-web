@@ -28,7 +28,8 @@ export default function AddSculptureView() {
   };
   const [newSculpture, setNewSculpture] =
     useState<ICreateSculptureDTO>(baseValues);
-
+  const [keywordArray, setKeywordArray] = useState<string[]>([]);
+  const [currentKeyword, setCurrentKeyword] = useState<string>("");
   useEffect(() => {
     setNewSculpture((newSculpture) => ({
       ...newSculpture,
@@ -57,6 +58,8 @@ export default function AddSculptureView() {
           ...baseValues,
           ...{ creatorId: prevVals.creatorId },
         }));
+        setKeywordArray([]);
+        setCurrentKeyword("");
       } else if (data.data?.code == 201) {
         showToast("Sculpture added!", Mode.Success);
         setNewSculpture(baseValues);
@@ -64,12 +67,36 @@ export default function AddSculptureView() {
           ...newSculpture,
           ...{ creatorId: payload.id },
         }));
+        setKeywordArray([]);
+        setCurrentKeyword("");
       } else {
         showToast("Something went wrong", Mode.Error);
       }
     },
   });
 
+  useEffect(() => {
+    const keywordString = keywordArray.join(";");
+    if (keywordString.length <= 255) {
+      if (keywordArray.length > 0) {
+        setNewSculpture((newSculpture) => ({
+          ...newSculpture,
+          ...{ keywords: keywordString },
+        }));
+      } else {
+        setNewSculpture((newSculpture) => ({
+          ...newSculpture,
+          ...{ keywords: "" },
+        }));
+      }
+    }
+  }, [keywordArray]);
+
+  function handleRemoveKeyword(keywordToRemove: string) {
+    setKeywordArray((prevKeywords) =>
+      prevKeywords.filter((keyword) => keyword !== keywordToRemove)
+    );
+  }
   return (
     <>
       <div className="formcontainer">
@@ -90,6 +117,7 @@ export default function AddSculptureView() {
             </label>
 
             <input
+              placeholder="Required"
               maxLength={255}
               type="text"
               className="formInput w-50"
@@ -254,7 +282,7 @@ export default function AddSculptureView() {
               value={newSculpture.location}
             />
           </div>
-          {/* <div className="w-100 d-flex jc-space-b">
+          <div className="w-100 d-flex jc-space-b">
             <div>
               <label htmlFor="yearret">Keywords</label>
               <MyToolTip
@@ -268,20 +296,88 @@ export default function AddSculptureView() {
                       holding balloon riding elephant" some good keywords would
                       be "animal", "child" (if minifigure is a child), etc
                     </div>
-                    Type one at at time and click "Add" to add it to the list of
-                    keywords
+                    <div style={{ color: "var(--lt-red)" }}>
+                      Type one at at time and click "Add" to add it to the list
+                      of keywords
+                    </div>
                   </div>
                 }
                 id="kw"
               />
             </div>
-            <input
-              maxLength={12}
-              className="formInput w-50"
-              type="text"
-              placeholder="Optional"
-            />
-          </div> */}
+            <div className="w-50">
+              <input
+                maxLength={12}
+                className="formInput"
+                style={{ width: "85%" }}
+                type="text"
+                placeholder="Optional"
+                onChange={(e) => {
+                  const inputValue = e.target.value
+                    .trim()
+                    .replace(/[^a-zA-Z0-9]/g, "");
+
+                  setCurrentKeyword(inputValue);
+                }}
+                value={currentKeyword}
+              />
+              <button
+                className="formInput"
+                style={{ width: "15%" }}
+                onClick={() => {
+                  if (
+                    currentKeyword.length > 0 &&
+                    !keywordArray.includes(currentKeyword)
+                  ) {
+                    if (
+                      keywordArray.join(";").length + currentKeyword.length >
+                      255
+                    ) {
+                      showToast("Maximum keywords reached!", Mode.Error);
+                    } else {
+                      setKeywordArray((prevKeywords) => [
+                        ...prevKeywords,
+                        currentKeyword,
+                      ]);
+                      setCurrentKeyword("");
+                    }
+                  } else {
+                    if (currentKeyword.length == 0) {
+                      showToast("Please enter a keyword first", Mode.Warning);
+                    } else {
+                      showToast(
+                        "This keyword is already set to be added.",
+                        Mode.Warning
+                      );
+                    }
+                  }
+                }}
+              >
+                Add
+              </button>
+            </div>
+          </div>
+          <div
+            style={{ minHeight: "3em", maxHeight: "10em" }}
+            className="w-100"
+          >
+            Keywords to add (Click to remove):
+            {keywordArray.length > 0 ? (
+              <div className="d-flex flex-wrap">
+                {keywordArray.map((keyword) => (
+                  <div
+                    onClick={() => handleRemoveKeyword(keyword)}
+                    className="new-keyword flex-wrap clickable"
+                    key={keyword}
+                  >
+                    {keyword}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grey-txt">None</div>
+            )}
+          </div>
           <label htmlFor="sculnote" style={{ marginRight: "auto" }}>
             Note for sculpture
           </label>
@@ -308,6 +404,8 @@ export default function AddSculptureView() {
                 if (validateDTO()) {
                   sculptureMutation.mutate(newSculpture);
                 }
+
+                // showToast(newSculpture.keywords, Mode.Info);
               }}
             >
               Add Sculpture
@@ -357,6 +455,18 @@ export default function AddSculptureView() {
         isGood = false;
       }
     }
+    if (newSculpture.keywords.length > 0) {
+      const pattern = /^[a-zA-Z0-9;]+$/;
+
+      if (!pattern.test(newSculpture.keywords)) {
+        isGood = false;
+        showToast(
+          "Invalid keyword! Must only contain a-z and 0-9.",
+          Mode.Error
+        );
+      }
+    }
+
     return isGood;
   }
   //   } else {

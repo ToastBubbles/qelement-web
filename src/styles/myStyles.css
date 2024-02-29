@@ -22,7 +22,7 @@
 }
 
 .Toastify__toast-container {
-  white-space : pre-line !important;
+  white-space: pre-line !important;
 }
 
 .disabled-link {
@@ -234,7 +234,12 @@ body::-webkit-scrollbar {
   display: flex;
   border: solid 1px var(--lt-grey);
 }
-
+.new-keyword {
+  padding: 0.15em;
+  margin: 0.15em;
+  border: solid var(--lt-grey) 1px;
+  border-radius: 0.25em;
+}
 .qpart-dropdown {
   position: absolute;
   max-height: 15em;
@@ -1757,7 +1762,17 @@ td {
   align-items: center;
   justify-content: center;
 }
-
+.flex-wrap {
+  flex-wrap: wrap;
+}
+.overflow-y-auto {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.wrap-string {
+  width: 100%; /* Set your desired width */
+  word-wrap: break-word; /* Break long words to wrap */
+}
 .cell-shade-red {
   background-color: #ff000009;
 }

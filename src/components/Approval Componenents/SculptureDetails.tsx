@@ -92,6 +92,20 @@ export default function SculptureDetails({ sculpture, refetchFn }: IProps) {
           <div>Location:</div>
           <div>{sculpture.location}</div>
         </div>
+        <div style={{ maxWidth: "40em", justifyContent: 'start' }} className="d-flex flex-wrap">
+          <div>Keywords:</div>
+          {/* <div className="wrap-string">{sculpture.keywords}</div> */}
+          {sculpture.keywords.length > 0 &&
+            sculpture.keywords.split(";").map((keyword) => (
+              <div className="new-keyword" key={keyword}>
+                {keyword}
+              </div>
+            ))}
+        </div>
+        <div>
+          <div>Note:</div>
+          <div>{sculpture.note}</div>
+        </div>
         <div>
           <div>Requestor:</div>
           <div>

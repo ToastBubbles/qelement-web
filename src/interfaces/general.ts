@@ -329,6 +329,7 @@ export interface ISculptureDTO {
   yearMade: number;
   yearRetired: number;
   keywords: string;
+  note: string;
   creator: user;
   inventory: IQPartWSculptureInventory[];
   images: ImageDTO[];

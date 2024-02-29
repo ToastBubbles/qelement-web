@@ -125,7 +125,7 @@ export default function SingleSculptureView() {
                 <div className="element-name">{sculpture.name}</div>
               </div>
               <div className="center">
-                <div className="d-flex">
+                <div className="d-flex w-100">
                   <div className="element-image">
                     <img
                       className="element-image-actual"
@@ -133,44 +133,53 @@ export default function SingleSculptureView() {
                       alt="placeholder"
                     />
                   </div>
+                  <div
+                    className="d-flex flex-col jc-space-b"
+                    style={{ width: "auto" }}
+                  >
+                    <div className="d-flex w-100">
+                      <div className="d-flex flex-col jc-space-b  action-container">
+                        <ul className="actions">
+                          <span>Details:</span>
+                          <li>Type: {sculpture.brickSystem}</li>
+                          <li>Location: {sculpture.location}</li>
+                          <li>Made: {sculpture.yearMade}</li>
+                          <li>Retired: {sculpture.yearRetired}</li>
+                        </ul>
+                      </div>
 
-                  <div className="d-flex flex-col jc-space-b  action-container">
-                    <ul className="actions">
-                      <span>Details:</span>
-                      <li>Type: {sculpture.brickSystem}</li>
-                      <li>Location: {sculpture.location}</li>
-                      <li>Made: {sculpture.yearMade}</li>
-                      <li>Retired: {sculpture.yearRetired}</li>
-                    </ul>
-                    <ul className="actions">
+                      <div className="d-flex flex-col   action-container">
+                        <Link
+                          className="link"
+                          to={`/add/sculpture/parts/${sculpture.id}`}
+                        >
+                          Add Parts
+                        </Link>
+                        <Link
+                          className="link"
+                          to={`/add/image/?sculptureId=${sculpture.id}`}
+                        >
+                          Add Photo
+                        </Link>
+                      </div>
+                    </div>
+                    <div style={{ padding: "1em" }} className="w-100 ai-end">
                       <span>Keywords:</span>
-
-                      <li>
-                        <a href="#" className="link">
-                          test
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" className="link">
-                          test
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div className="d-flex flex-col   action-container">
-                    <Link
-                      className="link"
-                      to={`/add/sculpture/parts/${sculpture.id}`}
-                    >
-                      Add Parts
-                    </Link>
-                    <Link
-                      className="link"
-                      to={`/add/image/?sculptureId=${sculpture.id}`}
-                    >
-                      Add Photo
-                    </Link>
+                      <div className="d-flex flex-wrap overflow-y-auto" style={{maxHeight: "10em"}}>
+                        {sculpture.keywords.length > 0 ? (
+                          splitKeywords(sculpture.keywords).map((keyword) => (
+                            <div
+                              className="new-keyword flex-wrap"
+                              key={keyword}
+                            >
+                              {keyword}
+                            </div>
+                          ))
+                        ) : (
+                          <div className="grey-txt">No keywords</div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <fieldset className="colors-used">
@@ -270,13 +279,11 @@ export default function SingleSculptureView() {
                     >
                       {sculpture.inventory.length > 0 ? (
                         sculpture.inventory.map((qpart) => (
-                          
-                            <RecentQPart
-                              key={qpart.id}
-                              qpart={qpart}
-                              hideDate={true}
-                            />
-                         
+                          <RecentQPart
+                            key={qpart.id}
+                            qpart={qpart}
+                            hideDate={true}
+                          />
                         ))
                       ) : (
                         <div style={{ paddingLeft: "1em", paddingTop: "2em" }}>
@@ -455,5 +462,9 @@ export default function SingleSculptureView() {
     });
     output.sort((a, b) => a.swatchId - b.swatchId);
     return output;
+  }
+
+  function splitKeywords(keywordString: string): string[] {
+    return keywordString.split(";");
   }
 }
