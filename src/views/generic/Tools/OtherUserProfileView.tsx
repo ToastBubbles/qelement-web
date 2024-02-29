@@ -127,6 +127,8 @@ export default function OtherUserProfileView() {
 
   if (username && userData && !isUsernameBad) {
     let user = userData.data as IUserDTO;
+    console.log(user);
+
     return (
       <div className="formcontainer">
         <div className="profile-container" style={{ marginTop: "3em" }}>
@@ -137,7 +139,7 @@ export default function OtherUserProfileView() {
               className="d-flex flex-col jc-center"
             >
               <div className="profile-name">{username}</div>
-              <div className="profile-title" style={{ color: "#00BB00" }}>
+              <div className={""} style={{ color: "#00BB00" }}>
                 Bricked up!
               </div>
             </div>

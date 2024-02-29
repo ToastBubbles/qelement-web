@@ -299,7 +299,7 @@ export default function TitleManagementView() {
                     >
                       {userTitleObj.title.title}
                     </div>
-                    <div style={{ width: "5%" }}>
+                    <div style={{ width: "5%", position: 'relative',  }}>
                       <X fn={handleRemoveUser} />
                     </div>
                   </div>

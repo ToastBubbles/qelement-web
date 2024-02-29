@@ -43,12 +43,10 @@ const ProfilePictureUploader = ({ userId, refetchFn, pfpId }: iProps) => {
   const allowedTypes = ["image/jpeg", "image/png"];
 
   const imgDeleteMutation = useMutation({
-    mutationFn: (id: number) =>
+    mutationFn: () =>
       axios.post<IAPIResponse>(
-        `http://localhost:3000/image/deny`,
-        {
-          id,
-        },
+        `http://localhost:3000/image/removeMyPFP`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -58,7 +56,7 @@ const ProfilePictureUploader = ({ userId, refetchFn, pfpId }: iProps) => {
     onError: (e) => {
       console.log(e);
 
-      showToast("401 Permissions Error", Mode.Error);
+      showToast("Permissions Error", Mode.Error);
     },
     onSuccess: (e) => {
       if (e.data.code == 200) {
@@ -380,7 +378,7 @@ const ProfilePictureUploader = ({ userId, refetchFn, pfpId }: iProps) => {
                   <button
                     disabled={deleteButtonDisabled}
                     onClick={() => {
-                      imgDeleteMutation.mutate(pfpId);
+                      imgDeleteMutation.mutate();
                     }}
                   >
                     Delete
