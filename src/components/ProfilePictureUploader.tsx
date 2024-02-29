@@ -1,6 +1,6 @@
 import axios from "axios";
 import { FormEvent, useContext, useState } from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import ReactCrop, { Crop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import { AppContext } from "../context/context";
@@ -16,9 +16,11 @@ import MyToolTip from "./MyToolTip";
 
 interface iProps {
   userId: number;
+  refetchFn: () => void;
+  pfpId?: number;
 }
 
-const ProfilePictureUploader = ({ userId }: iProps) => {
+const ProfilePictureUploader = ({ userId, refetchFn, pfpId }: iProps) => {
   const {
     state: {
       jwt: { token, payload },
@@ -27,14 +29,46 @@ const ProfilePictureUploader = ({ userId }: iProps) => {
   } = useContext(AppContext);
 
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [resizedImage, setResizedImage] = useState<Blob | null>(null);
+  // const [resizedImage, setResizedImage] = useState<Blob | null>(null);
   const [crop, setCrop] = useState<Crop>();
   const [isCropping, setIsCropping] = useState<boolean>(false);
   const [cropDataPercent, setCropDataPercent] = useState<Crop>();
+
+  const [readyToDelete, setReadyToDelete] = useState<boolean>(false);
+  const [deleteButtonDisabled, setDeleteButtonDisabled] =
+    useState<boolean>(false);
   const minWidth = 150;
   const maxWidth = 250;
 
   const allowedTypes = ["image/jpeg", "image/png"];
+
+  const imgDeleteMutation = useMutation({
+    mutationFn: (id: number) =>
+      axios.post<IAPIResponse>(
+        `http://localhost:3000/image/deny`,
+        {
+          id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onError: (e) => {
+      console.log(e);
+
+      showToast("401 Permissions Error", Mode.Error);
+    },
+    onSuccess: (e) => {
+      if (e.data.code == 200) {
+        refetchFn();
+        showToast("Profile Picture deleted...", Mode.Info);
+      } else {
+        showToast(`Error deleting image (${e.data.code})`, Mode.Error);
+      }
+    },
+  });
 
   if (userId > 0) {
     const handleCropComplete = (croppedArea: Crop, croppedAreaPixels: Crop) => {
@@ -99,59 +133,12 @@ const ProfilePictureUploader = ({ userId }: iProps) => {
       };
     };
 
-    // const handleResize = () => {
-    //   if (!selectedImage) return;
-    //   const reader = new FileReader();
-    //   reader.readAsDataURL(selectedImage);
-    //   reader.onload = () => {
-    //     const image = new Image();
-    //     image.src = reader.result as string;
-    //     image.onload = () => {
-    //       const canvas = document.createElement("canvas");
-    //       const context = canvas.getContext("2d");
-    //       if (!context) return;
-    //       let { width, height } = image;
-    //       const aspectRatio = width / height;
-    //       if (width > height) {
-    //         if (width > maxWidth) {
-    //           width = maxWidth;
-    //           height = width / aspectRatio;
-    //         } else if (width < minWidth) {
-    //           width = minWidth;
-    //           height = width / aspectRatio;
-    //         }
-    //       } else {
-    //         if (height > maxWidth) {
-    //           height = maxWidth;
-    //           width = height * aspectRatio;
-    //         } else if (height < maxWidth) {
-    //           height = minWidth;
-    //           width = height * aspectRatio;
-    //         }
-    //       }
-    //       canvas.width = width;
-    //       canvas.height = height;
-    //       context.drawImage(image, 0, 0, width, height);
-    //       canvas.toBlob((blob) => {
-    //         if (!blob) return;
-    //         setResizedImage(blob);
-    //         showToast(
-    //           `Image successfully resized to ${Math.floor(height)}x${Math.floor(
-    //             width
-    //           )}`,
-    //           Mode.Success
-    //         );
-    //       }, selectedImage.type);
-    //     };
-    //   };
-    // };
-
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       if (event.target.files !== null) {
         const file = event.target.files[0];
         if (allowedTypes.includes(file.type)) {
           setSelectedImage(file);
-          setResizedImage(null);
+          // setResizedImage(null);
           // resizeImage(file);
         } else {
           showToast("Image must be in JPG, JPEG, or PNG format.", Mode.Error);
@@ -171,12 +158,7 @@ const ProfilePictureUploader = ({ userId }: iProps) => {
             if (!context) return;
             let { width, height } = image;
             const aspectRatio = width / height;
-            // if (width != height) {
-            //   showToast(
-            //     "Image must have 1 / 1 aspect ratio. (square)",
-            //     Mode.Error
-            //   );
-            // }
+
             if (
               width > maxWidth ||
               width < minWidth ||
@@ -351,7 +333,7 @@ const ProfilePictureUploader = ({ userId }: iProps) => {
             }
           }}
         />
-        {selectedImage && (
+        {selectedImage ? (
           <>
             {isCropping ? (
               <button onClick={handleCropImage}>Confirm Crop</button>
@@ -369,6 +351,43 @@ const ProfilePictureUploader = ({ userId }: iProps) => {
             <button disabled={isCropping} onClick={resizeImage}>
               Auto Resize
             </button>
+          </>
+        ) : (
+          <>
+            {pfpId && pfpId > 0 && (
+              <>
+                <div className="fake-hr"></div>
+
+                <div className={readyToDelete ? "hidden" : ""}>
+                  <div style={{ padding: "2em 0" }}>
+                    Delete my Profile Picture
+                  </div>
+                  <button
+                    onClick={() => {
+                      setReadyToDelete(true);
+                      setDeleteButtonDisabled(true);
+                      setTimeout(() => {
+                        setDeleteButtonDisabled(false);
+                      }, 1500);
+                    }}
+                  >
+                    Delete...
+                  </button>
+                </div>
+
+                <div className={readyToDelete ? "" : "hidden"}>
+                  <div style={{ padding: "2em 0" }}>Are you sure?</div>
+                  <button
+                    disabled={deleteButtonDisabled}
+                    onClick={() => {
+                      imgDeleteMutation.mutate(pfpId);
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </>
+            )}
           </>
         )}
       </div>

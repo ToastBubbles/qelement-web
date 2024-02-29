@@ -37,7 +37,7 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
   } = useContext(AppContext);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imageType, setImageType] = useState<string>("");
-  const [resizedImage, setResizedImage] = useState<Blob | null>(null);
+  // const [resizedImage, setResizedImage] = useState<Blob | null>(null);
   const [crop, setCrop] = useState<Crop>();
   const [isCropping, setIsCropping] = useState<boolean>(false);
   // const [croppedImageUrl, setCroppedImageUrl] = useState("");
@@ -138,10 +138,10 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
     const handleSubmit = (event: FormEvent) => {
       event.preventDefault();
       let convertedFile = null;
-      if (resizedImage)
-        convertedFile = new File([resizedImage], "resized_image.jpg", {
-          type: "image/jpeg",
-        });
+      // if (resizedImage)
+      //   convertedFile = new File([resizedImage], "resized_image.jpg", {
+      //     type: "image/jpeg",
+      //   });
       const imageToUpload = convertedFile || selectedImage;
       if (!imageToUpload) {
         showToast("Please select an image.", Mode.Warning);
@@ -204,7 +204,7 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
                   if (resp.data.code == 201 || resp.data.code == 202) {
                     setImageType("");
                     setSelectedImage(null);
-                    setResizedImage(null);
+                    // setResizedImage(null);
                     if (resp.data.code == 201)
                       showToast("Image submitted for approval!", Mode.Success);
                     else showToast("Image added!", Mode.Success);
@@ -271,7 +271,7 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
         const file = event.target.files[0];
         if (allowedTypes.includes(file.type)) {
           setSelectedImage(file);
-          setResizedImage(null);
+          // setResizedImage(null);
           // resizeImage(file);
         } else {
           showToast("Image must be in JPG, JPEG, or PNG format.", Mode.Error);
