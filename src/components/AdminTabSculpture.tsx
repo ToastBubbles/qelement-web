@@ -14,6 +14,7 @@ import { useMutation } from "react-query";
 import axios from "axios";
 import { AppContext } from "../context/context";
 import KeywordAdd from "./Edit Components/KeywordAdd";
+import SculptureEdit from "./Edit Components/SculptureEdit";
 
 interface IProps {
   sculpture: ISculptureDTO;
@@ -59,10 +60,29 @@ export default function AdminTabSculpture({ sculpture, refetchFn }: IProps) {
   return (
     <>
       {popupOpen && (
-        <GenericPopup content={popupContent} closePopup={closePopUp} />
+        <GenericPopup
+          content={popupContent}
+          closePopup={closePopUp}
+          isLarge={true}
+        />
       )}
       <div>
-        <div>Element IDs:</div>
+        <div>Sculpture:</div>
+        <div
+          className="clickable"
+          onClick={() => {
+            setPopupContent(
+              <SculptureEdit
+                sculpture={sculpture}
+                closePopup={closePopUp}
+                refetchFn={refetchFn}
+              />
+            );
+            setPopupOpen(true);
+          }}
+        >
+          Edit this Sculpture
+        </div>
       </div>
       <div>Note:</div>
       <div>

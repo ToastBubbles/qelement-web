@@ -325,6 +325,16 @@ export interface ISimpleSculptureDTO {
   creator: user;
 }
 
+export interface ISculptureEdits {
+  id: number;
+  name: string;
+  brickSystem: string;
+  location: string;
+  yearMade: number;
+  yearRetired: number;
+  note: string;
+}
+
 export interface ISculptureDTO {
   id: number;
   name: string;

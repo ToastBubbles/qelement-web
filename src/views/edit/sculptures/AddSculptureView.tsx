@@ -476,6 +476,8 @@ export default function AddSculptureView() {
       }
     }
 
+
+
     return isGood;
   }
   //   } else {

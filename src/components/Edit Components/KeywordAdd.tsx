@@ -1,10 +1,4 @@
-import { Link } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
-
-import { IElementID, IIdAndNumber, iIdOnly } from "../../interfaces/general";
-import { AppContext } from "../../context/context";
-import { useMutation } from "react-query";
-import axios from "axios";
+import { useEffect, useState } from "react";
 import showToast, { Mode } from "../../utils/utils";
 
 interface IProps {

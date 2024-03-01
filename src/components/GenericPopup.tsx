@@ -4,12 +4,18 @@ interface IProps {
   content: ReactNode;
   closePopup: () => void;
   fn?: () => void;
+  isLarge?: boolean;
 }
 
-export default function GenericPopup({ content, closePopup, fn }: IProps) {
+export default function GenericPopup({
+  content,
+  closePopup,
+  fn,
+  isLarge = false,
+}: IProps) {
   return (
     <div className="popup-container">
-      <div className="popup-body">
+      <div className={isLarge ? "popup-body-large" : "popup-body"}>
         <button className="popup-close" onClick={closePopup}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
