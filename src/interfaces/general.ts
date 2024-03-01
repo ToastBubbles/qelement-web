@@ -133,6 +133,10 @@ export interface IIdAndString extends iIdOnly {
   string: string;
 }
 
+export interface IIdStringBool extends IIdAndString {
+  bool: boolean;
+}
+
 export interface IIdAndNumber extends iIdOnly {
   number: number;
 }

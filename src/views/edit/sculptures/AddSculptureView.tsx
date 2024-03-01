@@ -29,6 +29,9 @@ export default function AddSculptureView() {
   const [newSculpture, setNewSculpture] =
     useState<ICreateSculptureDTO>(baseValues);
   const [keywordArray, setKeywordArray] = useState<string[]>([]);
+  const [lowercaseKeywordArray, setLowercaseKeywordArray] = useState<string[]>(
+    []
+  );
   const [currentKeyword, setCurrentKeyword] = useState<string>("");
   useEffect(() => {
     setNewSculpture((newSculpture) => ({
@@ -83,6 +86,9 @@ export default function AddSculptureView() {
           ...newSculpture,
           ...{ keywords: keywordString },
         }));
+
+        const lowercaseKeywordsArr = keywordArray.map((kw) => kw.toLowerCase());
+        setLowercaseKeywordArray(lowercaseKeywordsArr);
       } else {
         setNewSculpture((newSculpture) => ({
           ...newSculpture,
@@ -284,7 +290,7 @@ export default function AddSculptureView() {
           </div>
           <div className="w-100 d-flex jc-space-b">
             <div>
-              <label htmlFor="yearret">Keywords</label>
+              <label htmlFor="keywords">Keywords</label>
               <MyToolTip
                 content={
                   <div style={{ maxWidth: "20em" }}>
@@ -308,6 +314,7 @@ export default function AddSculptureView() {
             <div className="w-50">
               <input
                 maxLength={12}
+                name="keywords"
                 className="formInput"
                 style={{ width: "85%" }}
                 type="text"
@@ -327,7 +334,9 @@ export default function AddSculptureView() {
                 onClick={() => {
                   if (
                     currentKeyword.length > 0 &&
-                    !keywordArray.includes(currentKeyword)
+                    !lowercaseKeywordArray.includes(
+                      currentKeyword.toLowerCase()
+                    )
                   ) {
                     if (
                       keywordArray.join(";").length + currentKeyword.length >
