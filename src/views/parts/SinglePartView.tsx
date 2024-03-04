@@ -13,6 +13,7 @@ import {
   ImageDTO,
   user,
   ICommentDTO,
+  part,
 } from "../../interfaces/general";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -70,6 +71,8 @@ export default function SinglePartView() {
   const [selectedQPartMold, setSelectedQPartMold] = useState<number>(-1);
   const [collectionOpen, setCollectionOpen] = useState(false);
   const [favoritesOpen, setFavoritesOpen] = useState(false);
+
+  const [noQParts, setNoQParts] = useState(false);
   const [eIDOpen, setEIDOpen] = useState(false);
 
   const [detailsTabActive, setDetailsTabActive] = useState<boolean>(true);
@@ -77,6 +80,11 @@ export default function SinglePartView() {
   const [commentTabActive, setCommentTabActive] = useState<boolean>(false);
   const [sculptureTabActive, setSculptureTabActive] = useState<boolean>(false);
   const [adminTabActive, setAdminTabActive] = useState<boolean>(false);
+
+  const [commentColorTabActive, setCommentColorTabActive] =
+    useState<boolean>(true);
+  const [commentPartTabActive, setCommentPartTabActive] =
+    useState<boolean>(false);
 
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
   const [commentContent, setCommentContent] = useState<string>("");
@@ -99,6 +107,25 @@ export default function SinglePartView() {
     setUrlColorId(Number(color));
     setUrlMoldId(Number(mold));
   }, [location]);
+
+  useEffect(() => {
+    if (noQParts) partRefetch();
+  }, [noQParts]);
+
+  const {
+    data: partData,
+    error: partError,
+    refetch: partRefetch,
+  } = useQuery({
+    queryKey: `part${partId}`,
+    queryFn: () => {
+      return axios.get<part>(`http://localhost:3000/parts/id/${partId}`);
+    },
+
+    staleTime: 0,
+    enabled: false,
+    // retry: false,
+  });
 
   const {
     data: qpartData,
@@ -157,23 +184,18 @@ export default function SinglePartView() {
   if (qpartError) navigate("/404");
 
   const commentMutation = useMutation({
-    mutationFn: ({ content, userId, qpartId }: ICommentCreationDTO) =>
-      axios.post(
-        `http://localhost:3000/comment/add`,
-        {
-          content,
-          userId,
-          qpartId,
+    mutationFn: (data: ICommentCreationDTO) =>
+      axios.post(`http://localhost:3000/comment/add`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      ),
+      }),
     onSuccess: () => {
       showToast("Comment Added", Mode.Success);
-      qpartRefetch();
+      setCommentContent("");
+      if (noQParts) {
+        partRefetch();
+      } else qpartRefetch();
     },
   });
   function getUnique(qpts: IQPartDTOInclude[]): IPartMoldDTO[] {
@@ -263,7 +285,7 @@ export default function SinglePartView() {
                     <Link
                       to={`/part-categories/${mypart?.mold.parentPart.category.id}`}
                     >
-                      Bricks
+                      {mypart?.mold.parentPart.category.name}
                     </Link>
                   </li>
                 </ul>
@@ -508,10 +530,19 @@ export default function SinglePartView() {
                           setAdminTabActive(false);
                         }}
                       >
-                        Comments{" "}
-                        {mypart?.comments &&
-                          mypart?.comments.length > 0 &&
-                          `(${mypart?.comments.length})`}
+                        <div className="comment-tab">
+                          Comments{" "}
+                          {mypart?.comments &&
+                            mypart.comments.length > 0 &&
+                            `(${mypart?.comments.length})`}
+                          {mypart &&
+                            mypart?.mold.parentPart.comments.length > 0 && (
+                              <span>
+                                Parent Part (
+                                {mypart?.mold.parentPart.comments.length})
+                              </span>
+                            )}
+                        </div>
                       </button>
                       <button
                         className={
@@ -587,39 +618,106 @@ export default function SinglePartView() {
                     </div>
                     <div
                       className={
-                        "tabcontent commenttab" +
-                        (commentTabActive ? "" : " tabhidden")
+                        "tabcontent" + (commentTabActive ? "" : " tabhidden")
                       }
                     >
                       <div>
-                        {mypart?.comments.length == 0 ? (
-                          <div
-                            style={{
-                              paddingBottom: "2em",
-                              paddingTop: "1em",
+                        <div className="sub-tab-container">
+                          {/* <div className="sub-tab">Color</div>
+                          <div className="sub-tab">Part</div> */}
+
+                          <button
+                            className={commentColorTabActive ? " active" : ""}
+                            onClick={() => {
+                              setCommentColorTabActive(true);
+                              setCommentPartTabActive(false);
                             }}
                           >
-                            No comments yet
+                            This QPart{" "}
+                            {mypart?.comments &&
+                              mypart?.comments.length > 0 &&
+                              `(${mypart?.comments.length})`}
+                          </button>
+
+                          <button
+                            className={commentPartTabActive ? " active" : ""}
+                            onClick={() => {
+                              setCommentColorTabActive(false);
+                              setCommentPartTabActive(true);
+                            }}
+                            style={{ left: "135px", width: "auto" }}
+                          >
+                            {mypart?.mold.parentPart.name}{" "}
+                            {mypart?.mold.parentPart.comments &&
+                              mypart?.mold.parentPart.comments.length > 0 &&
+                              `(${mypart?.mold.parentPart.comments.length})`}
+                          </button>
+                        </div>
+                        {commentColorTabActive && (
+                          <div style={{ padding: "0 1em 0 1em" }}>
+                            {mypart?.comments.length == 0 ? (
+                              <div
+                                style={{
+                                  paddingBottom: "2em",
+                                  paddingTop: "1em",
+                                }}
+                              >
+                                No comments yet
+                              </div>
+                            ) : (
+                              sortCommentsByDate(mypart?.comments).map(
+                                (comment) => {
+                                  return (
+                                    <Comment
+                                      key={comment.id}
+                                      data={comment}
+                                      isAdmin={isAdmin}
+                                      viewerId={payload.id}
+                                      getter={commentContent}
+                                      setter={setCommentContent}
+                                      refetchFn={qpartRefetch}
+                                    />
+                                  );
+                                }
+                              )
+                            )}
                           </div>
-                        ) : (
-                          sortCommentsByDate(mypart?.comments).map(
-                            (comment) => {
-                              return (
-                                <Comment
-                                  key={comment.id}
-                                  data={comment}
-                                  isAdmin={isAdmin}
-                                  viewerId={payload.id}
-                                  getter={commentContent}
-                                  setter={setCommentContent}
-                                  refetchFn={qpartRefetch}
-                                />
-                              );
-                            }
-                          )
+                        )}
+                        {commentPartTabActive && (
+                          <div style={{ padding: "0 1em 0 1em" }}>
+                            {mypart?.mold.parentPart.comments.length == 0 ? (
+                              <div
+                                style={{
+                                  paddingBottom: "2em",
+                                  paddingTop: "1em",
+                                }}
+                              >
+                                No comments yet
+                              </div>
+                            ) : (
+                              sortCommentsByDate(
+                                mypart?.mold.parentPart.comments
+                              ).map((comment) => {
+                                return (
+                                  <Comment
+                                    key={comment.id}
+                                    data={comment}
+                                    isAdmin={isAdmin}
+                                    viewerId={payload.id}
+                                    getter={commentContent}
+                                    setter={setCommentContent}
+                                    refetchFn={qpartRefetch}
+                                  />
+                                );
+                              })
+                            )}
+                          </div>
                         )}
                       </div>
-                      <div className="w-100 d-flex">
+                      <div
+                        className="w-100 d-flex"
+                        style={{ padding: "0 1em 1em 1em" }}
+                      >
                         {/* <PseudoInput /> */}
 
                         <ExpandingTextbox
@@ -630,12 +728,19 @@ export default function SinglePartView() {
                           className="comment-btn"
                           onClick={() => {
                             if (payload.id && commentContent.length > 1) {
-                              commentMutation.mutate({
-                                content: commentContent,
-                                userId: payload.id,
-                                qpartId: selectedQPartid,
-                              });
-                              setCommentContent("");
+                              if (commentColorTabActive) {
+                                commentMutation.mutate({
+                                  content: commentContent,
+                                  userId: payload.id,
+                                  qpartId: selectedQPartid,
+                                });
+                              } else if (mypart) {
+                                commentMutation.mutate({
+                                  content: commentContent,
+                                  userId: payload.id,
+                                  partId: mypart?.mold.parentPart.id,
+                                });
+                              }
                             } else
                               showToast("Error adding comment.", Mode.Error);
                           }}
@@ -753,7 +858,275 @@ export default function SinglePartView() {
     );
   } else {
     if (qpartData?.data && qpartData.data.length == 0) {
-      return <p>No Q-Elements exist for this part yet!</p>;
+      if (!noQParts) setNoQParts(true);
+
+      if (partData) {
+        console.log("showing part data");
+        let thisPart = partData.data;
+        let isAdmin = adminData?.data.code == 200;
+        return (
+          <div className="mx-w">
+            <div className="page-content-wrapper">
+              <div className="page-content-wide">
+                <div className="right-col">
+                  <div className="top">
+                    <ul className="breadcrumb">
+                      <li>
+                        <Link to={"/part-categories"}>Parts</Link>
+                      </li>
+                      <li>{"\u00A0>\u00A0"}</li>
+                      <li>
+                        <Link to={`/part-categories/${thisPart.category.id}`}>
+                          {thisPart.category.name}
+                        </Link>
+                      </li>
+                    </ul>
+
+                    <div className="element-name">{thisPart.name}</div>
+                    <div className="d-flex flex-col">
+                      <select
+                        name="qpartmolds"
+                        id="qpartmolds"
+                        className="qpart-color-dropdown"
+                        disabled={true}
+                      >
+                        <option key={-1} value="-1">
+                          --Show All Part Variations--
+                        </option>
+                      </select>
+                      <div>
+                        <div className="qpart-dropdown-btn">
+                          <div className={"qpart-dd-row-swatch "}></div>
+                          <div style={{ flexGrow: "1" }}>
+                            <div className="d-flex"></div>
+                            <div
+                              className="d-flex"
+                              style={{
+                                fontSize: "0.75em",
+                                color: "var(--lt-grey)",
+                              }}
+                            ></div>
+                          </div>
+                          <svg
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            viewBox="0 0 16 16"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="center">
+                    <div className="element-image">
+                      <img
+                        className="element-image-actual"
+                        src="https://via.placeholder.com/1024x768/eee?text=4:3"
+                        alt="placeholder"
+                      />
+                    </div>
+                    <div
+                      style={{
+                        width: "8em",
+                        fontSize: "1.25em",
+                        fontWeight: "700",
+                        textAlign: "center",
+                        margin: "auto",
+                      }}
+                    >
+                      No QParts Exist for this Part yet!
+                    </div>
+
+                    <div
+                      className="d-flex flex-col jc-space-b border-left action-container"
+                      style={{ width: "25%" }}
+                    >
+                      <ul className="actions">
+                        <span>Actions:</span>
+                        <li>
+                          <Link className="link" to={"/add/part"}>
+                            Add Molds
+                          </Link>
+                        </li>
+                        <li>
+                          <Link className="link" to={"/add/qpart"}>
+                            Add QParts
+                          </Link>
+                        </li>
+                      </ul>
+                      <ul className="actions">
+                        <span>Links:</span>
+                        <li>
+                          <a
+                            href={`https://www.bricklink.com/v2/catalog/catalogitem.page?P=${thisPart.blURL}`}
+                            className="link"
+                          >
+                            bricklink
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                    <fieldset className="status">
+                      <legend>Status History</legend>
+
+                      <div>
+                        <div className="grey-txt">
+                          Cannot display status information!
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                  <div className="lower-center">
+                    <div className="fake-hr"></div>
+                    <div className="lower-container">
+                      <div className="lower-center-left">
+                        <div className="tab">
+                          <button
+                            className={"tablinks active"}
+                            style={{ cursor: "default" }}
+                          >
+                            <div>
+                              Comments{" "}
+                              {thisPart.comments &&
+                                thisPart.comments.length > 0 &&
+                                `(${thisPart.comments.length})`}
+                            </div>
+                          </button>
+                        </div>
+
+                        <div className={"tabcontent"}>
+                          <div>
+                            <div className="sub-tab-container">
+                              <button className={" active"}>
+                                {thisPart.name}{" "}
+                                {thisPart.comments &&
+                                  thisPart.comments.length > 0 &&
+                                  `(${thisPart.comments.length})`}
+                              </button>
+                            </div>
+                            {commentColorTabActive && (
+                              <div style={{ padding: "0 1em 0 1em" }}>
+                                {thisPart.comments.length == 0 ? (
+                                  <div
+                                    style={{
+                                      paddingBottom: "2em",
+                                      paddingTop: "1em",
+                                    }}
+                                  >
+                                    No comments yet
+                                  </div>
+                                ) : (
+                                  sortCommentsByDate(thisPart.comments).map(
+                                    (comment) => {
+                                      return (
+                                        <Comment
+                                          key={comment.id}
+                                          data={comment}
+                                          isAdmin={isAdmin}
+                                          viewerId={payload.id}
+                                          getter={commentContent}
+                                          setter={setCommentContent}
+                                          refetchFn={partRefetch}
+                                        />
+                                      );
+                                    }
+                                  )
+                                )}
+                              </div>
+                            )}
+                            {commentPartTabActive && (
+                              <div style={{ padding: "0 1em 0 1em" }}>
+                                {thisPart.comments.length == 0 ? (
+                                  <div
+                                    style={{
+                                      paddingBottom: "2em",
+                                      paddingTop: "1em",
+                                    }}
+                                  >
+                                    No comments yet
+                                  </div>
+                                ) : (
+                                  sortCommentsByDate(thisPart.comments).map(
+                                    (comment) => {
+                                      return (
+                                        <Comment
+                                          key={comment.id}
+                                          data={comment}
+                                          isAdmin={isAdmin}
+                                          viewerId={payload.id}
+                                          getter={commentContent}
+                                          setter={setCommentContent}
+                                          refetchFn={qpartRefetch}
+                                        />
+                                      );
+                                    }
+                                  )
+                                )}
+                              </div>
+                            )}
+                          </div>
+                          <div
+                            className="w-100 d-flex"
+                            style={{ padding: "0 1em 1em 1em" }}
+                          >
+                            {/* <PseudoInput /> */}
+
+                            <ExpandingTextbox
+                              getter={commentContent}
+                              setter={setCommentContent}
+                            />
+                            <button
+                              className="comment-btn"
+                              onClick={() => {
+                                if (payload.id && commentContent.length > 1) {
+                                  commentMutation.mutate({
+                                    content: commentContent,
+                                    userId: payload.id,
+                                    partId: thisPart.id,
+                                  });
+                                } else
+                                  showToast(
+                                    "Error adding comment.",
+                                    Mode.Error
+                                  );
+                              }}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                fill="currentColor"
+                                viewBox="0 0 16 16"
+                              >
+                                <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="lower-center-right">
+                        <fieldset className="other-colors">
+                          <legend>Colors</legend>
+                          <div className="grey-txt">
+                            Cannot show Color data!
+                          </div>
+                        </fieldset>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      } else {
+        return <LoadingPage />;
+      }
     } else {
       return <LoadingPage />;
     }

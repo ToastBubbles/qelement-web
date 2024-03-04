@@ -266,6 +266,7 @@ export interface ICommentCreationDTO {
   userId: number;
   content: string;
   qpartId?: number;
+  partId?: number;
   sculptureId?: number;
 }
 export interface ImageDTO {
@@ -451,6 +452,7 @@ export interface part {
   name: string;
   // number: string;
   // catId: number;
+  comments: ICommentDTO[];
   category: ICategory;
   createdAt: string;
   updatedAt: string;

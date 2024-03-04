@@ -1069,6 +1069,55 @@ fieldset > legend {
   width: 80%;
 }
 
+.sub-tab-container {
+  position: relative;
+  height: 2.25em;
+  background-color: azure;
+  padding-top: 0.5em;
+  padding-left: 1em;
+  border-top-right-radius: 0.5em;
+  border-bottom: solid 1px #ccc;
+}
+
+.sub-tab-container button {
+  position: absolute;
+  bottom: -1px;
+  background-color: inherit;
+
+  border: none;
+  outline: none;
+  padding: 6px 12px;
+
+  width: 120px;
+  white-space: nowrap;
+  cursor: pointer;
+  border: solid 1px #ccc;
+  border-bottom: solid 1px #ccc;
+
+  border-radius: 0.5em 0.5em 0 0;
+}
+
+.sub-tab-container button:hover {
+  background-color: #ddd;
+}
+
+.sub-tab-container button.active {
+  background-color: #f1f1f1;
+  border-bottom: solid 1px transparent;
+}
+
+.comment-tab {
+  position: relative;
+}
+.comment-tab > span {
+  position: absolute;
+  left: 0;
+  top: 85%;
+  font-size: 0.75em;
+  color: #777;
+  white-space: nowrap;
+}
+
 .tab {
   overflow: hidden;
   background-color: transparent;
