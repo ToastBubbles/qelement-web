@@ -870,7 +870,7 @@ input:checked + .slider:before {
   background-color: rgb(231, 228, 7);
 }
 
-.tag-notApproved{
+.tag-notApproved {
   background-color: var(--lt-grey);
   border: 2px solid red;
 }
@@ -2800,9 +2800,10 @@ input:checked + .slider:before {
   position: relative;
   display: flex;
   flex-direction: column;
+  background-color: rgb(246, 254, 255);
   /* justify-content: center; */
   align-items: center;
-  width: 20%;
+  width: 24%;
   border: solid 2px var(--lt-grey);
   border-radius: 0.5em;
   padding-bottom: 1.5em;
