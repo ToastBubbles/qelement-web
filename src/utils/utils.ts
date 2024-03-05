@@ -402,7 +402,7 @@ export function howLongAgo(dateStr: string) {
   return "Just now";
 }
 
-export function formatDate(dateStr: string, mode: string = "short") {
+export function formatDate(dateStr: string, mode: string = "short"): string {
   const date = new Date(dateStr);
 
   const now_utc = Date.UTC(
@@ -441,4 +441,5 @@ export function formatDate(dateStr: string, mode: string = "short") {
     const year = date.getFullYear();
     return `${day} ${month} ${year}`;
   }
+  return dateStr;
 }

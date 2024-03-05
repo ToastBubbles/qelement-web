@@ -137,7 +137,7 @@ export default function PartStatusDetails({ status, refetchFn }: IProps) {
         </div>
         <div>
           <div>Status Date:</div>
-          <div>{status.date}</div>
+          <div>{formatDate(status.date)}</div>
         </div>
         <section>
           Note:
@@ -169,7 +169,9 @@ export default function PartStatusDetails({ status, refetchFn }: IProps) {
       <>
         {sortedStatus.map((s) => (
           <div className="d-flex">
-            <div className="w-33">{s.id == status.id ? "This status -->" : ""}</div>
+            <div className="w-33">
+              {s.id == status.id ? "This status -->" : ""}
+            </div>
             <div
               className={`w-33 status-tag tag-${s.status} ${
                 s.approvalDate == null ? "tag-notApproved" : ""

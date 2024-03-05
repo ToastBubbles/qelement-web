@@ -14,6 +14,7 @@ import {
   user,
   ICommentDTO,
   part,
+  IPartStatusDTO,
 } from "../../interfaces/general";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -21,6 +22,7 @@ import QPartStatusDate from "../../components/QPartStatusDate";
 import showToast, {
   Mode,
   filterImages,
+  formatDate,
   getPrefColorName,
   sortCommentsByDate,
   sortStatus,
@@ -62,6 +64,8 @@ export default function SinglePartView() {
     retry: false,
     enabled: !!payload.id,
   });
+
+  const [sortedStatuses, setSortedStatuses] = useState<IPartStatusDTO[]>([])
   const [urlColorId, setUrlColorId] = useState<number | undefined>(undefined);
   const [urlMoldId, setUrlMoldId] = useState<number | undefined>(undefined);
   const [urlHasChanged, setUrlHasChanged] = useState<boolean>(false);
@@ -171,6 +175,15 @@ export default function SinglePartView() {
     }
   }, [qpartData]);
 
+  useEffect(() => {
+    if(mypart){
+      
+      setSortedStatuses(sortStatus(mypart.partStatuses, false))
+    }else{
+      setSortedStatuses([])
+    }
+  }, [selectedQPartid]);
+
   if (qpartError) navigate("/404");
 
   const commentMutation = useMutation({
@@ -256,7 +269,7 @@ export default function SinglePartView() {
     // console.log(mypart);
 
    
-    console.log(mypart);
+
 
     return (
       <div className="mx-w">
@@ -471,12 +484,12 @@ export default function SinglePartView() {
                 <fieldset className="status">
                   <legend>Status History</legend>
                   {mypart?.partStatuses && mypart.partStatuses.length > 0 ? (
-                    sortStatus(mypart?.partStatuses).map((status) => (
+                    sortedStatuses.map((status) => (
                       <QPartStatusDate
                         key={status.id}
                         status={status.status}
-                        date={status.date}
-                        isPrimary={mypart?.partStatuses.indexOf(status) == 0}
+                        date={formatDate(status.date)}
+                        isPrimary={sortedStatuses.indexOf(status) == 0}
                       />
                     ))
                   ) : (

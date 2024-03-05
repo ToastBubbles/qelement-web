@@ -44,6 +44,7 @@ export default function AddQPartView() {
     note: "",
     creatorId: -1,
     qpartId: -1,
+    approvalDate: "",
   };
   const [resetColorComponent, setResetColorComponent] = useState(false);
   const [elementId, setElementId] = useState<number>(-1);
@@ -154,6 +155,7 @@ export default function AddQPartView() {
           note: newStatus.note,
           qpartId: Number(data.data.message),
           creatorId: payload.id,
+          approvalDate: "",
         });
         handleResetComponent();
 
