@@ -45,6 +45,7 @@ export default function AddQPartView() {
     creatorId: -1,
     qpartId: -1,
   };
+  const [resetColorComponent, setResetColorComponent] = useState(false);
   const [elementId, setElementId] = useState<number>(-1);
   const [newQPart, setNewQPart] = useState<iQPartDTO>(defaultValues);
   const [newStatus, setNewStatus] =
@@ -65,6 +66,13 @@ export default function AddQPartView() {
       axios.get<part[]>(`http://localhost:3000/parts/byCatId/${category}`),
     enabled: category != -1,
   });
+
+  const handleResetComponent = () => {
+    setResetColorComponent(true);
+    setTimeout(() => {
+      setResetColorComponent(false);
+    }, 0);
+  };
 
   const { refetch: matchRefetch } = useQuery({
     queryKey: `match-p${newQPart.partId}-m${newQPart.moldId}-c${newQPart.colorId}`,
@@ -147,6 +155,7 @@ export default function AddQPartView() {
           qpartId: Number(data.data.message),
           creatorId: payload.id,
         });
+        handleResetComponent();
 
         if (elementId && elementId > 999 && elementId < 999999999) {
           elementIDMutation.mutate({
@@ -311,6 +320,7 @@ export default function AddQPartView() {
                   }))
                 }
                 customStyles={colorInputSyles}
+                reset={resetColorComponent}
               />
             </div>
             <div className="w-100 d-flex jc-space-b">

@@ -308,7 +308,16 @@ export function getTier(rating: number): string {
   }
   return output;
 }
-export function sortStatus(statuses: IPartStatusDTO[]): IPartStatusDTO[] {
+export function sortStatus(
+  statuses: IPartStatusDTO[],
+  includeNotApproved = false,
+  reverse = false
+): IPartStatusDTO[] {
+  let filteredStatuses: IPartStatusDTO[];
+
+  if (includeNotApproved) filteredStatuses = statuses;
+  else filteredStatuses = statuses.filter((s) => s.approvalDate != null);
+
   function getValue(str: string): number {
     switch (str) {
       case "unknown":
@@ -327,7 +336,7 @@ export function sortStatus(statuses: IPartStatusDTO[]): IPartStatusDTO[] {
         return 0;
     }
   }
-  const output = statuses.sort((a, b) => {
+  const output = filteredStatuses.sort((a, b) => {
     const dateA = new Date(a.date);
     const dateB = new Date(b.date);
 
@@ -338,6 +347,7 @@ export function sortStatus(statuses: IPartStatusDTO[]): IPartStatusDTO[] {
     }
     return dateB.getTime() - dateA.getTime();
   });
+  if (reverse) return output.reverse();
   return output;
 }
 export function sortCommentsByDate(

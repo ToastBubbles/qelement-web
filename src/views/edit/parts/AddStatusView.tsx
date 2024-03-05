@@ -2,6 +2,7 @@ import axios from "axios";
 import { useContext, useState } from "react";
 import { useQuery, useMutation } from "react-query";
 import {
+  IAPIResponse,
   IPartStatusDTO,
   IQPartDTOIncludeLess,
 } from "../../../interfaces/general";
@@ -48,22 +49,29 @@ export default function AddStatusView() {
   });
   const partStatusMutation = useMutation({
     mutationFn: (status: IPartStatusDTO) =>
-      axios.post<IPartStatusDTO>(
-        `http://localhost:3000/partStatus/add`,
-        status,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      ),
-    onSuccess: () => {
-      showToast("Status Succesfully added!", Mode.Success);
-      setNewStatus((prevVals) => ({
-        ...defaultStatusValues,
-        creatorId: prevVals.creatorId,
-      }));
-      setStartDate(new Date());
+      axios.post<IAPIResponse>(`http://localhost:3000/partStatus/add`, status, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    onSuccess: (e) => {
+      if (e.data.code == 201) {
+        showToast("Status submitted for approval!", Mode.Success);
+        setNewStatus((prevVals) => ({
+          ...defaultStatusValues,
+          creatorId: prevVals.creatorId,
+        }));
+        setStartDate(new Date());
+      } else if (e.data.code == 200) {
+        showToast("Status succesfully added!", Mode.Success);
+        setNewStatus((prevVals) => ({
+          ...defaultStatusValues,
+          creatorId: prevVals.creatorId,
+        }));
+        setStartDate(new Date());
+      } else {
+        showToast("Error adding status!", Mode.Error);
+      }
     },
   });
 

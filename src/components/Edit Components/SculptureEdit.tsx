@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 
 import {
@@ -40,7 +40,7 @@ export default function SculptureEdit({
     location: "",
     note: "",
   };
-
+  const navigate = useNavigate();
   const [readyToDelete, setReadyToDelete] = useState<boolean>(false);
   const [deleteButtonDisabled, setDeleteButtonDisabled] =
     useState<boolean>(false);
@@ -84,8 +84,9 @@ export default function SculptureEdit({
       if (e.data.code == 200) {
         showToast("Sculpture Deleted!", Mode.Success);
         setNewSculptureValues(defaultSculptureValues);
-        refetchFn();
+
         closePopup();
+        navigate("/sculpture/all");
       } else {
         showToast("error", Mode.Error);
       }

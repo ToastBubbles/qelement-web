@@ -144,16 +144,6 @@ export default function SinglePartView() {
     // retry: false,
   });
 
-  const { data: usersData, refetch: usersRefetch } = useQuery({
-    queryKey: `allUsers`,
-    queryFn: () => {
-      return axios.get<user[]>(`http://localhost:3000/user`);
-    },
-
-    staleTime: 10000,
-
-    // retry: false,
-  });
 
   const mypart = qpartData?.data.find((x) => x.id == selectedQPartid);
 
@@ -231,9 +221,9 @@ export default function SinglePartView() {
     return "https://via.placeholder.com/1024x768/eee?text=4:3";
   }
 
-  if (qpartData && qpartData.data.length > 0 && usersData) {
+  if (qpartData && qpartData.data.length > 0) {
     let isAdmin = adminData?.data.code == 200;
-    const allUsers = usersData.data;
+  
     const qparts = qpartData?.data;
 
     if (selectedQPartid == -1 || urlHasChanged) {
@@ -265,9 +255,7 @@ export default function SinglePartView() {
     if (mypart) filteredImages = filterImages(mypart.images);
     // console.log(mypart);
 
-    const handleCommentTextFieldChange = (e: any) => {
-      setCommentContent(e);
-    };
+   
     console.log(mypart);
 
     return (
@@ -278,11 +266,12 @@ export default function SinglePartView() {
               <div className="top">
                 <ul className="breadcrumb">
                   <li>
-                    <Link to={"/part-categories"}>Parts</Link>
+                    <Link to={"/part-categories"} className="link">Parts</Link>
                   </li>
                   <li>{"\u00A0>\u00A0"}</li>
                   <li>
                     <Link
+                    className="link"
                       to={`/part-categories/${mypart?.mold.parentPart.category.id}`}
                     >
                       {mypart?.mold.parentPart.category.name}
@@ -872,11 +861,11 @@ export default function SinglePartView() {
                   <div className="top">
                     <ul className="breadcrumb">
                       <li>
-                        <Link to={"/part-categories"}>Parts</Link>
+                        <Link to={"/part-categories"} className="link">Parts</Link>
                       </li>
                       <li>{"\u00A0>\u00A0"}</li>
                       <li>
-                        <Link to={`/part-categories/${thisPart.category.id}`}>
+                        <Link to={`/part-categories/${thisPart.category.id}`} className="link">
                           {thisPart.category.name}
                         </Link>
                       </li>

@@ -869,6 +869,11 @@ input:checked + .slider:before {
 .tag-seen {
   background-color: rgb(231, 228, 7);
 }
+
+.tag-notApproved{
+  background-color: var(--lt-grey);
+  border: 2px solid red;
+}
 .tab-details > div {
   padding: 1em;
   width: 100%;

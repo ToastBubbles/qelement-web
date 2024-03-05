@@ -1,5 +1,5 @@
 import axios from "axios";
-import { FormEvent, useContext, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { AppContext } from "../context/context";
 import ReactCrop, { Crop } from "react-image-crop";
@@ -67,6 +67,10 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
     staleTime: 100,
     enabled: sculptureId != -1 && sculptureId != null,
   });
+
+  useEffect(() => {
+    setImageType("sculpture");
+  }, [sculptureData]);
 
   if (myqpartData || sculptureData) {
     const myqpart = myqpartData?.data || null;

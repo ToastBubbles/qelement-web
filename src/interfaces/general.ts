@@ -148,6 +148,7 @@ export interface IPartStatusDTO {
   note: string;
   qpartId: number;
   creatorId: number;
+  approvalDate: string;
 }
 
 export interface ITitle {
@@ -167,6 +168,7 @@ export interface IUserTitlePackedDTO {
 }
 export interface IPartStatusWQPart extends IPartStatusDTO {
   qpart: IQPartDTOInclude;
+  creator: user;
 }
 export interface IElementID {
   number: number;
