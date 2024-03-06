@@ -30,7 +30,7 @@ export default function ProfileView() {
     // },
     retry: false,
     // refetchInterval: 30000,
-    enabled: !!payload,
+    enabled: !!payload && payload.id > 0,
   });
   if (userData) {
     let me = userData.data;
@@ -66,7 +66,31 @@ export default function ProfileView() {
             >
               <div className="profile-overview">
                 <span>Date joined: {formatDate(me.createdAt, "short")}</span>
-                <span>Contributions: <span className="grey-txt">None</span></span>
+                <div>Submissions:</div>
+                <div
+                  className="d-flex flex-col"
+                  style={{ marginBottom: "1em" }}
+                >
+                  <span style={{ marginLeft: "1.5em" }}>
+                    Pending:{" "}
+                    {me.submissionCount.totalPending > 0 ? (
+                      <span className="red-txt">
+                        {me.submissionCount.totalPending}
+                      </span>
+                    ) : (
+                      <span className="grey-txt">None</span>
+                    )}
+                  </span>
+                  <span style={{ marginLeft: "1.5em" }}>
+                    Approved:{" "}
+                    {me.submissionCount.totalApproved > 0 ? (
+                      <span>{me.submissionCount.totalApproved}</span>
+                    ) : (
+                      <span className="grey-txt">None</span>
+                    )}
+                  </span>
+                </div>
+
                 <span>Role: {me.role}</span>
                 <span className="d-flex ai-center">
                   <span style={{ marginRight: "0.5em" }}>Favorite Color:</span>
@@ -77,7 +101,7 @@ export default function ProfileView() {
                   )}
                 </span>
 
-                <div className="w-100" style={{marginTop: '2em'}}>
+                <div className="w-100" style={{ marginTop: "2em" }}>
                   <div className="d-flex profile-btn-container">
                     <ProfileButton
                       link="/profile/collection"

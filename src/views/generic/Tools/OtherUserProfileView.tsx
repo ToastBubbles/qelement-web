@@ -127,6 +127,7 @@ export default function OtherUserProfileView() {
 
   if (username && userData && !isUsernameBad) {
     let user = userData.data as IUserDTO;
+    const title = user.titles.find((t) => t.id == user.selectedTitleId);
     console.log(user);
 
     return (
@@ -139,8 +140,11 @@ export default function OtherUserProfileView() {
               className="d-flex flex-col jc-center"
             >
               <div className="profile-name">{username}</div>
-              <div className={""} style={{ color: "#00BB00" }}>
-                Bricked up!
+              <div
+                className={title ? title.cssClasses : ""}
+                style={{ color: "#00BB00" }}
+              >
+                {title && title.title}
               </div>
             </div>
           </div>
@@ -192,7 +196,30 @@ export default function OtherUserProfileView() {
             >
               <div className="profile-overview">
                 <span>Date joined: {formatDate(user.createdAt, "short")}</span>
-                <span>Contributions: </span>
+                <div>Submissions:</div>
+                <div
+                  className="d-flex flex-col"
+                  style={{ marginBottom: "1em" }}
+                >
+                  <span style={{ marginLeft: "1.5em" }}>
+                    Pending:{" "}
+                    {user.submissionCount.totalPending > 0 ? (
+                      <span className="red-txt">
+                        {user.submissionCount.totalPending}
+                      </span>
+                    ) : (
+                      <span className="grey-txt">None</span>
+                    )}
+                  </span>
+                  <span style={{ marginLeft: "1.5em" }}>
+                    Approved:{" "}
+                    {user.submissionCount.totalApproved > 0 ? (
+                      <span>{user.submissionCount.totalApproved}</span>
+                    ) : (
+                      <span className="grey-txt">None</span>
+                    )}
+                  </span>
+                </div>
                 <span>Role: {user.role}</span>
                 <span className="d-flex ai-center">
                   <span style={{ marginRight: "0.5em" }}>Favorite Color:</span>

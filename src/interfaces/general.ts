@@ -153,6 +153,12 @@ export interface IPartStatusDTO {
   approvalDate: string;
 }
 
+export interface ISubmissionCount {
+  userId: number;
+  totalPending: number;
+  totalApproved: number;
+}
+
 export interface ISubmissions {
   colors: color[];
   eIDs: IElementID[];
@@ -527,6 +533,7 @@ export interface IUserDTO extends IUserCreationDTO {
   favoriteQParts?: IQPartDTOInclude[];
   inventory?: IQPartDTOInclude[];
   favoriteColor?: color;
+  submissionCount: ISubmissionCount;
 }
 
 export interface INodeWithID {
