@@ -151,6 +151,19 @@ export interface IPartStatusDTO {
   approvalDate: string;
 }
 
+export interface ISubmissions {
+  colors: color[];
+  eIDs: IElementID[];
+  images: ImageDTO[];
+  molds: IPartMoldDTO[];
+  parts: IPartDTO[];
+  statuses: IPartStatusDTO[];
+  qparts: IQPartDTOInclude[];
+  sculptureInventories: ISculptureInventory[];
+  sculptures: ISculptureDTO[];
+  similarColors: ISimilarColorDTO[];
+}
+
 export interface ITitle {
   title: string;
   cssClasses: string;

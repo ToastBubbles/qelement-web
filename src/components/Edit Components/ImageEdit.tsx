@@ -123,7 +123,7 @@ export default function ImageEdit({
 
   return (
     <div className="d-flex flex-col ai-center">
-      <div className="image-edit-image-container">
+      <div className="small-image-container">
         <img src={imagePath + image.fileName} alt="brick" />
       </div>
 

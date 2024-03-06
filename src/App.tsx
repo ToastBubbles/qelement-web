@@ -70,6 +70,7 @@ import TitleManagementView from "./views/generic/AdminTools/TitleManagementView"
 import PartEditView from "./views/edit/parts/PartEditView";
 import MoldEditView from "./views/edit/parts/MoldEditView";
 import QPartEditView from "./views/edit/parts/QPartEditView";
+import SubmissionsView from "./views/profile/SubmissionsView";
 const queryClient = new QueryClient({
   defaultOptions: {
     // queries: { staleTime: 10000 }
@@ -223,6 +224,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <WantedView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile/submissions"
+                element={
+                  <ProtectedRoute>
+                    <SubmissionsView />
                   </ProtectedRoute>
                 }
               />

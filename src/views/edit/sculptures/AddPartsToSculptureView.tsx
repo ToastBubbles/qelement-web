@@ -73,6 +73,8 @@ export default function AddPartsToSculptureView() {
     setPartId(-1);
   }, [category, partsRefetch]);
 
+ 
+
   useEffect(() => {
     qpartRefetch();
     setQPartId(-1);
