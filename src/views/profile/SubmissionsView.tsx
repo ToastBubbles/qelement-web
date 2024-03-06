@@ -4,10 +4,19 @@ import ProfileButton from "../../components/ProfileButton";
 import ColorLink from "../../components/ColorLink";
 import {
   IAPIResponse,
+  IElementID,
+  IPartDTO,
+  IPartMoldDTO,
+  IPartStatusDTO,
   IQPartDTOIncludeLess,
+  ISculptureDTO,
+  ISculptureInventory,
+  ISimilarColorDTO,
   ISubmissions,
   IUserDTO,
   ImageDTO,
+  color,
+  part,
 } from "../../interfaces/general";
 import axios from "axios";
 import showToast, {
@@ -72,51 +81,51 @@ export default function SubmissionsView() {
         />
         <CollapsibleSection
           title="Parts"
-          content={<></>}
-          pending={0}
-          approved={0}
+          content={genPartContent(submissions.parts)}
+          pending={countApprovalDates(submissions.parts ,true)}
+          approved={countApprovalDates(submissions.parts ,false)}
         />
         <CollapsibleSection
           title="Molds"
-          content={<></>}
-          pending={0}
-          approved={0}
+          content={genPartMoldContent(submissions.molds)}
+          pending={countApprovalDates(submissions.molds ,true)}
+          approved={countApprovalDates(submissions.molds ,false)}
         />
         <CollapsibleSection
           title="Colors"
-          content={<></>}
-          pending={0}
-          approved={0}
+          content={genColorContent(submissions.colors)}
+          pending={countApprovalDates(submissions.colors ,true)}
+          approved={countApprovalDates(submissions.colors ,false)}
         />
         <CollapsibleSection
           title="Similar Colors"
-          content={<></>}
-          pending={0}
-          approved={0}
+          content={genSimilarColorContent(submissions.similarColors)}
+          pending={countApprovalDates(submissions.similarColors ,true)}
+          approved={countApprovalDates(submissions.similarColors ,false)}
         />
         <CollapsibleSection
           title="QPart Statuses"
-          content={<></>}
-          pending={0}
-          approved={0}
+          content={genStatusContent(submissions.statuses)}
+          pending={countApprovalDates(submissions.statuses ,true)}
+          approved={countApprovalDates(submissions.statuses ,false)}
         />
         <CollapsibleSection
           title="Element IDs"
-          content={<></>}
-          pending={0}
-          approved={0}
+          content={genEIDContent(submissions.eIDs)}
+          pending={countApprovalDates(submissions.eIDs ,true)}
+          approved={countApprovalDates(submissions.eIDs ,false)}
         />
         <CollapsibleSection
           title="Sculptures"
-          content={<></>}
-          pending={0}
-          approved={0}
+          content={genSculptureContent(submissions.sculptures)}
+          pending={countApprovalDates(submissions.sculptures ,true)}
+          approved={countApprovalDates(submissions.sculptures ,false)}
         />
         <CollapsibleSection
           title="Sculpture Inventories"
-          content={<></>}
-          pending={0}
-          approved={0}
+          content={genSculptureInventoryContent(submissions.sculptureInventories)}
+          pending={countApprovalDates(submissions.sculptureInventories ,true)}
+          approved={countApprovalDates(submissions.sculptureInventories ,false)}
         />
       </div>
     );
@@ -192,6 +201,52 @@ export default function SubmissionsView() {
         ))}
       </div>
     );
+  }
+
+  function genPartContent(parts: IPartDTO[]): ReactNode {
+    if (parts.length == 0)
+      return <div className="grey-txt">No Parts submitted</div>;
+  }
+  function genPartMoldContent(molds: IPartMoldDTO[]): ReactNode {
+    if (molds.length == 0)
+      return <div className="grey-txt">No Part Molds submitted</div>;
+    return <></>;
+  }
+
+  function genColorContent(colors: color[]): ReactNode {
+    if (colors.length == 0)
+      return <div className="grey-txt">No Colors submitted</div>;
+    return <></>;
+  }
+
+  function genSimilarColorContent(simColors: ISimilarColorDTO[]): ReactNode {
+    if (simColors.length == 0)
+      return <div className="grey-txt">No Similar Colors submitted</div>;
+    return <></>;
+  }
+
+  function genStatusContent(statuses: IPartStatusDTO[]): ReactNode {
+    if (statuses.length == 0)
+      return <div className="grey-txt">No QPart Statuses submitted</div>;
+    return <></>;
+  }
+
+  function genEIDContent(eIDs: IElementID[]): ReactNode {
+    if (eIDs.length == 0)
+      return <div className="grey-txt">No Element IDs submitted</div>;
+    return <></>;
+  }
+  function genSculptureContent(sculptures: ISculptureDTO[]): ReactNode {
+    if (sculptures.length == 0)
+      return <div className="grey-txt">No Sculptures submitted</div>;
+    return <></>;
+  }
+  function genSculptureInventoryContent(
+    sculpInv: ISculptureInventory[]
+  ): ReactNode {
+    if (sculpInv.length == 0)
+      return <div className="grey-txt">No Sculpture Parts submitted</div>;
+    return <></>;
   }
 
   interface CommonInterface {

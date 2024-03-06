@@ -4,6 +4,7 @@ export interface ISimilarColorDTO {
   color_one: number;
   color_two: number;
   // creatorId: number;
+  approvalDate: string;
 }
 export interface IUserPrefDTO {
   lang: string;
@@ -51,6 +52,7 @@ export interface color {
   note: string;
   createdAt: string;
   updatedAt: string;
+  approvalDate: string;
 }
 
 export interface IColorWCreator extends color {
@@ -188,6 +190,7 @@ export interface IElementID {
   id: number;
   creator: user;
   createdAt: string;
+  approvalDate: string;
 }
 export interface IElementIDWQPart extends IElementID {
   qpart: IQPartDTOInclude;
@@ -203,6 +206,7 @@ export interface IPartDTO {
   Category: ICategory;
   creatorId: number;
   note: string;
+  approvalDate: string;
 }
 export interface IPartMoldDTO {
   id: number;
@@ -377,6 +381,7 @@ export interface IRibbonOverride {
 export interface ISculptureInventory {
   parts: IQPartDTOInclude[];
   sculpture: ISculptureDTO;
+  approvalDate: string;
 }
 
 interface IApprovalDateOnly {
