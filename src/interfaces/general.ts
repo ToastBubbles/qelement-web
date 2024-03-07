@@ -161,7 +161,7 @@ export interface ISubmissionCount {
 
 export interface ISubmissions {
   colors: color[];
-  eIDs: IElementID[];
+  eIDs: IElementIDWQPartLESS[];
   images: ImageDTO[];
   molds: IPartMoldDTO[];
   parts: IPartDTO[];
@@ -207,6 +207,10 @@ export interface IElementID {
 }
 export interface IElementIDWQPart extends IElementID {
   qpart: IQPartDTOInclude;
+}
+
+export interface IElementIDWQPartLESS extends IElementID {
+  qpart: IQPartDTOIncludeLess;
 }
 export interface IQPartDetails {
   part: IPartDTO;

@@ -15,7 +15,8 @@ const CollapsibleSection = ({ title, content, pending, approved }: iProps) => {
   return (
     <div>
       <div className="collapsible-btn" onClick={toggleCollapse}>
-        {title} {isOpen ? "▼" : "▶"}
+        {title}{" "}
+        <span style={{ color: "var(--dk-grey)", margin: '0 0.25em' }}>{isOpen ? "▼" : "▶"}</span>
         <div className="line fg-1" style={{ marginLeft: "0.25em" }}></div>
         <div
           className={
