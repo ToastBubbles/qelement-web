@@ -167,9 +167,16 @@ export interface ISubmissions {
   parts: IPartDTO[];
   statuses: IPartStatusDTO[];
   qparts: IQPartDTOInclude[];
-  sculptureInventories: ISculptureInventory[];
+  sculptureInventories: ISculptureInventoryItem[];
   sculptures: ISculptureDTO[];
   similarColors: ISimilarColorDTO[];
+}
+
+export interface ISculptureInventoryItem {
+  qpart: IQPartDTOIncludeLess;
+  sculpture: ISculptureWithImages;
+  creator: user;
+  approvalDate: string;
 }
 
 export interface ITitle {
@@ -209,7 +216,7 @@ export interface IQPartDetails {
 export interface IPartDTO {
   id: number;
   name: string;
-  Category: ICategory;
+  category: ICategory;
   creatorId: number;
   note: string;
   approvalDate: string;
@@ -361,7 +368,7 @@ export interface ISculptureEdits {
   note: string;
 }
 
-export interface ISculptureDTO {
+export interface ISculpture {
   id: number;
   name: string;
   brickSystem: string;
@@ -371,10 +378,16 @@ export interface ISculptureDTO {
   keywords: string;
   note: string;
   creator: user;
-  inventory: IQPartWSculptureInventory[];
-  images: ImageDTO[];
-  comments: ICommentDTO[];
   approvalDate: string;
+}
+
+export interface ISculptureWithImages extends ISculpture {
+  images: ImageDTO[];
+}
+
+export interface ISculptureDTO extends ISculptureWithImages {
+  inventory: IQPartWSculptureInventory[];
+  comments: ICommentDTO[];
 }
 
 export interface IRibbonOverride {

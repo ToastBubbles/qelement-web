@@ -74,7 +74,7 @@ export default function PartDetails({ part, refetchFn }: IProps) {
       </div>
       <div>
         <div>Category:</div>
-        <div>{part.Category.name}</div>
+        <div>{part.category.name}</div>
       </div>
 
       <section>

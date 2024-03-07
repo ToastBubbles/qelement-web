@@ -91,7 +91,7 @@ export default function ApproveCatView() {
             />
           )}
           <h1>approve categories</h1>
-          <Link to={"/approve"}>Back to Approval Overview</Link>
+          <Link className="link" to={"/approve"}>Back to Approval Overview</Link>
           <div className="mainform">
             {cats.length > 0 ? (
               cats.map((cat) => {

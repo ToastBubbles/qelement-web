@@ -24,7 +24,7 @@ export default function SimilarColorApprovalView() {
       <>
         <div className="formcontainer">
           <h1>approve similar colors</h1>
-          <Link to={"/approve"}>Back to Approval Overview</Link>
+          <Link  className="link" to={"/approve"}>Back to Approval Overview</Link>
           <div className="mainform">
             {simColors.length > 0 ? (
               simColors.map((data) => {

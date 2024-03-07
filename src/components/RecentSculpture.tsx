@@ -1,20 +1,24 @@
 import { Ribbon, RibbonContainer } from "react-ribbons";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { ISculptureDTO } from "../interfaces/general";
+import { ISculptureDTO, ISculptureWithImages } from "../interfaces/general";
 import { filterImages, formatDate, imagePath } from "../utils/utils";
 import { AppContext } from "../context/context";
 
 interface IProps {
-  sculpture: ISculptureDTO;
+  sculpture: ISculptureDTO | ISculptureWithImages;
   hideDate?: boolean;
   disableLinks?: boolean;
+  hidePartCount?: boolean;
+  hideRibbon?: boolean;
 }
 
 export default function RecentSculpture({
   sculpture,
   hideDate = false,
   disableLinks = false,
+  hidePartCount = false,
+  hideRibbon = false,
 }: IProps) {
   const {
     state: {
@@ -56,7 +60,7 @@ export default function RecentSculpture({
 
     return (
       <RibbonContainer>
-        {age <= 24 && (
+        {age <= 24 && !hideRibbon && (
           <Ribbon
             side="right"
             type="corner"
@@ -111,12 +115,19 @@ export default function RecentSculpture({
   } else return <div className="listing new-listing">Loading...</div>;
 
   function getUniquePartCount(): string {
-    if (sculpture.inventory == undefined || sculpture.inventory == null)
-      return "";
-    let output = 0;
-    sculpture.inventory.forEach((item) => {
-      if (item.SculptureInventory.approvalDate != null) output++;
-    });
-    return output + "  parts listed";
+    if (!hidePartCount) {
+      if (
+        "inventory" in sculpture &&
+        sculpture.inventory !== undefined &&
+        sculpture.inventory !== null
+      ) {
+        let output = 0;
+        sculpture.inventory.forEach((item) => {
+          if (item.SculptureInventory.approvalDate !== null) output++;
+        });
+        return output + "  parts listed";
+      }
+    }
+    return "";
   }
 }

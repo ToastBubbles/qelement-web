@@ -23,7 +23,7 @@ export default function ApprovePartView() {
       <>
         <div className="formcontainer">
           <h1>approve parts</h1>
-          <Link to={"/approve"}>Back to Approval Overview</Link>
+          <Link  className="link" to={"/approve"}>Back to Approval Overview</Link>
           <div className="mainform">
             {parts.length > 0 ? (
               parts.map((part) => {

@@ -95,7 +95,7 @@ export default function ApproveSculptureInventoryView() {
             />
           )}
           <h1>approve sculpture inventory</h1>
-          <Link to={"/approve"}>Back to Approval Overview</Link>
+          <Link className="link"  to={"/approve"}>Back to Approval Overview</Link>
           <div className="mainform">
             {sculptures.length > 0 ? (
               sculptures.map((sculpture) => {

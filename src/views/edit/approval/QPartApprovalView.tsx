@@ -21,7 +21,7 @@ export default function ApproveQPartView() {
       <>
         <div className="formcontainer">
           <h1>approve qelements</h1>
-          <Link to={"/approve"}>Back to Approval Overview</Link>
+          <Link  className="link" to={"/approve"}>Back to Approval Overview</Link>
           <div className="mainform">
             {qparts.length > 0 ? (
               qparts.map((qpart) => {

@@ -2,6 +2,7 @@ import { Ribbon, RibbonContainer } from "react-ribbons";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import {
+  IPartStatusDTO,
   IQPartDTOInclude,
   IQPartDTOIncludeLess,
   IRibbonOverride,
@@ -93,7 +94,7 @@ export default function RecentQPart({
         break;
       }
     }
-    // console.log(thisqpart);
+ 
 
     return (
       <RibbonContainer>
@@ -112,7 +113,7 @@ export default function RecentQPart({
                   : "/img/missingimage.png"
               }
             />
-            {thisqpart.partStatuses.length > 0 ? (
+            {hasAtLeastOneApprovedStatus(thisqpart.partStatuses) ? (
               <div
                 className={
                   "recentQPartStatus tag-" +
@@ -150,6 +151,15 @@ export default function RecentQPart({
       </RibbonContainer>
     );
   } else return <div className="listing new-listing">Loading...</div>;
+
+  function hasAtLeastOneApprovedStatus(statuses: IPartStatusDTO[]): boolean {
+    for (const status of statuses) {
+        if (status.approvalDate !== null) {
+            return true; // Return true if approvalDate is not null
+        }
+    }
+    return false; // Return false if no status has approvalDate not null
+}
 
   function generateRibbon(age: number): React.ReactNode {
     if (ribbonOverride) {

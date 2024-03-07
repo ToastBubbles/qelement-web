@@ -34,7 +34,7 @@ export default function ApproveImageView() {
         )} */}
         <div className="formcontainer">
           <h1>approve images</h1>
-          <Link to={"/approve"}>Back to Approval Overview</Link>
+          <Link className="link"  to={"/approve"}>Back to Approval Overview</Link>
           <div className="mainform-wide">
             <div className="grid-container-image w-100 p-1">
               <div>Image</div>

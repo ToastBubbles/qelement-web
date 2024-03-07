@@ -22,7 +22,7 @@ export default function ApproveSculptureView() {
       <>
         <div className="formcontainer">
           <h1>approve qelements</h1>
-          <Link to={"/approve"}>Back to Approval Overview</Link>
+          <Link className="link"  to={"/approve"}>Back to Approval Overview</Link>
           <div className="mainform">
             {sculptures.length > 0 ? (
               sculptures.map((sculpture) => {

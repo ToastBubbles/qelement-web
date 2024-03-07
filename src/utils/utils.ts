@@ -348,6 +348,7 @@ export function sortStatus(
     return dateB.getTime() - dateA.getTime();
   });
   if (reverse) return output.reverse();
+
   return output;
 }
 export function sortCommentsByDate(

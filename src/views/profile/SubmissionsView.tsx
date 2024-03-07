@@ -11,12 +11,15 @@ import {
   IQPartDTOIncludeLess,
   ISculptureDTO,
   ISculptureInventory,
+  ISculptureInventoryItem,
+  ISculptureWithImages,
   ISimilarColorDTO,
   ISubmissions,
   IUserDTO,
   ImageDTO,
   color,
   part,
+  user,
 } from "../../interfaces/general";
 import axios from "axios";
 import showToast, {
@@ -28,6 +31,7 @@ import LoadingPage from "../../components/LoadingPage";
 import { useQuery } from "react-query";
 import CollapsibleSection from "../../components/CollapsibleSection";
 import RecentQPart from "../../components/RecentQPart";
+import RecentSculpture from "../../components/RecentSculpture";
 
 export default function SubmissionsView() {
   const {
@@ -173,7 +177,7 @@ export default function SubmissionsView() {
     return (
       <div className="admin-image-container d-flex  w-100">
         {images.map((image) => (
-          <div className="admin-image-card">
+          <div key={image.id} className="admin-image-card">
             <div>
               <div className="admin-image-div">
                 <img src={imagePath + image.fileName} alt="brick" />
@@ -221,7 +225,8 @@ export default function SubmissionsView() {
     return colors.map((color) => (
       <div className="d-flex w-100">
         <div className="fg-1">
-        <ColorLink color={color} /></div>
+          <ColorLink color={color} />
+        </div>
         <div
           className={
             "status-tag " +
@@ -257,11 +262,77 @@ export default function SubmissionsView() {
     return sculptures.map((sculpture) => <></>);
   }
   function genSculptureInventoryContent(
-    sculpInv: ISculptureInventory[]
+    sculpInv: ISculptureInventoryItem[]
   ): ReactNode {
     if (sculpInv.length == 0)
       return <div className="grey-txt">No Sculpture Parts submitted</div>;
-    return sculpInv.map((part) => <></>);
+    console.log("sculpIn", sculpInv);
+
+    interface ISculpPart {
+      part: IQPartDTOIncludeLess;
+      approvalDate: string;
+    }
+    interface ISortedSculpInvParts {
+      sculpture: ISculptureWithImages;
+      creator: user;
+      parts: ISculpPart[];
+    }
+    let invArray: ISortedSculpInvParts[] = [];
+
+    sculpInv.forEach((entry) => {
+      let existingSculpture = invArray.find(
+        (x) => x.sculpture.id == entry.sculpture.id
+      );
+      if (existingSculpture) {
+        existingSculpture.parts.push({
+          part: entry.qpart,
+          approvalDate: entry.approvalDate,
+        } as ISculpPart);
+      } else {
+        invArray.push({
+          sculpture: entry.sculpture,
+          creator: entry.creator,
+          parts: [{ part: entry.qpart, approvalDate: entry.approvalDate }],
+        });
+      }
+    });
+    console.log("conversion:", invArray);
+
+    return invArray.map((sculpObj) => (
+      <fieldset key={sculpObj.sculpture.id} style={{margin: '1em 0'}}>
+        <legend className="w-33">
+          <RecentSculpture
+            sculpture={sculpObj.sculpture}
+            hidePartCount={true}
+            hideDate={true}
+            hideRibbon={true}
+          />
+        </legend>
+        <div className="rib-container">
+          {sculpObj.parts.map((partObj) => (
+            <RecentQPart
+              key={partObj.part.id}
+              qpartl={partObj.part}
+              ribbonOverride={
+                partObj.approvalDate == null
+                  ? {
+                      content: "Pending",
+                      bgColor: "#aaa",
+                      fgColor: "#000",
+                      fontSize: "1em",
+                    }
+                  : {
+                      content: "Approved",
+                      bgColor: "#00FF99",
+                      fgColor: "#000",
+                      fontSize: "1em",
+                    }
+              }
+            />
+          ))}
+        </div>
+      </fieldset>
+    ));
   }
 
   interface CommonInterface {

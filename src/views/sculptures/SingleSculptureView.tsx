@@ -165,7 +165,10 @@ export default function SingleSculptureView() {
                     </div>
                     <div style={{ padding: "1em" }} className="w-100 ai-end">
                       <span>Keywords:</span>
-                      <div className="d-flex flex-wrap overflow-y-auto" style={{maxHeight: "10em"}}>
+                      <div
+                        className="d-flex flex-wrap overflow-y-auto"
+                        style={{ maxHeight: "10em" }}
+                      >
                         {sculpture.keywords.length > 0 ? (
                           splitKeywords(sculpture.keywords).map((keyword) => (
                             <div
@@ -370,7 +373,7 @@ export default function SingleSculptureView() {
                       {sculpture.images.length > 0 ? (
                         filterImages(sculpture.images).map((image) => {
                           return (
-                            <div>
+                            <div key={image.id}>
                               <img
                                 src={imagePath + image.fileName}
                                 alt="brick"

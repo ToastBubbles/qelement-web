@@ -21,7 +21,7 @@ export default function ApproveStatusView() {
       <>
         <div className="formcontainer">
           <h1>approve statuses</h1>
-          <Link to={"/approve"}>Back to Approval Overview</Link>
+          <Link className="link"  to={"/approve"}>Back to Approval Overview</Link>
           <div className="mainform">
             {statuses.length > 0 ? (
               statuses.map((status) => {

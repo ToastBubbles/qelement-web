@@ -72,13 +72,13 @@ export default function QPartDetails({ qpart, refetchFn }: IProps) {
         )}
         <div>
           <div>Part:</div>
-          <Link to={`/part/${qpart.mold.parentPart.id}`}>
+          <Link className="link" to={`/part/${qpart.mold.parentPart.id}`}>
             {qpart.mold.parentPart.name} ({qpart.mold.number})
           </Link>
         </div>
         <div>
           <div>Color:</div>
-          <Link to={`/color/${qpart.color.id}`}>
+          <Link className="link" to={`/color/${qpart.color.id}`}>
             {qpart.color?.bl_name ? qpart.color.bl_name : qpart.color?.tlg_name}
           </Link>
         </div>

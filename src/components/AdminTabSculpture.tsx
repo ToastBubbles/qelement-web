@@ -104,6 +104,7 @@ export default function AdminTabSculpture({ sculpture, refetchFn }: IProps) {
       >
         {sculpture.keywords.split(";").map((keyword) => (
           <div
+            key={keyword}
             onClick={() => keywordAddOrRemove(keyword, "remove")}
             className="new-keyword clickable"
           >

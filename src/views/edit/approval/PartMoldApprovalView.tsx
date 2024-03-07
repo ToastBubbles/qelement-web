@@ -21,7 +21,7 @@ export default function ApprovePartMoldView() {
       <>
         <div className="formcontainer">
           <h1>approve molds</h1>
-          <Link to={"/approve"}>Back to Approval Overview</Link>
+          <Link  className="link" to={"/approve"}>Back to Approval Overview</Link>
           <div className="mainform">
             {molds.length > 0 ? (
               molds.map((mold) => {
