@@ -256,17 +256,39 @@ export default function SubmissionsView() {
       return <div className="grey-txt">No Element IDs submitted</div>;
     return eIDs.map((eID) => <></>);
   }
-  function genSculptureContent(sculptures: ISculptureDTO[]): ReactNode {
+  function genSculptureContent(sculptures: ISculptureWithImages[]): ReactNode {
     if (sculptures.length == 0)
       return <div className="grey-txt">No Sculptures submitted</div>;
-    return sculptures.map((sculpture) => <></>);
+
+    console.log(sculptures);
+
+    return sculptures.map((sculpture) => (
+      <RecentSculpture
+        key={sculpture.id}
+        sculpture={sculpture}
+        ribbonOverride={
+          sculpture.approvalDate == null
+            ? {
+                content: "Pending",
+                bgColor: "#aaa",
+                fgColor: "#000",
+                fontSize: "1em",
+              }
+            : {
+                content: "Approved",
+                bgColor: "#00FF99",
+                fgColor: "#000",
+                fontSize: "1em",
+              }
+        }
+      />
+    ));
   }
   function genSculptureInventoryContent(
     sculpInv: ISculptureInventoryItem[]
   ): ReactNode {
     if (sculpInv.length == 0)
       return <div className="grey-txt">No Sculpture Parts submitted</div>;
-    console.log("sculpIn", sculpInv);
 
     interface ISculpPart {
       part: IQPartDTOIncludeLess;
@@ -296,10 +318,9 @@ export default function SubmissionsView() {
         });
       }
     });
-    console.log("conversion:", invArray);
 
     return invArray.map((sculpObj) => (
-      <fieldset key={sculpObj.sculpture.id} style={{margin: '1em 0'}}>
+      <fieldset key={sculpObj.sculpture.id} style={{ margin: "1em 0" }}>
         <legend className="w-33">
           <RecentSculpture
             sculpture={sculpObj.sculpture}

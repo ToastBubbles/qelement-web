@@ -1,7 +1,7 @@
 import { Ribbon, RibbonContainer } from "react-ribbons";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { ISculptureDTO, ISculptureWithImages } from "../interfaces/general";
+import { IRibbonOverride, ISculptureDTO, ISculptureWithImages } from "../interfaces/general";
 import { filterImages, formatDate, imagePath } from "../utils/utils";
 import { AppContext } from "../context/context";
 
@@ -11,6 +11,7 @@ interface IProps {
   disableLinks?: boolean;
   hidePartCount?: boolean;
   hideRibbon?: boolean;
+  ribbonOverride?: IRibbonOverride;
 }
 
 export default function RecentSculpture({
@@ -19,6 +20,7 @@ export default function RecentSculpture({
   disableLinks = false,
   hidePartCount = false,
   hideRibbon = false,
+  ribbonOverride
 }: IProps) {
   const {
     state: {
@@ -60,7 +62,7 @@ export default function RecentSculpture({
 
     return (
       <RibbonContainer>
-        {age <= 24 && !hideRibbon && (
+        {/* {age <= 24 && !hideRibbon && (
           <Ribbon
             side="right"
             type="corner"
@@ -72,7 +74,8 @@ export default function RecentSculpture({
           >
             {makeHoursString(age)}
           </Ribbon>
-        )}
+        )} */}
+         {!hideRibbon && generateRibbon(age)}
         <Link
           to={`/sculpture/${sculpture.id}`}
           className={`listing link new-listing ${
@@ -87,14 +90,6 @@ export default function RecentSculpture({
                   : "/img/missingimage.png"
               }
             />
-            {/* <div
-              className={
-                "recentQPartStatus tag-" +
-                sortStatus(thisqpart.partStatuses)[0].status
-              }
-            >
-              {sortStatus(thisqpart.partStatuses)[0].status}
-            </div> */}
           </div>
           <div>
             <div>
@@ -113,7 +108,53 @@ export default function RecentSculpture({
       </RibbonContainer>
     );
   } else return <div className="listing new-listing">Loading...</div>;
+  function generateRibbon(age: number): React.ReactNode {
+    if (ribbonOverride) {
+      return (
+        <Ribbon
+          side="right"
+          type="corner"
+          size="normal"
+          backgroundColor={ribbonOverride.bgColor}
+          color={ribbonOverride.fgColor}
+          withStripes={false}
+          fontFamily="lexend"
+        >
+          <div style={{ fontSize: ribbonOverride.fontSize }}>
+            {ribbonOverride.content}
+          </div>
+        </Ribbon>
+      );
+    }
+    if (sculpture.approvalDate == null) return;
+    <Ribbon
+      side="right"
+      type="corner"
+      size="normal"
+      backgroundColor="red"
+      color="white"
+      withStripes={false}
+      fontFamily="lexend"
+    >
+      <div style={{ fontSize: "0.6em" }}>NOT APPROVED</div>
+    </Ribbon>;
 
+    if (age <= 24)
+      return (
+        <Ribbon
+          side="right"
+          type="corner"
+          size="normal"
+          backgroundColor="var(--dk-grey)"
+          color="var(--lt-grey)"
+          withStripes={false}
+          fontFamily="lexend"
+        >
+          {makeHoursString(age)}
+        </Ribbon>
+      );
+    return <></>;
+  }
   function getUniquePartCount(): string {
     if (!hidePartCount) {
       if (

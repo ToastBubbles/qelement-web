@@ -168,7 +168,7 @@ export interface ISubmissions {
   statuses: IPartStatusDTO[];
   qparts: IQPartDTOInclude[];
   sculptureInventories: ISculptureInventoryItem[];
-  sculptures: ISculptureDTO[];
+  sculptures: ISculptureWithImages[];
   similarColors: ISimilarColorDTO[];
 }
 
