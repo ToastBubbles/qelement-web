@@ -393,6 +393,7 @@ export interface ISculpture {
   note: string;
   creator: user;
   approvalDate: string;
+  createdAt: string;
 }
 
 export interface ISculptureWithImages extends ISculpture {

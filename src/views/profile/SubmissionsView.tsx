@@ -37,6 +37,7 @@ import RecentSculpture from "../../components/RecentSculpture";
 import QPartSubmissions from "../../components/Submission Components/QPartSubmissions";
 import ImageSubmissions from "../../components/Submission Components/ImageSubmissions";
 import ColorSubmissions from "../../components/Submission Components/ColorSubmissions";
+import SculptureSubmissions from "../../components/Submission Components/SculptureSubmissions";
 
 export default function SubmissionsView() {
   const {
@@ -126,7 +127,7 @@ export default function SubmissionsView() {
         />
         <CollapsibleSection
           title="Sculptures"
-          content={genSculptureContent(submissions.sculptures)}
+          content={<SculptureSubmissions sculptures={submissions.sculptures} />}
           pending={countApprovalDates(submissions.sculptures, true)}
           approved={countApprovalDates(submissions.sculptures, false)}
         />
@@ -286,34 +287,34 @@ export default function SubmissionsView() {
       </div>
     ));
   }
-  function genSculptureContent(sculptures: ISculptureWithImages[]): ReactNode {
-    if (sculptures.length == 0)
-      return <div className="grey-txt">No Sculptures submitted</div>;
+  // function genSculptureContent(sculptures: ISculptureWithImages[]): ReactNode {
+  //   if (sculptures.length == 0)
+  //     return <div className="grey-txt">No Sculptures submitted</div>;
 
-    // console.log(sculptures);
+  //   // console.log(sculptures);
 
-    return sculptures.map((sculpture) => (
-      <RecentSculpture
-        key={sculpture.id}
-        sculpture={sculpture}
-        ribbonOverride={
-          sculpture.approvalDate == null
-            ? {
-                content: "Pending",
-                bgColor: "#aaa",
-                fgColor: "#000",
-                fontSize: "1em",
-              }
-            : {
-                content: "Approved",
-                bgColor: "#00FF99",
-                fgColor: "#000",
-                fontSize: "1em",
-              }
-        }
-      />
-    ));
-  }
+  //   return sculptures.map((sculpture) => (
+  //     <RecentSculpture
+  //       key={sculpture.id}
+  //       sculpture={sculpture}
+  //       ribbonOverride={
+  //         sculpture.approvalDate == null
+  //           ? {
+  //               content: "Pending",
+  //               bgColor: "#aaa",
+  //               fgColor: "#000",
+  //               fontSize: "1em",
+  //             }
+  //           : {
+  //               content: "Approved",
+  //               bgColor: "#00FF99",
+  //               fgColor: "#000",
+  //               fontSize: "1em",
+  //             }
+  //       }
+  //     />
+  //   ));
+  // }
   function genSculptureInventoryContent(
     sculpInv: ISculptureInventoryItem[]
   ): ReactNode {
