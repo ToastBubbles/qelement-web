@@ -6,6 +6,7 @@ export interface ISimilarColor {
 }
 export interface ISimilarColorDTO extends ISimilarColor {
   approvalDate: string;
+  createdAt: string;
 }
 export interface IUserPrefDTO {
   lang: string;
@@ -121,6 +122,8 @@ export interface ISimilarColorDetailed {
   color1: color;
   color2: color;
   creator: user;
+  approvalDate: string;
+  createdAt: string;
 }
 
 export interface ISimilarColorDetailedWithInversionId
@@ -178,7 +181,7 @@ export interface ISubmissions {
   qparts: IQPartDTOInclude[];
   sculptureInventories: ISculptureInventoryItem[];
   sculptures: ISculptureWithImages[];
-  similarColors: ISimilarColorDTO[];
+  similarColors: ISimilarColorDetailed[];
 }
 
 export interface ISculptureInventoryItem {

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  IQPartDTOIncludeLess,
   ISculpPart,
   ISculptureInventoryItem,
   ISculptureWithImages,
@@ -9,7 +8,6 @@ import {
 import { paginate } from "../../utils/utils";
 import PaginationControl from "../PaginationControl";
 import RecentSculpture from "../RecentSculpture";
-import RecentQPart from "../RecentQPart";
 import QPartSubmissions from "./QPartSubmissions";
 
 interface IProps {
@@ -81,27 +79,6 @@ export default function SculptureInventoriesSubmissions({
           </legend>
           <div className="rib-container">
             <QPartSubmissions qparts={sculpObj.parts} />
-            {/* {sculpObj.parts.map((partObj) => (
-              <RecentQPart
-                key={partObj.part.id}
-                qpartl={partObj.part}
-                ribbonOverride={
-                  partObj.approvalDate == null
-                    ? {
-                        content: "Pending",
-                        bgColor: "#aaa",
-                        fgColor: "#000",
-                        fontSize: "1em",
-                      }
-                    : {
-                        content: "Approved",
-                        bgColor: "#00FF99",
-                        fgColor: "#000",
-                        fontSize: "1em",
-                      }
-                }
-              />
-            ))} */}
           </div>
         </fieldset>
       ))}
