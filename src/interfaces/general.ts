@@ -1,9 +1,10 @@
 import { ReactNode } from "react";
 
-export interface ISimilarColorDTO {
+export interface ISimilarColor {
   color_one: number;
   color_two: number;
-  // creatorId: number;
+}
+export interface ISimilarColorDTO extends ISimilarColor {
   approvalDate: string;
 }
 export interface IUserPrefDTO {
@@ -70,9 +71,17 @@ export interface colorWSimilar {
   bo_id: number;
   type: string;
   note: string;
-  similar: color[];
+  similar: IColorWSimColId[];
   createdAt: string;
   updatedAt: string;
+}
+interface IAppDateAndId {
+  id: number;
+  approvalDate: string;
+}
+
+export interface IColorWSimColId extends color {
+  SimilarColor: IAppDateAndId;
 }
 export interface INotApporvedCounts {
   colors: number;

@@ -253,7 +253,7 @@ export default function SingleColorView() {
                   {color?.note ? color.note : "No additional notes"}
                 </div>
               </div>
-              <Link to={`/edit/color/${color?.id}`}>Edit this color</Link>
+              <Link className="link" to={`/edit/color/${color?.id}`}>Edit this color</Link>
             </section>
           </div>
         </div>

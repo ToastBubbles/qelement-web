@@ -9,18 +9,24 @@ import showToast, { Mode, getPrefColorName } from "../utils/utils";
 import { AppContext } from "../context/context";
 
 interface IProps {
-  mode?: Mode;
+  delayBtn?: boolean;
   content: string;
   closePopup: () => void;
   fn: () => void;
 }
 
 export default function ConfirmPopup({
-  mode,
+  delayBtn = true,
   content,
   closePopup,
   fn,
 }: IProps) {
+  const [btnReady, setBtnReady] = useState<boolean>(false);
+  if (delayBtn && !btnReady) {
+    setTimeout(() => {
+      setBtnReady(true);
+    }, 1500);
+  }
   return (
     <div className="popup-container">
       <div className="popup-body">
@@ -40,6 +46,7 @@ export default function ConfirmPopup({
           <h3>{content}</h3>
           <div>
             <button
+              disabled={delayBtn && !btnReady}
               className="formInputNM"
               onClick={() => {
                 fn();

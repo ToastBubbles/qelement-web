@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useContext, useState } from "react";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import { useQuery, useMutation } from "react-query";
 import { useNavigate, useParams } from "react-router";
 import SimilarColorBanner from "../../../components/SimilarColorBanner";
@@ -9,10 +9,14 @@ import {
   IEditColor,
   IAPIResponse,
   colorWSimilar,
+  ISimilarColor,
+  iIdOnly,
 } from "../../../interfaces/general";
 import showToast, { Mode } from "../../../utils/utils";
 import { AppContext } from "../../../context/context";
 import ColorTextField from "../../../components/ColorTextField";
+import ColorLink from "../../../components/ColorLink";
+import ConfirmPopup from "../../../components/ConfirmPopup";
 
 export default function ColorEditView() {
   const {
@@ -23,6 +27,10 @@ export default function ColorEditView() {
   const { colorId } = useParams();
   const [similarColorToAdd, setSimilarColorToAdd] = useState<number>(0);
   const [resetColorComponent, setResetColorComponent] = useState(false);
+
+  const [showPopup, setShowPopup] = useState<boolean>(false);
+
+  const [simColId, setSimColId] = useState<number>(0);
   const navigate = useNavigate();
 
   const {
@@ -78,7 +86,7 @@ export default function ColorEditView() {
   });
 
   const similarColorMutation = useMutation({
-    mutationFn: ({ color_one, color_two }: ISimilarColorDTO) =>
+    mutationFn: ({ color_one, color_two }: ISimilarColor) =>
       axios.post<IAPIResponse>(
         `http://localhost:3000/similarColor/add`,
         {
@@ -123,6 +131,29 @@ export default function ColorEditView() {
       }
     },
   });
+
+  const similarColorDeletionMutation = useMutation({
+    mutationFn: (data: iIdOnly) =>
+      axios.post<IAPIResponse>(
+        `http://localhost:3000/similarColor/deny`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onSuccess: (e) => {
+      if (e.data.code == 200) {
+        showToast("Similar Color Pair removed!", Mode.Success);
+        refetch();
+        closePopup();
+      } else {
+        showToast("Failed to delete Similar Color.", Mode.Error);
+      }
+    },
+  });
+
   const handleResetComponent = () => {
     setResetColorComponent(true);
     setTimeout(() => {
@@ -223,8 +254,17 @@ export default function ColorEditView() {
   }
   if (color) {
     const name = color?.bl_name.length == 0 ? color.tlg_name : color?.bl_name;
+
     return (
       <div className="mx-w">
+        {showPopup && (
+          <ConfirmPopup
+            delayBtn={true}
+            content="Are you sure you want to delete this Color Relationship?"
+            fn={simColDelete}
+            closePopup={closePopup}
+          />
+        )}
         <div className="colorTop">
           <div className="colorName">{name}</div>
 
@@ -251,8 +291,6 @@ export default function ColorEditView() {
                 if (!hexPattern.test(key)) {
                   e.preventDefault(); // Prevent the character from being entered
                 }
-                //  else {
-                // }
               }}
               onChange={(e) => {
                 setColorEdits((colorEdits) => ({
@@ -270,24 +308,27 @@ export default function ColorEditView() {
         <div className="color-container">
           <section>
             Similar Colors:
-            {color.similar.map((col) => (
-              <div key={col.id}>
-                {name} | QID: {col.id}
-              </div>
-            ))}
+            {color.similar.map((col) => {
+              return (
+                <div
+                  key={col.id}
+                  className="clickable"
+                  onClick={() => {
+                    setSimColId(col.SimilarColor.id);
+                    setShowPopup(true);
+                  }}
+                >
+                  <ColorLink color={col} deleteMode={true} />
+                </div>
+              );
+            })}
           </section>
           <section>
             <div className="edit-similarity">
-              {/* <input
-                maxLength={6}
-                onChange={(e) => setSimilarColorToAdd(Number(e.target.value))}
-                type="number"
-                id="similarId"
-                name="similarId"
-                placeholder="color QID"
-              /> */}
-
-              <ColorTextField setter={setSimilarColorToAdd} reset={resetColorComponent} />
+              <ColorTextField
+                setter={setSimilarColorToAdd}
+                reset={resetColorComponent}
+              />
               <button
                 onClick={() => {
                   console.log(Number(colorId), similarColorToAdd);
@@ -320,7 +361,6 @@ export default function ColorEditView() {
               </div>
               <div className="color-subdetails-id">
                 <div>
-                  {/* <div className="color-id">{color?.bl_id}</div> */}
                   <input
                     maxLength={6}
                     className="edit-id-input"
@@ -336,7 +376,6 @@ export default function ColorEditView() {
                   <div>Bricklink</div>
                 </div>
                 <div>
-                  {/* <div className="color-id">{color?.tlg_id}</div> */}
                   <input
                     maxLength={6}
                     className="edit-id-input"
@@ -492,10 +531,6 @@ export default function ColorEditView() {
             <button
               id="save-edits"
               onClick={() => {
-                // similarColorMutation.mutate({
-                //   color_one: Number(colorId),
-                //   color_two: similarColorToAdd,
-                // });
                 applyChanges();
               }}
             >
@@ -506,4 +541,13 @@ export default function ColorEditView() {
       </div>
     );
   } else return <p>Loading...</p>;
+
+  function closePopup() {
+    setShowPopup(false);
+  }
+
+  function simColDelete() {
+    if (simColId > 0) similarColorDeletionMutation.mutate({ id: simColId });
+    else showToast("Error deleting Similar Color!", Mode.Error);
+  }
 }
