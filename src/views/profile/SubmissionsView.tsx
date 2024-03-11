@@ -35,6 +35,7 @@ import CollapsibleSection from "../../components/CollapsibleSection";
 import RecentQPart from "../../components/RecentQPart";
 import RecentSculpture from "../../components/RecentSculpture";
 import QPartSubmissions from "../../components/Submission Components/QPartSubmissions";
+import ImageSubmissions from "../../components/Submission Components/ImageSubmissions";
 
 export default function SubmissionsView() {
   const {
@@ -65,7 +66,7 @@ export default function SubmissionsView() {
   if (userData && submissionData) {
     let me = userData.data;
     let submissions = submissionData.data;
-    console.log(submissions);
+    // console.log(submissions);
 
     return (
       <div className="submission-container">
@@ -82,7 +83,7 @@ export default function SubmissionsView() {
         />
         <CollapsibleSection
           title="Images"
-          content={genImageContent(submissions.images)}
+          content={<ImageSubmissions images={submissions.images} />}
           pending={countApprovalDates(submissions.images, true)}
           approved={countApprovalDates(submissions.images, false)}
         />
@@ -140,43 +141,43 @@ export default function SubmissionsView() {
     );
   } else return <LoadingPage />;
 
-  function genImageContent(images: ImageDTO[]): ReactNode {
-    if (images.length == 0)
-      return <div className="grey-txt">No Images submitted</div>;
-    return (
-      <div className="admin-image-container d-flex  w-100">
-        {images.map((image) => (
-          <div key={image.id} className="admin-image-card">
-            <div>
-              <div className="admin-image-div">
-                <img src={imagePath + image.fileName} alt="brick" />
-              </div>
-              <div className="d-flex flex-col ai-start">
-                <div className={"status-tag img-" + image.type}>
-                  {image.type}
-                </div>
-                {image.approvalDate == null ? (
-                  <div
-                    className="status-tag tag-grey"
-                    style={{ fontSize: "0.55em" }}
-                  >
-                    Pending
-                  </div>
-                ) : (
-                  <div
-                    className="status-tag tag-approved"
-                    style={{ fontSize: "0.55em", backgroundColor: "#00FF55" }}
-                  >
-                    Approved
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  }
+  // function genImageContent(images: ImageDTO[]): ReactNode {
+  //   if (images.length == 0)
+  //     return <div className="grey-txt">No Images submitted</div>;
+  //   return (
+  //     <div className="admin-image-container d-flex  w-100">
+  //       {images.map((image) => (
+  //         <div key={image.id} className="admin-image-card">
+  //           <div>
+  //             <div className="admin-image-div">
+  //               <img src={imagePath + image.fileName} alt="brick" />
+  //             </div>
+  //             <div className="d-flex flex-col ai-start">
+  //               <div className={"status-tag img-" + image.type}>
+  //                 {image.type}
+  //               </div>
+  //               {image.approvalDate == null ? (
+  //                 <div
+  //                   className="status-tag tag-grey"
+  //                   style={{ fontSize: "0.55em" }}
+  //                 >
+  //                   Pending
+  //                 </div>
+  //               ) : (
+  //                 <div
+  //                   className="status-tag tag-approved"
+  //                   style={{ fontSize: "0.55em", backgroundColor: "#00FF55" }}
+  //                 >
+  //                   Approved
+  //                 </div>
+  //               )}
+  //             </div>
+  //           </div>
+  //         </div>
+  //       ))}
+  //     </div>
+  //   );
+  // }
 
   function genPartContent(parts: IPartDTO[]): ReactNode {
     if (parts.length == 0)
@@ -288,7 +289,7 @@ export default function SubmissionsView() {
     if (sculptures.length == 0)
       return <div className="grey-txt">No Sculptures submitted</div>;
 
-    console.log(sculptures);
+    // console.log(sculptures);
 
     return sculptures.map((sculpture) => (
       <RecentSculpture

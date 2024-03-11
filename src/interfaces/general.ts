@@ -323,6 +323,7 @@ export interface ImageDTO {
   qpartId: number;
   sculptureId?: number;
   approvalDate: string;
+  createdAt: string;
 }
 
 export interface IImageEdits {

@@ -1392,7 +1392,8 @@ fieldset > legend {
 }
 .admin-image-div img {
   height: 100%;
-  width: auto;
+  width: 100%;
+  object-fit: contain;
 }
 .primary-image-tag {
   background-color: #00ff73;

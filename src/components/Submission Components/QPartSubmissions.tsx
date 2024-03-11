@@ -20,11 +20,14 @@ export default function QPartSubmissions({ qparts }: IProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(qparts.length / itemsPerPage);
 
-  const paginatedQParts = qparts.length > itemsPerPage ? paginate(qparts, currentPage, itemsPerPage) : qparts
+  const paginatedItems =
+    qparts.length > itemsPerPage
+      ? paginate(qparts, currentPage, itemsPerPage)
+      : qparts;
 
   return (
     <div className="rib-container">
-      {paginatedQParts.map((qpart) => (
+      {paginatedItems.map((qpart) => (
         <RecentQPart
           key={qpart.id}
           qpartl={qpart}
