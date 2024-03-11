@@ -893,6 +893,15 @@ input:checked + .slider:before {
 .text-black {
   color: #2c2c2c;
 }
+.page{
+  width: 1em;
+}
+.pagination{
+  margin: 0.5em 0;
+display: flex;
+width: 100%;
+justify-content: center;
+}
 
 .colors-used {
   border: solid 1px var(--lt-grey);

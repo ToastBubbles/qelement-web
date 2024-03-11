@@ -27,12 +27,14 @@ import showToast, {
   formatDate,
   getProfilePicture,
   imagePath,
+  paginate,
 } from "../../utils/utils";
 import LoadingPage from "../../components/LoadingPage";
 import { useQuery } from "react-query";
 import CollapsibleSection from "../../components/CollapsibleSection";
 import RecentQPart from "../../components/RecentQPart";
 import RecentSculpture from "../../components/RecentSculpture";
+import QPartSubmissions from "../../components/Submission Components/QPartSubmissions";
 
 export default function SubmissionsView() {
   const {
@@ -74,7 +76,7 @@ export default function SubmissionsView() {
         </div>
         <CollapsibleSection
           title="QParts"
-          content={genQPartContent(submissions.qparts)}
+          content={<QPartSubmissions qparts={submissions.qparts} />}
           pending={countApprovalDates(submissions.qparts, true)}
           approved={countApprovalDates(submissions.qparts, false)}
         />
@@ -137,40 +139,6 @@ export default function SubmissionsView() {
       </div>
     );
   } else return <LoadingPage />;
-
-  function genQPartContent(qparts: IQPartDTOIncludeLess[]): ReactNode {
-    if (qparts.length == 0)
-      return <div className="grey-txt">No QParts submitted</div>;
-    qparts.sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
-    return (
-      <div className="rib-container">
-        {qparts.map((qpart) => (
-          <RecentQPart
-            key={qpart.id}
-            qpartl={qpart}
-            ribbonOverride={
-              qpart.approvalDate == null
-                ? {
-                    content: "Pending",
-                    bgColor: "#aaa",
-                    fgColor: "#000",
-                    fontSize: "1em",
-                  }
-                : {
-                    content: "Approved",
-                    bgColor: "#00FF99",
-                    fgColor: "#000",
-                    fontSize: "1em",
-                  }
-            }
-          />
-        ))}
-      </div>
-    );
-  }
 
   function genImageContent(images: ImageDTO[]): ReactNode {
     if (images.length == 0)
@@ -299,14 +267,15 @@ export default function SubmissionsView() {
             />
           </svg>
         </div>
-        <div style={{width: '62%'}}>
+        <div style={{ width: "62%" }}>
           {qpartObj.eIDs.map((eID) => (
             <div
+              key={eID.id}
               className={
                 "status-tag " +
                 (eID.approvalDate == null ? "tag-grey" : "tag-approved")
               }
-              style={{ textShadow: "0 0 3px #000", margin: '0.25em' }}
+              style={{ textShadow: "0 0 3px #000", margin: "0.25em" }}
             >
               {eID.number}
             </div>

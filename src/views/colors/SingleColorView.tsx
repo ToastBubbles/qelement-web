@@ -8,6 +8,7 @@ import LoadingPage from "../../components/LoadingPage";
 import SimilarColorBanner from "../../components/SimilarColorBanner";
 import {
   IAPIResponse,
+  ISimilarColor,
   ISimilarColorDTO,
   colorWSimilar,
 } from "../../interfaces/general";
@@ -56,7 +57,7 @@ export default function SingleColorView() {
   }, [colorId, colRefetch]);
 
   const similarColorMutation = useMutation({
-    mutationFn: ({ color_one, color_two }: ISimilarColorDTO) =>
+    mutationFn: ({ color_one, color_two }: ISimilarColor) =>
       axios.post<IAPIResponse>(
         `http://localhost:3000/similarColor/add`,
         {
