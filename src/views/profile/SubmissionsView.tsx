@@ -36,6 +36,7 @@ import RecentQPart from "../../components/RecentQPart";
 import RecentSculpture from "../../components/RecentSculpture";
 import QPartSubmissions from "../../components/Submission Components/QPartSubmissions";
 import ImageSubmissions from "../../components/Submission Components/ImageSubmissions";
+import ColorSubmissions from "../../components/Submission Components/ColorSubmissions";
 
 export default function SubmissionsView() {
   const {
@@ -101,7 +102,7 @@ export default function SubmissionsView() {
         />
         <CollapsibleSection
           title="Colors"
-          content={genColorContent(submissions.colors)}
+          content={<ColorSubmissions colors={submissions.colors} />}
           pending={countApprovalDates(submissions.colors, true)}
           approved={countApprovalDates(submissions.colors, false)}
         />
@@ -189,25 +190,25 @@ export default function SubmissionsView() {
     return molds.map((mold) => <></>);
   }
 
-  function genColorContent(colors: color[]): ReactNode {
-    if (colors.length == 0)
-      return <div className="grey-txt">No Colors submitted</div>;
-    return colors.map((color) => (
-      <div className="d-flex w-100">
-        <div className="fg-1">
-          <ColorLink color={color} />
-        </div>
-        <div
-          className={
-            "status-tag " +
-            (color.approvalDate == null ? "tag-grey" : "tag-approved")
-          }
-        >
-          {color.approvalDate == null ? "Pending" : "Approved"}
-        </div>
-      </div>
-    ));
-  }
+  // function genColorContent(colors: color[]): ReactNode {
+  //   if (colors.length == 0)
+  //     return <div className="grey-txt">No Colors submitted</div>;
+  //   return colors.map((color) => (
+  //     <div className="d-flex w-100">
+  //       <div className="fg-1">
+  //         <ColorLink color={color} />
+  //       </div>
+  //       <div
+  //         className={
+  //           "status-tag " +
+  //           (color.approvalDate == null ? "tag-grey" : "tag-approved")
+  //         }
+  //       >
+  //         {color.approvalDate == null ? "Pending" : "Approved"}
+  //       </div>
+  //     </div>
+  //   ));
+  // }
 
   function genSimilarColorContent(simColors: ISimilarColorDTO[]): ReactNode {
     if (simColors.length == 0)

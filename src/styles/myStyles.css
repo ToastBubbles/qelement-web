@@ -894,7 +894,7 @@ input:checked + .slider:before {
   color: #2c2c2c;
 }
 .page{
-  width: 1em;
+  padding: 0 0.25em;
 }
 .pagination{
   margin: 0.5em 0;
