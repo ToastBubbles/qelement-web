@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { IQPartDTOIncludeLess } from "../../interfaces/general";
+import { IQPartDTOIncludeLess, ISculpPart } from "../../interfaces/general";
 import { paginate } from "../../utils/utils";
 import RecentQPart from "../RecentQPart";
 import PaginationControl from "../PaginationControl";
 
 interface IProps {
-  qparts: IQPartDTOIncludeLess[];
+  qparts: IQPartDTOIncludeLess[] | ISculpPart[];
 }
 
 export default function QPartSubmissions({ qparts }: IProps) {
@@ -20,34 +20,44 @@ export default function QPartSubmissions({ qparts }: IProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(qparts.length / itemsPerPage);
 
+  qparts.find(x=> x.approvalDate != null)
+
   const paginatedItems =
     qparts.length > itemsPerPage
-      ? paginate(qparts, currentPage, itemsPerPage)
+      ? paginate<IQPartDTOIncludeLess | ISculpPart>(qparts, currentPage, itemsPerPage)
       : qparts;
 
   return (
     <div className="rib-container">
-      {paginatedItems.map((qpart) => (
-        <RecentQPart
-          key={qpart.id}
-          qpartl={qpart}
-          ribbonOverride={
-            qpart.approvalDate == null
-              ? {
-                  content: "Pending",
-                  bgColor: "#aaa",
-                  fgColor: "#000",
-                  fontSize: "1em",
-                }
-              : {
-                  content: "Approved",
-                  bgColor: "#00FF99",
-                  fgColor: "#000",
-                  fontSize: "1em",
-                }
-          }
-        />
-      ))}
+      {paginatedItems.map((part) => {
+        let qpart = undefined;
+        if ("id" in part) {
+          qpart = part;
+        } else {
+          qpart = part.part;
+        }
+        return (
+          <RecentQPart
+            key={qpart.id}
+            qpartl={qpart}
+            ribbonOverride={
+              qpart.approvalDate == null
+                ? {
+                    content: "Pending",
+                    bgColor: "#aaa",
+                    fgColor: "#000",
+                    fontSize: "1em",
+                  }
+                : {
+                    content: "Approved",
+                    bgColor: "#00FF99",
+                    fgColor: "#000",
+                    fontSize: "1em",
+                  }
+            }
+          />
+        );
+      })}
       {qparts.length > itemsPerPage && (
         <PaginationControl
           currentPage={currentPage}

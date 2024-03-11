@@ -39,6 +39,7 @@ import ImageSubmissions from "../../components/Submission Components/ImageSubmis
 import ColorSubmissions from "../../components/Submission Components/ColorSubmissions";
 import SculptureSubmissions from "../../components/Submission Components/SculptureSubmissions";
 import EIDsubmissions from "../../components/Submission Components/EIDSubmissions";
+import SculptureInventoriesSubmissions from "../../components/Submission Components/SculptureInventoriesSubmissions";
 
 export default function SubmissionsView() {
   const {
@@ -122,7 +123,7 @@ export default function SubmissionsView() {
         />
         <CollapsibleSection
           title="Element IDs"
-          content={<EIDsubmissions eIDs={submissions.eIDs}/>}
+          content={<EIDsubmissions eIDs={submissions.eIDs} />}
           pending={countApprovalDates(submissions.eIDs, true)}
           approved={countApprovalDates(submissions.eIDs, false)}
         />
@@ -134,9 +135,11 @@ export default function SubmissionsView() {
         />
         <CollapsibleSection
           title="Sculpture Inventories"
-          content={genSculptureInventoryContent(
-            submissions.sculptureInventories
-          )}
+          content={
+            <SculptureInventoriesSubmissions
+              sculpInventories={submissions.sculptureInventories}
+            />
+          }
           pending={countApprovalDates(submissions.sculptureInventories, true)}
           approved={countApprovalDates(submissions.sculptureInventories, false)}
         />
@@ -316,77 +319,77 @@ export default function SubmissionsView() {
   //     />
   //   ));
   // }
-  function genSculptureInventoryContent(
-    sculpInv: ISculptureInventoryItem[]
-  ): ReactNode {
-    if (sculpInv.length == 0)
-      return <div className="grey-txt">No Sculpture Parts submitted</div>;
+  // function genSculptureInventoryContent(
+  //   sculpInv: ISculptureInventoryItem[]
+  // ): ReactNode {
+  //   if (sculpInv.length == 0)
+  //     return <div className="grey-txt">No Sculpture Parts submitted</div>;
 
-    interface ISculpPart {
-      part: IQPartDTOIncludeLess;
-      approvalDate: string;
-    }
-    interface ISortedSculpInvParts {
-      sculpture: ISculptureWithImages;
-      creator: user;
-      parts: ISculpPart[];
-    }
-    let invArray: ISortedSculpInvParts[] = [];
+  //   interface ISculpPart {
+  //     part: IQPartDTOIncludeLess;
+  //     approvalDate: string;
+  //   }
+  //   interface ISortedSculpInvParts {
+  //     sculpture: ISculptureWithImages;
+  //     creator: user;
+  //     parts: ISculpPart[];
+  //   }
+  //   let invArray: ISortedSculpInvParts[] = [];
 
-    sculpInv.forEach((entry) => {
-      let existingSculpture = invArray.find(
-        (x) => x.sculpture.id == entry.sculpture.id
-      );
-      if (existingSculpture) {
-        existingSculpture.parts.push({
-          part: entry.qpart,
-          approvalDate: entry.approvalDate,
-        } as ISculpPart);
-      } else {
-        invArray.push({
-          sculpture: entry.sculpture,
-          creator: entry.creator,
-          parts: [{ part: entry.qpart, approvalDate: entry.approvalDate }],
-        });
-      }
-    });
+  //   sculpInv.forEach((entry) => {
+  //     let existingSculpture = invArray.find(
+  //       (x) => x.sculpture.id == entry.sculpture.id
+  //     );
+  //     if (existingSculpture) {
+  //       existingSculpture.parts.push({
+  //         part: entry.qpart,
+  //         approvalDate: entry.approvalDate,
+  //       } as ISculpPart);
+  //     } else {
+  //       invArray.push({
+  //         sculpture: entry.sculpture,
+  //         creator: entry.creator,
+  //         parts: [{ part: entry.qpart, approvalDate: entry.approvalDate }],
+  //       });
+  //     }
+  //   });
 
-    return invArray.map((sculpObj) => (
-      <fieldset key={sculpObj.sculpture.id} style={{ margin: "1em 0" }}>
-        <legend className="w-33">
-          <RecentSculpture
-            sculpture={sculpObj.sculpture}
-            hidePartCount={true}
-            hideDate={true}
-            hideRibbon={true}
-          />
-        </legend>
-        <div className="rib-container">
-          {sculpObj.parts.map((partObj) => (
-            <RecentQPart
-              key={partObj.part.id}
-              qpartl={partObj.part}
-              ribbonOverride={
-                partObj.approvalDate == null
-                  ? {
-                      content: "Pending",
-                      bgColor: "#aaa",
-                      fgColor: "#000",
-                      fontSize: "1em",
-                    }
-                  : {
-                      content: "Approved",
-                      bgColor: "#00FF99",
-                      fgColor: "#000",
-                      fontSize: "1em",
-                    }
-              }
-            />
-          ))}
-        </div>
-      </fieldset>
-    ));
-  }
+  //   return invArray.map((sculpObj) => (
+  //     <fieldset key={sculpObj.sculpture.id} style={{ margin: "1em 0" }}>
+  //       <legend className="w-33">
+  //         <RecentSculpture
+  //           sculpture={sculpObj.sculpture}
+  //           hidePartCount={true}
+  //           hideDate={true}
+  //           hideRibbon={true}
+  //         />
+  //       </legend>
+  //       <div className="rib-container">
+  //         {sculpObj.parts.map((partObj) => (
+  //           <RecentQPart
+  //             key={partObj.part.id}
+  //             qpartl={partObj.part}
+  //             ribbonOverride={
+  //               partObj.approvalDate == null
+  //                 ? {
+  //                     content: "Pending",
+  //                     bgColor: "#aaa",
+  //                     fgColor: "#000",
+  //                     fontSize: "1em",
+  //                   }
+  //                 : {
+  //                     content: "Approved",
+  //                     bgColor: "#00FF99",
+  //                     fgColor: "#000",
+  //                     fontSize: "1em",
+  //                   }
+  //             }
+  //           />
+  //         ))}
+  //       </div>
+  //     </fieldset>
+  //   ));
+  // }
 
   interface CommonInterface {
     approvalDate: string | null;

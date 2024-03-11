@@ -186,6 +186,7 @@ export interface ISculptureInventoryItem {
   sculpture: ISculptureWithImages;
   creator: user;
   approvalDate: string;
+  createdAt: string;
 }
 
 export interface ITitle {
@@ -479,7 +480,11 @@ export interface IQPartDTOIncludeLess {
   createdAt: string;
   approvalDate: string;
 }
-
+export interface ISculpPart {
+  part: IQPartDTOIncludeLess;
+  approvalDate: string;
+  createdAt: string;
+}
 export interface IQPartDTOInclude extends IQPartDTOIncludeLess {
   ratings: rating[];
   comments: ICommentDTO[];
