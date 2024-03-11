@@ -1,10 +1,8 @@
 import { useState } from "react";
 import {
-  IQPartDTOIncludeLess,
   ISculptureWithImages,
 } from "../../interfaces/general";
 import { paginate } from "../../utils/utils";
-import RecentQPart from "../RecentQPart";
 import PaginationControl from "../PaginationControl";
 import RecentSculpture from "../RecentSculpture";
 
