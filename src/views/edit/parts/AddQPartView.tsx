@@ -109,7 +109,7 @@ export default function AddQPartView() {
     partsRefetch();
     setNewQPart((newQPart) => ({
       ...newQPart,
-      ...{ partId: -1 },
+      ...{ partId: -1, moldId: -1 },
     }));
   }, [category, partsRefetch]);
 
@@ -250,6 +250,7 @@ export default function AddQPartView() {
             <div className="w-100 d-flex jc-space-b">
               <label htmlFor="par">Part</label>
               <select
+                disabled={category <= 0}
                 name="par"
                 id="par"
                 className="w-50 formInput"
@@ -273,6 +274,7 @@ export default function AddQPartView() {
             <div className="w-100 d-flex jc-space-b">
               <label htmlFor="par">Part Number</label>
               <select
+                disabled={newQPart.partId <= 0}
                 name="partmold"
                 id="partmold"
                 className="w-50 formInput"

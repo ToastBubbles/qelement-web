@@ -65,7 +65,7 @@ export default function SinglePartView() {
     enabled: !!payload.id,
   });
 
-  const [sortedStatuses, setSortedStatuses] = useState<IPartStatusDTO[]>([])
+  const [sortedStatuses, setSortedStatuses] = useState<IPartStatusDTO[]>([]);
   const [urlColorId, setUrlColorId] = useState<number | undefined>(undefined);
   const [urlMoldId, setUrlMoldId] = useState<number | undefined>(undefined);
   const [urlHasChanged, setUrlHasChanged] = useState<boolean>(false);
@@ -148,7 +148,6 @@ export default function SinglePartView() {
     // retry: false,
   });
 
-
   const mypart = qpartData?.data.find((x) => x.id == selectedQPartid);
 
   function getRatings(ratings: rating[] | undefined): number {
@@ -176,11 +175,10 @@ export default function SinglePartView() {
   }, [qpartData]);
 
   useEffect(() => {
-    if(mypart){
-      
-      setSortedStatuses(sortStatus(mypart.partStatuses, false))
-    }else{
-      setSortedStatuses([])
+    if (mypart) {
+      setSortedStatuses(sortStatus(mypart.partStatuses, false));
+    } else {
+      setSortedStatuses([]);
     }
   }, [selectedQPartid]);
 
@@ -236,7 +234,7 @@ export default function SinglePartView() {
 
   if (qpartData && qpartData.data.length > 0) {
     let isAdmin = adminData?.data.code == 200;
-  
+
     const qparts = qpartData?.data;
 
     if (selectedQPartid == -1 || urlHasChanged) {
@@ -268,9 +266,6 @@ export default function SinglePartView() {
     if (mypart) filteredImages = filterImages(mypart.images);
     // console.log(mypart);
 
-   
-
-
     return (
       <div className="mx-w">
         <div className="page-content-wrapper">
@@ -279,12 +274,14 @@ export default function SinglePartView() {
               <div className="top">
                 <ul className="breadcrumb">
                   <li>
-                    <Link to={"/part-categories"} className="link">Parts</Link>
+                    <Link to={"/part-categories"} className="link">
+                      Parts
+                    </Link>
                   </li>
                   <li>{"\u00A0>\u00A0"}</li>
                   <li>
                     <Link
-                    className="link"
+                      className="link"
                       to={`/part-categories/${mypart?.mold.parentPart.category.id}`}
                     >
                       {mypart?.mold.parentPart.category.name}
@@ -456,6 +453,11 @@ export default function SinglePartView() {
                       >
                         Add Element ID
                       </a>
+                    </li>
+                    <li>
+                      <Link to={`/add/marbled`} className="link">
+                        Add Marbled Part
+                      </Link>
                     </li>
                   </ul>
                   <ul className="actions">
@@ -874,11 +876,16 @@ export default function SinglePartView() {
                   <div className="top">
                     <ul className="breadcrumb">
                       <li>
-                        <Link to={"/part-categories"} className="link">Parts</Link>
+                        <Link to={"/part-categories"} className="link">
+                          Parts
+                        </Link>
                       </li>
                       <li>{"\u00A0>\u00A0"}</li>
                       <li>
-                        <Link to={`/part-categories/${thisPart.category.id}`} className="link">
+                        <Link
+                          to={`/part-categories/${thisPart.category.id}`}
+                          className="link"
+                        >
                           {thisPart.category.name}
                         </Link>
                       </li>

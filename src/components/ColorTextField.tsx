@@ -7,7 +7,8 @@ import { useState, useContext, CSSProperties } from "react";
 import { AppContext } from "../context/context";
 
 interface IProps {
-  setter: (colorId: number) => void;
+  setter?: (colorId: number) => void;
+  setterObj?: (color: color | null) => void;
   placeholder?: string;
   customStyles?: CSSProperties;
   reset?: boolean;
@@ -15,6 +16,7 @@ interface IProps {
 
 function ColorTextField({
   setter,
+  setterObj,
   placeholder = "",
   customStyles,
   reset = false,
@@ -86,15 +88,16 @@ function ColorTextField({
 
   const handleClear = () => {
     setInputValue("");
-    setter(-1);
+    setter && setter(-1)
+    setterObj && setterObj(null)
     setHex("FFFFFF00");
     setType("");
     setSuggestions([]);
   };
   const handleSuggestionClick = (suggestion: color) => {
     setInputValue(getPrefColorName(suggestion, prefPayload.prefName));
-
-    setter(suggestion.id);
+    setter && setter(suggestion.id);
+    setterObj && setterObj(suggestion)
     setHex(suggestion.hex);
     setType(suggestion.type);
     setSuggestions([]); // Clear suggestions after selection

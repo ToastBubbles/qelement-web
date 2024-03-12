@@ -162,7 +162,7 @@ export default function SingleColorView() {
                 }}
               >
                 Add similarity
-              </button>{" "}
+              </button>
             </div>
           </div>
           <div className="color-container">

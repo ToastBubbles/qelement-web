@@ -60,17 +60,12 @@ import UserManagementView from "./views/generic/AdminTools/UserManagementView";
 import UserLookupView from "./views/generic/Tools/UserLookupView";
 import AllToolsView from "./views/generic/Tools/AllToolsView";
 import OtherUserProfileView from "./views/generic/Tools/OtherUserProfileView";
-import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
-import { getJWT } from "./auth/auth";
-import LoadingPage from "./components/LoadingPage";
-import { user } from "./interfaces/general";
-import { JWTPayload } from "jose";
 import TitleManagementView from "./views/generic/AdminTools/TitleManagementView";
 import PartEditView from "./views/edit/parts/PartEditView";
 import MoldEditView from "./views/edit/parts/MoldEditView";
 import QPartEditView from "./views/edit/parts/QPartEditView";
 import SubmissionsView from "./views/profile/SubmissionsView";
+import AddMarbledPartView from "./views/edit/parts/AddMarbledPartView";
 const queryClient = new QueryClient({
   defaultOptions: {
     // queries: { staleTime: 10000 }
@@ -151,6 +146,15 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <AddPartView />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/add/marbled"
+                element={
+                  <ProtectedRoute>
+                    <AddMarbledPartView />
                   </ProtectedRoute>
                 }
               />
