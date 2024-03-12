@@ -360,7 +360,7 @@ export default function AddPartView() {
             <div className="w-100 d-flex flex-col flex-center">
               <div className="fake-hr-form"></div>
               <div style={{ marginBottom: "1em" }}>
-                can't find the category? add a new one:
+                Can't find the category? Add a new one:
                 <MyToolTip
                   content={
                     <div style={{ maxWidth: "25em" }}>

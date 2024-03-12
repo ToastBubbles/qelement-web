@@ -45,6 +45,7 @@ export default function AddQPartView() {
     creatorId: -1,
     qpartId: -1,
     approvalDate: "",
+    createdAt: "",
   };
   const [resetColorComponent, setResetColorComponent] = useState(false);
   const [elementId, setElementId] = useState<number>(-1);
@@ -156,6 +157,7 @@ export default function AddQPartView() {
           qpartId: Number(data.data.message),
           creatorId: payload.id,
           approvalDate: "",
+          createdAt: "",
         });
         handleResetComponent();
 
@@ -593,9 +595,11 @@ export default function AddQPartView() {
             <div className="w-100 d-flex flex-col flex-center">
               <div className="fake-hr-form"></div>
               <div style={{ marginBottom: "1em" }}>
-                can't find the category or part? add it here:
+                Can't find the category or part? Add it here:
               </div>
-              <Link to={"/add/part"}>Add Parts</Link>
+              <Link className="link" to={"/add/part"}>
+                Add Parts
+              </Link>
             </div>
           </div>
         </div>

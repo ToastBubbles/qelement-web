@@ -17,7 +17,7 @@ interface IQPartWithEIDS {
 }
 export default function EIDsubmissions({ eIDs }: IProps) {
   if (eIDs.length == 0)
-    return <div className="grey-txt">No Element IDS submitted</div>;
+    return <div className="grey-txt">No Element IDs submitted</div>;
 
   eIDs.sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()

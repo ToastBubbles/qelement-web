@@ -20,11 +20,15 @@ export default function QPartSubmissions({ qparts }: IProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(qparts.length / itemsPerPage);
 
-  qparts.find(x=> x.approvalDate != null)
+  qparts.find((x) => x.approvalDate != null);
 
   const paginatedItems =
     qparts.length > itemsPerPage
-      ? paginate<IQPartDTOIncludeLess | ISculpPart>(qparts, currentPage, itemsPerPage)
+      ? paginate<IQPartDTOIncludeLess | ISculpPart>(
+          qparts,
+          currentPage,
+          itemsPerPage
+        )
       : qparts;
 
   return (
@@ -35,6 +39,7 @@ export default function QPartSubmissions({ qparts }: IProps) {
           qpart = part;
         } else {
           qpart = part.part;
+          qpart.approvalDate = part.approvalDate;
         }
         return (
           <RecentQPart

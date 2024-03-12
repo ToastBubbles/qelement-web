@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  ISimilarColorDTO,
   ISimilarColorDetailed,
 } from "../../interfaces/general";
 import { paginate } from "../../utils/utils";
@@ -14,7 +13,7 @@ interface IProps {
 
 export default function SimilarColorSubmissions({ simColors }: IProps) {
   if (simColors.length == 0)
-    return <div className="grey-txt">No simColors submitted</div>;
+    return <div className="grey-txt">No Color Relationships submitted</div>;
 
   simColors.sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()

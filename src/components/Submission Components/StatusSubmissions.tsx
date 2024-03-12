@@ -31,8 +31,6 @@ export default function StatusSubmissions({ statuses }: IProps) {
   let conversion: IQPartStatusConversion[] = [];
 
   statuses.forEach((statusObj) => {
-    console.log(statusObj);
-
     const existingConversion = conversion.find(
       (conv) => conv.qpart.id === statusObj.qpart.id
     );
@@ -45,8 +43,6 @@ export default function StatusSubmissions({ statuses }: IProps) {
       });
     }
   });
-
-  console.log(conversion);
 
   const itemsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
@@ -90,7 +86,9 @@ export default function StatusSubmissions({ statuses }: IProps) {
                   key={status.id}
                   className={
                     `status-tag tag-${status.status} ` +
-                    (status.approvalDate == null ? "outline-grey" : "outline-approved")
+                    (status.approvalDate == null
+                      ? "outline-grey"
+                      : "outline-approved")
                   }
                   style={{ textShadow: "0 0 3px #000", margin: "0.25em" }}
                 >

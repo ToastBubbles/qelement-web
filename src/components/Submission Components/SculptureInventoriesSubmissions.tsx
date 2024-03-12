@@ -65,6 +65,9 @@ export default function SculptureInventoriesSubmissions({
     invArray.length > itemsPerPage
       ? paginate(invArray, currentPage, itemsPerPage)
       : invArray;
+
+  console.log(paginatedItems);
+
   return (
     <div className="rib-container">
       {paginatedItems.map((sculpObj) => (
