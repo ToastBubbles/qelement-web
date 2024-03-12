@@ -127,7 +127,10 @@ export default function OtherUserProfileView() {
 
   if (username && userData && !isUsernameBad) {
     let user = userData.data as IUserDTO;
-    const title = user.titles.find((t) => t.id == user.selectedTitleId);
+    let title = null;
+    if (user.titles) {
+      title = user.titles.find((t) => t.id == user.selectedTitleId);
+    }
     console.log(user);
 
     return (

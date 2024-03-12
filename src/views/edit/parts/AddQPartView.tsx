@@ -17,7 +17,7 @@ import {
   part,
 } from "../../../interfaces/general";
 import { AppContext } from "../../../context/context";
-import showToast, { Mode } from "../../../utils/utils";
+import showToast, { Mode, testStatus } from "../../../utils/utils";
 import ColorTextField from "../../../components/ColorTextField";
 
 export default function AddQPartView() {
@@ -38,7 +38,7 @@ export default function AddQPartView() {
   };
   const defaultStatusValues: IPartStatusDTO = {
     id: -1,
-    status: "unknown",
+    status: "",
     date: "",
     location: "",
     note: "",
@@ -148,17 +148,25 @@ export default function AddQPartView() {
       console.log(data);
 
       if ((data.data?.code == 200 || data.data?.code == 201) && payload) {
-        partStatusMutation.mutate({
-          id: -1,
-          status: newStatus.status,
-          date: startDate.toDateString(),
-          location: newStatus.location,
-          note: newStatus.note,
-          qpartId: Number(data.data.message),
-          creatorId: payload.id,
-          approvalDate: "",
-          createdAt: "",
-        });
+        if (testStatus(newStatus.status)) {
+          partStatusMutation.mutate({
+            id: -1,
+            status: newStatus.status,
+            date: startDate.toDateString(),
+            location: newStatus.location,
+            note: newStatus.note,
+            qpartId: Number(data.data.message),
+            creatorId: payload.id,
+            approvalDate: "",
+            createdAt: "",
+          });
+        } else {
+          if (data.data.code == 201) {
+            showToast("QElement added!", Mode.Success);
+          } else {
+            showToast("QElement submitted for approval!", Mode.Success);
+          }
+        }
         handleResetComponent();
 
         if (elementId && elementId > 999 && elementId < 999999999) {
@@ -480,6 +488,7 @@ export default function AddQPartView() {
                 }
                 value={newStatus.status}
               >
+                <option value={""}>--</option>
                 <option value={"unknown"}>Unknown</option>
                 <option value={"idOnly"}>Element ID Only</option>
                 <option value={"seen"}>Seen</option>
@@ -508,6 +517,7 @@ export default function AddQPartView() {
                 />
               </div>
               <input
+                disabled={newStatus.status == ""}
                 maxLength={100}
                 id="location"
                 className="formInput w-50"
@@ -525,6 +535,7 @@ export default function AddQPartView() {
               <label htmlFor="date">Date</label>
               <div className="w-50">
                 <DatePicker
+                  disabled={newStatus.status == ""}
                   className="w-100 formInput"
                   selected={startDate}
                   onChange={(date) => {
@@ -538,6 +549,7 @@ export default function AddQPartView() {
             </label>
             <div className="w-100 d-flex">
               <textarea
+                disabled={newStatus.status == ""}
                 maxLength={255}
                 id="satusnote"
                 className="fg-1 formInput"

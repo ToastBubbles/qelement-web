@@ -351,6 +351,17 @@ export function sortStatus(
 
   return output;
 }
+export function testStatus(status: string): boolean {
+  const validStatuses = [
+    "unknown",
+    "idOnly",
+    "seen",
+    "found",
+    "known",
+    "other",
+  ];
+  return validStatuses.includes(status);
+}
 
 export function paginate<T>(
   items: T[],
