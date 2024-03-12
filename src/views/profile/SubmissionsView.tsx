@@ -41,6 +41,9 @@ import SculptureSubmissions from "../../components/Submission Components/Sculptu
 import EIDsubmissions from "../../components/Submission Components/EIDSubmissions";
 import SculptureInventoriesSubmissions from "../../components/Submission Components/SculptureInventoriesSubmissions";
 import SimilarColorSubmissions from "../../components/Submission Components/SimilarColorSubmissions";
+import PartSubmissions from "../../components/Submission Components/PartSubmission";
+import MoldSubmissions from "../../components/Submission Components/MoldSubmissions";
+import StatusSubmissions from "../../components/Submission Components/StatusSubmissions";
 
 export default function SubmissionsView() {
   const {
@@ -94,13 +97,13 @@ export default function SubmissionsView() {
         />
         <CollapsibleSection
           title="Parts"
-          content={genPartContent(submissions.parts)}
+          content={<PartSubmissions parts={submissions.parts} />}
           pending={countApprovalDates(submissions.parts, true)}
           approved={countApprovalDates(submissions.parts, false)}
         />
         <CollapsibleSection
           title="Molds"
-          content={genPartMoldContent(submissions.molds)}
+          content={<MoldSubmissions molds={submissions.molds} />}
           pending={countApprovalDates(submissions.molds, true)}
           approved={countApprovalDates(submissions.molds, false)}
         />
@@ -124,7 +127,7 @@ export default function SubmissionsView() {
         />
         <CollapsibleSection
           title="QPart Statuses"
-          content={genStatusContent(submissions.statuses)}
+          content={<StatusSubmissions statuses={submissions.statuses} />}
           pending={countApprovalDates(submissions.statuses, true)}
           approved={countApprovalDates(submissions.statuses, false)}
         />
@@ -153,30 +156,6 @@ export default function SubmissionsView() {
       </div>
     );
   } else return <LoadingPage />;
-
-  function genPartContent(parts: IPartDTO[]): ReactNode {
-    if (parts.length == 0)
-      return <div className="grey-txt">No Parts submitted</div>;
-  }
-  function genPartMoldContent(molds: IPartMoldDTO[]): ReactNode {
-    if (molds.length == 0)
-      return <div className="grey-txt">No Part Molds submitted</div>;
-    return molds.map((mold) => <></>);
-  }
-
-  // function genSimilarColorContent(simColors: ISimilarColorDTO[]): ReactNode {
-  //   console.log(simColors);
-
-  //   if (simColors.length == 0)
-  //     return <div className="grey-txt">No Similar Colors submitted</div>;
-  //   return simColors.map((simColor) => <></>);
-  // }
-
-  function genStatusContent(statuses: IPartStatusDTO[]): ReactNode {
-    if (statuses.length == 0)
-      return <div className="grey-txt">No QPart Statuses submitted</div>;
-    return statuses.map((status) => <></>);
-  }
 
   interface CommonInterface {
     approvalDate: string | null;

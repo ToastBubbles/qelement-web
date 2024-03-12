@@ -29,7 +29,7 @@ export default function ColorSubmissions({ colors }: IProps) {
   return (
     <>
       {paginatedItems.map((color) => (
-        <div className="d-flex w-100">
+        <div key={color.id} className="d-flex w-100">
           <div className="fg-1">
             <ColorLink color={color} />
           </div>

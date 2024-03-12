@@ -834,6 +834,12 @@ input:checked + .slider:before {
   padding: 0.3em;
   border-radius: 0.25em;
 }
+.outline-grey {
+  border: solid 4px #b1b1b1;
+}
+.outline-approved {
+  border: solid 4px #00ff55;
+}
 .tag-grey {
   background-color: #b1b1b1;
 }
@@ -855,8 +861,8 @@ input:checked + .slider:before {
   background-color: rgb(48, 48, 48);
 }
 
-.tag-approved{
-  background-color: #00FF55;
+.tag-approved {
+  background-color: #00ff55;
 }
 /* .tag-prototype {
   background-color: var(--lt-red);
@@ -893,14 +899,14 @@ input:checked + .slider:before {
 .text-black {
   color: #2c2c2c;
 }
-.page{
+.page {
   padding: 0 0.25em;
 }
-.pagination{
+.pagination {
   margin: 0.5em 0;
-display: flex;
-width: 100%;
-justify-content: center;
+  display: flex;
+  width: 100%;
+  justify-content: center;
 }
 
 .colors-used {

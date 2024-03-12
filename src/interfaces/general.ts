@@ -163,6 +163,7 @@ export interface IPartStatusDTO {
   qpartId: number;
   creatorId: number;
   approvalDate: string;
+  createdAt: string;
 }
 
 export interface ISubmissionCount {
@@ -177,7 +178,7 @@ export interface ISubmissions {
   images: ImageDTO[];
   molds: IPartMoldDTO[];
   parts: IPartDTO[];
-  statuses: IPartStatusDTO[];
+  statuses: IPartStatusWQPartLess[];
   qparts: IQPartDTOInclude[];
   sculptureInventories: ISculptureInventoryItem[];
   sculptures: ISculptureWithImages[];
@@ -206,6 +207,10 @@ export interface ITitlesToAddToUsers {
 }
 export interface IUserTitlePackedDTO {
   array: ITitlesToAddToUsers[];
+}
+export interface IPartStatusWQPartLess extends IPartStatusDTO {
+  qpart: IQPartDTOIncludeLess;
+  creator: user;
 }
 export interface IPartStatusWQPart extends IPartStatusDTO {
   qpart: IQPartDTOInclude;
@@ -237,6 +242,7 @@ export interface IPartDTO {
   creatorId: number;
   note: string;
   approvalDate: string;
+  createdAt: string;
 }
 export interface IPartMoldDTO {
   id: number;
