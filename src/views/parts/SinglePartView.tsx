@@ -967,6 +967,11 @@ export default function SinglePartView() {
                             Add QParts
                           </Link>
                         </li>
+                        <li>
+                          <Link to={`/add/marbled`} className="link">
+                            Add Marbled Part
+                          </Link>
+                        </li>
                       </ul>
                       <ul className="actions">
                         <span>Links:</span>

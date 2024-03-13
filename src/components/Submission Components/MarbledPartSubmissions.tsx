@@ -5,12 +5,16 @@ import PaginationControl from "../PaginationControl";
 import RecentGeneric from "../RecentGeneric";
 import ColorPieChart from "../ColorPieChart";
 import ColorLink from "../ColorLink";
+import MarbledImageUploader from "../MarbledImageUploader";
+import GenericPopup from "../GenericPopup";
 
 interface IProps {
   parts: IMarbledPart[];
 }
 
 export default function MarbledPartSubmissions({ parts }: IProps) {
+  const [showImagePopup, setShowImagePopup] = useState<boolean>(false);
+  const [selectedPartId, setSelectedPartId] = useState<number>(-1);
   if (parts.length == 0)
     return <div className="grey-txt">No Marbled Parts submitted</div>;
 
@@ -29,6 +33,12 @@ export default function MarbledPartSubmissions({ parts }: IProps) {
 
   return (
     <div className="rib-container">
+      {showImagePopup && (
+        <GenericPopup
+          closePopup={closePopup}
+          content={<MarbledImageUploader partId={selectedPartId} />}
+        />
+      )}
       {paginatedItems.map((part) => {
         let ribbonStyles =
           part.approvalDate == null
@@ -47,11 +57,14 @@ export default function MarbledPartSubmissions({ parts }: IProps) {
 
         return (
           <div className=" d-flex ai-center">
-            <div className="rib-container w-33">
+            <div className="rib-container w-33" style={{ minWidth: "33.3%" }}>
               <RecentGeneric
                 key={part.id}
-                mainText={"Marbled Part"}
-                subText={`${part.mold.parentPart.name} (${part.mold.number})`}
+                imageName={part.images.length > 0 ? part.images[0].fileName : undefined}
+                mainText={`Marbled Part ${part.id}`}
+                subText={`${part.mold.parentPart.name} (${part.mold.number}${
+                  part.isMoldUnknown ? "*" : ""
+                })`}
                 link={`/part/${part.mold.parentPart.id}`}
                 ribbonOverride={ribbonStyles}
               />
@@ -59,7 +72,10 @@ export default function MarbledPartSubmissions({ parts }: IProps) {
             <div style={{ margin: "0 1em" }}>
               <ColorPieChart colorsWPercent={part.colors} radius={50} />
             </div>
-            <div className="d-flex w-33 flex-wrap">
+            <div
+              className="d-flex flex-wrap fg-1 overflow-y-auto"
+              style={{ maxHeight: "5em" }}
+            >
               {part.colors.map((colObj) => (
                 <div
                   className="d-flex ai-center"
@@ -75,6 +91,15 @@ export default function MarbledPartSubmissions({ parts }: IProps) {
                 </div>
               ))}
             </div>
+            <button
+              style={{ minWidth: "8em" }}
+              onClick={() => {
+                setSelectedPartId(part.id);
+                setShowImagePopup(true);
+              }}
+            >
+              Add Image
+            </button>
           </div>
         );
       })}
@@ -87,4 +112,7 @@ export default function MarbledPartSubmissions({ parts }: IProps) {
       )}
     </div>
   );
+  function closePopup() {
+    setShowImagePopup(false);
+  }
 }

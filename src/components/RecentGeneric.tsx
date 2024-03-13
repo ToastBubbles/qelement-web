@@ -1,12 +1,13 @@
 import { Ribbon, RibbonContainer } from "react-ribbons";
 import { Link } from "react-router-dom";
 import { IRibbonOverride } from "../interfaces/general";
+import { imagePath } from "../utils/utils";
 
 interface IProps {
   mainText: string;
   subText?: string;
   link?: string;
-
+  imageName?: string;
   ribbonOverride?: IRibbonOverride;
 }
 
@@ -14,7 +15,7 @@ export default function RecentGeneric({
   mainText,
   subText,
   link,
-
+  imageName,
   ribbonOverride,
 }: IProps) {
   return (
@@ -25,8 +26,10 @@ export default function RecentGeneric({
         style={link == undefined ? { pointerEvents: "none" } : undefined}
         className={`listing link new-listing`}
       >
-        <div className="listing-img">
-          <img src={"/img/missingimage.png"} />
+        <div className="listing-img" style={{ padding: "0" }}>
+          <img
+            src={imageName ? imagePath + imageName : "/img/missingimage.png"}
+          />
         </div>
         <div>
           <div>{mainText}</div>

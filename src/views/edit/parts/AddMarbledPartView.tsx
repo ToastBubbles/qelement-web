@@ -252,6 +252,13 @@ export default function AddMarbledPartView() {
                 <button
                   style={{ height: "24px" }}
                   onClick={() => {
+                    if (colors.length >= 10) {
+                      showToast(
+                        "Only 10 colors are allowed per marbled part, list additional colors in the Note if necessary!",
+                        Mode.Error
+                      );
+                      return;
+                    }
                     if (
                       selectedColor &&
                       !colors.find((x) => x.color == selectedColor)
@@ -380,6 +387,13 @@ export default function AddMarbledPartView() {
                   }
                   if (colors.length <= 1) {
                     showToast("Please add at least two colors!", Mode.Error);
+                    return;
+                  }
+                  if (colors.length > 10) {
+                    showToast(
+                      "Only 10 colors are allowed per marbled part, list additional colors in the Note if necessary!",
+                      Mode.Error
+                    );
                     return;
                   }
                   if (!validatePercentages()) {

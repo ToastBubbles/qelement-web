@@ -2363,6 +2363,19 @@ textarea {
   height: 0;
 }
 
+.img-marbled {
+  background: linear-gradient(
+    124deg,
+    #ff8c7a,
+    #e9b36d,
+    #fcfd9b,
+    #9fffaf,
+    #9790ff,
+    #f589ff
+  );
+  /* background-size: 100% 100%; */
+}
+
 .img-part {
   background-color: rgb(0, 204, 255);
 }

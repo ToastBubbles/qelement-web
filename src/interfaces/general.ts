@@ -230,6 +230,7 @@ export interface IMarbledPart {
   mold: IPartMoldDTO;
   colors: IColorWithPercent[];
   isMoldUnknown: boolean;
+  images: ImageDTO[];
   note: string;
   creator: user;
   createdAt: string;
