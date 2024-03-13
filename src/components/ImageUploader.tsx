@@ -142,21 +142,14 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
     const handleSubmit = (event: FormEvent) => {
       event.preventDefault();
       let convertedFile = null;
-      // if (resizedImage)
-      //   convertedFile = new File([resizedImage], "resized_image.jpg", {
-      //     type: "image/jpeg",
-      //   });
+
       const imageToUpload = convertedFile || selectedImage;
       if (!imageToUpload) {
         showToast("Please select an image.", Mode.Warning);
         return;
       }
 
-      // console.log("Converted: ", convertedFile);
 
-      // console.log("selected: ", selectedImage);
-
-      // console.log(imageToUpload);
 
       if (imageToUpload) {
         const image = new Image();
@@ -173,9 +166,7 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
             isValidRatio(width, height) &&
             allowedTypes.includes(imageToUpload.type)
           ) {
-            // All validation conditions met, proceed with uploading
-
-            // console.log(image);
+   
 
             const imageData: ImageSubmission = {
               userId: payload.id,
@@ -295,14 +286,7 @@ const ImageUploader = ({ qpartId, sculptureId }: iProps) => {
             if (!context) return;
             let { width, height } = image;
             const aspectRatio = width / height;
-            // if (!isValidRatio(width, height)) {
-            //   showToast(
-            //     `Image must be be at least a 1 / 2 aspect ratio. Your image is ${
-            //       width < height ? "too narrow/tall." : "too wide/short."
-            //     } (${reduceFraction(width, height)})`,
-            //     Mode.Error
-            //   );
-            // } else
+
             if (
               width > maxWidth ||
               width < minWidth ||

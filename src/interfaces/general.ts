@@ -212,6 +212,17 @@ export interface IPartStatusWQPartLess extends IPartStatusDTO {
   qpart: IQPartDTOIncludeLess;
   creator: user;
 }
+
+export interface IColorWithPercent {
+  color: color;
+  percent: number | null;
+}
+export interface IMarbledPartDTO {
+  moldId: number;
+  colors: IIdAndNumber[];
+  isMoldUnknown: boolean;
+  note: string;
+}
 export interface IPartStatusWQPart extends IPartStatusDTO {
   qpart: IQPartDTOInclude;
   creator: user;

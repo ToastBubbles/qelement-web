@@ -3,23 +3,20 @@ import { CSSProperties, useContext, useEffect, useState } from "react";
 import { useQuery, useMutation } from "react-query";
 import {
   part,
-  IPartWithMoldDTO,
   IAPIResponse,
-  ICategoryWParts,
   ICategory,
-  IElementIDCreationDTO,
   IPartMoldDTO,
-  IPartStatusDTO,
-  IQPartVerifcation,
   color,
-  iQPartDTO,
+  IColorWithPercent,
+  IMarbledPartDTO,
 } from "../../../interfaces/general";
-import showToast, { Mode, testStatus } from "../../../utils/utils";
+import showToast, { Mode } from "../../../utils/utils";
 import MyToolTip from "../../../components/MyToolTip";
 import { AppContext } from "../../../context/context";
 import { Link } from "react-router-dom";
 import ColorTextField from "../../../components/ColorTextField";
-import ColorLink from "../../../components/ColorLink";
+import ColorForMarbledPart from "../../../components/ColorForMarbledPart";
+import ImageUploader from "../../../components/ImageUploader";
 
 export default function AddMarbledPartView() {
   const {
@@ -28,33 +25,21 @@ export default function AddMarbledPartView() {
     },
   } = useContext(AppContext);
 
-  const defaultValues: iQPartDTO = {
-    partId: -1,
-    colorId: -1,
+  const defaultValues: IMarbledPartDTO = {
     moldId: -1,
     isMoldUnknown: false,
-    type: "unknown",
-    creatorId: -1,
     note: "",
+    colors: [],
   };
-  const defaultStatusValues: IPartStatusDTO = {
-    id: -1,
-    status: "",
-    date: "",
-    location: "",
-    note: "",
-    creatorId: -1,
-    qpartId: -1,
-    approvalDate: "",
-    createdAt: "",
-  };
+
   const [resetColorComponent, setResetColorComponent] = useState(false);
-  const [newQPart, setNewQPart] = useState<iQPartDTO>(defaultValues);
+  const [newMarbledPart, setNewMarbledPart] =
+    useState<IMarbledPartDTO>(defaultValues);
   const [category, setCategory] = useState<number>(-1);
   const [molds, setMolds] = useState<IPartMoldDTO[]>();
-  const [colors, setColors] = useState<color[]>([]);
+  const [selectedPartId, setSelectedPartId] = useState<number>(-1);
+  const [colors, setColors] = useState<IColorWithPercent[]>([]);
   const [selectedColor, setSelectedColor] = useState<color | null>(null);
-  const [qpartExistenceCode, setQpartExistenceCode] = useState<number>(-1);
 
   const { data: colData } = useQuery("allColors", () =>
     axios.get<color[]>("http://localhost:3000/color")
@@ -74,70 +59,51 @@ export default function AddMarbledPartView() {
     }, 0);
   };
 
-  const { refetch: matchRefetch } = useQuery({
-    queryKey: `match-p${newQPart.partId}-m${newQPart.moldId}-c${newQPart.colorId}`,
-    queryFn: () =>
-      axios.get<IAPIResponse>(`http://localhost:3000/qpart/checkIfExists`, {
-        params: {
-          moldId: newQPart.moldId,
-          colorId: newQPart.colorId,
-        } as IQPartVerifcation,
-      }),
-    onSuccess: (resp) => {
-      const code = resp.data.code;
-      setQpartExistenceCode(code);
-      if (code == 200) {
-        showToast(
-          `QPart does not exist in database yet, you're good to go!`,
-          Mode.Success
-        );
-      } else if (code == 201) {
-        showToast(
-          `QPart already exists. It may be pending approval.`,
-          Mode.Warning
-        );
-      } else if (code == 500) {
-        showToast(`Error checking part`, Mode.Error);
-      }
-    },
-    enabled: false,
-  });
-
   useEffect(() => {
     partsRefetch();
-    setNewQPart((newQPart) => ({
-      ...newQPart,
-      ...{ partId: -1, moldId: -1 },
+    setNewMarbledPart((newMarbledPart) => ({
+      ...newMarbledPart,
+      ...{ moldId: -1 },
     }));
+    setSelectedPartId(-1);
   }, [category, partsRefetch]);
 
   useEffect(() => {
-    setNewQPart((newQPart) => ({
-      ...newQPart,
-      ...{ creatorId: payload.id },
-    }));
-  }, [payload]);
-
-  useEffect(() => {
-    if (newQPart.moldId != -1 && newQPart.colorId != -1) {
-      matchRefetch();
+    if (colors.length > 0) {
+      const convertedColors = colors.map((colorObj) => ({
+        id: colorObj.color.id,
+        number: colorObj.percent || -1,
+      }));
+      setNewMarbledPart((newMarbledPart) => ({
+        ...newMarbledPart,
+        ...{ colors: convertedColors },
+      }));
+    } else {
+      setNewMarbledPart((newMarbledPart) => ({
+        ...newMarbledPart,
+        ...{ colors: [] },
+      }));
     }
-  }, [newQPart.moldId, newQPart.colorId, matchRefetch]);
+  }, [colors]);
 
   useEffect(() => {
     if (partsData) {
-      const thesemolds = partsData.data.find((x) => x.id == newQPart.partId);
+      const thesemolds = partsData.data.find((x) => x.id == selectedPartId);
       if (thesemolds) setMolds(thesemolds.molds);
+      setNewMarbledPart((newMarbledPart) => ({
+        ...newMarbledPart,
+        ...{ moldId: -1 },
+      }));
     }
-  }, [newQPart.partId, partsData]);
+  }, [selectedPartId, partsData]);
 
   const { data: catData } = useQuery("todos", () =>
     axios.get<ICategory[]>("http://localhost:3000/categories")
   );
 
-  const partMutation = useMutation({
-    mutationFn: (qpart: iQPartDTO) =>
-      axios.post<IAPIResponse>(`http://localhost:3000/qpart/add`, qpart, {
+  const marbleMutation = useMutation({
+    mutationFn: (part: IMarbledPartDTO) =>
+      axios.post<IAPIResponse>(`http://localhost:3000/marbledPart/add`, part, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -147,9 +113,14 @@ export default function AddMarbledPartView() {
 
       if ((data.data?.code == 200 || data.data?.code == 201) && payload) {
         if (data.data.code == 201) {
-          showToast("QElement added!", Mode.Success);
+          showToast("Marbled part added!", Mode.Success);
+          setNewMarbledPart(defaultValues);
         } else {
-          showToast("QElement submitted for approval!", Mode.Success);
+          showToast(
+            "Marbled part submitted, please make sure to add an image on the My Submissions page!",
+            Mode.Success
+          );
+          setNewMarbledPart(defaultValues);
         }
 
         handleResetComponent();
@@ -167,6 +138,10 @@ export default function AddMarbledPartView() {
   };
 
   if (catData && colData) {
+    const percent = colors.reduce(
+      (total, colorObj) => total + (colorObj.percent || 0),
+      0
+    );
     return (
       <>
         <div className="formcontainer">
@@ -196,13 +171,8 @@ export default function AddMarbledPartView() {
                 name="par"
                 id="par"
                 className="w-50 formInput"
-                onChange={(e) =>
-                  setNewQPart((newQPart) => ({
-                    ...newQPart,
-                    ...{ partId: Number(e.target.value) },
-                  }))
-                }
-                value={newQPart.partId}
+                onChange={(e) => setSelectedPartId(Number(e.target.value))}
+                value={selectedPartId}
               >
                 <option value="-1">--</option>
                 {partsData?.data.map((part) => (
@@ -216,18 +186,18 @@ export default function AddMarbledPartView() {
             <div className="w-100 d-flex jc-space-b">
               <label htmlFor="par">Part Number</label>
               <select
-                disabled={newQPart.partId <= 0}
+                disabled={selectedPartId <= 0}
                 name="partmold"
                 id="partmold"
                 className="w-50 formInput"
                 style={{ marginBottom: "1em" }}
                 onChange={(e) =>
-                  setNewQPart((newQPart) => ({
-                    ...newQPart,
+                  setNewMarbledPart((newMarbledPart) => ({
+                    ...newMarbledPart,
                     ...{ moldId: Number(e.target.value) },
                   }))
                 }
-                value={newQPart.moldId}
+                value={newMarbledPart.moldId}
               >
                 <option value="-1">--</option>
                 {molds?.map((mold) => (
@@ -256,10 +226,10 @@ export default function AddMarbledPartView() {
                 type="checkbox"
                 className="formInput"
                 style={checkboxStyles}
-                checked={newQPart.isMoldUnknown}
+                checked={newMarbledPart.isMoldUnknown}
                 onChange={(e) => {
-                  setNewQPart((newQPart) => ({
-                    ...newQPart,
+                  setNewMarbledPart((newMarbledPart) => ({
+                    ...newMarbledPart,
                     ...{ isMoldUnknown: e.target.checked },
                   }));
                 }}
@@ -277,12 +247,19 @@ export default function AddMarbledPartView() {
                 <button
                   style={{ height: "24px" }}
                   onClick={() => {
-                    if (selectedColor && !colors.includes(selectedColor)) {
-                      setColors((prevColors) => [...prevColors, selectedColor]);
+                    if (
+                      selectedColor &&
+                      !colors.find((x) => x.color == selectedColor)
+                    ) {
+                      setColors((prevColors) => [
+                        ...prevColors,
+                        { color: selectedColor, percent: null },
+                      ]);
                       handleResetComponent();
+                      setSelectedColor(null);
                     } else if (selectedColor == null) {
                       showToast("Please select a color first!", Mode.Warning);
-                    } else if (colors.includes(selectedColor)) {
+                    } else if (colors.find((x) => x.color == selectedColor)) {
                       showToast(
                         "This color has already been added!",
                         Mode.Warning
@@ -295,12 +272,57 @@ export default function AddMarbledPartView() {
               </div>
             </div>
             <div className="w-100 d-flex flex-col">
-              <label>Colors to add:</label>
-              <div className="d-flex" style={{ marginBottom: "1.5em" }}>
+              <label>
+                Colors to add:{" "}
+                <MyToolTip
+                  id="marbleColorPercent"
+                  content={
+                    <div style={{ maxWidth: "15em" }}>
+                      The percent field is optional, it is used to mark how much
+                      of each color is present in the marbling. If you had a
+                      part that was mostly white with a bit of blue and a very
+                      small streak of red, you could do
+                      <ul style={{ margin: "1em" }}>
+                        <li>White: 85</li>
+                        <li>Blue: 10</li>
+                        <li>Red: 5</li>
+                      </ul>
+                      Use only whole numbers, you don't need to include
+                      percentage signs (%), If you do opt to include percentage
+                      numbers, they must add up to 100
+                    </div>
+                  }
+                />
+              </label>
+              <div
+                className="d-flex flex-col"
+                style={{ marginBottom: "1.5em" }}
+              >
                 {colors.length > 0 ? (
-                  colors.map((color) => <ColorLink color={color} />)
+                  colors.map((colorObj, index) => (
+                    <ColorForMarbledPart
+                      key={index}
+                      colorObj={colorObj}
+                      onChange={(color, percent) => {
+                        const updatedColors = [...colors];
+                        const index = updatedColors.findIndex(
+                          (c) => c.color === color
+                        );
+                        if (index !== -1) {
+                          updatedColors[index].percent = percent;
+                          setColors(updatedColors);
+                        }
+                      }}
+                    />
+                  ))
                 ) : (
                   <div className="grey-txt">No colors added</div>
+                )}
+                {colors.length > 0 && !!percent && (
+                  <div className="d-flex jc-space-b w-100">
+                    <div>Total Percent:</div>
+                    <div style={{ width: "3.3em" }}>{percent}%</div>
+                  </div>
                 )}
               </div>
             </div>
@@ -316,51 +338,53 @@ export default function AddMarbledPartView() {
                 rows={5}
                 placeholder="Optional"
                 onChange={(e) =>
-                  setNewQPart((newQPart) => ({
-                    ...newQPart,
+                  setNewMarbledPart((newMarbledPart) => ({
+                    ...newMarbledPart,
                     ...{ note: e.target.value },
                   }))
                 }
-                value={newQPart.note}
+                value={newMarbledPart.note}
               />
             </div>
-
+            <div
+              className="grey-txt"
+              style={{ fontSize: "0.9em", marginTop: "1em" }}
+            >
+              After adding this part, you must add a picture, or your request
+              will be denied.
+            </div>
+            <div className="grey-txt" style={{ fontSize: "0.9em" }}>
+              You can submit images through the{" "}
+              <Link to={"/profile/submissions"} className="link">
+                My Submissions
+              </Link>{" "}
+              page.
+            </div>
             <div>
               <button
                 className="formInputNM"
-                style={{ marginTop: "1.5em" }}
+                style={{ marginTop: "1em" }}
                 onClick={() => {
-                  if (
-                    newQPart.partId != -1 &&
-                    newQPart.colorId != -1 &&
-                    qpartExistenceCode == 200 &&
-                    newQPart.creatorId != -1 &&
-                    newQPart.moldId != -1
-                  ) {
-                    console.log("adding...");
-                    partMutation.mutate(newQPart);
-
-                    setNewQPart((prevVals) => ({
-                      ...defaultValues,
-                      ...{ creatorId: prevVals.creatorId },
-                    }));
-                  } else {
-                    if (qpartExistenceCode == 201) {
-                      showToast(
-                        "This part already exists in the database, it may be pending approval",
-                        Mode.Warning
-                      );
-                    } else if (newQPart.creatorId == -1) {
-                      showToast("User ID Error!", Mode.Error);
-                    } else {
-                      console.log(qpartExistenceCode);
-
-                      showToast(
-                        "Please make sure you have filled out the form properly",
-                        Mode.Error
-                      );
-                    }
+                  if (selectedPartId === -1) {
+                    showToast("Please select a part first!", Mode.Error);
+                    return;
                   }
+                  if (newMarbledPart.moldId === -1) {
+                    showToast("Please select a mold first!", Mode.Error);
+                    return;
+                  }
+                  if (colors.length <= 1) {
+                    showToast("Please add at least two colors!", Mode.Error);
+                    return;
+                  }
+                  if (!validatePercentages()) {
+                    showToast(
+                      "Please check color percentages. They should either all be blank or add up to 100!",
+                      Mode.Error
+                    );
+                    return;
+                  }
+                  marbleMutation.mutate(newMarbledPart);
                 }}
               >
                 Add Marbled Part
@@ -381,5 +405,27 @@ export default function AddMarbledPartView() {
     );
   } else {
     return <p>Loading...</p>;
+  }
+  function validatePercentages(): boolean {
+    let percentTotal = 0;
+    let containsNulls = false;
+
+    colors.forEach((colorObj) => {
+      if (colorObj.percent == null) {
+        containsNulls = true;
+        return;
+      } else {
+        percentTotal += colorObj.percent;
+      }
+    });
+
+    if (containsNulls && percentTotal === 0) {
+      return true;
+    }
+    if (!containsNulls && percentTotal === 100) {
+      return true;
+    }
+
+    return false;
   }
 }
