@@ -16,7 +16,6 @@ import { AppContext } from "../../../context/context";
 import { Link } from "react-router-dom";
 import ColorTextField from "../../../components/ColorTextField";
 import ColorForMarbledPart from "../../../components/ColorForMarbledPart";
-import ImageUploader from "../../../components/ImageUploader";
 
 export default function AddMarbledPartView() {
   const {
@@ -101,6 +100,12 @@ export default function AddMarbledPartView() {
     axios.get<ICategory[]>("http://localhost:3000/categories")
   );
 
+  const clearValues = () => {
+    setNewMarbledPart(defaultValues);
+    setSelectedPartId(-1);
+    setColors([]);
+  };
+
   const marbleMutation = useMutation({
     mutationFn: (part: IMarbledPartDTO) =>
       axios.post<IAPIResponse>(`http://localhost:3000/marbledPart/add`, part, {
@@ -114,13 +119,13 @@ export default function AddMarbledPartView() {
       if ((data.data?.code == 200 || data.data?.code == 201) && payload) {
         if (data.data.code == 201) {
           showToast("Marbled part added!", Mode.Success);
-          setNewMarbledPart(defaultValues);
+          clearValues();
         } else {
           showToast(
             "Marbled part submitted, please make sure to add an image on the My Submissions page!",
             Mode.Success
           );
-          setNewMarbledPart(defaultValues);
+          clearValues();
         }
 
         handleResetComponent();

@@ -44,6 +44,7 @@ import SimilarColorSubmissions from "../../components/Submission Components/Simi
 import PartSubmissions from "../../components/Submission Components/PartSubmission";
 import MoldSubmissions from "../../components/Submission Components/MoldSubmissions";
 import StatusSubmissions from "../../components/Submission Components/StatusSubmissions";
+import MarbledPartSubmissions from "../../components/Submission Components/MarbledPartSubmissions";
 
 export default function SubmissionsView() {
   const {
@@ -72,9 +73,9 @@ export default function SubmissionsView() {
     enabled: !!payload,
   });
   if (userData && submissionData) {
-    let me = userData.data;
+    // let me = userData.data;
     let submissions = submissionData.data;
-    // console.log(submissions);
+    console.log(submissions);
 
     return (
       <div className="submission-container">
@@ -152,6 +153,13 @@ export default function SubmissionsView() {
           }
           pending={countApprovalDates(submissions.sculptureInventories, true)}
           approved={countApprovalDates(submissions.sculptureInventories, false)}
+        />
+
+        <CollapsibleSection
+          title="Marbled Parts"
+          content={<MarbledPartSubmissions parts={submissions.marbledParts} />}
+          pending={countApprovalDates(submissions.marbledParts, true)}
+          approved={countApprovalDates(submissions.marbledParts, false)}
         />
       </div>
     );

@@ -183,6 +183,7 @@ export interface ISubmissions {
   sculptureInventories: ISculptureInventoryItem[];
   sculptures: ISculptureWithImages[];
   similarColors: ISimilarColorDetailed[];
+  marbledParts: IMarbledPart[];
 }
 
 export interface ISculptureInventoryItem {
@@ -222,6 +223,17 @@ export interface IMarbledPartDTO {
   colors: IIdAndNumber[];
   isMoldUnknown: boolean;
   note: string;
+}
+
+export interface IMarbledPart {
+  id: number;
+  mold: IPartMoldDTO;
+  colors: IColorWithPercent[];
+  isMoldUnknown: boolean;
+  note: string;
+  creator: user;
+  createdAt: string;
+  approvalDate: string;
 }
 export interface IPartStatusWQPart extends IPartStatusDTO {
   qpart: IQPartDTOInclude;

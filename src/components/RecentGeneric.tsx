@@ -30,7 +30,7 @@ export default function RecentGeneric({
         </div>
         <div>
           <div>{mainText}</div>
-          <div className="grey-txt">({subText})</div>
+          <div className="grey-txt">{subText}</div>
         </div>
       </Link>
     </RibbonContainer>
