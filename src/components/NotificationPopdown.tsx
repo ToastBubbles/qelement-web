@@ -1,13 +1,16 @@
-import axios from "axios";
-import Cookies from "js-cookie";
-import { useContext } from "react";
-import { useQuery } from "react-query";
-import { Link } from "react-router-dom";
-import { AppContext } from "../context/context";
-import { Types } from "../context/jwt/reducer";
-import { IAPIResponse } from "../interfaces/general";
-import showToast, { Mode } from "../utils/utils";
+import { INotification } from "../interfaces/general";
+import Notification from "./Notification";
 
-export default function NotificationPopdown() {
-  return <div className={"notif-pop-down"}>NOTIFGICVASDO</div>;
+interface iProps {
+  notifications: INotification[] | undefined;
+}
+
+export default function NotificationPopdown({ notifications }: iProps) {
+  return (
+    <div className={"notif-pop-down"}>
+      <div>Clear Notifications</div>
+      <div className="fake-hr"></div>
+      {notifications && notifications.length > 0 ? notifications.map(notif =><Notification key={notif.id} notification={notif}/>) : <div className="grey-txt">No Notifications</div>}
+    </div>
+  );
 }

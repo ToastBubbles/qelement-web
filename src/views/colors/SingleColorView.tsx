@@ -11,6 +11,7 @@ import {
   ISimilarColor,
   ISimilarColorDTO,
   colorWSimilar,
+  iIdOnly,
 } from "../../interfaces/general";
 import { useEffect } from "react";
 import MyToolTip from "../../components/MyToolTip";
@@ -55,6 +56,27 @@ export default function SingleColorView() {
   useEffect(() => {
     colRefetch();
   }, [colorId, colRefetch]);
+
+  const subscriptionMutation = useMutation({
+    mutationFn: (data: iIdOnly) =>
+      axios.post<IAPIResponse>(
+        `http://localhost:3000/notificationSubscription/add/color`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    onSuccess: (e) => {
+      console.log(e.data);
+      if (e.data.code == 200) {
+        showToast("Subscription created!", Mode.Success);
+      } else {
+        showToast("Failed to create subscription!", Mode.Error);
+      }
+    },
+  });
 
   const similarColorMutation = useMutation({
     mutationFn: ({ color_one, color_two }: ISimilarColor) =>
@@ -135,7 +157,25 @@ export default function SingleColorView() {
               {hex}
             </div>
           </div>
-          <div className="fake-hr"></div>
+          <div className="fake-hr" style={{ margin: "0" }}></div>
+          <div className="w-100 d-flex ai-center">
+            <button
+              style={{ margin: "0.5em 0" }}
+              onClick={() => subscriptionMutation.mutate({ id: color.id })}
+            >
+              Follow this Color
+            </button>
+            <MyToolTip
+              id="followColor"
+              content={
+                <div style={{ maxWidth: "10em" }}>
+                  This will notify you whenever a new QPart is added to the
+                  database in this color.
+                </div>
+              }
+            />
+          </div>
+          <div className="fake-hr" style={{ margin: "0" }}></div>
           <SimilarColorBanner similarColors={color.similar} />
           <div className="jc-end">
             <div className="d-flex jc-end" style={{ marginBottom: "1em" }}>
@@ -254,7 +294,9 @@ export default function SingleColorView() {
                   {color?.note ? color.note : "No additional notes"}
                 </div>
               </div>
-              <Link className="link" to={`/edit/color/${color?.id}`}>Edit this color</Link>
+              <Link className="link" to={`/edit/color/${color?.id}`}>
+                Edit this color
+              </Link>
             </section>
           </div>
         </div>

@@ -598,8 +598,20 @@ export interface IUserDTO extends IUserCreationDTO {
   selectedTitleId: number | null;
   favoriteQParts?: IQPartDTOInclude[];
   inventory?: IQPartDTOInclude[];
+  notifications: INotification[];
   favoriteColor?: color;
   submissionCount: ISubmissionCount;
+}
+
+export interface INotification {
+  id: number;
+  name: string;
+  type: string;
+  content: string;
+  link: string;
+  read: boolean;
+  userId: number;
+  createdAt: string;
 }
 
 export interface INodeWithID {

@@ -126,12 +126,25 @@ function Navbar() {
                 }
               }}
             >
-              <div className="notif-badge">1</div>
+              {data &&
+                data.data.notifications &&
+                data.data.notifications.length > 0 && (
+                  <div className="notif-badge">
+                    {data.data.notifications.length}
+                  </div>
+                )}
+
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="26"
                 height="26"
-                fill={false ? "#eee" : "var(--lt-red)"}
+                fill={
+                  data &&
+                  data.data.notifications &&
+                  data.data.notifications.length > 0
+                    ? "var(--lt-red)"
+                    : "#eee"
+                }
                 className="bi-envelope-fill"
                 viewBox="0 0 448 512"
               >
@@ -180,7 +193,7 @@ function Navbar() {
                   <NavbarPopdown />
                 )}
                 {!toggleMainDropdown && toggleNotificationDropdown && (
-                  <NotificationPopdown />
+                  <NotificationPopdown notifications={data?.data.notifications} />
                 )}
               </div>
             </div>
