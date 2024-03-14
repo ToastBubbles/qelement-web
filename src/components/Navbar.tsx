@@ -9,11 +9,13 @@ import NavbarPopdown from "./NavbarPopdown";
 import SearchBarMain from "./SearchBarMain";
 import ColorWheelButton from "./ColorWheelButton";
 import { IUserDTO } from "../interfaces/general";
+import NotificationPopdown from "./NotificationPopdown";
 
 function Navbar() {
   // const { dropdownRef, isComponentVisible } = useComponentVisible(true);
-  const [toggleDropdown, setToggleDropdown] = useState<boolean>(false);
-
+  const [toggleMainDropdown, setToggleMainDropdown] = useState<boolean>(false);
+  const [toggleNotificationDropdown, setToggleNotificationDropdown] =
+    useState<boolean>(false);
   const [timerId, setTimerId] = useState<number | null>(null);
   // const [messageCount, setMessageCount] = useState<number>(0);
   const {
@@ -83,20 +85,24 @@ function Navbar() {
         <ColorWheelButton link="/part-categories" content="parts" />
         <ColorWheelButton link="/colors" content="colors" />
 
-        {/* {payload.username && <p>Hello, {payload.username}</p>} */}
         {token === "" ? (
           <LoginBtn />
         ) : (
           <>
-            <Link className="mail-svg" to={"/profile/messages"}>
+            <Link
+              className="mail-svg"
+              to={"/profile/messages"}
+              style={{ paddingLeft: "0.5em" }}
+            >
               <div>
                 {msgData && msgData.data > 0 && (
                   <div className="mail-badge">{msgData.data}</div>
                 )}
+                <div className="mail-badge">10</div>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="32"
-                  height="32"
+                  width="30"
+                  height="30"
                   fill="#eee"
                   className="bi-envelope-fill"
                   viewBox="0 0 16 16"
@@ -105,30 +111,61 @@ function Navbar() {
                 </svg>
               </div>
             </Link>
+
+            <div
+              style={{
+                marginLeft: "0.75em",
+                marginRight: "0.25em",
+                position: "relative",
+              }}
+              className="clickable"
+              onClick={() => {
+                setToggleNotificationDropdown(!toggleNotificationDropdown);
+                if (toggleMainDropdown) {
+                  setToggleMainDropdown(false);
+                }
+              }}
+            >
+              <div className="notif-badge">1</div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="26"
+                fill={false ? "#eee" : "var(--lt-red)"}
+                className="bi-envelope-fill"
+                viewBox="0 0 448 512"
+              >
+                <path d="M224 0c-17.7 0-32 14.3-32 32V51.2C119 66 64 130.6 64 208v18.8c0 47-17.3 92.4-48.5 127.6l-7.4 8.3c-8.4 9.4-10.4 22.9-5.3 34.4S19.4 416 32 416H416c12.6 0 24-7.4 29.2-18.9s3.1-25-5.3-34.4l-7.4-8.3C401.3 319.2 384 273.9 384 226.8V208c0-77.4-55-142-128-156.8V32c0-17.7-14.3-32-32-32zm45.3 493.3c12-12 18.7-28.3 18.7-45.3H224 160c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7z" />
+              </svg>
+            </div>
             <div
               onMouseOver={() => {
-                setToggleDropdown(true);
-                if (timerId) {
-                  clearTimeout(timerId);
-                  setTimerId(null);
+                if (!toggleNotificationDropdown) {
+                  setToggleMainDropdown(true);
+                  if (timerId) {
+                    clearTimeout(timerId);
+                    setTimerId(null);
+                  }
                 }
               }}
               onMouseLeave={() => {
-                setTimerId(
-                  setTimeout(() => {
-                    setToggleDropdown(false);
-                    setTimerId(null);
-                  }, 500)
-                );
+                if (!toggleNotificationDropdown && toggleMainDropdown) {
+                  setTimerId(
+                    setTimeout(() => {
+                      setToggleMainDropdown(false);
+                      setTimerId(null);
+                    }, 500)
+                  );
+                }
+              }}
+              onClick={() => {
+                if (toggleNotificationDropdown) {
+                  setToggleNotificationDropdown(false);
+                  setToggleMainDropdown(true);
+                }
               }}
             >
-              <button
-                className="navbarProfileImg"
-                // onClick={() => {
-                //   setToggleDropdown(!toggleDropdown);
-                //   console.log("clicked");
-                // }}
-              >
+              <button className="navbarProfileImg">
                 <img
                   className="profile-img clickable"
                   src={getProfilePicture(data?.data.profilePicture, true)}
@@ -136,10 +173,15 @@ function Navbar() {
               </button>
               <div
                 onClick={() => {
-                  setToggleDropdown(false);
+                  setToggleMainDropdown(false);
                 }}
               >
-                {toggleDropdown && <NavbarPopdown />}
+                {toggleMainDropdown && !toggleNotificationDropdown && (
+                  <NavbarPopdown />
+                )}
+                {!toggleMainDropdown && toggleNotificationDropdown && (
+                  <NotificationPopdown />
+                )}
               </div>
             </div>
           </>

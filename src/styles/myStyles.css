@@ -305,6 +305,21 @@ body::-webkit-scrollbar {
   border-radius: 1em;
   text-shadow: #2c2c2c 1px 1px 0;
 }
+
+.notif-badge {
+  min-width: 1.5em;
+  text-align: center;
+  font-size: 0.8em;
+
+  position: absolute;
+ 
+  top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  color: white;
+
+  text-shadow: #2c2c2c 1px 1px 0;
+}
 .pfp-big-container {
   position: relative;
   border-radius: 50%;
@@ -2749,6 +2764,19 @@ input:checked + .slider:before {
 }
 .nav-pop-down > div {
   border-right: solid 1px var(--lt-grey);
+}
+
+.notif-pop-down {
+  padding: 0.5em 0;
+  z-index: 1;
+  position: absolute;
+  display: flex;
+  background-color: #eeeeee;
+  height: 14em;
+  top: 4rem;
+  right: 0;
+  border-bottom: solid 1px #525252;
+  border-left: solid 1px #525252;
 }
 .hidden {
   display: none;
