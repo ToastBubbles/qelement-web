@@ -2769,6 +2769,7 @@ input:checked + .slider:before {
 .notification {
   max-width: 35em;
   margin-bottom: -1px;
+  margin-left: -1px;
 }
 
 .bold-notif {
@@ -2776,7 +2777,7 @@ input:checked + .slider:before {
 }
 .ellipsis-dropdown {
   position: absolute;
-  z-index: 5;
+  z-index: 3;
   right: 0.8em;
   top: 3.25em;
   background-color: #eee;
@@ -2785,6 +2786,9 @@ input:checked + .slider:before {
   border-radius: 4px;
   font-size: 0.9em;
   filter: drop-shadow(2px 2px 2px #55555577);
+}
+.color-fade {
+  transition: fill 0.5s;
 }
 
 .ellipsis-dropdown::before {
@@ -2808,11 +2812,16 @@ input:checked + .slider:before {
   right: 3px;
   width: 0px;
   height: 0px;
-  z-index: 10;
+  z-index: 4;
   pointer-events: none;
 }
+.notif-header {
+  font-weight: 700;
+  font-size: 1.25em;
+  margin-left: 0.5em;
+  margin-top: 0.5em;
+}
 .notif-pop-down {
-  padding: 0.5em 0;
   z-index: 1;
   position: absolute;
   display: flex;
@@ -2823,8 +2832,7 @@ input:checked + .slider:before {
   max-width: 35em;
   top: 4rem;
   right: 0;
-  border-bottom: solid 1px #525252;
-  border-left: solid 1px #525252;
+  border: solid 1px #bdbdbd;
 }
 .hidden {
   display: none;
@@ -2967,7 +2975,7 @@ input:checked + .slider:before {
   padding: 0.11em 0.5em;
   border: solid 2px var(--lt-grey);
   border-radius: 0.5em;
-  z-index: 10;
+  /* z-index: 10; */
   margin-right: 0.25em;
   transition: border-color 1s;
 }
