@@ -35,7 +35,6 @@ export default function SculptureInventoryAdmin({
   //   const [content, setContent] = useState<ReactNode>(<></>);
   const handleMouseEnter = () => {
     setHovered(true);
-    console.log(qpart);
   };
 
   const handleMouseLeave = () => {

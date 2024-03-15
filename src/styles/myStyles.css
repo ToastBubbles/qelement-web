@@ -2766,17 +2766,52 @@ input:checked + .slider:before {
   border-right: solid 1px var(--lt-grey);
 }
 
-.notification{
+.notification {
   max-width: 35em;
   margin-bottom: -1px;
 }
 
-.bold-notif{
+.bold-notif {
   font-weight: 700;
 }
+.ellipsis-dropdown {
+  position: absolute;
+  z-index: 5;
+  right: 0.8em;
+  top: 3.25em;
+  background-color: #eee;
+  border: solid 1px #ddd;
+  padding: 0.5em;
+  border-radius: 4px;
+  font-size: 0.9em;
+  filter: drop-shadow(2px 2px 2px #55555577);
+}
 
+.ellipsis-dropdown::before {
+  position: absolute;
+  content: "";
+  border: 8px solid transparent;
+  border-bottom: 7px solid #ddd;
+  top: -15px;
+  right: 2px;
+  width: 0px;
+  height: 0px;
+  pointer-events: none;
+}
+
+.ellipsis-dropdown::after {
+  position: absolute;
+  content: "";
+  border: 7px solid transparent;
+  border-bottom: 7px solid #eee;
+  top: -13px;
+  right: 3px;
+  width: 0px;
+  height: 0px;
+  z-index: 10;
+  pointer-events: none;
+}
 .notif-pop-down {
-  overflow-y: hidden;
   padding: 0.5em 0;
   z-index: 1;
   position: absolute;
@@ -2790,7 +2825,6 @@ input:checked + .slider:before {
   right: 0;
   border-bottom: solid 1px #525252;
   border-left: solid 1px #525252;
-  
 }
 .hidden {
   display: none;

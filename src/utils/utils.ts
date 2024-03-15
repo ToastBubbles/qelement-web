@@ -366,15 +366,18 @@ interface EntityWithCreatedAt {
   createdAt: string;
 }
 
-export function sortByCreatedAt<T extends EntityWithCreatedAt>(items: T[], ascending: boolean = true): T[] {
+export function sortByCreatedAt<T extends EntityWithCreatedAt>(
+  items: T[],
+  ascending: boolean = true
+): T[] {
   const sortedItems = [...items].sort((a, b) => {
-      const dateA = new Date(a.createdAt).getTime();
-      const dateB = new Date(b.createdAt).getTime();
-      if (ascending) {
-          return dateA - dateB;
-      } else {
-          return dateB - dateA;
-      }
+    const dateA = new Date(a.createdAt).getTime();
+    const dateB = new Date(b.createdAt).getTime();
+    if (ascending) {
+      return dateA - dateB;
+    } else {
+      return dateB - dateA;
+    }
   });
   return sortedItems;
 }
@@ -440,7 +443,11 @@ export function howLongAgo(dateStr: string) {
   return "Just now";
 }
 
-export function formatDate(dateStr: string, mode: string = "short"): string {
+export function formatDate(
+  dateStr: string,
+  mode: string = "short",
+  hideYear: boolean = false
+): string {
   const date = new Date(dateStr);
 
   const now_utc = Date.UTC(
@@ -477,7 +484,7 @@ export function formatDate(dateStr: string, mode: string = "short"): string {
     ];
     const month = monthNames[date.getMonth()];
     const year = date.getFullYear();
-    return `${day} ${month} ${year}`;
+    return `${day} ${month} ${hideYear ? "" : year}`;
   }
-  return dateStr;
+  return dateStr.trim();
 }

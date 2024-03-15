@@ -137,7 +137,7 @@ function Navbar() {
                 {msgData && msgData.data > 0 && (
                   <div className="mail-badge">{msgData.data}</div>
                 )}
-                <div className="mail-badge">10</div>
+
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="30"
