@@ -9,7 +9,7 @@ import { IAPIResponse } from "../interfaces/general";
 import showToast, { Mode } from "../utils/utils";
 
 export default function NavbarPopdown() {
-  // const { ref, isComponentVisible } = useComponentVisible(true);
+
   const {
     state: {
       jwt: { token, payload },
@@ -94,19 +94,7 @@ export default function NavbarPopdown() {
             </li>
           </ul>
         </div>
-        {/* {adminData && adminData.data.code == 200 && (
-          <>
-            <Link className="link" to={"/approve"}>
-              Approve Content
-            </Link>
-            <Link className="link" to={"/delete"}>
-              Delete Content
-            </Link>
-            <Link className="link" to={"/userManagement"}>
-              User Management
-            </Link>
-          </>
-        )} */}
+      
       </div>
 
       {adminData && adminData.data.code == 200 && (

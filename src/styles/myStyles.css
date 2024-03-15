@@ -312,10 +312,10 @@ body::-webkit-scrollbar {
   font-size: 0.8em;
 
   position: absolute;
- 
+
   top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  left: 50%;
+  transform: translate(-50%, -50%);
   color: white;
 
   text-shadow: #2c2c2c 1px 1px 0;
@@ -2766,18 +2766,31 @@ input:checked + .slider:before {
   border-right: solid 1px var(--lt-grey);
 }
 
+.notification{
+  max-width: 35em;
+  margin-bottom: -1px;
+}
+
+.bold-notif{
+  font-weight: 700;
+}
+
 .notif-pop-down {
+  overflow-y: hidden;
   padding: 0.5em 0;
   z-index: 1;
   position: absolute;
   display: flex;
   flex-direction: column;
   background-color: #eeeeee;
-  height: 14em;
+  max-height: 30em;
+  min-width: 25em;
+  max-width: 35em;
   top: 4rem;
   right: 0;
   border-bottom: solid 1px #525252;
   border-left: solid 1px #525252;
+  
 }
 .hidden {
   display: none;

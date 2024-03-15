@@ -362,6 +362,22 @@ export function testStatus(status: string): boolean {
   ];
   return validStatuses.includes(status);
 }
+interface EntityWithCreatedAt {
+  createdAt: string;
+}
+
+export function sortByCreatedAt<T extends EntityWithCreatedAt>(items: T[], ascending: boolean = true): T[] {
+  const sortedItems = [...items].sort((a, b) => {
+      const dateA = new Date(a.createdAt).getTime();
+      const dateB = new Date(b.createdAt).getTime();
+      if (ascending) {
+          return dateA - dateB;
+      } else {
+          return dateB - dateA;
+      }
+  });
+  return sortedItems;
+}
 
 export function paginate<T>(
   items: T[],

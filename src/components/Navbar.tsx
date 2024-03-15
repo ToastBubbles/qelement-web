@@ -8,7 +8,7 @@ import LoginBtn from "./LoginBtn";
 import NavbarPopdown from "./NavbarPopdown";
 import SearchBarMain from "./SearchBarMain";
 import ColorWheelButton from "./ColorWheelButton";
-import { IUserDTO } from "../interfaces/general";
+import { INotification, IUserDTO } from "../interfaces/general";
 import NotificationPopdown from "./NotificationPopdown";
 
 function Navbar() {
@@ -17,6 +17,7 @@ function Navbar() {
   const [toggleNotificationDropdown, setToggleNotificationDropdown] =
     useState<boolean>(false);
   const [timerId, setTimerId] = useState<number | null>(null);
+  const [notificationCount, setNotificationCount] = useState<number>(0);
   // const [messageCount, setMessageCount] = useState<number>(0);
   const {
     state: {
@@ -25,7 +26,7 @@ function Navbar() {
   } = useContext(AppContext);
 
   const { data: msgData } = useQuery({
-    queryKey: "individualMessage",
+    queryKey: `msgCount${payload.id}`,
     queryFn: () =>
       axios.get<number>(
         `http://localhost:3000/message/getUnreadCountById/${payload.id}`,
@@ -36,7 +37,23 @@ function Navbar() {
         }
       ),
     retry: false,
-    refetchInterval: 30000,
+    refetchInterval: 300000,
+    enabled: !!payload.id,
+  });
+
+  const { data: notifData, refetch: notifRefetch } = useQuery({
+    queryKey: `notifs${payload.id}`,
+    queryFn: () =>
+      axios.get<INotification[]>(
+        `http://localhost:3000/notification/myNotifications`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ),
+    retry: false,
+    refetchInterval: 300000,
     enabled: !!payload.id,
   });
 
@@ -57,6 +74,21 @@ function Navbar() {
       showToast(`${msgData.data} ${message}`, Mode.Success);
     }
   }, [msgData?.data]);
+
+  useEffect(() => {
+    if (notifData?.data) {
+      let notifications = notifData.data;
+      const unreadCount = notifications.reduce((count, notification) => {
+        // Check if the notification has read: false
+        if (!notification.read) {
+          return count + 1; // Increment count if read is false
+        } else {
+          return count; // Otherwise, return the current count
+        }
+      }, 0); // Start with an initial count of 0
+      setNotificationCount(unreadCount);
+    } else setNotificationCount(0);
+  }, [notifData]);
 
   useEffect(() => {
     return () => {
@@ -89,6 +121,13 @@ function Navbar() {
           <LoginBtn />
         ) : (
           <>
+            {!toggleMainDropdown && toggleNotificationDropdown && (
+              <NotificationPopdown
+                notifications={notifData?.data}
+                refetchFn={notifRefetch}
+                closePopdown={closeNotifPopdown}
+              />
+            )}
             <Link
               className="mail-svg"
               to={"/profile/messages"}
@@ -126,25 +165,15 @@ function Navbar() {
                 }
               }}
             >
-              {data &&
-                data.data.notifications &&
-                data.data.notifications.length > 0 && (
-                  <div className="notif-badge">
-                    {data.data.notifications.length}
-                  </div>
-                )}
+              {notificationCount > 0 && (
+                <div className="notif-badge">{notificationCount}</div>
+              )}
 
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="26"
                 height="26"
-                fill={
-                  data &&
-                  data.data.notifications &&
-                  data.data.notifications.length > 0
-                    ? "var(--lt-red)"
-                    : "#eee"
-                }
+                fill={notificationCount > 0 ? "var(--lt-red)" : "#eee"}
                 className="bi-envelope-fill"
                 viewBox="0 0 448 512"
               >
@@ -192,9 +221,6 @@ function Navbar() {
                 {toggleMainDropdown && !toggleNotificationDropdown && (
                   <NavbarPopdown />
                 )}
-                {!toggleMainDropdown && toggleNotificationDropdown && (
-                  <NotificationPopdown notifications={data?.data.notifications} />
-                )}
               </div>
             </div>
           </>
@@ -202,6 +228,9 @@ function Navbar() {
       </div>
     </nav>
   );
+  function closeNotifPopdown() {
+    setToggleNotificationDropdown(false);
+  }
 }
 
 export default Navbar;
