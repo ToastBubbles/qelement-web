@@ -19,55 +19,46 @@ export default function ColorStatus({ color, statuses }: iProps) {
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
-
+  function replaceSpacesWithDash(str: string): string {
+    return str.replace(/ /g, "-");
+  }
   function generateStatuses(): ReactNode {
     if (statuses.length > 2) {
       let i = 0;
-      return (
-
-        statuses.map((statusObj) => {
-          i++;
-          if (i <= 4)
-            return (
-              <Link
-                to={`/part/${statusObj.partId}?color=${color.id}&mold=${statusObj.moldId}`}
-                onClick={(event) => {
-                  if (statusObj.status == "no status") event.preventDefault();
-                }}
-                key={i}
-                className={`flag-status tag-${
-                  statusObj.status == "no status"
-                    ? "nostatus notclickable"
-                    : statusObj.status
-                } flag-sizebyqty-${statuses.length > 4 ? 4 : statuses.length}`}
-              >
-                {statusObj.status.toUpperCase()[0]}
-                {statusObj.unknown ? "*" : ""}
-              </Link>
-            );
-        })
-      );
+      return statuses.map((statusObj) => {
+        i++;
+        if (i <= 4)
+          return (
+            <Link
+              to={`/part/${statusObj.partId}?color=${color.id}&mold=${statusObj.moldId}`}
+              onClick={(event) => {
+                if (statusObj.status == "no status") event.preventDefault();
+              }}
+              key={i}
+              className={`flag-status tag-${replaceSpacesWithDash(
+                statusObj.status.trim()
+              )} flag-sizebyqty-${statuses.length > 4 ? 4 : statuses.length}`}
+            >
+              {statusObj.status.toUpperCase()[0]}
+              {statusObj.unknown ? "*" : ""}
+            </Link>
+          );
+      });
     } else {
-      return (
-   
-        statuses.map((statusObj) => (
-          <Link
-            to={`/part/${statusObj.partId}?color=${color.id}&mold=${statusObj.moldId}`}
-            key={statusObj.moldId}
-            onClick={(event) => {
-              if (statusObj.status == "no status") event.preventDefault();
-            }}
-            className={
-              "flag-status tag-" +
-              (statusObj.status == "no status"
-                ? "nostatus notclickable"
-                : statusObj.status)
-            }
-          >
-            {statusObj.status.toUpperCase()}
-          </Link>
-        ))
-      );
+      return statuses.map((statusObj) => (
+        <Link
+          to={`/part/${statusObj.partId}?color=${color.id}&mold=${statusObj.moldId}`}
+          key={statusObj.moldId}
+          onClick={(event) => {
+            if (statusObj.status == "no status") event.preventDefault();
+          }}
+          className={
+            "flag-status tag-" + replaceSpacesWithDash(statusObj.status.trim())
+          }
+        >
+          {statusObj.status.toUpperCase()}
+        </Link>
+      ));
     }
   }
 

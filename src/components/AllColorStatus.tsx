@@ -55,6 +55,7 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
     sortedCounterObj.forEach((obj) =>
       output.push({ id: obj.id, count: obj.count, number: obj.number })
     );
+
     setArrayOrder(output);
   }
 
@@ -72,6 +73,7 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
         known: [],
         other: [],
         unknown: [],
+        noStatus: [],
       },
       secondary: {
         found: [],
@@ -80,10 +82,11 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
         known: [],
         other: [],
         unknown: [],
+        noStatus: [],
       },
     };
 
-    const colorsWithoutStatus: IColorWUnk[] = [];
+    const colorsWithoutParts: IColorWUnk[] = [];
 
     colors.forEach((color) => {
       if (validateSearch(color, search)) {
@@ -114,26 +117,48 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
           });
 
           sameColorQParts.forEach((scQPart) => {
-            if (!alreadyAdded && scQPart.partStatuses.length > 0) {
-              // const statusObj = scQPart.partStatuses[0].status;
-              const statusObj = findHighestStatus(scQPart.partStatuses).status;
-              const category =
-                scQPart.mold.id === sortKey ? "primary" : "secondary";
+            if (!alreadyAdded) {
+              if (scQPart.partStatuses.length > 0) {
+                // const statusObj = scQPart.partStatuses[0].status;
+                const statusObj = findHighestStatus(
+                  scQPart.partStatuses
+                ).status;
+                const category =
+                  scQPart.mold.id === sortKey ? "primary" : "secondary";
 
-              if (statusMapping[category][statusObj]) {
-                statusMapping[category][statusObj].push({
-                  unknown: scQPart.isMoldUnknown,
-                  color: color,
-                });
-                alreadyAdded = true;
+                if (statusMapping[category][statusObj]) {
+                  statusMapping[category][statusObj].push({
+                    unknown: scQPart.isMoldUnknown,
+                    color: color,
+                  });
+                  alreadyAdded = true;
+                }
+              } else {
+                console.log("here", color);
+
+                const category =
+                  scQPart.mold.id === sortKey ? "primary" : "secondary";
+                console.log(statusMapping[category].noStatus);
+
+                if (statusMapping[category].noStatus) {
+                  console.log("pushing ", color.bl_name);
+
+                  statusMapping[category].noStatus.push({
+                    unknown: scQPart.isMoldUnknown,
+                    color: color,
+                  });
+                  alreadyAdded = true;
+                }
               }
             }
           });
         } else {
-          colorsWithoutStatus.push({ unknown: false, color: color });
+          colorsWithoutParts.push({ unknown: false, color: color });
         }
       }
     });
+    console.log(statusMapping.primary.noStatus);
+
     let output = [
       ...statusMapping.primary.found,
       ...statusMapping.primary.seen,
@@ -141,22 +166,38 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
       ...statusMapping.primary.known,
       ...statusMapping.primary.other,
       ...statusMapping.primary.unknown,
+      ...statusMapping.primary.noStatus,
       ...statusMapping.secondary.found,
       ...statusMapping.secondary.seen,
       ...statusMapping.secondary.idOnly,
       ...statusMapping.secondary.known,
       ...statusMapping.secondary.other,
       ...statusMapping.secondary.unknown,
-      // ...colorsWithoutStatus,
+      ...statusMapping.secondary.noStatus,
+      // ...colorsWithoutParts,
     ];
     if (sortBySwatch) {
       output.sort((a, b) => a.color.swatchId - b.color.swatchId);
     }
-    output = [...output, ...colorsWithoutStatus];
+    console.log(output);
+
+    output = [...output, ...colorsWithoutParts];
     return output;
   }
 
   function findHighestStatus(statuses: IPartStatusDTO[]): IPartStatusDTO {
+    if (statuses.length == 0)
+      return {
+        id: -1,
+        status: "no status",
+        date: "",
+        location: "",
+        note: "",
+        qpartId: -1,
+        creatorId: -1,
+        approvalDate: "",
+        createdAt: "",
+      };
     const sortedStatuses = statuses.sort((a, b) => {
       // Parse date strings into Date objects for comparison
       const dateA = new Date(a.date);
@@ -170,6 +211,7 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
       "idOnly",
       "other",
       "unknown",
+      "noStatus",
     ];
 
     for (const status of statusOrder) {
@@ -203,7 +245,7 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
         output.push({
           partId: qparts[0].mold.parentPart.id,
           moldId: obj.id,
-          status: "no status",
+          status: "no parts",
           unknown: false,
         });
       }
@@ -218,6 +260,7 @@ export default function AllColorStatus({ qparts, moldId, search }: IProps) {
     }
     let colors = colorData.data;
     let sortedColors = sortByStatus(colors);
+
     let i = 0;
     return (
       <>

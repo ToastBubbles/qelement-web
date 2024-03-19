@@ -864,9 +864,14 @@ input:checked + .slider:before {
 .tag-unknown {
   background-color: rgb(153, 12, 106);
 }
+.tag-no-status,
 .tag-nostatus,
 .tag-none {
-  background-color: rgb(71, 71, 71);
+  background-color: rgb(83, 83, 83);
+  color: #a0a0a0;
+}
+.tag-no-parts{
+  background-color: rgb(43, 43, 43);
   color: #a0a0a0;
 }
 .tag-known {
@@ -2975,7 +2980,7 @@ input:checked + .slider:before {
   padding: 0.11em 0.5em;
   border: solid 2px var(--lt-grey);
   border-radius: 0.5em;
-  /* z-index: 10; */
+  z-index: 2;
   margin-right: 0.25em;
   transition: border-color 1s;
 }
