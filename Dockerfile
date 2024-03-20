@@ -1,4 +1,4 @@
-# Use an official Node.js runtime as the base image for the build stage
+# Use an official Node.js runtime as the base image for the build stag
 FROM node:16 as builder
 
 # Set the working directory in the container
