@@ -50,6 +50,7 @@ export default function ProfileSettingsView() {
   const [collectionVisible, setCollectionVisible] = useState<boolean>(true);
   const [lang, setLang] = useState<string>("en");
   const [allowMessages, setAllowMessages] = useState<boolean>(true);
+  const [diffMats, setDiffMats] = useState<boolean>(false);
   const [showProfilePicPopup, setShowProfilePicPopup] =
     useState<boolean>(false);
   const [showColorUpdater, setShowColorUpdater] = useState<boolean>(false);
@@ -62,12 +63,14 @@ export default function ProfileSettingsView() {
     queryFn: () =>
       axios.get<IUserDTO>(`http://localhost:3000/user/id/${payload.id}`),
     onSuccess(res) {
-      setAllowMessages(res.data.preferences.allowMessages);
-      setCollectionVisible(res.data.preferences.isCollectionVisible);
-      setWantedVisible(res.data.preferences.isWantedVisible);
-      setLang(res.data.preferences.lang);
-      setPrefColorName(res.data.preferences.prefName as ColName);
-      setPrefColorId(res.data.preferences.prefId as ColId);
+      const prefs = res.data.preferences;
+      setAllowMessages(prefs.allowMessages);
+      setCollectionVisible(prefs.isCollectionVisible);
+      setWantedVisible(prefs.isWantedVisible);
+      setDiffMats(prefs.differentiateMaterialsInCollection);
+      setLang(prefs.lang);
+      setPrefColorName(prefs.prefName as ColName);
+      setPrefColorId(prefs.prefId as ColId);
       setSelectedTitleId(res.data.selectedTitleId);
     },
     enabled: !!payload.id,
@@ -75,7 +78,7 @@ export default function ProfileSettingsView() {
   const userPrefMutation = useMutation({
     mutationFn: (userPrefs: IUserPrefDTO) =>
       axios.post<IAPIResponse>(
-        `http://localhost:3000/userPreference/userId/${payload.id}`,
+        `http://localhost:3000/userPreference/userId`,
         userPrefs,
         {
           headers: {
@@ -95,6 +98,7 @@ export default function ProfileSettingsView() {
               isCollectionVisible: collectionVisible,
               isWantedVisible: wantedVisible,
               allowMessages: allowMessages,
+              differentiateMaterialsInCollection: diffMats,
               prefName: prefColorName,
               prefId: prefColorId,
             } as unknown as UserPrefPayload,
@@ -158,6 +162,9 @@ export default function ProfileSettingsView() {
       if (me.preferences.isWantedVisible != wantedVisible) {
         hasChanges = true;
       }
+      if (me.preferences.differentiateMaterialsInCollection != diffMats) {
+        hasChanges = true;
+      }
       if (me.preferences.isCollectionVisible != collectionVisible) {
         hasChanges = true;
       }
@@ -180,7 +187,11 @@ export default function ProfileSettingsView() {
             content={
               <div>
                 <h3>Upload Profile Picture</h3>
-                <ProfilePictureUploader userId={me.id} refetchFn={refetchUser} pfpId={me.profilePicture?.id} />
+                <ProfilePictureUploader
+                  userId={me.id}
+                  refetchFn={refetchUser}
+                  pfpId={me.profilePicture?.id}
+                />
               </div>
             }
             closePopup={closePFPPopUp}
@@ -265,6 +276,25 @@ export default function ProfileSettingsView() {
                 />
               </div>
             </div>
+
+            <div className="w-100 d-flex jc-space-b">
+              <div>
+                Differentiate materials in my Collection{" "}
+                <MyToolTip
+                  id="diffMatsTip"
+                  content={
+                    <div style={{ maxWidth: "20em" }}>
+                      Allows you to specify the material your QParts are. So you
+                      can say you have a QPart in PC or in MABS, or both. This
+                      feature is disabled by default due to how niche it is.
+                    </div>
+                  }
+                />
+              </div>
+              <div>
+                <SliderToggle2 getter={diffMats} setter={setDiffMats} />
+              </div>
+            </div>
             <div className="w-100 d-flex jc-space-b">
               <div>
                 Preferred Color Name{" "}
@@ -347,7 +377,6 @@ export default function ProfileSettingsView() {
             <div className="w-100 d-flex jc-space-b">
               <div>Title</div>
               <div>
-                
                 <CustomSelect
                   setter={setSelectedTitleId}
                   options={getOptions(me.titles)}
@@ -406,6 +435,7 @@ export default function ProfileSettingsView() {
                     allowMessages: allowMessages,
                     isCollectionVisible: collectionVisible,
                     isWantedVisible: wantedVisible,
+                    differentiateMaterialsInCollection: diffMats,
                     prefName: prefColorName as string,
                     prefId: prefColorId as string,
                   };

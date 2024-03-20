@@ -13,7 +13,7 @@ export interface IUserPrefDTO {
   isCollectionVisible: boolean;
   isWantedVisible: boolean;
   allowMessages: boolean;
-
+  differentiateMaterialsInCollection: boolean;
   prefName: string;
   prefId: string;
 }
@@ -314,6 +314,7 @@ export interface ICollectionDTOGET {
   forSale: boolean;
   availDuplicates: boolean;
   qpart: IQPartDTOIncludeLess;
+  material: string;
   userId: number;
   quantity: number;
   condition: string;
@@ -323,6 +324,7 @@ export interface ICollectionDTO {
   forTrade: boolean;
   forSale: boolean;
   availDupes: boolean;
+  material: string;
   qpartId: number;
   userId: number;
   quantity: number;

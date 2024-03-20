@@ -26,6 +26,7 @@ export default function PopupCollection({ qpart, closePopup }: IProps) {
     qpartId: qpart.id || -1,
     userId: payload.id || -1,
     quantity: 1,
+    material: "",
     condition: "used",
     note: "",
     availDupes: false,
@@ -47,7 +48,7 @@ export default function PopupCollection({ qpart, closePopup }: IProps) {
       if (e.data.code == 200) {
         showToast("Added to your collection!", Mode.Success);
         closePopup();
-      } else if (e.data.code == 501) {
+      } else if (e.data.code == 500) {
         showToast(
           "This part already exists in your collection, to update the quantity, visit your collection page.",
           Mode.Warning
@@ -157,6 +158,38 @@ export default function PopupCollection({ qpart, closePopup }: IProps) {
             />
           </div>
         </div>
+        {prefPayload.differentiateMaterialsInCollection && (
+          <div className="w-100 d-flex jc-space-b my-1">
+            <div className="d-flex">
+              <div>Material:</div>{" "}
+              <MyToolTip
+                content={
+                  <div style={{ maxWidth: "20em" }}>
+                    (15 character limit) This is where you can specify the
+                    material/type of plastic your part is made of. This is only
+                    be visible in your collection, and others may be able to see
+                    this depending on your settings. Typical usage would be
+                    "PC", "MABS", "PP", "CA", etc. Check out the resources page
+                    to learn more: /tools/resources
+                  </div>
+                }
+                id="co-mat"
+              />
+            </div>
+            <input
+              className="w-33"
+              maxLength={15}
+              placeholder="Optional"
+              value={collectionObj.material}
+              onChange={(e) =>
+                setCollectionObj((collectionObj) => ({
+                  ...collectionObj,
+                  ...{ material: e.target.value.trim() },
+                }))
+              }
+            />
+          </div>
+        )}
         <div className="w-100 d-flex jc-space-b my-1">
           <div>Quantity:</div>
           <input

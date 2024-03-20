@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import { AppContext } from "../context/context";
 import { ICollectionDTOGET } from "../interfaces/general";
 import { filterImages, imagePath } from "../utils/utils";
 
@@ -5,8 +7,11 @@ interface iProps {
   data: ICollectionDTOGET;
 }
 export default function CollectionPart({ data }: iProps) {
-  // const hex = "#" + data.qpart.color.hex;
-  // console.log(data.qpart);
+  const {
+    state: {
+      userPreferences: { payload: prefPayload },
+    },
+  } = useContext(AppContext);
 
   const images = filterImages(data.qpart.images);
   let primaryImage = images[images.length - 1];
@@ -19,11 +24,7 @@ export default function CollectionPart({ data }: iProps) {
       break;
     }
   }
-  //   function getLetter(bool: boolean): string {
-  //     if (!bool) return false
 
-  //     if (bool && data.availDuplicates) return true
-  //   }
   function getLetter(bool: boolean): string {
     if (!bool) return "";
     if (bool && !data.availDuplicates) return "Y";
@@ -32,10 +33,7 @@ export default function CollectionPart({ data }: iProps) {
   }
 
   return (
-    <div
-      //   to={`/part/${data.qpart.mold.parentPart.id}?color=${data.qpart.color.id}`}
-      className="collection-item"
-    >
+    <div className="collection-item">
       <div className="goal-img">
         <img
           src={
@@ -63,6 +61,11 @@ export default function CollectionPart({ data }: iProps) {
         </div>
       </div>
       <div className="col-part-body">
+        {prefPayload.differentiateMaterialsInCollection && (
+          <div style={{ fontSize: "0.9em", overflow: "hidden", width: "7em" }}>
+            {data.material.toUpperCase()}
+          </div>
+        )}
         <div
           style={{ fontWeight: "bolder" }}
           className={

@@ -3,6 +3,7 @@ export interface UserPrefPayload {
   isCollectionVisible: boolean;
   isWantedVisible: boolean;
   allowMessages: boolean;
+  differentiateMaterialsInCollection: boolean;
   prefName: string;
   prefId: string;
 }
@@ -15,6 +16,7 @@ export const userPrefrencesInitialState: UserPrefStateType = {
     isCollectionVisible: true,
     isWantedVisible: true,
     allowMessages: true,
+    differentiateMaterialsInCollection: false,
     prefName: "bl",
     prefId: "tlg",
   },

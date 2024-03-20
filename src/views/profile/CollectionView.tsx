@@ -83,6 +83,7 @@ export default function CollectionView() {
                 ? "Your Collection is visible to others"
                 : "Your Collection is hidden from others"}
             </div>
+            {prefPayload.differentiateMaterialsInCollection && <div style={{width: '6.25em'}}>Material</div>}
             <div>Sale</div>
             <div>Trade</div>
             <div>Qty</div>
