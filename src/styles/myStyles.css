@@ -4,6 +4,8 @@
   --lt-grey: #ccc;
   --dk-grey: #32363d;
   --md-grey: #838282;
+  --lt-yel: #f8ca31;
+  --dk-yel: #a58a33;
   /* --main-font-family: "Nunito Sans", sans-serif; */
 
   /* *** Toast Overrides *** */
@@ -40,6 +42,36 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.color-text-field-container {
+  position: relative;
+  height: 100%;
+}
+.color-text-field {
+  height: 100%;
+
+  padding-right: 1.5em;
+}
+
+#color-text-field-warn {
+  position: absolute;
+  top: 50%;
+  right: 6px; /* Adjust based on SVG icon size */
+  transform: translateY(-50%);
+  width: 1em;
+  height: 1em;
+  fill: var(--dk-yel);
+}
+
+.color-text-field-hint {
+  position: absolute;
+  background-color: white;
+  border: solid 1px var(--dk-grey);
+  border-radius: 5px;
+  bottom: 1.75em;
+  padding: 0.5em;
+  max-width: 15em;
 }
 
 .color-item {
@@ -866,7 +898,7 @@ input:checked + .slider:before {
 .outline-approved {
   border: solid 4px #00ff55;
 }
-.material-tag{
+.material-tag {
   margin-right: 0.75em;
   border: solid 1px var(--dk-grey);
   border-radius: 3px;

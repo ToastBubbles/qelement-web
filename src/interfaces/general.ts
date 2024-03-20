@@ -60,21 +60,10 @@ export interface color {
 export interface IColorWCreator extends color {
   creator: user;
 }
-export interface colorWSimilar {
-  id: number;
-  bl_name: string;
-  tlg_name: string;
-  bo_name: string;
-  swatchId: number;
-  hex: string;
-  bl_id: number;
-  tlg_id: number;
-  bo_id: number;
-  type: string;
-  note: string;
+export interface colorWSimilar extends color {
+
   similar: IColorWSimColId[];
-  createdAt: string;
-  updatedAt: string;
+  
 }
 interface IAppDateAndId {
   id: number;
