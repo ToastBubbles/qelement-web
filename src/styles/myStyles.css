@@ -177,6 +177,14 @@ ul > li {
   text-decoration: none;
   color: var(--dk-grey);
 }
+
+.lt-link:link,
+.lt-link:visited,
+.lt-link:hover,
+.lt-link:active {
+  text-decoration: none;
+  color: var(--lt-red);
+}
 a:link,
 a:visited,
 a:hover,
@@ -852,9 +860,19 @@ input:checked + .slider:before {
 .outline-grey {
   border: solid 4px #b1b1b1;
 }
+.not-clickable {
+  cursor: default;
+}
 .outline-approved {
   border: solid 4px #00ff55;
 }
+.material-tag{
+  margin-right: 0.75em;
+  border: solid 1px var(--dk-grey);
+  border-radius: 3px;
+  padding: 0.2em 0.5em;
+}
+
 .tag-grey {
   background-color: #b1b1b1;
 }
@@ -870,7 +888,7 @@ input:checked + .slider:before {
   background-color: rgb(83, 83, 83);
   color: #a0a0a0;
 }
-.tag-no-parts{
+.tag-no-parts {
   background-color: rgb(43, 43, 43);
   color: #a0a0a0;
 }
@@ -1583,7 +1601,8 @@ fieldset > legend {
 .topfive-card {
   background-color: azure;
   filter: drop-shadow(0px 0px 3px #00000050);
-  margin: auto;
+  /* margin: auto; */
+  margin: 0 0.5%;
   width: 19%;
   aspect-ratio: 3 / 4;
   border: solid 4px;
@@ -1731,6 +1750,8 @@ fieldset > legend {
 .my-ribbon {
   background-color: var(--lt-red);
 }
+.lt-link:link,
+.lt-link:visited,
 .link:link,
 .link:visited {
   /* color: #fff; */
@@ -2059,11 +2080,17 @@ textarea {
 .w-25 {
   width: 25%;
 }
+.w-30 {
+  width: 30%;
+}
 .w-33 {
   width: 33.3%;
 }
 .w-35 {
   width: 35%;
+}
+.w-40 {
+  width: 40%;
 }
 .w-50 {
   width: 50%;

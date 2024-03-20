@@ -504,6 +504,7 @@ export interface IQPartDTOIncludeLess {
   type: string;
   mold: IPartMoldDTO;
   isMoldUnknown: boolean;
+  material: string;
   color: color;
   creator: user;
   note: string;
@@ -536,6 +537,7 @@ export interface iQPartDTO {
   colorId: number;
   isMoldUnknown: boolean;
   type: string;
+  material: string;
   creatorId: number;
   note: string;
 }

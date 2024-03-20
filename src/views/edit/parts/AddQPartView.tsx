@@ -33,6 +33,7 @@ export default function AddQPartView() {
     moldId: -1,
     isMoldUnknown: false,
     type: "unknown",
+    material: "",
     creatorId: -1,
     note: "",
   };
@@ -47,6 +48,11 @@ export default function AddQPartView() {
     approvalDate: "",
     createdAt: "",
   };
+  const [hasPC, setHasPC] = useState(false);
+  const [hasMABS, setHasMABS] = useState(false);
+  const [hasPP, setHasPP] = useState(false);
+  const [hasOther, setHasOther] = useState(false);
+  const [selectedColor, setSelectedColor] = useState<color | null>(null);
   const [resetColorComponent, setResetColorComponent] = useState(false);
   const [elementId, setElementId] = useState<number>(-1);
   const [newQPart, setNewQPart] = useState<iQPartDTO>(defaultValues);
@@ -104,6 +110,31 @@ export default function AddQPartView() {
     },
     enabled: false,
   });
+
+  useEffect(() => {
+    let matString: string[] = [];
+
+    if (hasPC) matString.push("pc");
+    if (hasMABS) matString.push("mabs");
+    if (hasPP) matString.push("pp");
+    if (hasOther) matString.push("other");
+
+    setNewQPart((newQPart) => ({
+      ...newQPart,
+      ...{ material: matString.length > 0 ? matString.join(";") : "" },
+    }));
+  }, [hasPC, hasMABS, hasPP, hasOther]);
+
+  useEffect(() => {
+    setNewQPart((newQPart) => ({
+      ...newQPart,
+      ...{ colorId: selectedColor ? selectedColor.id : -1 },
+    }));
+    setHasMABS(false);
+    setHasPC(false);
+    setHasPP(false);
+    setHasOther(false);
+  }, [selectedColor]);
 
   useEffect(() => {
     partsRefetch();
@@ -327,12 +358,7 @@ export default function AddQPartView() {
             <div className="w-100 d-flex jc-space-b">
               <label htmlFor="par">Color</label>
               <ColorTextField
-                setter={(newColorId) =>
-                  setNewQPart((newQPart) => ({
-                    ...newQPart,
-                    ...{ colorId: newColorId },
-                  }))
-                }
+                setterObj={setSelectedColor}
                 customStyles={colorInputSyles}
                 reset={resetColorComponent}
               />
@@ -423,6 +449,97 @@ export default function AddQPartView() {
                 <option value={"other"}>Other</option>
               </select>
             </div>
+            {selectedColor &&
+              (selectedColor.type == "transparent" ||
+                selectedColor.type == "glitter" ||
+                selectedColor.type == "unreleased") && (
+                <div className="w-100">
+                  <div className="w-100 d-flex jc-space-b">
+                    <div className="w-30">
+                      <label htmlFor="qmat">Materials</label>
+                      <MyToolTip
+                        content={
+                          <div style={{ maxWidth: "22em" }}>
+                            This is where you can specify if the QPart is
+                            available in Polycarbonate (PC), Methylmethacrylate
+                            acrylonitrile butadiene styrene (MABS), the less
+                            common Polypropylene (PP), or if the part has had
+                            multiple iterations available in different
+                            materials, an example of this would be the 2x2 tile,
+                            since it was used on internal LEGO Designer color
+                            palettes, some colors of this part, like
+                            Trans-Orange, are available in PC, MABS, and PP! For
+                            transparent parts, MABS replaced PC around 2019.{" "}
+                            <span
+                              style={{
+                                fontWeight: "800",
+                                textDecoration: "underline",
+                              }}
+                            >
+                              If you are unsure, just leave blank.
+                            </span>{" "}
+                            Read more about materials by visiting our resources
+                            page: /tools/resources
+                          </div>
+                        }
+                        id="material"
+                      />
+                    </div>
+                    <div className="d-flex fg-1 jc-end">
+                      <div className="w-50">
+                        <input
+                          type="checkbox"
+                          className="formInput"
+                          style={checkboxStyles}
+                          checked={hasMABS}
+                          onChange={(e) => {
+                            setHasMABS(e.target.checked);
+                          }}
+                        ></input>{" "}
+                        <label>MABS</label>
+                      </div>
+                      <div className="w-50">
+                        <input
+                          type="checkbox"
+                          className="formInput"
+                          style={checkboxStyles}
+                          checked={hasPC}
+                          onChange={(e) => {
+                            setHasPC(e.target.checked);
+                          }}
+                        ></input>{" "}
+                        <label>Polycarbonate (PC)</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="d-flex jc-end w-100">
+                    <div className="w-35">
+                      <input
+                        type="checkbox"
+                        className="formInput"
+                        style={checkboxStyles}
+                        checked={hasOther}
+                        onChange={(e) => {
+                          setHasOther(e.target.checked);
+                        }}
+                      ></input>{" "}
+                      <label>Other</label>
+                    </div>
+                    <div className="w-35">
+                      <input
+                        type="checkbox"
+                        className="formInput"
+                        style={checkboxStyles}
+                        checked={hasPP}
+                        onChange={(e) => {
+                          setHasPP(e.target.checked);
+                        }}
+                      ></input>{" "}
+                      <label>Polypropylene (PP)</label>
+                    </div>
+                  </div>
+                </div>
+              )}
 
             <label htmlFor="partnote" style={{ marginRight: "auto" }}>
               Note for qelement
@@ -584,6 +701,8 @@ export default function AddQPartView() {
                       ...defaultValues,
                       ...{ creatorId: prevVals.creatorId },
                     }));
+
+                    setSelectedColor(null);
                   } else {
                     if (qpartExistenceCode == 201) {
                       showToast(

@@ -16,7 +16,7 @@ import {
   part,
   IPartStatusDTO,
 } from "../../interfaces/general";
-import { useContext, useEffect, useState } from "react";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import QPartStatusDate from "../../components/QPartStatusDate";
 import showToast, {
@@ -617,8 +617,16 @@ export default function SinglePartView() {
                             : "No IDs found"}
                         </div>
                       </div>
+
+                      <div>Types of plastic produced in:</div>
+                      {listMaterials(mypart?.material)}
+
                       <div>Note:</div>
-                      <div>{mypart?.note ? mypart.note : "No note"}</div>
+                      {mypart?.note ? (
+                        <div>{mypart.note}</div>
+                      ) : (
+                        <div className="grey-txt">No note</div>
+                      )}
                     </div>
                     <div
                       className={
@@ -1144,5 +1152,18 @@ export default function SinglePartView() {
     } else {
       return <LoadingPage />;
     }
+  }
+
+  function listMaterials(mats: string | null | undefined): ReactNode {
+    if (!mats || mats.length == 0)
+      return <div className="grey-txt">Not specified</div>;
+    let arr = mats.split(";");
+    return (
+      <div className="d-flex w-100" style={{ justifyContent: "start" }}>
+        {arr.map((mat) => (
+          <div className="material-tag">{mat.toUpperCase()}</div>
+        ))}
+      </div>
+    );
   }
 }

@@ -1,13 +1,6 @@
 import { useMutation, useQuery } from "react-query";
-import {
-  IAPIResponse,
-  ICategory,
-  ICollectionDTO,
-  IQPartDTOInclude,
-} from "../interfaces/general";
-import ConditionSlider from "./ConditionSlider";
-import MyToolTip from "./MyToolTip";
-import SliderToggle from "./SliderToggle";
+import { IAPIResponse, ICategory } from "../interfaces/general";
+
 import axios from "axios";
 import { useContext, useState } from "react";
 import showToast, { Mode, getPrefColorName } from "../utils/utils";
@@ -45,6 +38,7 @@ export default function EditCategoryPopup({ closePopup }: IProps) {
       console.log("e", e.data);
       if (e.data.code == 200) {
         setNewCatName("");
+        setCatId(-1);
         refetch();
         showToast("Category name changed!", Mode.Success);
       } else {
@@ -100,6 +94,7 @@ export default function EditCategoryPopup({ closePopup }: IProps) {
             </div>
             <div>
               <button
+                disabled={newCatName.trim().length == 0}
                 className="formInputNM"
                 onClick={() => {
                   catMutation.mutate({

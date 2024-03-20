@@ -66,6 +66,7 @@ import MoldEditView from "./views/edit/parts/MoldEditView";
 import QPartEditView from "./views/edit/parts/QPartEditView";
 import SubmissionsView from "./views/profile/SubmissionsView";
 import AddMarbledPartView from "./views/edit/parts/AddMarbledPartView";
+import ExternalSitesView from "./views/generic/Tools/ExternalSitesView";
 const queryClient = new QueryClient({
   defaultOptions: {
     // queries: { staleTime: 10000 }
@@ -261,6 +262,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <AllToolsView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/tools/resources"
+                element={
+                  <ProtectedRoute>
+                    <ExternalSitesView />
                   </ProtectedRoute>
                 }
               />

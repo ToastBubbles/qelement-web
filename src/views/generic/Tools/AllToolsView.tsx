@@ -67,6 +67,9 @@ export default function AllToolsView() {
               <Link className="link" to="/tools/userLookup">
                 User lookup
               </Link>
+              <Link className="link" to="/tools/resources">
+                Resources/External Websites
+              </Link>
               {isAdmin && showPopup && (
                 <GenericPopup
                   content={

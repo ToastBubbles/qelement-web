@@ -72,9 +72,10 @@ export default function TopFiveCard({
     setHovered(false);
   };
 
-  const status = sortStatus(
-    myWantedPart.qpart.partStatuses
-  )[0].status.toUpperCase();
+  const status =
+    myWantedPart.qpart.partStatuses.length == 0
+      ? "NO STATUS"
+      : sortStatus(myWantedPart.qpart.partStatuses)[0].status.toUpperCase();
 
   function getColor(type: string): string {
     let bg: string;
@@ -143,12 +144,8 @@ export default function TopFiveCard({
       to={`/part/${myWantedPart.qpart.mold.parentPart.id}?color=${myWantedPart.qpart.color.id}`}
       className="topfive-card clickable link"
       style={{ borderColor: "#" + myWantedPart.qpart.color.hex }}
-      onMouseEnter={() => {
-        if (isMine) handleMouseEnter;
-      }}
-      onMouseLeave={() => {
-        if (isMine) handleMouseLeave;
-      }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <RibbonContainer>
         <Ribbon

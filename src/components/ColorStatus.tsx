@@ -50,11 +50,11 @@ export default function ColorStatus({ color, statuses }: iProps) {
           to={`/part/${statusObj.partId}?color=${color.id}&mold=${statusObj.moldId}`}
           key={statusObj.moldId}
           onClick={(event) => {
-            if (statusObj.status == "no status") event.preventDefault();
+            if (statusObj.status == "no parts") event.preventDefault();
           }}
-          className={
-            "flag-status tag-" + replaceSpacesWithDash(statusObj.status.trim())
-          }
+          className={`flag-status tag-${replaceSpacesWithDash(
+            statusObj.status.trim()
+          )} ${statusObj.status == "no parts" ? "not-clickable" : ""}`}
         >
           {statusObj.status.toUpperCase()}
         </Link>

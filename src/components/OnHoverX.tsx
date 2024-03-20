@@ -1,18 +1,22 @@
-
-
 interface IProps {
   onClickFn: () => void;
+  xOffest?: number;
+  yOffest?: number;
 }
 
-export default function OnHoverX({ onClickFn }: IProps) {
+export default function OnHoverX({
+  onClickFn,
+  xOffest = 2,
+  yOffest = 2,
+}: IProps) {
   return (
     <div
       style={{
         position: "absolute",
-        top: "2px",
-        right: "2px",
+        top: `${yOffest}px`,
+        right: `${xOffest}px`,
         cursor: "pointer",
-        zIndex: 20,
+        zIndex: 40,
       }}
       onClick={(e) => {
         e.preventDefault();

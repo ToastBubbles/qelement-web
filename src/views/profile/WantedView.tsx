@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AppContext } from "../../context/context";
 
 import axios from "axios";
@@ -6,6 +6,10 @@ import { useQuery } from "react-query";
 import LoadingPage from "../../components/LoadingPage";
 import TopFiveCard from "../../components/TopFiveCard";
 import { IWantedDTOGET } from "../../interfaces/general";
+import RecentQPart from "../../components/RecentQPart";
+import OnHoverX from "../../components/OnHoverX";
+import showToast, { Mode } from "../../utils/utils";
+import MyWantedItem from "../../components/MyWantedItem";
 
 export default function WantedView() {
   const {
@@ -14,8 +18,10 @@ export default function WantedView() {
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
-
-  // const [faveTab, setFaveTab] = useState<boolean>(true);
+  const [topFiveTabActive, setTopFiveTabActive] = useState<boolean>(true);
+  const [wantedTabActive, setWantedTabActive] = useState<boolean>(false);
+  const [faveTabActive, setFaveTabActive] = useState<boolean>(false);
+  const [otherTabActive, setOtherTabActive] = useState<boolean>(false);
 
   const { data: mywantedData, refetch: mywantedrefetch } = useQuery({
     queryKey: "mywanted",
@@ -72,64 +78,126 @@ export default function WantedView() {
               ? "Your Wanted Lists are visible to others"
               : "Your Wanted Lists are hidden from others"}
           </div>
-          <h2>
+          {/* <h2>
             Your Top {myTopFive.length > 0 ? myTopFive.length : "5"} Most Wanted
-          </h2>
-          <div className="topfive-container">
-            {myTopFive.length > 0 ? (
-              myTopFive.map((myWantedPart) => (
-                <TopFiveCard
-                  key={myWantedPart.id}
-                  myWantedPart={myWantedPart}
-                  refetchFn={mywantedrefetch}
-                />
-              ))
+          </h2> */}
+
+          {/* <h2>Wanted List</h2> */}
+
+          <div className="tab">
+            <button
+              className={"tablinks" + (topFiveTabActive ? " active" : "")}
+              onClick={() => {
+                setWantedTabActive(false);
+                setFaveTabActive(false);
+                setOtherTabActive(false);
+                setTopFiveTabActive(true);
+              }}
+            >
+              Top {myTopFive.length > 0 ? myTopFive.length : 5}
+            </button>
+            <button
+              className={"tablinks" + (wantedTabActive ? " active" : "")}
+              onClick={() => {
+                setWantedTabActive(true);
+                setFaveTabActive(false);
+                setOtherTabActive(false);
+                setTopFiveTabActive(false);
+              }}
+            >
+              Wanted {myWanted && myWanted.length > 0 && `(${myWanted.length})`}
+            </button>
+            <button
+              className={"tablinks" + (faveTabActive ? " active" : "")}
+              onClick={() => {
+                setFaveTabActive(true);
+                setWantedTabActive(false);
+                setOtherTabActive(false);
+                setTopFiveTabActive(false);
+              }}
+            >
+              Favorites{" "}
+              {myFavorites &&
+                myFavorites.length > 0 &&
+                `(${myFavorites.length})`}
+            </button>
+            <button
+              className={"tablinks" + (otherTabActive ? " active" : "")}
+              onClick={() => {
+                setWantedTabActive(false);
+                setFaveTabActive(false);
+                setOtherTabActive(true);
+                setTopFiveTabActive(false);
+              }}
+              // disabled={mypart?.images.length == 0}
+            >
+              Other {myOther && myOther.length > 0 && `(${myOther.length})`}
+            </button>
+          </div>
+          <div
+            className={"tabcontent  " + (topFiveTabActive ? "" : " tabhidden")}
+            style={{ padding: "2em 1em" }}
+          >
+            <div className="topfive-container">
+              {myTopFive.length > 0 ? (
+                myTopFive.map((myWantedPart) => (
+                  <TopFiveCard
+                    key={myWantedPart.id}
+                    myWantedPart={myWantedPart}
+                    refetchFn={mywantedrefetch}
+                    isMine={true}
+                  />
+                ))
+              ) : (
+                <p className="grey-txt">
+                  You don't have anything in your Top Five!
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div
+            className={"tabcontent " + (wantedTabActive ? "" : " tabhidden")}
+            style={{ padding: "2em 1em" }}
+          >
+            {myWanted.length > 0 ? (
+              myWanted.map((item) => <MyWantedItem key={item.id} item={item} />)
             ) : (
-              <p>You don't have anything in your Top Five!</p>
+              <p className="grey-txt">
+                You don't have anything in your Wanted list!
+              </p>
             )}
           </div>
-          <h2>Wanted List</h2>
-          <div className="grey-txt">TODO</div>
-          {/* <div className="tab">
-            <button
-              className={"tablinks" + (detailsTabActive ? " active" : "")}
-              onClick={() => {
-                setDetailsTabActive(true);
-                // setImageTabActive(false);
-                // setCommentTabActive(false);
-              }}
-            >
-              Details
-            </button>
-            <button
-              className={"tablinks" + (commentTabActive ? " active" : "")}
-              onClick={() => {
-                setDetailsTabActive(false);
-                setImageTabActive(false);
-                setCommentTabActive(true);
-              }}
-            >
-              Comments{" "}
-              {mypart?.comments &&
-                mypart?.comments.length > 0 &&
-                `(${mypart?.comments.length})`}
-            </button>
-            
-            <button
-              className={"tablinks" + (imageTabActive ? " active" : "")}
-              onClick={() => {
-                setDetailsTabActive(false);
-                setCommentTabActive(false);
-                setImageTabActive(true);
-              }}
-              disabled={mypart?.images.length == 0}
-            >
-              Images{" "}
-              {mypart?.images &&
-                filterImages(mypart?.images).length > 0 &&
-                `(${filterImages(mypart?.images).length})`}
-            </button>
-          </div> */}
+
+          <div
+            className={"tabcontent " + (faveTabActive ? "" : " tabhidden")}
+            style={{ padding: "2em 1em" }}
+          >
+            {" "}
+            {myFavorites.length > 0 ? (
+              myFavorites.map((item) => (
+                <MyWantedItem key={item.id} item={item} />
+              ))
+            ) : (
+              <p className="grey-txt">
+                You don't have anything in your Favorites list!
+              </p>
+            )}
+          </div>
+
+          <div
+            className={"tabcontent " + (otherTabActive ? "" : " tabhidden")}
+            style={{ padding: "2em 1em" }}
+          >
+            {" "}
+            {myOther.length > 0 ? (
+              myOther.map((item) => <MyWantedItem key={item.id} item={item} />)
+            ) : (
+              <p className="grey-txt">
+                You don't have anything in your Other list!
+              </p>
+            )}
+          </div>
         </div>
       </>
     );

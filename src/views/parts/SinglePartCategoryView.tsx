@@ -13,18 +13,23 @@ export default function SinglePartCategoryView() {
   );
 
   if (catData && partsData) {
+    let parts = partsData.data;
     return (
       <>
         <div className="mx-w">
           <h1>{catData.data.name}</h1>
           <div className="parts-view">
-            {partsData.data.map((part) => {
-              return (
-                <Link key={part.id} className="link" to={"/part/" + part.id}>
-                  {part.name}
-                </Link>
-              );
-            })}
+            {parts.length > 0 ? (
+              parts.map((part) => {
+                return (
+                  <Link key={part.id} className="link" to={"/part/" + part.id}>
+                    {part.name}
+                  </Link>
+                );
+              })
+            ) : (
+              <div className="grey-txt">No parts yet!</div>
+            )}
           </div>
         </div>
       </>
