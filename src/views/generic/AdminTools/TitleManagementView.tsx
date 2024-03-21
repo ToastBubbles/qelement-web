@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { CSSProperties, useContext, useEffect, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import showToast, { Mode } from "../../../utils/utils";
 import {
@@ -35,6 +35,8 @@ export default function TitleManagementView() {
   const [newTitle, setNewTitle] = useState<ITitle>({
     title: "",
     cssClasses: "",
+    public: true,
+    requirement: "",
   });
   const [selectedTitleId, setSelectedTitleId] = useState<number | null>(-1);
 
@@ -112,6 +114,8 @@ export default function TitleManagementView() {
         setNewTitle({
           title: "",
           cssClasses: "",
+          public: true,
+          requirement: "",
         });
         titleRefetch();
       } else {
@@ -142,7 +146,10 @@ export default function TitleManagementView() {
       console.log(err);
     },
   });
-
+  const checkboxStyles: CSSProperties = {
+    transform: "scale(1.5)", // Adjust the scale factor as needed
+    marginRight: "8px", // Add some spacing if desired
+  };
   if (allTitleData) {
     const allTitles = allTitleData.data;
     return (
@@ -182,15 +189,49 @@ export default function TitleManagementView() {
                 }
               ></input>
             </div>
-            <button
-              onClick={() => {
-                if (newTitle.title.length > 1) {
-                  titleCreationMutation.mutate(newTitle);
+            <div className="w-100 d-flex jc-space-b">
+              <label htmlFor="titlePub">Is this title Public?</label>
+              <input
+                name="titlePub"
+                type="checkbox"
+                className="formInput"
+                style={checkboxStyles}
+                checked={newTitle.public}
+                onChange={(e) => {
+                  setNewTitle((titleDTO) => ({
+                    ...titleDTO,
+                    ...{ public: e.target.checked },
+                  }));
+                }}
+              ></input>
+            </div>
+            <div className="w-100 d-flex flex-col">
+              <label htmlFor="titleReq">Requirement</label>
+              <textarea
+                rows={5}
+                name="titleReq"
+                placeholder="Unspecified"
+                value={newTitle.requirement}
+                onChange={(e) =>
+                  setNewTitle((titleDTO) => ({
+                    ...titleDTO,
+                    ...{ requirement: e.target.value },
+                  }))
                 }
-              }}
-            >
-              Add
-            </button>
+              ></textarea>
+            </div>
+
+            <div style={{ marginTop: "1em" }}>
+              <button
+                onClick={() => {
+                  if (newTitle.title.length > 1) {
+                    titleCreationMutation.mutate(newTitle);
+                  }
+                }}
+              >
+                Add
+              </button>
+            </div>
             <div className="fake-hr"></div>
             <h3>Grant Title to User</h3>
             <div className="w-100 d-flex">
@@ -209,17 +250,6 @@ export default function TitleManagementView() {
                 }}
                 value={tempUserCreds.creds}
                 onBlur={(e) => {
-                  // // getRecipientId(e.target.value)
-                  // if (e.target.value.length > 1) {
-                  //   let mode = e.target.value.includes("@")
-                  //     ? "email"
-                  //     : "username";
-
-                  //   setTempUserCreds((values) => ({
-                  //     ...values,
-                  //     ...{ creds: e.target.value.trim(), type: mode },
-                  //   }));
-                  // }
                   if (
                     (tempUserCreds.type == "email" ||
                       tempUserCreds.type == "username") &&
@@ -234,8 +264,9 @@ export default function TitleManagementView() {
                   }
                 }}
               ></input>
-              <div style={{ width: "40%" }}>
+              <div style={{ width: "40%", height: "1.75em" }}>
                 <CustomSelect
+                  customStyles={{ height: "100%" }}
                   setter={setSelectedTitleId}
                   options={getOptions(allTitles)}
                 />
@@ -299,7 +330,7 @@ export default function TitleManagementView() {
                     >
                       {userTitleObj.title.title}
                     </div>
-                    <div style={{ width: "5%", position: 'relative',  }}>
+                    <div style={{ width: "5%", position: "relative" }}>
                       <X fn={handleRemoveUser} />
                     </div>
                   </div>

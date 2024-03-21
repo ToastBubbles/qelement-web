@@ -61,9 +61,7 @@ export interface IColorWCreator extends color {
   creator: user;
 }
 export interface colorWSimilar extends color {
-
   similar: IColorWSimColId[];
-  
 }
 interface IAppDateAndId {
   id: number;
@@ -186,6 +184,8 @@ export interface ISculptureInventoryItem {
 export interface ITitle {
   title: string;
   cssClasses: string;
+  public: boolean;
+  requirement: string;
 }
 
 export interface ITitleDTO extends ITitle {

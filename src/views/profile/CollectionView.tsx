@@ -7,6 +7,8 @@ import LoadingPage from "../../components/LoadingPage";
 import PopupGoal from "../../components/PopupGoal";
 import Goal from "../../components/Goal";
 import CollectionPart from "../../components/CollectionPart";
+import { paginate } from "../../utils/utils";
+import PaginationControl from "../../components/PaginationControl";
 
 export default function CollectionView() {
   const {
@@ -51,6 +53,15 @@ export default function CollectionView() {
   if (mycollectionData && myGoalData) {
     const goals = myGoalData.data;
     const myParts = mycollectionData.data;
+
+    const itemsPerPage = 10;
+    const [currentPage, setCurrentPage] = useState(1);
+    const totalPages = Math.ceil(myParts.length / itemsPerPage);
+
+    const paginatedItems =
+      myParts.length > itemsPerPage
+        ? paginate(myParts, currentPage, itemsPerPage)
+        : myParts;
     return (
       <>
         <div className="mx-w">
@@ -83,16 +94,27 @@ export default function CollectionView() {
                 ? "Your Collection is visible to others"
                 : "Your Collection is hidden from others"}
             </div>
-            {prefPayload.differentiateMaterialsInCollection && <div style={{width: '6.25em'}}>Material</div>}
+            {prefPayload.differentiateMaterialsInCollection && (
+              <div style={{ width: "6.25em" }}>Material</div>
+            )}
             <div>Sale</div>
             <div>Trade</div>
             <div>Qty</div>
           </div>
           <div>
             {myParts.length > 0 ? (
-              myParts.map((myqpart) => (
-                <CollectionPart key={myqpart.id} data={myqpart} />
-              ))
+              <div>
+                {paginatedItems.map((myqpart) => (
+                  <CollectionPart key={myqpart.id} data={myqpart} />
+                ))}
+                {myParts.length > itemsPerPage && (
+                  <PaginationControl
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                  />
+                )}
+              </div>
             ) : (
               <p>Your collection is empty!</p>
             )}

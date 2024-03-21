@@ -1319,7 +1319,13 @@ fieldset > legend {
   position: relative;
 }
 .custom-select {
+  display: flex;
+  align-items: center;
   border: solid 1px var(--dk-grey);
+  height: 100%;
+  width: 100%;
+  cursor:default;
+  background-color: #FFF;
   border-radius: 0.25em;
   padding-left: 0.25em;
   padding-right: 1.5em;
