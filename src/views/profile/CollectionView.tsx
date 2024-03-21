@@ -17,7 +17,9 @@ export default function CollectionView() {
       userPreferences: { payload: prefPayload },
     },
   } = useContext(AppContext);
+  const [currentPage, setCurrentPage] = useState(1);
   const [goalPopupOpen, setGoalPopupOpen] = useState(false);
+  const [numberOfEditors, setNumberOfEditors] = useState<number>(0);
 
   const { data: mycollectionData } = useQuery({
     queryKey: "mycollection",
@@ -55,7 +57,7 @@ export default function CollectionView() {
     const myParts = mycollectionData.data;
 
     const itemsPerPage = 10;
-    const [currentPage, setCurrentPage] = useState(1);
+
     const totalPages = Math.ceil(myParts.length / itemsPerPage);
 
     const paginatedItems =
@@ -94,18 +96,29 @@ export default function CollectionView() {
                 ? "Your Collection is visible to others"
                 : "Your Collection is hidden from others"}
             </div>
+            {numberOfEditors > 0 && (
+              <>
+                <div style={{ width: "7em" }}>Condition</div>
+                <div>Dupes</div>
+              </>
+            )}
             {prefPayload.differentiateMaterialsInCollection && (
               <div style={{ width: "6.25em" }}>Material</div>
             )}
             <div>Sale</div>
             <div>Trade</div>
-            <div>Qty</div>
+            <div style={{ marginRight: "3em" }}>Qty</div>
           </div>
           <div>
             {myParts.length > 0 ? (
               <div>
                 {paginatedItems.map((myqpart) => (
-                  <CollectionPart key={myqpart.id} data={myqpart} />
+                  <CollectionPart
+                    key={myqpart.id}
+                    data={myqpart}
+                    allowEdit={true}
+                    tellParentImEditing={countEditors}
+                  />
                 ))}
                 {myParts.length > itemsPerPage && (
                   <PaginationControl
@@ -124,5 +137,15 @@ export default function CollectionView() {
     );
   } else {
     return <LoadingPage />;
+  }
+
+  function countEditors(b: boolean) {
+    console.log(numberOfEditors);
+
+    if (b) {
+      setNumberOfEditors(numberOfEditors + 1);
+    } else if (numberOfEditors > 0) {
+      setNumberOfEditors(numberOfEditors - 1);
+    }
   }
 }

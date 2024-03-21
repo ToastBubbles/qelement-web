@@ -11,6 +11,7 @@ import { AppContext } from "../context/context";
 interface IProps {
   delayBtn?: boolean;
   content: string;
+  delayInSeconds?: number;
   closePopup: () => void;
   fn: () => void;
 }
@@ -18,6 +19,7 @@ interface IProps {
 export default function ConfirmPopup({
   delayBtn = true,
   content,
+  delayInSeconds = 1.5,
   closePopup,
   fn,
 }: IProps) {
@@ -25,7 +27,7 @@ export default function ConfirmPopup({
   if (delayBtn && !btnReady) {
     setTimeout(() => {
       setBtnReady(true);
-    }, 1500);
+    }, delayInSeconds * 1000);
   }
   return (
     <div className="popup-container">
